@@ -189,7 +189,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     }
   }, [center[0], center[1], activeRadiusKm, completedRadiiKm.length]);
 
-  // Update Markers (Minimalist dots with city name, NO population)
+  // Update Markers with precise geometric centering (dot centered exactly on GPS coordinates)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -200,17 +200,18 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     // Seed City Marker
     if (seedCity) {
       const el = document.createElement("div");
-      el.className = "flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none";
+      // Exactly sized to the pin icon, label positioned absolutely below to prevent anchor offset
+      el.className = "relative flex items-center justify-center w-7 h-7 pointer-events-none select-none";
       el.innerHTML = `
         <div class="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 border-2 border-white text-white shadow-xl text-xs font-bold ring-4 ring-blue-500/30">
           📍
         </div>
-        <div class="mt-1 px-2 py-0.5 rounded-md bg-slate-950/90 border border-blue-500/60 text-blue-300 font-bold text-[11px] shadow-lg whitespace-nowrap">
+        <div class="absolute top-full mt-1 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-md bg-slate-950/90 border border-blue-500/60 text-blue-300 font-bold text-[11px] shadow-lg whitespace-nowrap">
           ${seedCity.name} (Centre)
         </div>
       `;
 
-      const marker = new maplibregl.Marker({ element: el })
+      const marker = new maplibregl.Marker({ element: el, anchor: "center" })
         .setLngLat([seedCity.lon, seedCity.lat])
         .addTo(map);
 
@@ -220,7 +221,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     // Guessed & Target Markers
     markers.forEach((m) => {
       const el = document.createElement("div");
-      el.className = "flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none";
+      // Root element is strictly 14x14px (size of the dot). Anchor center will place the dot center EXACTLY on [lon, lat]!
+      el.className = "relative flex items-center justify-center w-3.5 h-3.5 pointer-events-none select-none";
 
       let dotBg = "bg-rose-500 ring-rose-500/30";
       let labelBorder = "border-rose-500/50 text-rose-200";
@@ -235,12 +237,12 @@ export const GeoMap: React.FC<GeoMapProps> = ({
 
       el.innerHTML = `
         <div class="w-3.5 h-3.5 rounded-full ${dotBg} border-2 border-white shadow-lg ring-4 animate-scale-in"></div>
-        <div class="mt-1 px-2 py-0.5 rounded-md bg-slate-950/90 border ${labelBorder} text-[11px] shadow-lg whitespace-nowrap">
+        <div class="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-md bg-slate-950/90 border ${labelBorder} text-[11px] shadow-lg whitespace-nowrap">
           ${m.type === "revealed" ? "★ " : ""}${m.label}
         </div>
       `;
 
-      const marker = new maplibregl.Marker({ element: el })
+      const marker = new maplibregl.Marker({ element: el, anchor: "center" })
         .setLngLat([m.lon, m.lat])
         .addTo(map);
 
