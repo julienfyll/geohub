@@ -2,11 +2,18 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Loader2, MapPin } from "lucide-react";
-import { City, GameScale } from "@/lib/games/types";
+import { GameScale } from "@/lib/games/types";
+
+export interface SearchCityItem {
+  id: string;
+  name: string;
+  countryCode: string;
+  scale?: GameScale;
+}
 
 interface SearchBarProps {
   scale: GameScale;
-  onSelectCity: (city: City) => void;
+  onSelectCity: (city: SearchCityItem) => void;
   disabled?: boolean;
   placeholder?: string;
 }
@@ -18,7 +25,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder = "Entrez le nom d'une ville...",
 }) => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<City[]>([]);
+  const [results, setResults] = useState<SearchCityItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -63,7 +70,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSelect = (city: City) => {
+  const handleSelect = (city: SearchCityItem) => {
     onSelectCity(city);
     setQuery("");
     setResults([]);
@@ -107,7 +114,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         )}
       </div>
 
-      {/* Autocomplete Dropdown */}
+      {/* Autocomplete Dropdown - Anti-cheat: No population shown */}
       {isOpen && results.length > 0 && (
         <div className="absolute z-50 left-0 right-0 mt-2 bg-slate-900/95 border border-slate-700/80 rounded-xl shadow-2xl backdrop-blur-xl max-h-64 overflow-y-auto divide-y divide-slate-800">
           {results.map((city, idx) => {
@@ -118,19 +125,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 type="button"
                 onClick={() => handleSelect(city)}
                 onMouseEnter={() => setSelectedIndex(idx)}
-                className={`w-full px-4 py-2.5 flex items-center justify-between text-left transition-colors ${
+                className={`w-full px-4 py-3 flex items-center justify-between text-left transition-colors ${
                   isSelected ? "bg-blue-600/30 text-white" : "hover:bg-slate-800/80 text-slate-200"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
                   <span className="font-semibold text-sm">{city.name}</span>
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
-                    {city.countryCode}
-                  </span>
                 </div>
-                <span className="text-xs text-slate-400 font-medium">
-                  {city.population.toLocaleString("fr-FR")} hab.
+                <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
+                  {city.countryCode}
                 </span>
               </button>
             );

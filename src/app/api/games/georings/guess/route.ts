@@ -79,14 +79,18 @@ export async function POST(request: NextRequest) {
     const ringFailed = newTriesLeft === 0;
 
     let message = "";
+    const popFormatted = city.population.toLocaleString("fr-FR");
+
     if (!isInRing) {
-      message = `${city.name} est hors de l'anneau (${Math.round(distance)} km du centre, attendu entre ${innerRadiusKm} et ${outerRadiusKm} km).`;
+      message = `${city.name} (${popFormatted} hab.) est hors de l'anneau (${Math.round(distance)} km du centre, attendu entre ${innerRadiusKm} et ${outerRadiusKm} km).`;
     } else {
-      message = `${city.name} (${city.population.toLocaleString("fr-FR")} hab.) n'est pas la plus peuplée de cet anneau.`;
+      message = `${city.name} (${popFormatted} hab.) n'est pas la plus peuplée de cet anneau.`;
     }
 
     if (ringFailed) {
       message += ` 3 essais épuisés ! La bonne réponse était ${targetCity.name} (${targetCity.population.toLocaleString("fr-FR")} hab.).`;
+    } else {
+      message += ` Il vous reste ${newTriesLeft} essai${newTriesLeft > 1 ? "s" : ""}.`;
     }
 
     const response: CityGuessResult = {

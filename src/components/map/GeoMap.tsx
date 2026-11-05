@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import { createGeodesicCircle, getBoundingBox } from "@/lib/geo/haversine";
 
-// Free, reliable vector basemap with zero labels (anti-cheat)
 const BASEMAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json";
 
 export interface MapMarker {
@@ -12,7 +11,6 @@ export interface MapMarker {
   lat: number;
   lon: number;
   label: string;
-  sublabel?: string;
   type: "seed" | "correct" | "wrong" | "revealed";
 }
 
@@ -35,12 +33,16 @@ export const GeoMap: React.FC<GeoMapProps> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const isLoadedRef = useRef<boolean>(false);
   const markersRef = useRef<maplibregl.Marker[]>([]);
 
-  // Function to update rings GeoJSON source and animate camera
+  // Keep latest props in refs to avoid closure stalls
+  const latestPropsRef = useRef({ center, activeRadiusKm, completedRadiiKm });
+  latestPropsRef.current = { center, activeRadiusKm, completedRadiiKm };
+
   const updateRingsAndCamera = () => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !isLoadedRef.current) return;
 
     let source = map.getSource("rings-source") as maplibregl.GeoJSONSource | undefined;
     if (!source) {
@@ -68,8 +70,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           "fill-opacity": [
             "case",
             ["==", ["get", "type"], "active"],
-            0.15,
-            0.06,
+            0.12,
+            0.05,
           ],
         },
       });
@@ -93,30 +95,37 @@ export const GeoMap: React.FC<GeoMapProps> = ({
             3,
             2,
           ],
+          "line-dasharray": [
+            "case",
+            ["==", ["get", "type"], "completed"],
+            ["literal", [2, 2]],
+            ["literal", [1, 0]],
+          ],
         },
       });
 
       source = map.getSource("rings-source") as maplibregl.GeoJSONSource;
     }
 
-    const [lon, lat] = center;
+    const { center: curCenter, activeRadiusKm: curActiveR, completedRadiiKm: curCompletedR } = latestPropsRef.current;
+    const [lon, lat] = curCenter;
     const features: GeoJSON.Feature[] = [];
 
-    // Completed rings
-    completedRadiiKm.forEach((radius) => {
+    // Completed rings (rendered with subtle green dashed border)
+    curCompletedR.forEach((radius) => {
       const feat = createGeodesicCircle(lat, lon, radius, 72);
       feat.properties = { type: "completed", radiusKm: radius };
       features.push(feat);
     });
 
-    // Active ring
-    if (activeRadiusKm && activeRadiusKm > 0) {
-      const activeFeat = createGeodesicCircle(lat, lon, activeRadiusKm, 72);
-      activeFeat.properties = { type: "active", radiusKm: activeRadiusKm };
+    // Active ring (rendered with glowing blue border)
+    if (curActiveR && curActiveR > 0) {
+      const activeFeat = createGeodesicCircle(lat, lon, curActiveR, 72);
+      activeFeat.properties = { type: "active", radiusKm: curActiveR };
       features.push(activeFeat);
 
-      // Fit map bounds to encompass the active ring comfortably with padding
-      const bbox = getBoundingBox(lat, lon, activeRadiusKm);
+      // Smooth camera fit
+      const bbox = getBoundingBox(lat, lon, curActiveR);
       map.fitBounds(
         [
           [bbox[0], bbox[1]],
@@ -124,16 +133,10 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         ],
         {
           padding: { top: 180, bottom: 80, left: 60, right: 60 },
-          duration: 1200,
+          duration: 1000,
           maxZoom: 13,
         }
       );
-    } else {
-      map.flyTo({
-        center: [lon, lat],
-        zoom: 7,
-        duration: 1000,
-      });
     }
 
     if (source) {
@@ -157,6 +160,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     });
 
     map.on("load", () => {
+      isLoadedRef.current = true;
       updateRingsAndCamera();
     });
 
@@ -165,37 +169,37 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     return () => {
       map.remove();
       mapRef.current = null;
+      isLoadedRef.current = false;
     };
   }, []);
 
-  // Update Rings Source & Camera view when props change
+  // Update Rings Source & Camera view whenever props change
   useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    if (map.isStyleLoaded()) {
+    if (isLoadedRef.current) {
       updateRingsAndCamera();
-    } else {
-      map.once("load", updateRingsAndCamera);
     }
-  }, [center, activeRadiusKm, completedRadiiKm]);
+  }, [center[0], center[1], activeRadiusKm, completedRadiiKm.length]);
 
-  // Update Markers
+  // Update Markers (Minimalist dots with city name, NO population)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    // Clear existing markers
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
-    // Add Seed City Marker
+    // Seed City Marker
     if (seedCity) {
       const el = document.createElement("div");
-      el.className =
-        "flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 border-2 border-white text-white shadow-xl text-xs font-bold ring-4 ring-blue-500/30 cursor-pointer";
-      el.innerHTML = "📍";
-      el.title = `Ville départ : ${seedCity.name}`;
+      el.className = "flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none";
+      el.innerHTML = `
+        <div class="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 border-2 border-white text-white shadow-xl text-xs font-bold ring-4 ring-blue-500/30">
+          📍
+        </div>
+        <div class="mt-1 px-2 py-0.5 rounded-md bg-slate-950/90 border border-blue-500/60 text-blue-300 font-bold text-[11px] shadow-lg whitespace-nowrap">
+          ${seedCity.name} (Centre)
+        </div>
+      `;
 
       const marker = new maplibregl.Marker({ element: el })
         .setLngLat([seedCity.lon, seedCity.lat])
@@ -204,24 +208,27 @@ export const GeoMap: React.FC<GeoMapProps> = ({
       markersRef.current.push(marker);
     }
 
-    // Add Guess & Target Markers
+    // Guessed & Target Markers
     markers.forEach((m) => {
       const el = document.createElement("div");
-      let bg = "bg-rose-600 border-rose-300 text-white";
-      let icon = "✕";
+      el.className = "flex flex-col items-center justify-center -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none";
+
+      let dotBg = "bg-rose-500 ring-rose-500/30";
+      let labelBorder = "border-rose-500/50 text-rose-200";
 
       if (m.type === "correct") {
-        bg = "bg-emerald-600 border-emerald-300 text-white ring-4 ring-emerald-500/30";
-        icon = "✓";
+        dotBg = "bg-emerald-500 ring-emerald-500/30";
+        labelBorder = "border-emerald-500/50 text-emerald-200 font-bold";
       } else if (m.type === "revealed") {
-        bg = "bg-amber-600 border-amber-300 text-white ring-4 ring-amber-500/30";
-        icon = "★";
+        dotBg = "bg-amber-400 ring-amber-400/30";
+        labelBorder = "border-amber-500/50 text-amber-200 font-bold";
       }
 
-      el.className = `flex flex-col items-center justify-center px-2 py-1 rounded-lg text-xs font-semibold shadow-xl border ${bg} backdrop-blur-sm`;
       el.innerHTML = `
-        <span class="leading-none text-[11px] font-bold">${icon} ${m.label}</span>
-        ${m.sublabel ? `<span class="text-[9px] opacity-90">${m.sublabel}</span>` : ""}
+        <div class="w-3.5 h-3.5 rounded-full ${dotBg} border-2 border-white shadow-lg ring-4 animate-scale-in"></div>
+        <div class="mt-1 px-2 py-0.5 rounded-md bg-slate-950/90 border ${labelBorder} text-[11px] shadow-lg whitespace-nowrap">
+          ${m.type === "revealed" ? "★ " : ""}${m.label}
+        </div>
       `;
 
       const marker = new maplibregl.Marker({ element: el })

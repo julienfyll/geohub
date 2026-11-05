@@ -14,10 +14,10 @@ import {
   X,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
-import { SearchBar } from "@/components/ui/SearchBar";
+import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
 import { RingProgressHUD, RingStatus } from "@/components/game/RingProgressHUD";
 import { GameOverModal } from "@/components/game/GameOverModal";
-import { City, CityGuessResult, GameScale, GeoRingsInitResponse } from "@/lib/games/types";
+import { CityGuessResult, GameScale, GeoRingsInitResponse } from "@/lib/games/types";
 
 function GeoRingsGame() {
   const searchParams = useSearchParams();
@@ -80,7 +80,7 @@ function GeoRingsGame() {
   }, [scale, mode, userSeed]);
 
   // Handle City Guess
-  const handleSelectCity = async (city: City) => {
+  const handleSelectCity = async (city: SearchCityItem) => {
     if (!session || isGameOver || isSubmitting) return;
 
     setIsSubmitting(true);
@@ -104,13 +104,12 @@ function GeoRingsGame() {
       if (!res.ok) throw new Error("Erreur de validation");
       const result: CityGuessResult = await res.json();
 
-      // Add tested city marker
+      // Add tested city marker (minimalist dot + name, NO population on the map)
       const newMarker: MapMarker = {
         id: `guess_${city.id}_${Date.now()}`,
         lat: result.city.latitude,
         lon: result.city.longitude,
         label: result.city.name,
-        sublabel: `${result.city.population.toLocaleString("fr-FR")} hab.`,
         type: result.isTarget ? "correct" : "wrong",
       };
 
@@ -139,7 +138,7 @@ function GeoRingsGame() {
           setTriesLeft(3);
         } else {
           setRings(updatedRings);
-          setTimeout(() => setIsGameOver(true), 800);
+          setTimeout(() => setIsGameOver(true), 1000);
         }
       } else {
         // Wrong Guess
@@ -155,7 +154,6 @@ function GeoRingsGame() {
               lat: result.targetCityIfRevealed.latitude,
               lon: result.targetCityIfRevealed.longitude,
               label: result.targetCityIfRevealed.name,
-              sublabel: `${result.targetCityIfRevealed.population.toLocaleString("fr-FR")} hab.`,
               type: "revealed",
             };
             setMarkers((prev) => [...prev, revealedMarker]);
@@ -185,7 +183,9 @@ function GeoRingsGame() {
             }
           }, 2400);
         } else {
-          setFeedback({ text: result.message, type: "warning" });
+          // Failed try, but has lives left
+          const feedbackType = !result.isInRing ? "warning" : "error";
+          setFeedback({ text: result.message, type: feedbackType });
         }
       }
     } catch (err) {
@@ -311,21 +311,21 @@ function GeoRingsGame() {
             scale={scale}
             onSelectCity={handleSelectCity}
             disabled={isGameOver || isSubmitting || loading}
-            placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1} (ex: Lyon, Marseille...)`}
+            placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1}...`}
           />
         </div>
 
         {/* Feedback Banner */}
         {feedback && (
           <div
-            className={`pointer-events-auto px-4 py-2.5 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center gap-2 ${
+            className={`pointer-events-auto px-4 py-3 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center gap-2.5 ${
               feedback.type === "success"
-                ? "bg-emerald-950/90 border-emerald-600/80 text-emerald-200"
+                ? "bg-emerald-950/95 border-emerald-500/80 text-emerald-200"
                 : feedback.type === "error"
-                ? "bg-rose-950/90 border-rose-600/80 text-rose-200"
+                ? "bg-rose-950/95 border-rose-500/80 text-rose-200"
                 : feedback.type === "warning"
-                ? "bg-amber-950/90 border-amber-600/80 text-amber-200"
-                : "bg-slate-900/90 border-slate-700 text-slate-200"
+                ? "bg-amber-950/95 border-amber-500/80 text-amber-200"
+                : "bg-slate-900/95 border-slate-700 text-slate-200"
             }`}
           >
             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -358,7 +358,7 @@ function GeoRingsGame() {
                 ⭕ <b>5 Anneaux :</b> Le premier anneau est un cercle proche du centre. Les anneaux suivants s'étendent de plus en plus loin.
               </p>
               <p>
-                ❤️ <b>3 Vies par anneau :</b> Chaque ville essayée apparaît sur la carte avec sa population pour vous guider. Si vous échouez 3 fois, la réponse est révélée et le jeu passe à l'anneau suivant.
+                ❤️ <b>3 Vies par anneau :</b> Chaque ville essayée apparaît sur la carte avec un point rouge (échec) ou vert (succès). Si vous échouez 3 fois, la bonne réponse est révélée et le jeu passe à l'anneau suivant.
               </p>
             </div>
             <button

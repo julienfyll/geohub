@@ -12,8 +12,16 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const results = searchCities(q, scale, 8);
-    return NextResponse.json({ results });
+    const rawResults = searchCities(q, scale, 8);
+    // Anti-cheat: strip population and coordinates so they can NEVER be inspected before guessing
+    const sanitizedResults = rawResults.map((city) => ({
+      id: city.id,
+      name: city.name,
+      countryCode: city.countryCode,
+      scale: city.scale,
+    }));
+
+    return NextResponse.json({ results: sanitizedResults });
   } catch (error) {
     console.error("Search error:", error);
     return NextResponse.json({ error: "Failed to search cities" }, { status: 500 });
