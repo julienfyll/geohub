@@ -1,0 +1,384 @@
+"use client";
+
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Share2,
+  Check,
+  Compass,
+  AlertCircle,
+  HelpCircle,
+  RotateCcw,
+} from "lucide-react";
+import { GeoMap, MapMarker } from "@/components/map/GeoMap";
+import { SearchBar } from "@/components/ui/SearchBar";
+import { RingProgressHUD, RingStatus } from "@/components/game/RingProgressHUD";
+import { GameOverModal } from "@/components/game/GameOverModal";
+import { City, CityGuessResult, GameScale, GeoRingsInitResponse } from "@/lib/games/types";
+
+function GeoRingsGame() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const scale = (searchParams.get("scale") || "fr") as GameScale;
+  const mode = (searchParams.get("mode") || "daily") as "daily" | "free";
+  const userSeed = searchParams.get("seed") || "";
+
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<(GeoRingsInitResponse & { seed: string }) | null>(null);
+  const [currentRingIndex, setCurrentRingIndex] = useState(0);
+  const [triesLeft, setTriesLeft] = useState(3);
+  const [rings, setRings] = useState<RingStatus[]>([]);
+  const [markers, setMarkers] = useState<MapMarker[]>([]);
+  const [completedRadii, setCompletedRadii] = useState<number[]>([]);
+  const [feedback, setFeedback] = useState<{ text: string; type: "info" | "success" | "error" | "warning" } | null>(null);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Initialize Session
+  const initGame = async () => {
+    setLoading(true);
+    setFeedback(null);
+    setIsGameOver(false);
+    setCurrentRingIndex(0);
+    setTriesLeft(3);
+    setMarkers([]);
+    setCompletedRadii([]);
+
+    try {
+      const url = `/api/games/georings/session?scale=${scale}&mode=${mode}${userSeed ? `&seed=${userSeed}` : ""}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Erreur d'initialisation");
+      const data: GeoRingsInitResponse & { seed: string } = await res.json();
+      setSession(data);
+
+      const initialRings: RingStatus[] = data.rings.map((r, idx) => ({
+        index: r.index,
+        innerRadiusKm: r.innerRadiusKm,
+        outerRadiusKm: r.outerRadiusKm,
+        isCurrent: idx === 0,
+        isCompleted: false,
+        isFailed: false,
+        triesUsed: 0,
+      }));
+      setRings(initialRings);
+    } catch (err) {
+      console.error(err);
+      setFeedback({ text: "Impossible de charger la partie.", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    initGame();
+  }, [scale, mode, userSeed]);
+
+  // Handle City Guess
+  const handleSelectCity = async (city: City) => {
+    if (!session || isGameOver || isSubmitting) return;
+
+    setIsSubmitting(true);
+    const activeRing = rings[currentRingIndex];
+
+    try {
+      const res = await fetch("/api/games/georings/guess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scale: session.scale,
+          centerLat: session.seedCity.latitude,
+          centerLon: session.seedCity.longitude,
+          innerRadiusKm: activeRing.innerRadiusKm,
+          outerRadiusKm: activeRing.outerRadiusKm,
+          cityId: city.id,
+          currentTriesLeft: triesLeft,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Erreur de validation");
+      const result: CityGuessResult = await res.json();
+
+      // Add tested city marker
+      const newMarker: MapMarker = {
+        id: `guess_${city.id}_${Date.now()}`,
+        lat: result.city.latitude,
+        lon: result.city.longitude,
+        label: result.city.name,
+        sublabel: `${result.city.population.toLocaleString("fr-FR")} hab.`,
+        type: result.isTarget ? "correct" : "wrong",
+      };
+
+      setMarkers((prev) => [...prev, newMarker]);
+
+      if (result.isTarget) {
+        // Success !
+        const triesUsed = 4 - triesLeft;
+        setFeedback({ text: result.message, type: "success" });
+
+        const updatedRings = [...rings];
+        updatedRings[currentRingIndex] = {
+          ...activeRing,
+          isCurrent: false,
+          isCompleted: true,
+          triesUsed,
+          targetCityName: result.city.name,
+        };
+
+        setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
+
+        if (currentRingIndex < 4) {
+          updatedRings[currentRingIndex + 1].isCurrent = true;
+          setRings(updatedRings);
+          setCurrentRingIndex((prev) => prev + 1);
+          setTriesLeft(3);
+        } else {
+          setRings(updatedRings);
+          setTimeout(() => setIsGameOver(true), 800);
+        }
+      } else {
+        // Wrong Guess
+        setTriesLeft(result.triesLeft);
+
+        if (result.ringFailed) {
+          // Failed 3 tries: Reveal target city
+          setFeedback({ text: result.message, type: "error" });
+
+          if (result.targetCityIfRevealed) {
+            const revealedMarker: MapMarker = {
+              id: `revealed_${result.targetCityIfRevealed.id}`,
+              lat: result.targetCityIfRevealed.latitude,
+              lon: result.targetCityIfRevealed.longitude,
+              label: result.targetCityIfRevealed.name,
+              sublabel: `${result.targetCityIfRevealed.population.toLocaleString("fr-FR")} hab.`,
+              type: "revealed",
+            };
+            setMarkers((prev) => [...prev, revealedMarker]);
+          }
+
+          const updatedRings = [...rings];
+          updatedRings[currentRingIndex] = {
+            ...activeRing,
+            isCurrent: false,
+            isFailed: true,
+            triesUsed: 3,
+            targetCityName: result.targetCityIfRevealed?.name,
+          };
+
+          setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
+
+          setTimeout(() => {
+            if (currentRingIndex < 4) {
+              updatedRings[currentRingIndex + 1].isCurrent = true;
+              setRings(updatedRings);
+              setCurrentRingIndex((prev) => prev + 1);
+              setTriesLeft(3);
+              setFeedback(null);
+            } else {
+              setRings(updatedRings);
+              setIsGameOver(true);
+            }
+          }, 2400);
+        } else {
+          setFeedback({ text: result.message, type: "warning" });
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setFeedback({ text: "Erreur réseau lors de la validation.", type: "error" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    if (!session) return;
+    const url = `${window.location.origin}/play/georings?scale=${scale}&mode=free&seed=${session.seed}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return (
+    <div className="relative w-screen h-screen overflow-hidden flex flex-col bg-slate-950 text-slate-100">
+      {/* Top Navigation Bar */}
+      <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-3 bg-slate-950/70 backdrop-blur-xl border-b border-slate-800/80">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Hub</span>
+          </Link>
+          <div className="flex items-center gap-2">
+            <Compass className="w-5 h-5 text-blue-500" />
+            <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block">
+              GeoRings
+            </h1>
+          </div>
+        </div>
+
+        {/* Scale Switcher */}
+        <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+          <button
+            onClick={() => router.push(`/play/georings?scale=fr&mode=${mode}`)}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              scale === "fr"
+                ? "bg-blue-600 text-white font-semibold shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            🇫🇷 France
+          </button>
+          <button
+            onClick={() => router.push(`/play/georings?scale=eu&mode=${mode}`)}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              scale === "eu"
+                ? "bg-blue-600 text-white font-semibold shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            🇪🇺 Europe
+          </button>
+          <button
+            onClick={() => router.push(`/play/georings?scale=world&mode=${mode}`)}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              scale === "world"
+                ? "bg-blue-600 text-white font-semibold shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            🌍 Monde
+          </button>
+        </div>
+
+        {/* Share / Seed Action */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleCopyLink}
+            title="Copier le lien de cette graine pour défier un ami"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
+          >
+            {shareCopied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400">Lien copié !</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Défier un ami</span>
+              </>
+            )}
+          </button>
+        </div>
+      </header>
+
+      {/* Main Map Background */}
+      <main className="relative flex-1 w-full h-full pt-14">
+        {session ? (
+          <GeoMap
+            center={[session.seedCity.longitude, session.seedCity.latitude]}
+            seedCity={{
+              name: session.seedCity.name,
+              lat: session.seedCity.latitude,
+              lon: session.seedCity.longitude,
+            }}
+            activeRadiusKm={rings[currentRingIndex]?.outerRadiusKm}
+            completedRadiiKm={completedRadii}
+            markers={markers}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-slate-950 text-slate-400">
+            <div className="flex flex-col items-center gap-3">
+              <Compass className="w-8 h-8 text-blue-500 animate-spin" />
+              <span className="text-sm">Chargement de la carte...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Floating Game Control Panel (HUD & Search) */}
+        <div className="absolute top-18 left-1/2 -translate-x-1/2 z-20 w-full max-w-xl px-4 flex flex-col gap-3 pointer-events-none">
+          {/* Progress Bar & Lives */}
+          {rings.length > 0 && (
+            <div className="pointer-events-auto">
+              <RingProgressHUD
+                rings={rings}
+                currentRingIndex={currentRingIndex}
+                triesLeft={triesLeft}
+                totalTries={3}
+              />
+            </div>
+          )}
+
+          {/* Search Box */}
+          <div className="pointer-events-auto">
+            <SearchBar
+              scale={scale}
+              onSelectCity={handleSelectCity}
+              disabled={isGameOver || isSubmitting || loading}
+              placeholder={`Quelle est la ville la plus peuplée de l'anneau ${currentRingIndex + 1} ?`}
+            />
+          </div>
+
+          {/* Feedback Banner */}
+          {feedback && (
+            <div
+              className={`pointer-events-auto px-4 py-2.5 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center gap-2 ${
+                feedback.type === "success"
+                  ? "bg-emerald-950/90 border-emerald-600/80 text-emerald-200"
+                  : feedback.type === "error"
+                  ? "bg-rose-950/90 border-rose-600/80 text-rose-200"
+                  : feedback.type === "warning"
+                  ? "bg-amber-950/90 border-amber-600/80 text-amber-200"
+                  : "bg-slate-900/90 border-slate-700 text-slate-200"
+              }`}
+            >
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{feedback.text}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Seed Info Badge (Bottom Left) */}
+        {session && (
+          <div className="absolute bottom-4 left-4 z-20 px-3 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 backdrop-blur-md flex items-center gap-2 shadow-lg">
+            <span>Centre :</span>
+            <b className="text-blue-400 font-semibold">{session.seedCity.name}</b>
+            <span className="text-slate-600">|</span>
+            <span className="font-mono text-[10px] text-slate-500">Seed : {session.seed}</span>
+          </div>
+        )}
+      </main>
+
+      {/* Game Over Modal */}
+      {session && (
+        <GameOverModal
+          isOpen={isGameOver}
+          scale={scale}
+          mode={mode}
+          seed={session.seed}
+          seedCityName={session.seedCity.name}
+          rings={rings}
+          onRestart={initGame}
+        />
+      )}
+    </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="w-screen h-screen bg-slate-950" />}>
+      <GeoRingsGame />
+    </Suspense>
+  );
+}
