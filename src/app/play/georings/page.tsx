@@ -11,6 +11,7 @@ import {
   AlertCircle,
   HelpCircle,
   RotateCcw,
+  X,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar } from "@/components/ui/SearchBar";
@@ -37,6 +38,7 @@ function GeoRingsGame() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   // Initialize Session
   const initGame = async () => {
@@ -209,7 +211,7 @@ function GeoRingsGame() {
   return (
     <div className="relative w-screen h-screen overflow-hidden flex flex-col bg-slate-950 text-slate-100">
       {/* Top Navigation Bar */}
-      <header className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-3 bg-slate-950/70 backdrop-blur-xl border-b border-slate-800/80">
+      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -260,8 +262,15 @@ function GeoRingsGame() {
           </button>
         </div>
 
-        {/* Share / Seed Action */}
+        {/* Right Actions */}
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowHelp((prev) => !prev)}
+            title="Règles du jeu"
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all text-xs"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </button>
           <button
             onClick={handleCopyLink}
             title="Copier le lien de cette graine pour défier un ami"
@@ -282,8 +291,88 @@ function GeoRingsGame() {
         </div>
       </header>
 
+      {/* Floating Game Control Panel (HUD & Search) */}
+      <div className="absolute top-[68px] left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4 flex flex-col gap-3 pointer-events-none">
+        {/* Progress Bar & Lives */}
+        {rings.length > 0 && (
+          <div className="pointer-events-auto">
+            <RingProgressHUD
+              rings={rings}
+              currentRingIndex={currentRingIndex}
+              triesLeft={triesLeft}
+              totalTries={3}
+            />
+          </div>
+        )}
+
+        {/* Search Box */}
+        <div className="pointer-events-auto">
+          <SearchBar
+            scale={scale}
+            onSelectCity={handleSelectCity}
+            disabled={isGameOver || isSubmitting || loading}
+            placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1} (ex: Lyon, Marseille...)`}
+          />
+        </div>
+
+        {/* Feedback Banner */}
+        {feedback && (
+          <div
+            className={`pointer-events-auto px-4 py-2.5 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center gap-2 ${
+              feedback.type === "success"
+                ? "bg-emerald-950/90 border-emerald-600/80 text-emerald-200"
+                : feedback.type === "error"
+                ? "bg-rose-950/90 border-rose-600/80 text-rose-200"
+                : feedback.type === "warning"
+                ? "bg-amber-950/90 border-amber-600/80 text-amber-200"
+                : "bg-slate-900/90 border-slate-700 text-slate-200"
+            }`}
+          >
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{feedback.text}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Rules Modal */}
+      {showHelp && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6 shadow-2xl text-left flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Compass className="w-5 h-5 text-blue-500" />
+                <span>Règles de GeoRings</span>
+              </h3>
+              <button
+                onClick={() => setShowHelp(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="text-sm text-slate-300 space-y-2.5">
+              <p>
+                🎯 <b>Objectif :</b> À partir d'une ville centrale, découvrez la <b>ville la plus peuplée</b> au sein de chaque anneau concentrique successif.
+              </p>
+              <p>
+                ⭕ <b>5 Anneaux :</b> Le premier anneau est un cercle proche du centre. Les anneaux suivants s'étendent de plus en plus loin.
+              </p>
+              <p>
+                ❤️ <b>3 Vies par anneau :</b> Chaque ville essayée apparaît sur la carte avec sa population pour vous guider. Si vous échouez 3 fois, la réponse est révélée et le jeu passe à l'anneau suivant.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowHelp(false)}
+              className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm transition-all"
+            >
+              Compris, c'est parti !
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main Map Background */}
-      <main className="relative flex-1 w-full h-full pt-14">
+      <main className="relative flex-1 w-full h-full">
         {session ? (
           <GeoMap
             center={[session.seedCity.longitude, session.seedCity.latitude]}
@@ -304,49 +393,6 @@ function GeoRingsGame() {
             </div>
           </div>
         )}
-
-        {/* Floating Game Control Panel (HUD & Search) */}
-        <div className="absolute top-18 left-1/2 -translate-x-1/2 z-20 w-full max-w-xl px-4 flex flex-col gap-3 pointer-events-none">
-          {/* Progress Bar & Lives */}
-          {rings.length > 0 && (
-            <div className="pointer-events-auto">
-              <RingProgressHUD
-                rings={rings}
-                currentRingIndex={currentRingIndex}
-                triesLeft={triesLeft}
-                totalTries={3}
-              />
-            </div>
-          )}
-
-          {/* Search Box */}
-          <div className="pointer-events-auto">
-            <SearchBar
-              scale={scale}
-              onSelectCity={handleSelectCity}
-              disabled={isGameOver || isSubmitting || loading}
-              placeholder={`Quelle est la ville la plus peuplée de l'anneau ${currentRingIndex + 1} ?`}
-            />
-          </div>
-
-          {/* Feedback Banner */}
-          {feedback && (
-            <div
-              className={`pointer-events-auto px-4 py-2.5 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center gap-2 ${
-                feedback.type === "success"
-                  ? "bg-emerald-950/90 border-emerald-600/80 text-emerald-200"
-                  : feedback.type === "error"
-                  ? "bg-rose-950/90 border-rose-600/80 text-rose-200"
-                  : feedback.type === "warning"
-                  ? "bg-amber-950/90 border-amber-600/80 text-amber-200"
-                  : "bg-slate-900/90 border-slate-700 text-slate-200"
-              }`}
-            >
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{feedback.text}</span>
-            </div>
-          )}
-        </div>
 
         {/* Seed Info Badge (Bottom Left) */}
         {session && (
