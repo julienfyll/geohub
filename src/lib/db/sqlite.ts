@@ -122,20 +122,21 @@ export function getMostPopulatedCityInRing(
 }
 
 /**
- * Option 1: Strictly Linear / Arithmetic progression (constant delta R).
- * Provides perfect concentric equidistant radar rings.
+ * Calibrated linear radii progression tailored to user constraints:
+ * - France: [80, 160, 240, 320, 400] (step: +80 km)
+ * - Europe: [250, 490, 730, 970, 1200] (min: 250 km, max: 1200 km, step: ~240 km)
+ * - World:  [800, 1850, 2900, 3950, 5000] (min: 800 km, max: 5000 km, step: +1050 km)
  */
 export function getDefaultRadii(scale: GameScale): number[] {
   switch (scale) {
     case "fr":
-      // Constant step of +80 km: [80, 160, 240, 320, 400]
       return [80, 160, 240, 320, 400];
     case "eu":
-      // Constant step of +400 km: [400, 800, 1200, 1600, 2000]
-      return [400, 800, 1200, 1600, 2000];
+      // Europe: min 250 km, max 1200 km (regular step ~240 km)
+      return [250, 490, 730, 970, 1200];
     case "world":
-      // Constant step of +1500 km: [1500, 3000, 4500, 6000, 7500]
-      return [1500, 3000, 4500, 6000, 7500];
+      // World: min 800 km, max 5000 km (regular step +1050 km)
+      return [800, 1850, 2900, 3950, 5000];
   }
 }
 
