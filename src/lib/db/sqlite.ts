@@ -95,9 +95,11 @@ export function getCitiesInRing(
   const candidates = stmt.all(scale, minLat, maxLat, minLon, maxLon) as unknown as City[];
 
   // Refine candidates using exact geodesic Haversine distance
+  // Minimum distance of 1.0 km ensures the seed center city itself is never counted in Ring 1
+  const minAllowedDist = Math.max(1.0, innerRadiusKm);
   const inRing = candidates.filter((city) => {
     const dist = getDistanceKm(centerLat, centerLon, city.latitude, city.longitude);
-    return dist > innerRadiusKm && dist <= outerRadiusKm;
+    return dist > minAllowedDist && dist <= outerRadiusKm;
   });
 
   // Ensure sorted by population descending
@@ -120,20 +122,20 @@ export function getMostPopulatedCityInRing(
 }
 
 /**
- * Calibrated radii (in km) for each geographical scale.
- * Adjusted for optimal difficulty and balanced density.
+ * Option 1: Strictly Linear / Arithmetic progression (constant delta R).
+ * Provides perfect concentric equidistant radar rings.
  */
 export function getDefaultRadii(scale: GameScale): number[] {
   switch (scale) {
     case "fr":
-      // Calibrated for France: Suburban (50km), Regional (110km), Inter-regional (200km), Macro-region (320km), National (450km)
-      return [50, 110, 200, 320, 450];
+      // Constant step of +80 km: [80, 160, 240, 320, 400]
+      return [80, 160, 240, 320, 400];
     case "eu":
-      // Calibrated for Europe: Proximity (250km), Western hubs (550km), Continental (950km), Cross-European (1500km), Pan-European (2200km)
-      return [250, 550, 950, 1500, 2200];
+      // Constant step of +400 km: [400, 800, 1200, 1600, 2000]
+      return [400, 800, 1200, 1600, 2000];
     case "world":
-      // Calibrated for World: Sub-continental (800km), Regional (1800km), Transcontinental (3500km), Intercontinental (6000km), Global (9500km)
-      return [800, 1800, 3500, 6000, 9500];
+      // Constant step of +1500 km: [1500, 3000, 4500, 6000, 7500]
+      return [1500, 3000, 4500, 6000, 7500];
   }
 }
 
