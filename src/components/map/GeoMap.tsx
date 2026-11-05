@@ -124,19 +124,28 @@ export const GeoMap: React.FC<GeoMapProps> = ({
       activeFeat.properties = { type: "active", radiusKm: curActiveR };
       features.push(activeFeat);
 
-      // Smooth camera fit
-      const bbox = getBoundingBox(lat, lon, curActiveR);
-      map.fitBounds(
-        [
-          [bbox[0], bbox[1]],
-          [bbox[2], bbox[3]],
-        ],
-        {
-          padding: { top: 180, bottom: 80, left: 60, right: 60 },
+      // Safe camera fit with Mercator protection & fallback
+      try {
+        const bbox = getBoundingBox(lat, lon, curActiveR);
+        map.fitBounds(
+          [
+            [bbox[0], bbox[1]],
+            [bbox[2], bbox[3]],
+          ],
+          {
+            padding: { top: 180, bottom: 80, left: 60, right: 60 },
+            duration: 1000,
+            maxZoom: 13,
+          }
+        );
+      } catch (err) {
+        console.warn("fitBounds fallback to flyTo:", err);
+        map.flyTo({
+          center: [lon, Math.max(-60, Math.min(60, lat))],
+          zoom: Math.max(1, 4),
           duration: 1000,
-          maxZoom: 13,
-        }
-      );
+        });
+      }
     }
 
     if (source) {

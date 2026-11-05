@@ -82,8 +82,10 @@ export async function POST(request: NextRequest) {
     const popFormatted = city.population.toLocaleString("fr-FR");
 
     if (!isInRing) {
-      message = `${city.name} (${popFormatted} hab.) est hors de l'anneau (${Math.round(distance)} km du centre, attendu entre ${innerRadiusKm} et ${outerRadiusKm} km).`;
+      // User request: DO NOT display population if outside the ring (prevents leaking info for future rings)
+      message = `${city.name} est hors de l'anneau (${Math.round(distance)} km du centre, attendu entre ${innerRadiusKm} et ${outerRadiusKm} km).`;
     } else {
+      // In the ring: display population to help calibrate
       message = `${city.name} (${popFormatted} hab.) n'est pas la plus peuplée de cet anneau.`;
     }
 

@@ -3,6 +3,7 @@
  */
 
 const EARTH_RADIUS_KM = 6371.0088;
+const MAX_MERCATOR_LAT = 85.0511;
 
 /**
  * Calculates the Great Circle / Haversine distance between two coordinates in kilometers.
@@ -31,7 +32,7 @@ export function createGeodesicCircle(
   centerLat: number,
   centerLon: number,
   radiusKm: number,
-  points: number = 64
+  points: number = 72
 ): GeoJSON.Feature<GeoJSON.Polygon> {
   const coordinates: [number, number][] = [];
   const toRad = (deg: number) => (deg * Math.PI) / 180;
@@ -57,9 +58,9 @@ export function createGeodesicCircle(
         Math.cos(angularDist) - Math.sin(rLat) * Math.sin(lat)
       );
 
-    // Normalize longitude between -180 and 180
+    const degLat = Math.max(-MAX_MERCATOR_LAT, Math.min(MAX_MERCATOR_LAT, toDeg(lat)));
     const normalizedLon = ((toDeg(lon) + 540) % 360) - 180;
-    coordinates.push([normalizedLon, toDeg(lat)]);
+    coordinates.push([normalizedLon, degLat]);
   }
 
   return {
@@ -75,19 +76,49 @@ export function createGeodesicCircle(
 }
 
 /**
- * Computes bounding box [minLon, minLat, maxLon, maxLat] for a center + radius
+ * Computes safe bounding box [minLon, minLat, maxLon, maxLat] for MapLibre fitBounds.
+ * Guaranteed to respect Web Mercator bounds [-85.0511, 85.0511] and longitude limits.
  */
 export function getBoundingBox(
   lat: number,
   lon: number,
   radiusKm: number
 ): [number, number, number, number] {
-  // Approximate delta in degrees with margin
-  const deltaLat = (radiusKm / EARTH_RADIUS_KM) * (180 / Math.PI) * 1.15;
-  const deltaLon =
-    (radiusKm / (EARTH_RADIUS_KM * Math.cos((lat * Math.PI) / 180))) *
-    (180 / Math.PI) *
-    1.15;
+  // If radius is global (e.g. > 7000 km), return whole world bounds
+  if (radiusKm >= 7000) {
+    return [-175, -75, 175, 75];
+  }
 
-  return [lon - deltaLon, lat - deltaLat, lon + deltaLon, lat + deltaLat];
+  const feat = createGeodesicCircle(lat, lon, radiusKm, 72);
+  const coords = feat.geometry.coordinates[0];
+
+  let minLon = 180;
+  let maxLon = -180;
+  let minLat = MAX_MERCATOR_LAT;
+  let maxLat = -MAX_MERCATOR_LAT;
+
+  for (const [pLon, pLat] of coords) {
+    if (pLon < minLon) minLon = pLon;
+    if (pLon > maxLon) maxLon = pLon;
+    if (pLat < minLat) minLat = pLat;
+    if (pLat > maxLat) maxLat = pLat;
+  }
+
+  // Margin padding
+  const padLat = Math.min(5, (maxLat - minLat) * 0.1);
+  const padLon = Math.min(5, (maxLon - minLon) * 0.1);
+
+  const safeMinLat = Math.max(-MAX_MERCATOR_LAT, minLat - padLat);
+  const safeMaxLat = Math.min(MAX_MERCATOR_LAT, maxLat + padLat);
+
+  // Check if span crosses antimeridian
+  let safeMinLon = Math.max(-179.9, minLon - padLon);
+  let safeMaxLon = Math.min(179.9, maxLon + padLon);
+
+  if (safeMinLon >= safeMaxLon) {
+    safeMinLon = -179.9;
+    safeMaxLon = 179.9;
+  }
+
+  return [safeMinLon, safeMinLat, safeMaxLon, safeMaxLat];
 }
