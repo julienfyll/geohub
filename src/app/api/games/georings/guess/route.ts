@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCityById, getMostPopulatedCityInRing } from "@/lib/db/sqlite";
+import { getCityById, getCitiesInRing } from "@/lib/db/sqlite";
 import { getDistanceKm } from "@/lib/geo/haversine";
 import { CityGuessResult, GameScale } from "@/lib/games/types";
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const distance = getDistanceKm(centerLat, centerLon, city.latitude, city.longitude);
     const isInRing = distance > innerRadiusKm && distance <= outerRadiusKm;
 
-    const targetCity = getMostPopulatedCityInRing(
+    const inRingCities = getCitiesInRing(
       centerLat,
       centerLon,
       innerRadiusKm,
@@ -44,13 +44,14 @@ export async function POST(request: NextRequest) {
       scale
     );
 
-    if (!targetCity) {
+    if (!inRingCities || inRingCities.length === 0) {
       return NextResponse.json(
         { error: "No target city found in this ring" },
         { status: 500 }
       );
     }
 
+    const targetCity = inRingCities[0];
     const isTarget = city.id === targetCity.id;
 
     if (isTarget) {
@@ -69,7 +70,7 @@ export async function POST(request: NextRequest) {
         triesLeft: currentTriesLeft,
         ringCompleted: true,
         ringFailed: false,
-        message: `Félicitations ! ${city.name} est bien la ville la plus peuplée (${city.population.toLocaleString("fr-FR")} hab.) !`,
+        message: `Félicitations ! ${city.name} est bien la 1ʳᵉ ville la plus peuplée (${city.population.toLocaleString("fr-FR")} hab.) !`,
       };
       return NextResponse.json(response);
     }
@@ -82,11 +83,20 @@ export async function POST(request: NextRequest) {
     const popFormatted = city.population.toLocaleString("fr-FR");
 
     if (!isInRing) {
-      // User request: DO NOT display population if outside the ring (prevents leaking info for future rings)
+      // Outside the ring: DO NOT display population to avoid spoiling future rings
       message = `${city.name} est hors de l'anneau (${Math.round(distance)} km du centre, attendu entre ${innerRadiusKm} et ${outerRadiusKm} km).`;
     } else {
-      // In the ring: display population to help calibrate
-      message = `${city.name} (${popFormatted} hab.) n'est pas la plus peuplée de cet anneau.`;
+      // Inside the ring: provide exact rank in the annulus!
+      const rank = inRingCities.findIndex((c) => c.id === city.id) + 1;
+      if (rank === 2) {
+        message = `${city.name} (${popFormatted} hab.) est 2ᵉ de cet anneau (si proche !).`;
+      } else if (rank > 0 && rank <= 10) {
+        message = `${city.name} (${popFormatted} hab.) est ${rank}ᵉ de cet anneau.`;
+      } else if (rank > 10) {
+        message = `${city.name} (${popFormatted} hab.) n'est que ${rank}ᵉ de cet anneau.`;
+      } else {
+        message = `${city.name} (${popFormatted} hab.) n'est pas la plus peuplée de cet anneau.`;
+      }
     }
 
     if (ringFailed) {

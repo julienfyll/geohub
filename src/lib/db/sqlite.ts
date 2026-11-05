@@ -121,15 +121,19 @@ export function getMostPopulatedCityInRing(
 
 /**
  * Calibrated radii (in km) for each geographical scale.
+ * Adjusted for optimal difficulty and balanced density.
  */
 export function getDefaultRadii(scale: GameScale): number[] {
   switch (scale) {
     case "fr":
-      return [60, 130, 230, 360, 520];
+      // Calibrated for France: Suburban (50km), Regional (110km), Inter-regional (200km), Macro-region (320km), National (450km)
+      return [50, 110, 200, 320, 450];
     case "eu":
-      return [350, 750, 1350, 2100, 3100];
+      // Calibrated for Europe: Proximity (250km), Western hubs (550km), Continental (950km), Cross-European (1500km), Pan-European (2200km)
+      return [250, 550, 950, 1500, 2200];
     case "world":
-      return [1800, 4200, 7500, 11500, 16000];
+      // Calibrated for World: Sub-continental (800km), Regional (1800km), Transcontinental (3500km), Intercontinental (6000km), Global (9500km)
+      return [800, 1800, 3500, 6000, 9500];
   }
 }
 
@@ -138,7 +142,6 @@ export function getDefaultRadii(scale: GameScale): number[] {
  */
 export function getSeedCities(scale: GameScale): City[] {
   const db = getDb();
-  // Select well-known anchor cities with strong population and central/varied geographic positions
   const stmt = db.prepare(`
     SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
     FROM cities

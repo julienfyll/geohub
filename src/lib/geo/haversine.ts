@@ -26,7 +26,7 @@ export function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: nu
 
 /**
  * Generates a GeoJSON Polygon representing a geodesic circle on the Earth.
- * Uses spherical trigonometry (bearing & angular distance) to ensure no Mercator distortion.
+ * Ensures longitude continuity so circles never produce horizontal cut lines across the screen.
  */
 export function createGeodesicCircle(
   centerLat: number,
@@ -41,6 +41,8 @@ export function createGeodesicCircle(
   const rLat = toRad(centerLat);
   const rLon = toRad(centerLon);
   const angularDist = radiusKm / EARTH_RADIUS_KM;
+
+  let prevLon = centerLon;
 
   for (let i = 0; i <= points; i++) {
     const bearing = (i * 360) / points;
@@ -59,8 +61,16 @@ export function createGeodesicCircle(
       );
 
     const degLat = Math.max(-MAX_MERCATOR_LAT, Math.min(MAX_MERCATOR_LAT, toDeg(lat)));
-    const normalizedLon = ((toDeg(lon) + 540) % 360) - 180;
-    coordinates.push([normalizedLon, degLat]);
+    let degLon = toDeg(lon);
+
+    // Keep longitude continuous relative to previous point to avoid antimeridian jumps
+    if (i > 0) {
+      while (degLon - prevLon > 180) degLon -= 360;
+      while (degLon - prevLon < -180) degLon += 360;
+    }
+    prevLon = degLon;
+
+    coordinates.push([degLon, degLat]);
   }
 
   return {
@@ -77,15 +87,13 @@ export function createGeodesicCircle(
 
 /**
  * Computes safe bounding box [minLon, minLat, maxLon, maxLat] for MapLibre fitBounds.
- * Guaranteed to respect Web Mercator bounds [-85.0511, 85.0511] and longitude limits.
  */
 export function getBoundingBox(
   lat: number,
   lon: number,
   radiusKm: number
 ): [number, number, number, number] {
-  // If radius is global (e.g. > 7000 km), return whole world bounds
-  if (radiusKm >= 7000) {
+  if (radiusKm >= 6000) {
     return [-175, -75, 175, 75];
   }
 
@@ -104,14 +112,12 @@ export function getBoundingBox(
     if (pLat > maxLat) maxLat = pLat;
   }
 
-  // Margin padding
-  const padLat = Math.min(5, (maxLat - minLat) * 0.1);
-  const padLon = Math.min(5, (maxLon - minLon) * 0.1);
+  const padLat = Math.min(4, Math.max(1, (maxLat - minLat) * 0.1));
+  const padLon = Math.min(6, Math.max(1, (maxLon - minLon) * 0.1));
 
   const safeMinLat = Math.max(-MAX_MERCATOR_LAT, minLat - padLat);
   const safeMaxLat = Math.min(MAX_MERCATOR_LAT, maxLat + padLat);
 
-  // Check if span crosses antimeridian
   let safeMinLon = Math.max(-179.9, minLon - padLon);
   let safeMaxLon = Math.min(179.9, maxLon + padLon);
 
