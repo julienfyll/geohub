@@ -31,8 +31,11 @@ export const RingProgressHUD: React.FC<RingProgressHUDProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-3">
-      {/* 5 Rings Navigation Bar */}
-      <div className="grid grid-cols-5 gap-2 bg-slate-900/80 p-2 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md">
+      {/* Rings Navigation Bar (Dynamic columns for 3 to 8 rings) */}
+      <div
+        className="grid gap-2 bg-slate-900/80 p-2 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md"
+        style={{ gridTemplateColumns: `repeat(${rings.length}, minmax(0, 1fr))` }}
+      >
         {rings.map((ring) => {
           let ringBadgeBg = "bg-slate-800/60 border-slate-700/50 text-slate-400";
           let icon = <span className="text-xs font-bold font-mono">#{ring.index + 1}</span>;
@@ -61,7 +64,7 @@ export const RingProgressHUD: React.FC<RingProgressHUDProps> = ({
               </span>
               {ring.isCompleted && (
                 <span className="text-[9px] font-mono text-emerald-400/90 font-medium">
-                  {ring.triesUsed}/3
+                  {ring.triesUsed > 0 ? `${ring.triesUsed}e` : "✓"}
                 </span>
               )}
             </div>
@@ -89,16 +92,22 @@ export const RingProgressHUD: React.FC<RingProgressHUDProps> = ({
           {/* Lives Counter */}
           <div className="flex items-center gap-1.5 shrink-0 pl-2">
             <span className="text-slate-400 text-[11px] font-medium mr-1">Vies :</span>
-            {Array.from({ length: totalTries }).map((_, i) => (
-              <Heart
-                key={i}
-                className={`w-4 h-4 transition-transform duration-300 ${
-                  i < triesLeft
-                    ? "text-rose-500 fill-rose-500 scale-100"
-                    : "text-slate-700 fill-slate-800 scale-90"
-                }`}
-              />
-            ))}
+            {totalTries === -1 ? (
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold text-[11px]">
+                ♾️ Illimitées
+              </span>
+            ) : (
+              Array.from({ length: totalTries }).map((_, i) => (
+                <Heart
+                  key={i}
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    i < triesLeft
+                      ? "text-rose-500 fill-rose-500 scale-100"
+                      : "text-slate-700 fill-slate-800 scale-90"
+                  }`}
+                />
+              ))
+            )}
           </div>
         </div>
       )}

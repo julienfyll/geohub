@@ -12,11 +12,17 @@ import {
   HelpCircle,
   RotateCcw,
   X,
+  Settings,
+  Sliders,
+  Sparkles,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
 import { RingProgressHUD, RingStatus } from "@/components/game/RingProgressHUD";
 import { GameOverModal } from "@/components/game/GameOverModal";
+import { SettingsModal } from "@/components/game/SettingsModal";
+import { CustomGameModal } from "@/components/game/CustomGameModal";
+import { useSettings } from "@/lib/settings/useSettings";
 import { CityGuessResult, GameScale, GeoRingsInitResponse } from "@/lib/games/types";
 
 function GeoRingsGame() {
@@ -24,21 +30,33 @@ function GeoRingsGame() {
   const router = useRouter();
 
   const scale = (searchParams.get("scale") || "fr") as GameScale;
-  const mode = (searchParams.get("mode") || "daily") as "daily" | "free";
+  const mode = (searchParams.get("mode") || "daily") as "daily" | "free" | "custom";
   const userSeed = searchParams.get("seed") || "";
+  const continent = searchParams.get("continent") || "";
+  const customRadii = searchParams.get("radii") || "";
+  const customLives = searchParams.get("lives") || "";
+
+  const { settings, updateSetting, resetDefaults } = useSettings();
 
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<(GeoRingsInitResponse & { seed: string }) | null>(null);
   const [currentRingIndex, setCurrentRingIndex] = useState(0);
   const [triesLeft, setTriesLeft] = useState(3);
+  const [totalTries, setTotalTries] = useState(3);
   const [rings, setRings] = useState<RingStatus[]>([]);
   const [markers, setMarkers] = useState<MapMarker[]>([]);
   const [completedRadii, setCompletedRadii] = useState<number[]>([]);
-  const [feedback, setFeedback] = useState<{ text: string; type: "info" | "success" | "error" | "warning" } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    text: string;
+    type: "info" | "success" | "error" | "warning";
+    directionHint?: { code: string; label: string; arrow: string };
+  } | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   // Initialize Session
   const initGame = async () => {
@@ -46,16 +64,24 @@ function GeoRingsGame() {
     setFeedback(null);
     setIsGameOver(false);
     setCurrentRingIndex(0);
-    setTriesLeft(3);
     setMarkers([]);
     setCompletedRadii([]);
 
     try {
-      const url = `/api/games/georings/session?scale=${scale}&mode=${mode}${userSeed ? `&seed=${userSeed}` : ""}`;
+      let url = `/api/games/georings/session?scale=${scale}&mode=${mode}`;
+      if (userSeed) url += `&seed=${userSeed}`;
+      if (continent) url += `&continent=${continent}`;
+      if (customRadii) url += `&radii=${customRadii}`;
+      if (customLives) url += `&lives=${customLives}`;
+
       const res = await fetch(url);
       if (!res.ok) throw new Error("Erreur d'initialisation");
       const data: GeoRingsInitResponse & { seed: string } = await res.json();
       setSession(data);
+
+      const maxTries = data.maxTriesPerRing ?? 3;
+      setTotalTries(maxTries);
+      setTriesLeft(maxTries);
 
       const initialRings: RingStatus[] = data.rings.map((r, idx) => ({
         index: r.index,
@@ -77,7 +103,7 @@ function GeoRingsGame() {
 
   useEffect(() => {
     initGame();
-  }, [scale, mode, userSeed]);
+  }, [scale, mode, userSeed, continent, customRadii, customLives]);
 
   // Handle City Guess
   const handleSelectCity = async (city: SearchCityItem) => {
@@ -125,7 +151,7 @@ function GeoRingsGame() {
 
       if (result.isTarget) {
         // Success !
-        const triesUsed = 4 - triesLeft;
+        const triesUsed = totalTries === -1 ? 1 : totalTries - triesLeft + 1;
         setFeedback({ text: result.message, type: "success" });
 
         const updatedRings = [...rings];
@@ -139,11 +165,11 @@ function GeoRingsGame() {
 
         setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
 
-        if (currentRingIndex < 4) {
+        if (currentRingIndex < rings.length - 1) {
           updatedRings[currentRingIndex + 1].isCurrent = true;
           setRings(updatedRings);
           setCurrentRingIndex((prev) => prev + 1);
-          setTriesLeft(3);
+          setTriesLeft(totalTries);
         } else {
           setRings(updatedRings);
           setTimeout(() => setIsGameOver(true), 1000);
@@ -153,7 +179,7 @@ function GeoRingsGame() {
         setTriesLeft(result.triesLeft);
 
         if (result.ringFailed) {
-          // Failed 3 tries: Reveal target city
+          // Failed tries: Reveal target city
           setFeedback({ text: result.message, type: "error" });
 
           if (result.targetCityIfRevealed) {
@@ -182,18 +208,18 @@ function GeoRingsGame() {
             ...activeRing,
             isCurrent: false,
             isFailed: true,
-            triesUsed: 3,
+            triesUsed: totalTries,
             targetCityName: result.targetCityIfRevealed?.name,
           };
 
           setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
 
           setTimeout(() => {
-            if (currentRingIndex < 4) {
+            if (currentRingIndex < rings.length - 1) {
               updatedRings[currentRingIndex + 1].isCurrent = true;
               setRings(updatedRings);
               setCurrentRingIndex((prev) => prev + 1);
-              setTriesLeft(3);
+              setTriesLeft(totalTries);
               setFeedback(null);
             } else {
               setRings(updatedRings);
@@ -203,7 +229,11 @@ function GeoRingsGame() {
         } else {
           // Failed try, but has lives left
           const feedbackType = !result.isInRing ? "warning" : "error";
-          setFeedback({ text: result.message, type: feedbackType });
+          setFeedback({
+            text: result.message,
+            type: feedbackType,
+            directionHint: result.directionHint,
+          });
         }
       }
     } catch (err) {
@@ -214,9 +244,18 @@ function GeoRingsGame() {
     }
   };
 
+  const getCustomShareUrl = () => {
+    if (!session) return "";
+    let url = `${window.location.origin}/play/georings?scale=${scale}&mode=${mode}&seed=${session.seed}`;
+    if (continent) url += `&continent=${continent}`;
+    if (customRadii) url += `&radii=${customRadii}`;
+    if (customLives) url += `&lives=${customLives}`;
+    return url;
+  };
+
   const handleCopyLink = async () => {
-    if (!session) return;
-    const url = `${window.location.origin}/play/georings?scale=${scale}&mode=free&seed=${session.seed}`;
+    const url = getCustomShareUrl();
+    if (!url) return;
     try {
       await navigator.clipboard.writeText(url);
       setShareCopied(true);
@@ -246,42 +285,80 @@ function GeoRingsGame() {
           </div>
         </div>
 
-        {/* Scale Switcher */}
-        <div className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
-          <button
-            onClick={() => router.push(`/play/georings?scale=fr&mode=${mode}`)}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
-              scale === "fr"
-                ? "bg-blue-600 text-white font-semibold shadow-sm"
-                : "text-slate-400 hover:text-white"
-            }`}
-          >
-            🇫🇷 France
-          </button>
-          <button
-            onClick={() => router.push(`/play/georings?scale=eu&mode=${mode}`)}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
-              scale === "eu"
-                ? "bg-blue-600 text-white font-semibold shadow-sm"
-                : "text-slate-400 hover:text-white"
-            }`}
-          >
-            🇪🇺 Europe
-          </button>
-          <button
-            onClick={() => router.push(`/play/georings?scale=world&mode=${mode}`)}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
-              scale === "world"
-                ? "bg-blue-600 text-white font-semibold shadow-sm"
-                : "text-slate-400 hover:text-white"
-            }`}
-          >
-            🌍 Monde
-          </button>
+        {/* Center: Mode Indicator & Scale Switcher */}
+        <div className="flex items-center gap-2">
+          {/* Daily vs Custom Button */}
+          <div className="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+            <button
+              onClick={() => router.push(`/play/georings?scale=${scale}&mode=daily`)}
+              className={`px-2.5 py-1 rounded-lg transition-all ${
+                mode === "daily"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              📅 Daily
+            </button>
+            <button
+              onClick={() => setShowCustomModal(true)}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                mode === "custom"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Sliders className="w-3 h-3" />
+              <span>Custom</span>
+            </button>
+          </div>
+
+          {/* Scale Switcher */}
+          <div className="hidden md:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+            <button
+              onClick={() => router.push(`/play/georings?scale=fr&mode=${mode}`)}
+              className={`px-2.5 py-1 rounded-lg transition-all ${
+                scale === "fr"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              🇫🇷 France
+            </button>
+            <button
+              onClick={() => router.push(`/play/georings?scale=eu&mode=${mode}`)}
+              className={`px-2.5 py-1 rounded-lg transition-all ${
+                scale === "eu"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              🇪🇺 Europe
+            </button>
+            <button
+              onClick={() => router.push(`/play/georings?scale=world&mode=${mode}`)}
+              className={`px-2.5 py-1 rounded-lg transition-all ${
+                scale === "world"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              🌍 Monde
+            </button>
+          </div>
         </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+          {/* Settings button */}
+          <button
+            onClick={() => setShowSettings(true)}
+            title="Réglages de jeu (Frontières, boussole, etc.)"
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all text-xs"
+          >
+            <Settings className="w-4 h-4" />
+          </button>
+
+          {/* Help button */}
           <button
             onClick={() => setShowHelp((prev) => !prev)}
             title="Règles du jeu"
@@ -289,9 +366,11 @@ function GeoRingsGame() {
           >
             <HelpCircle className="w-4 h-4" />
           </button>
+
+          {/* Share button */}
           <button
             onClick={handleCopyLink}
-            title="Copier le lien de cette graine pour défier un ami"
+            title="Copier le lien pour défier un ami sur cette partie"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
           >
             {shareCopied ? (
@@ -318,7 +397,7 @@ function GeoRingsGame() {
               rings={rings}
               currentRingIndex={currentRingIndex}
               triesLeft={triesLeft}
-              totalTries={3}
+              totalTries={totalTries}
             />
           </div>
         )}
@@ -334,15 +413,16 @@ function GeoRingsGame() {
                 type: "warning",
               })
             }
+            showDropdown={settings.showAutocompleteDropdown}
             disabled={isGameOver || isSubmitting || loading}
             placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1}...`}
           />
         </div>
 
-        {/* Feedback Banner */}
+        {/* Feedback Banner with optional Compass Direction Hint */}
         {feedback && (
           <div
-            className={`pointer-events-auto px-4 py-3 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center gap-2.5 ${
+            className={`pointer-events-auto px-4 py-3 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center justify-between gap-2.5 ${
               feedback.type === "success"
                 ? "bg-emerald-950/95 border-emerald-500/80 text-emerald-200"
                 : feedback.type === "error"
@@ -352,11 +432,37 @@ function GeoRingsGame() {
                 : "bg-slate-900/95 border-slate-700 text-slate-200"
             }`}
           >
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{feedback.text}</span>
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{feedback.text}</span>
+            </div>
+
+            {/* Compass direction badge if available & enabled */}
+            {settings.showDirectionHints && feedback.directionHint && (
+              <span className="shrink-0 px-2.5 py-1 rounded-lg bg-blue-600/30 border border-blue-500/60 text-blue-200 font-bold flex items-center gap-1.5">
+                <span>{feedback.directionHint.arrow}</span>
+                <span>{feedback.directionHint.label}</span>
+              </span>
+            )}
           </div>
         )}
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={settings}
+        onUpdateSetting={updateSetting}
+        onResetDefaults={resetDefaults}
+      />
+
+      {/* Custom Game Configuration Modal */}
+      <CustomGameModal
+        isOpen={showCustomModal}
+        onClose={() => setShowCustomModal(false)}
+        currentScale={scale}
+      />
 
       {/* Rules Modal */}
       {showHelp && (
@@ -379,10 +485,13 @@ function GeoRingsGame() {
                 🎯 <b>Objectif :</b> À partir d'une ville centrale, découvrez la <b>ville la plus peuplée</b> au sein de chaque anneau concentrique successif.
               </p>
               <p>
-                ⭕ <b>5 Anneaux :</b> Le premier anneau est un cercle proche du centre. Les anneaux suivants s'étendent de plus en plus loin.
+                ⭕ <b>Anneaux :</b> Le premier anneau est un cercle proche du centre. Les anneaux suivants s'étendent de plus en plus loin.
               </p>
               <p>
-                ❤️ <b>3 Vies par anneau :</b> Chaque ville essayée apparaît sur la carte avec un point rouge (échec) ou vert (succès). Si vous échouez 3 fois, la bonne réponse est révélée et le jeu passe à l'anneau suivant.
+                ❤️ <b>Vies :</b> Chaque ville essayée apparaît sur la carte avec un point rouge (échec) ou vert (succès). Si vous échouez, la bonne réponse est révélée et le jeu passe à l'anneau suivant.
+              </p>
+              <p>
+                🧭 <b>Boussole :</b> En cas d'erreur dans l'anneau, un indice vous indique la direction de la cible depuis la ville essayée.
               </p>
             </div>
             <button
@@ -408,6 +517,7 @@ function GeoRingsGame() {
             activeRadiusKm={rings[currentRingIndex]?.outerRadiusKm}
             completedRadiiKm={completedRadii}
             markers={markers}
+            showBorders={settings.showBorders}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-slate-950 text-slate-400">
@@ -424,7 +534,9 @@ function GeoRingsGame() {
             <span>Centre :</span>
             <b className="text-blue-400 font-semibold">{session.seedCity.name}</b>
             <span className="text-slate-600">|</span>
-            <span className="font-mono text-[10px] text-slate-500">Seed : {session.seed}</span>
+            <span className="font-mono text-[10px] text-slate-500">
+              {mode === "daily" ? "Daily" : mode === "custom" ? "Custom" : "Free"}
+            </span>
           </div>
         )}
       </main>
@@ -438,6 +550,7 @@ function GeoRingsGame() {
           seed={session.seed}
           seedCityName={session.seedCity.name}
           rings={rings}
+          customShareUrl={getCustomShareUrl()}
           onRestart={initGame}
         />
       )}

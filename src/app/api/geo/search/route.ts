@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q") || "";
   const scale = (searchParams.get("scale") || "fr") as GameScale;
+  const preferFrench = searchParams.get("preferFrench") !== "false";
 
   if (q.trim().length < 2) {
     return NextResponse.json({ results: [] });
@@ -16,10 +17,10 @@ export async function GET(request: NextRequest) {
     // Anti-cheat: strip population and coordinates so they can NEVER be inspected before guessing
     const sanitizedResults = rawResults.map((city) => {
       // If matched via French alias or exonym (e.g. "Londres"), display "Londres (London)"
-      const displayName =
-        city.matchedAlias && city.matchedAlias.toLowerCase() !== city.name.toLowerCase()
-          ? `${city.matchedAlias} (${city.name})`
-          : city.name;
+      let displayName = city.name;
+      if (preferFrench && city.matchedAlias && city.matchedAlias.toLowerCase() !== city.name.toLowerCase()) {
+        displayName = `${city.matchedAlias} (${city.name})`;
+      }
 
       return {
         id: city.id,

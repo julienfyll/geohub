@@ -55,6 +55,7 @@ def process_and_seed_db():
             name TEXT NOT NULL,
             normalized_name TEXT NOT NULL,
             country_code TEXT NOT NULL,
+            continent TEXT,
             scale TEXT NOT NULL,          -- 'fr', 'eu', 'world'
             population INTEGER NOT NULL,
             latitude REAL NOT NULL,
@@ -65,6 +66,7 @@ def process_and_seed_db():
 
     cursor.execute("CREATE INDEX idx_cities_scale_pop ON cities (scale, population DESC);")
     cursor.execute("CREATE INDEX idx_cities_country ON cities (country_code);")
+    cursor.execute("CREATE INDEX idx_cities_continent ON cities (continent);")
     cursor.execute("CREATE INDEX idx_cities_normalized_name ON cities (normalized_name);")
     cursor.execute("CREATE INDEX idx_cities_lat_lon ON cities (latitude, longitude);")
 

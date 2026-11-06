@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCityById, getCitiesInRing } from "@/lib/db/sqlite";
-import { getDistanceKm } from "@/lib/geo/haversine";
+import { getDistanceKm, getBearingDegrees, getCompassDirection } from "@/lib/geo/haversine";
 import { CityGuessResult, GameScale } from "@/lib/games/types";
 
 export async function POST(request: NextRequest) {
@@ -76,17 +76,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Not the target city
-    const newTriesLeft = Math.max(0, currentTriesLeft - 1);
-    const ringFailed = newTriesLeft === 0;
+    const isInfiniteLives = currentTriesLeft === -1;
+    const newTriesLeft = isInfiniteLives ? -1 : Math.max(0, currentTriesLeft - 1);
+    const ringFailed = !isInfiniteLives && newTriesLeft === 0;
 
     let message = "";
+    let directionHint: { code: string; label: string; arrow: string } | undefined = undefined;
     const popFormatted = city.population.toLocaleString("fr-FR");
 
     if (!isInRing) {
       // Outside the ring: DO NOT display population to avoid spoiling future rings
       message = `${city.name} est hors de l'anneau (${Math.round(distance)} km du centre, attendu entre ${innerRadiusKm} et ${outerRadiusKm} km).`;
     } else {
-      // Inside the ring: provide exact rank in the annulus!
+      // Inside the ring: calculate vector direction relative to the guessed city towards target!
+      const bearing = getBearingDegrees(city.latitude, city.longitude, targetCity.latitude, targetCity.longitude);
+      directionHint = getCompassDirection(bearing);
+
       const rank = inRingCities.findIndex((c) => c.id === city.id) + 1;
       if (rank === 2) {
         message = `${city.name} (${popFormatted} hab.) est 2ᵉ de cet anneau (si proche !).`;
@@ -97,11 +102,15 @@ export async function POST(request: NextRequest) {
       } else {
         message = `${city.name} (${popFormatted} hab.) n'est pas la plus peuplée de cet anneau.`;
       }
+
+      if (!ringFailed) {
+        message += ` Cible : plus au ${directionHint.label} ${directionHint.arrow}.`;
+      }
     }
 
     if (ringFailed) {
-      message += ` 3 essais épuisés ! La bonne réponse était ${targetCity.name} (${targetCity.population.toLocaleString("fr-FR")} hab.).`;
-    } else {
+      message += ` Essais épuisés ! La bonne réponse était ${targetCity.name} (${targetCity.population.toLocaleString("fr-FR")} hab.).`;
+    } else if (!isInfiniteLives) {
       message += ` Il vous reste ${newTriesLeft} essai${newTriesLeft > 1 ? "s" : ""}.`;
     }
 
@@ -117,6 +126,7 @@ export async function POST(request: NextRequest) {
       isInRing,
       distanceFromCenterKm: Math.round(distance),
       isTarget: false,
+      directionHint,
       targetCityIfRevealed: ringFailed
         ? {
             id: targetCity.id,

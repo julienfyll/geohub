@@ -128,3 +128,47 @@ export function getBoundingBox(
 
   return [safeMinLon, safeMinLat, safeMaxLon, safeMaxLat];
 }
+
+/**
+ * Calculates initial bearing (azimuth in degrees [0, 360)) from coordinate 1 to coordinate 2.
+ */
+export function getBearingDegrees(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const toDeg = (rad: number) => (rad * 180) / Math.PI;
+
+  const y = Math.sin(toRad(lon2 - lon1)) * Math.cos(toRad(lat2));
+  const x =
+    Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+    Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(toRad(lon2 - lon1));
+
+  const bearing = (toDeg(Math.atan2(y, x)) + 360) % 360;
+  return bearing;
+}
+
+/**
+ * Returns 8-sector compass direction from bearing degrees.
+ */
+export function getCompassDirection(bearingDeg: number): {
+  code: string;
+  label: string;
+  arrow: string;
+} {
+  const deg = (bearingDeg + 360) % 360;
+  if (deg >= 337.5 || deg < 22.5) {
+    return { code: "N", label: "Nord", arrow: "⬆️" };
+  } else if (deg >= 22.5 && deg < 67.5) {
+    return { code: "NE", label: "Nord-Est", arrow: "↗️" };
+  } else if (deg >= 67.5 && deg < 112.5) {
+    return { code: "E", label: "Est", arrow: "➡️" };
+  } else if (deg >= 112.5 && deg < 157.5) {
+    return { code: "SE", label: "Sud-Est", arrow: "↘️" };
+  } else if (deg >= 157.5 && deg < 202.5) {
+    return { code: "S", label: "Sud", arrow: "⬇️" };
+  } else if (deg >= 202.5 && deg < 247.5) {
+    return { code: "SO", label: "Sud-Ouest", arrow: "↙️" };
+  } else if (deg >= 247.5 && deg < 292.5) {
+    return { code: "O", label: "Ouest", arrow: "⬅️" };
+  } else {
+    return { code: "NO", label: "Nord-Ouest", arrow: "↖️" };
+  }
+}

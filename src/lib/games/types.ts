@@ -24,6 +24,11 @@ export interface CityGuessResult {
   isInRing: boolean;
   distanceFromCenterKm: number;
   isTarget: boolean;
+  directionHint?: {
+    code: string;
+    label: string;
+    arrow: string;
+  };
   targetCityIfRevealed?: {
     id: string;
     name: string;
@@ -47,7 +52,9 @@ export interface RingConfig {
 export interface GeoRingsInitResponse {
   sessionId: string;
   scale: GameScale;
-  mode: "daily" | "free";
+  mode: "daily" | "free" | "custom";
+  continent?: string;
+  maxTriesPerRing?: number;
   seedCity: {
     id: string;
     name: string;

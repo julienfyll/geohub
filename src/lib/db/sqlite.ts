@@ -177,15 +177,27 @@ export function getDefaultRadii(scale: GameScale): number[] {
 
 /**
  * Returns a curated list of seed cities for starting games.
+ * Supports continent filtering for custom world scale.
  */
-export function getSeedCities(scale: GameScale): City[] {
+export function getSeedCities(scale: GameScale, continent?: string): City[] {
   const db = getDb();
+  if (scale === "world" && continent) {
+    const stmt = db.prepare(`
+      SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
+      FROM cities
+      WHERE scale = ? AND continent = ?
+      ORDER BY population DESC
+      LIMIT 80
+    `);
+    return stmt.all(scale, continent) as unknown as City[];
+  }
+
   const stmt = db.prepare(`
     SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
     FROM cities
     WHERE scale = ?
     ORDER BY population DESC
-    LIMIT 60
+    LIMIT 80
   `);
   return stmt.all(scale) as unknown as City[];
 }

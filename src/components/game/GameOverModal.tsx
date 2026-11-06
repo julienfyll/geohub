@@ -9,10 +9,11 @@ import { GameScale } from "@/lib/games/types";
 interface GameOverModalProps {
   isOpen: boolean;
   scale: GameScale;
-  mode: "daily" | "free";
+  mode: "daily" | "free" | "custom";
   seed: string;
   seedCityName: string;
   rings: RingStatus[];
+  customShareUrl?: string;
   onRestart: () => void;
 }
 
@@ -23,15 +24,16 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   seed,
   seedCityName,
   rings,
+  customShareUrl,
   onRestart,
 }) => {
   const [copied, setCopied] = useState(false);
 
   const solvedCount = rings.filter((r) => r.isCompleted).length;
-  const isPerfect = solvedCount === 5;
+  const isPerfect = solvedCount === rings.length;
 
   useEffect(() => {
-    if (isOpen && solvedCount >= 3) {
+    if (isOpen && solvedCount >= Math.ceil(rings.length / 2)) {
       confetti({
         particleCount: isPerfect ? 150 : 80,
         spread: 70,
@@ -39,7 +41,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
         colors: ["#3b82f6", "#10b981", "#f59e0b", "#ec4899"],
       });
     }
-  }, [isOpen, solvedCount, isPerfect]);
+  }, [isOpen, solvedCount, isPerfect, rings.length]);
 
   if (!isOpen) return null;
 
@@ -51,16 +53,20 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
 
   const generateShareText = () => {
     const emojis = rings
-      .map((r) => (r.isCompleted ? `🟢 ${r.triesUsed}/3` : "🔴 X"))
+      .map((r) => (r.isCompleted ? `🟢 ${r.triesUsed > 0 ? `${r.triesUsed}e` : "✓"}` : "🔴 X"))
       .join(" | ");
 
-    const shareUrl = `${window.location.origin}/play/georings?scale=${scale}&mode=free&seed=${seed}`;
+    const shareUrl =
+      customShareUrl ||
+      `${window.location.origin}/play/georings?scale=${scale}&mode=free&seed=${seed}`;
+
+    const modeLabel = mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Défi Custom" : "Partie Libre";
 
     return [
-      `🌍 GeoHub — GeoRings ${scaleNames[scale]}`,
+      `🌍 GeoHub — GeoRings ${scaleNames[scale]} (${modeLabel})`,
       `📍 Centre : ${seedCityName}`,
       `${emojis}`,
-      `Score : ${solvedCount}/5 anneaux découverts`,
+      `Score : ${solvedCount}/${rings.length} anneaux découverts`,
       `Défie-moi sur cette même partie :`,
       shareUrl,
     ].join("\n");
@@ -101,7 +107,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             Partie {mode === "daily" ? "Défi du Jour" : "Libre"} — Échelle {scaleNames[scale]} (Centre : {seedCityName})
           </p>
           <div className="mt-3 inline-block px-4 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-lg font-bold text-blue-400">
-            {solvedCount} / 5 <span className="text-xs font-medium text-slate-400">anneaux réussis</span>
+            {solvedCount} / {rings.length} <span className="text-xs font-medium text-slate-400">anneaux réussis</span>
           </div>
         </div>
 

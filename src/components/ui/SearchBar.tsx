@@ -17,6 +17,7 @@ interface SearchBarProps {
   onCityNotFound?: (query: string) => void;
   disabled?: boolean;
   placeholder?: string;
+  showDropdown?: boolean;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -25,6 +26,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onCityNotFound,
   disabled = false,
   placeholder = "Entrez le nom d'une ville...",
+  showDropdown = true,
 }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchCityItem[]>([]);
@@ -164,7 +166,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </div>
 
       {/* Autocomplete Dropdown - Anti-cheat: No population shown */}
-      {isOpen && results.length > 0 && (
+      {showDropdown && isOpen && results.length > 0 && (
         <div
           onWheel={(e) => e.stopPropagation()}
           className="absolute z-50 left-0 right-0 mt-2 bg-slate-900/95 border border-slate-700/80 rounded-xl shadow-2xl backdrop-blur-xl max-h-64 overflow-y-auto divide-y divide-slate-800"

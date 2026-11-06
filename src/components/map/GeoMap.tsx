@@ -20,6 +20,7 @@ export interface GeoMapProps {
   activeRadiusKm?: number;
   completedRadiiKm?: number[];
   markers?: MapMarker[];
+  showBorders?: boolean;
   className?: string;
 }
 
@@ -29,6 +30,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
   activeRadiusKm,
   completedRadiiKm = [],
   markers = [],
+  showBorders = true,
   className = "w-full h-full",
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -395,6 +397,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
 
     map.on("load", () => {
       isLoadedRef.current = true;
+      updateBasemapLayers();
       updateRingsAndCamera();
       updateMarkers();
     });
@@ -441,12 +444,49 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     };
   }, []);
 
+  // Update Basemap Layers: permanently hide roads, toggle political borders
+  const updateBasemapLayers = () => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+
+    const style = map.getStyle();
+    if (!style || !style.layers) return;
+
+    style.layers.forEach((layer) => {
+      // 1. Hide roads permanently to avoid revealing urban corridors
+      if (
+        layer.id.startsWith("road_") ||
+        layer.id.startsWith("tunnel_") ||
+        layer.id.startsWith("bridge_") ||
+        layer.id.startsWith("aeroway")
+      ) {
+        if (map.getLayer(layer.id)) {
+          map.setLayoutProperty(layer.id, "visibility", "none");
+        }
+      }
+
+      // 2. Control borders visibility (Normal vs Hardcore)
+      if (layer.id.startsWith("boundary_")) {
+        if (map.getLayer(layer.id)) {
+          map.setLayoutProperty(layer.id, "visibility", showBorders ? "visible" : "none");
+        }
+      }
+    });
+  };
+
   // Update Rings Source & Camera view whenever props change
   useEffect(() => {
     if (isLoadedRef.current) {
       updateRingsAndCamera();
     }
   }, [center[0], center[1], activeRadiusKm, completedRadiiKm.length]);
+
+  // Update Borders visibility whenever showBorders changes
+  useEffect(() => {
+    if (isLoadedRef.current) {
+      updateBasemapLayers();
+    }
+  }, [showBorders]);
 
   // Update Native Markers whenever markers or seedCity change
   useEffect(() => {
