@@ -14,6 +14,7 @@ export interface SearchCityItem {
 interface SearchBarProps {
   scale: GameScale;
   onSelectCity: (city: SearchCityItem) => void;
+  onCityNotFound?: (query: string) => void;
   disabled?: boolean;
   placeholder?: string;
 }
@@ -21,6 +22,7 @@ interface SearchBarProps {
 export const SearchBar: React.FC<SearchBarProps> = ({
   scale,
   onSelectCity,
+  onCityNotFound,
   disabled = false,
   placeholder = "Entrez le nom d'une ville...",
 }) => {
@@ -78,20 +80,67 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     setSelectedIndex(-1);
   };
 
+  const handleDirectSubmit = async (searchQuery: string) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/geo/search?q=${encodeURIComponent(searchQuery)}&scale=${scale}&limit=1`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+          handleSelect(data.results[0]);
+          return;
+        }
+      }
+      if (onCityNotFound) {
+        onCityNotFound(searchQuery);
+      }
+    } catch (err) {
+      console.error("Direct search error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen || results.length === 0) return;
+    if (e.key === "Escape") {
+      setIsOpen(false);
+      return;
+    }
 
     if (e.key === "ArrowDown") {
+      if (results.length > 0) {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev < results.length - 1 ? prev + 1 : 0));
+      }
+      return;
+    }
+
+    if (e.key === "ArrowUp") {
+      if (results.length > 0) {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : results.length - 1));
+      }
+      return;
+    }
+
+    if (e.key === "Enter") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev < results.length - 1 ? prev + 1 : 0));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : results.length - 1));
-    } else if (e.key === "Enter" && selectedIndex >= 0) {
-      e.preventDefault();
-      handleSelect(results[selectedIndex]);
-    } else if (e.key === "Escape") {
-      setIsOpen(false);
+      // 1. If an item was explicitly highlighted via arrows
+      if (selectedIndex >= 0 && results[selectedIndex]) {
+        handleSelect(results[selectedIndex]);
+        return;
+      }
+
+      // 2. If suggestions are loaded, auto-pick the 1st (top match) without requiring arrow/click!
+      if (results.length > 0) {
+        handleSelect(results[0]);
+        return;
+      }
+
+      // 3. If user typed fast and hit Enter before autocomplete finished loading
+      if (query.trim().length >= 2) {
+        handleDirectSubmit(query.trim());
+      }
     }
   };
 

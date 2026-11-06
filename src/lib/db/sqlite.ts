@@ -124,19 +124,19 @@ export function getMostPopulatedCityInRing(
 /**
  * Calibrated linear radii progression tailored to user constraints:
  * - France: [80, 160, 240, 320, 400] (step: +80 km)
- * - Europe: [250, 490, 730, 970, 1200] (min: 250 km, max: 1200 km, step: ~240 km)
- * - World:  [800, 1850, 2900, 3950, 5000] (min: 800 km, max: 5000 km, step: +1050 km)
+ * - Europe: [200, 400, 600, 800, 1000] (max: 1000 km, step: +200 km)
+ * - World:  [600, 1200, 1800, 2400, 3000] (max: 3000 km, step: +600 km)
  */
 export function getDefaultRadii(scale: GameScale): number[] {
   switch (scale) {
     case "fr":
       return [80, 160, 240, 320, 400];
     case "eu":
-      // Europe: min 250 km, max 1200 km (regular step ~240 km)
-      return [250, 490, 730, 970, 1200];
+      // Europe: min 200 km, max 1000 km (regular step +200 km)
+      return [200, 400, 600, 800, 1000];
     case "world":
-      // World: min 800 km, max 5000 km (regular step +1050 km)
-      return [800, 1850, 2900, 3950, 5000];
+      // World: min 600 km, max 3000 km (regular step +600 km)
+      return [600, 1200, 1800, 2400, 3000];
   }
 }
 

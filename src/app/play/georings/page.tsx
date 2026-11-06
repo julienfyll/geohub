@@ -328,6 +328,12 @@ function GeoRingsGame() {
           <SearchBar
             scale={scale}
             onSelectCity={handleSelectCity}
+            onCityNotFound={(query) =>
+              setFeedback({
+                text: `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
+                type: "warning",
+              })
+            }
             disabled={isGameOver || isSubmitting || loading}
             placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1}...`}
           />
