@@ -14,12 +14,20 @@ export async function GET(request: NextRequest) {
   try {
     const rawResults = searchCities(q, scale, 8);
     // Anti-cheat: strip population and coordinates so they can NEVER be inspected before guessing
-    const sanitizedResults = rawResults.map((city) => ({
-      id: city.id,
-      name: city.name,
-      countryCode: city.countryCode,
-      scale: city.scale,
-    }));
+    const sanitizedResults = rawResults.map((city) => {
+      // If matched via French alias or exonym (e.g. "Londres"), display "Londres (London)"
+      const displayName =
+        city.matchedAlias && city.matchedAlias.toLowerCase() !== city.name.toLowerCase()
+          ? `${city.matchedAlias} (${city.name})`
+          : city.name;
+
+      return {
+        id: city.id,
+        name: displayName,
+        countryCode: city.countryCode,
+        scale: city.scale,
+      };
+    });
 
     return NextResponse.json({ results: sanitizedResults });
   } catch (error) {

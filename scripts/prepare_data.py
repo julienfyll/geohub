@@ -68,6 +68,18 @@ def process_and_seed_db():
     cursor.execute("CREATE INDEX idx_cities_normalized_name ON cities (normalized_name);")
     cursor.execute("CREATE INDEX idx_cities_lat_lon ON cities (latitude, longitude);")
 
+    # Table for city alternate names (French names, exonyms, transliterations)
+    cursor.execute("DROP TABLE IF EXISTS city_aliases;")
+    cursor.execute("""
+        CREATE TABLE city_aliases (
+            city_id TEXT NOT NULL,
+            alias TEXT NOT NULL,
+            normalized_alias TEXT NOT NULL,
+            scale TEXT NOT NULL,
+            population INTEGER NOT NULL
+        );
+    """)
+
     # Table for pre-generated daily challenges & seeds
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS daily_challenges (
@@ -81,6 +93,9 @@ def process_and_seed_db():
 
     print(f"Extracting and parsing {TXT_NAME}...")
     records = []
+    alias_records = []
+    seen_aliases = set()
+
     with zipfile.ZipFile(ZIP_PATH, 'r') as zf:
         with zf.open(TXT_NAME) as f:
             for line_bytes in f:
@@ -93,6 +108,7 @@ def process_and_seed_db():
 
                 geoname_id = parts[0]
                 name = parts[1]
+                raw_alts = parts[3].split(',') if parts[3] else []
                 lat = float(parts[4])
                 lon = float(parts[5])
                 feature_code = parts[7]
@@ -113,20 +129,55 @@ def process_and_seed_db():
                 # 'fr': French cities (Metropolitan France & Corsica filter: lat 41-52, lon -5 to 10)
                 # 'eu': European countries
                 # 'world': Globally all cities > 15k pop (or > 5k)
+                assigned_scales = []
                 if country_code == "FR" and (41.0 <= lat <= 51.5) and (-5.5 <= lon <= 10.0):
-                    records.append((f"fr_{geoname_id}", name, norm_name, country_code, "fr", pop, lat, lon, timezone))
+                    cid = f"fr_{geoname_id}"
+                    records.append((cid, name, norm_name, country_code, "fr", pop, lat, lon, timezone))
+                    assigned_scales.append((cid, "fr"))
                 
                 if country_code in EUROPE_COUNTRIES and pop >= 15000:
-                    records.append((f"eu_{geoname_id}", name, norm_name, country_code, "eu", pop, lat, lon, timezone))
+                    cid = f"eu_{geoname_id}"
+                    records.append((cid, name, norm_name, country_code, "eu", pop, lat, lon, timezone))
+                    assigned_scales.append((cid, "eu"))
 
                 if pop >= 25000:
-                    records.append((f"world_{geoname_id}", name, norm_name, country_code, "world", pop, lat, lon, timezone))
+                    cid = f"world_{geoname_id}"
+                    records.append((cid, name, norm_name, country_code, "world", pop, lat, lon, timezone))
+                    assigned_scales.append((cid, "world"))
+
+                # Parse alternate names (French, local, exonyms)
+                if assigned_scales and raw_alts:
+                    for raw_alt in raw_alts:
+                        alt = raw_alt.strip()
+                        if not alt or len(alt) < 2:
+                            continue
+                        norm_alt = normalize_text(alt)
+                        if not norm_alt or len(norm_alt) < 2:
+                            continue
+                        if norm_alt == norm_name:
+                            continue
+                        if not re.match(r'^[a-z0-9\s\-]+$', norm_alt):
+                            continue
+
+                        for cid, scale in assigned_scales:
+                            pair = (cid, norm_alt)
+                            if pair not in seen_aliases:
+                                seen_aliases.add(pair)
+                                alias_records.append((cid, alt, norm_alt, scale, pop))
 
     print(f"Inserting {len(records)} city entries into SQLite...")
     cursor.executemany("""
         INSERT INTO cities (id, name, normalized_name, country_code, scale, population, latitude, longitude, timezone)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
     """, records)
+
+    print(f"Inserting {len(alias_records)} alias entries into SQLite...")
+    cursor.executemany("""
+        INSERT INTO city_aliases (city_id, alias, normalized_alias, scale, population)
+        VALUES (?, ?, ?, ?, ?);
+    """, alias_records)
+
+    cursor.execute("CREATE INDEX idx_city_aliases_lookup ON city_aliases (scale, normalized_alias, population DESC);")
 
     conn.commit()
 

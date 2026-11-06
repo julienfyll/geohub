@@ -25,31 +25,66 @@ export function normalizeText(text: string): string {
 
 /**
  * Autocomplete search for cities in the given scale.
+ * Searches both official names and alternate names (French names, exonyms, transliterations).
  */
 export function searchCities(
   query: string,
   scale: GameScale,
   limit: number = 8
-): City[] {
+): (City & { matchedAlias?: string })[] {
   const norm = normalizeText(query);
   if (!norm || norm.length < 2) return [];
 
   const db = getDb();
+  const startsWith = `${norm}%`;
+  const contains = `% ${norm}%`;
+
   const stmt = db.prepare(`
-    SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
-    FROM cities
-    WHERE scale = ? AND (normalized_name LIKE ? OR normalized_name LIKE ?)
-    ORDER BY 
-      CASE WHEN normalized_name LIKE ? THEN 0 ELSE 1 END,
-      population DESC
+    WITH matches AS (
+      -- Direct city name match
+      SELECT id, name, NULL as matchedAlias, country_code as countryCode, scale, population, latitude, longitude, timezone,
+             CASE 
+               WHEN normalized_name = ? THEN 0 
+               WHEN normalized_name LIKE ? THEN 1 
+               ELSE 2 
+             END as rank_score
+      FROM cities
+      WHERE scale = ? AND (normalized_name LIKE ? OR normalized_name LIKE ?)
+
+      UNION ALL
+
+      -- Alias match (French names, local exonyms, transliterations)
+      SELECT c.id, c.name, a.alias as matchedAlias, c.country_code as countryCode, c.scale, c.population, c.latitude, c.longitude, c.timezone,
+             CASE 
+               WHEN a.normalized_alias = ? THEN 0 
+               WHEN a.normalized_alias LIKE ? THEN 1 
+               ELSE 2 
+             END as rank_score
+      FROM city_aliases a
+      JOIN cities c ON a.city_id = c.id
+      WHERE a.scale = ? AND (a.normalized_alias LIKE ? OR a.normalized_alias LIKE ?)
+    )
+    SELECT id, name, matchedAlias, countryCode, scale, population, latitude, longitude, timezone
+    FROM matches
+    GROUP BY id
+    ORDER BY min(rank_score) ASC, population DESC
     LIMIT ?
   `);
 
-  const startsWith = `${norm}%`;
-  const contains = `% ${norm}%`;
-  const exactOrStarts = `${norm}%`;
+  const rows = stmt.all(
+    norm,
+    startsWith,
+    scale,
+    startsWith,
+    contains,
+    norm,
+    startsWith,
+    scale,
+    startsWith,
+    contains,
+    limit
+  ) as unknown as (City & { matchedAlias?: string })[];
 
-  const rows = stmt.all(scale, startsWith, contains, exactOrStarts, limit) as unknown as City[];
   return rows;
 }
 
