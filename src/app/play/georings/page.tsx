@@ -106,14 +106,22 @@ function GeoRingsGame() {
 
       // Add tested city marker (minimalist dot + name, NO population on the map)
       const newMarker: MapMarker = {
-        id: `guess_${city.id}_${Date.now()}`,
+        id: `guess_${city.id}`,
         lat: result.city.latitude,
         lon: result.city.longitude,
         label: result.city.name,
         type: result.isTarget ? "correct" : "wrong",
       };
 
-      setMarkers((prev) => [...prev, newMarker]);
+      setMarkers((prev) => {
+        // Prevent duplicate markers for the same city
+        const filtered = prev.filter(
+          (m) =>
+            m.id !== newMarker.id &&
+            !(Math.abs(m.lat - newMarker.lat) < 0.005 && Math.abs(m.lon - newMarker.lon) < 0.005)
+        );
+        return [...filtered, newMarker];
+      });
 
       if (result.isTarget) {
         // Success !
@@ -156,7 +164,17 @@ function GeoRingsGame() {
               label: result.targetCityIfRevealed.name,
               type: "revealed",
             };
-            setMarkers((prev) => [...prev, revealedMarker]);
+            setMarkers((prev) => {
+              // Upgrade any prior wrong guess for this city to the revealed state
+              const filtered = prev.filter(
+                (m) =>
+                  !(
+                    Math.abs(m.lat - revealedMarker.lat) < 0.005 &&
+                    Math.abs(m.lon - revealedMarker.lon) < 0.005
+                  )
+              );
+              return [...filtered, revealedMarker];
+            });
           }
 
           const updatedRings = [...rings];

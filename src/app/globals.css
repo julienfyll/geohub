@@ -37,6 +37,16 @@ body {
   display: none !important;
 }
 
+/* Custom tooltip popup styling for native map markers */
+.maplibregl-popup-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.maplibregl-popup-tip {
+  display: none !important;
+}
+
 /* Radar pulse animation for the active ring */
 @keyframes radar-pulse {
   0% {
