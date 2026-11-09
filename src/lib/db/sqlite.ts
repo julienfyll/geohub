@@ -242,7 +242,8 @@ export function getDefaultRadii(scale: GameScale): number[] {
  * Supports continent filtering for custom world scale.
  * - Europe: all prominent European cities >= 200,000 inhabitants (330 cities).
  * - France: top 80 major regional centers (>= ~60,000 inhabitants).
- * - World: top 120 global metropolises (or top 100 for specific continent).
+ * - World (all continents): balanced stratified pool of 138 world-class metropolises across all 6 continents (Method 2).
+ * - World (specific continent): top 100 metropolises for that continent.
  */
 export function getSeedCities(scale: GameScale, continent?: string): City[] {
   const db = getDb();
@@ -257,6 +258,30 @@ export function getSeedCities(scale: GameScale, continent?: string): City[] {
     return stmt.all(scale, continent) as unknown as City[];
   }
 
+  if (scale === "world") {
+    // Stratified continent sampling (Method 2):
+    // Quotas: 25 EU, 25 NA, 25 SA, 25 AF, 30 AS, 8 OC = 138 iconic metropolises worldwide
+    // Excludes NYC boroughs (Brooklyn, Queens, etc.) to keep single NYC center
+    const stmt = db.prepare(`
+      WITH ranked AS (
+        SELECT id, name, country_code as countryCode, scale, continent, population, latitude, longitude, timezone,
+               ROW_NUMBER() OVER (PARTITION BY continent ORDER BY population DESC) as rn
+        FROM cities
+        WHERE scale = 'world' AND name NOT IN ('Brooklyn', 'Queens', 'Manhattan', 'The Bronx', 'Staten Island')
+      )
+      SELECT id, name, countryCode, scale, population, latitude, longitude, timezone
+      FROM ranked
+      WHERE (continent = 'EU' AND rn <= 25)
+         OR (continent = 'NA' AND rn <= 25)
+         OR (continent = 'SA' AND rn <= 25)
+         OR (continent = 'AF' AND rn <= 25)
+         OR (continent = 'AS' AND rn <= 30)
+         OR (continent = 'OC' AND rn <= 8)
+      ORDER BY population DESC
+    `);
+    return stmt.all() as unknown as City[];
+  }
+
   if (scale === "eu") {
     const stmt = db.prepare(`
       SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
@@ -267,13 +292,13 @@ export function getSeedCities(scale: GameScale, continent?: string): City[] {
     return stmt.all() as unknown as City[];
   }
 
-  const limit = scale === "fr" ? 80 : 120;
+  // France: top 80 major regional centers
   const stmt = db.prepare(`
     SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
     FROM cities
     WHERE scale = ?
     ORDER BY population DESC
-    LIMIT ?
+    LIMIT 80
   `);
-  return stmt.all(scale, limit) as unknown as City[];
+  return stmt.all(scale) as unknown as City[];
 }
