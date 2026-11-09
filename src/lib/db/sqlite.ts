@@ -1,7 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
 import path from "node:path";
 import { getDistanceKm, getBoundingBox } from "@/lib/geo/haversine";
-import { City, GameScale } from "@/lib/games/types";
+import { City, Airport, GameScale, GameMetric } from "@/lib/games/types";
 
 let dbInstance: DatabaseSync | null = null;
 
@@ -220,11 +220,27 @@ export function getMostPopulatedCityInRing(
 
 /**
  * Calibrated linear radii progression tailored to user constraints:
- * - France: [80, 160, 240, 320, 400] (step: +80 km)
- * - Europe: [200, 400, 600, 800, 1000] (max: 1000 km, step: +200 km)
- * - World:  [600, 1200, 1800, 2400, 3000] (max: 3000 km, step: +600 km)
+ * - Population:
+ *   - France: [80, 160, 240, 320, 400] (step: +80 km)
+ *   - Europe: [200, 400, 600, 800, 1000] (max: 1000 km, step: +200 km)
+ *   - World:  [600, 1200, 1800, 2400, 3000] (max: 3000 km, step: +600 km)
+ * - Airports (widened for airport density):
+ *   - France: [120, 240, 360, 480, 600] (step: +120 km)
+ *   - Europe: [250, 500, 750, 1000, 1250] (step: +250 km)
+ *   - World:  [800, 1600, 2400, 3200, 4000] (step: +800 km)
  */
-export function getDefaultRadii(scale: GameScale): number[] {
+export function getDefaultRadii(scale: GameScale, metric: GameMetric = "population"): number[] {
+  if (metric === "airports") {
+    switch (scale) {
+      case "fr":
+        return [120, 240, 360, 480, 600];
+      case "eu":
+        return [250, 500, 750, 1000, 1250];
+      case "world":
+        return [800, 1600, 2400, 3200, 4000];
+    }
+  }
+
   switch (scale) {
     case "fr":
       return [80, 160, 240, 320, 400];
@@ -235,6 +251,152 @@ export function getDefaultRadii(scale: GameScale): number[] {
       // World: min 600 km, max 3000 km (regular step +600 km)
       return [600, 1200, 1800, 2400, 3000];
   }
+}
+
+/**
+ * Autocomplete search for commercial airports.
+ * Multi-key match: IATA code, airport name, or city name.
+ */
+export function searchAirports(
+  query: string,
+  scale: GameScale,
+  limit: number = 8
+): (Airport & { matchedAlias?: string })[] {
+  const norm = normalizeText(query);
+  if (!norm || norm.length < 2) return [];
+
+  const db = getDb();
+  const startsWith = `${norm}%`;
+  const contains = `% ${norm}%`;
+
+  const scaleFilter = scale === "fr" ? "scale = 'fr'" : (scale === "eu" ? "scale IN ('fr', 'eu')" : "1=1");
+  const aliasScaleFilter = scale === "fr" ? "a.scale = 'fr'" : (scale === "eu" ? "a.scale IN ('fr', 'eu')" : "1=1");
+
+  const stmt = db.prepare(`
+    WITH matches AS (
+      -- Tier 0: Exact match on IATA code
+      SELECT id, iata, name, city_name as cityName, country_code as countryCode, country_name as countryName,
+             scale, passenger_count as passengerCount, latitude, longitude, NULL as matchedAlias, 0 as tier
+      FROM airports
+      WHERE ${scaleFilter} AND iata = ?
+
+      UNION ALL
+
+      -- Tier 1: Official name or city starts with query
+      SELECT id, iata, name, city_name as cityName, country_code as countryCode, country_name as countryName,
+             scale, passenger_count as passengerCount, latitude, longitude, NULL as matchedAlias, 1 as tier
+      FROM airports
+      WHERE ${scaleFilter} AND (normalized_name LIKE ? OR normalized_city LIKE ?) AND iata != ?
+
+      UNION ALL
+
+      -- Tier 2: Official name or city contains query at word boundary
+      SELECT id, iata, name, city_name as cityName, country_code as countryCode, country_name as countryName,
+             scale, passenger_count as passengerCount, latitude, longitude, NULL as matchedAlias, 2 as tier
+      FROM airports
+      WHERE ${scaleFilter} AND (normalized_name LIKE ? OR normalized_city LIKE ?) AND normalized_name NOT LIKE ?
+
+      UNION ALL
+
+      -- Tier 3: Canonical alias exact match
+      SELECT ap.id, ap.iata, ap.name, ap.city_name as cityName, ap.country_code as countryCode, ap.country_name as countryName,
+             ap.scale, ap.passenger_count as passengerCount, ap.latitude, ap.longitude, a.alias as matchedAlias, 3 as tier
+      FROM airport_aliases a
+      JOIN airports ap ON a.airport_id = ap.id
+      WHERE ${aliasScaleFilter} AND a.normalized_alias = ? AND ap.iata != ?
+
+      UNION ALL
+
+      -- Tier 4: Canonical alias starts with query
+      SELECT ap.id, ap.iata, ap.name, ap.city_name as cityName, ap.country_code as countryCode, ap.country_name as countryName,
+             ap.scale, ap.passenger_count as passengerCount, ap.latitude, ap.longitude, a.alias as matchedAlias, 4 as tier
+      FROM airport_aliases a
+      JOIN airports ap ON a.airport_id = ap.id
+      WHERE ${aliasScaleFilter} AND a.normalized_alias LIKE ? AND a.normalized_alias != ? AND ap.normalized_name NOT LIKE ?
+    )
+    SELECT id, iata, name, cityName, countryCode, countryName, scale, passengerCount, latitude, longitude, matchedAlias, min(tier) as best_tier
+    FROM matches
+    GROUP BY id
+    ORDER BY best_tier ASC, passengerCount DESC
+    LIMIT ?
+  `);
+
+  const upperQuery = query.trim().toUpperCase();
+  let rows = stmt.all(
+    upperQuery,
+    startsWith, startsWith, upperQuery,
+    contains, contains, startsWith,
+    norm, upperQuery,
+    startsWith, norm, startsWith,
+    limit
+  ) as unknown as (Airport & { matchedAlias?: string })[];
+
+  return rows;
+}
+
+export function getAirportById(id: string): Airport | null {
+  const db = getDb();
+  const stmt = db.prepare(`
+    SELECT id, iata, name, city_name as cityName, country_code as countryCode, country_name as countryName,
+           scale, passenger_count as passengerCount, latitude, longitude
+    FROM airports
+    WHERE id = ? OR iata = ?
+    LIMIT 1
+  `);
+  const row = stmt.get(id, id) as unknown as Airport | undefined;
+  return row || null;
+}
+
+/**
+ * Retrieves all airports in the annulus (innerRadiusKm, outerRadiusKm], sorted by passenger_count DESC.
+ */
+export function getAirportsInRing(
+  centerLat: number,
+  centerLon: number,
+  innerRadiusKm: number,
+  outerRadiusKm: number,
+  scale: GameScale
+): Airport[] {
+  const db = getDb();
+  const [minLon, minLat, maxLon, maxLat] = getBoundingBox(
+    centerLat,
+    centerLon,
+    outerRadiusKm
+  );
+
+  const scaleFilter = scale === "fr" ? "scale = 'fr'" : (scale === "eu" ? "scale IN ('fr', 'eu')" : "1=1");
+
+  const stmt = db.prepare(`
+    SELECT id, iata, name, city_name as cityName, country_code as countryCode, country_name as countryName,
+           scale, passenger_count as passengerCount, latitude, longitude
+    FROM airports
+    WHERE ${scaleFilter}
+      AND latitude BETWEEN ? AND ?
+      AND longitude BETWEEN ? AND ?
+    ORDER BY passenger_count DESC
+  `);
+
+  const candidates = stmt.all(minLat, maxLat, minLon, maxLon) as unknown as Airport[];
+
+  const minAllowedDist = Math.max(1.0, innerRadiusKm);
+  const inRing = candidates.filter((airport) => {
+    const dist = getDistanceKm(centerLat, centerLon, airport.latitude, airport.longitude);
+    return dist > minAllowedDist && dist <= outerRadiusKm;
+  });
+
+  inRing.sort((a, b) => b.passengerCount - a.passengerCount);
+  return inRing;
+}
+
+export function getMostPopulatedAirportInRing(
+  centerLat: number,
+  centerLon: number,
+  innerRadiusKm: number,
+  outerRadiusKm: number,
+  scale: GameScale
+): Airport | null {
+  const airports = getAirportsInRing(centerLat, centerLon, innerRadiusKm, outerRadiusKm, scale);
+  return airports.length > 0 ? airports[0] : null;
 }
 
 /**

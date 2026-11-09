@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Trophy, CheckCircle2, XCircle, Info, Sparkles, MapPin, Eye } from "lucide-react";
-import { TopCityItem } from "@/lib/games/types";
+import { ChevronDown, ChevronUp, Trophy, CheckCircle2, XCircle, Info, MapPin, Eye, Plane } from "lucide-react";
+import { GameMetric, TopCityItem } from "@/lib/games/types";
 
 export interface GuessRecord {
   id?: string;
   cityName: string;
   countryCode?: string;
   population?: number;
+  passengerCount?: number;
+  iata?: string;
   isTarget: boolean;
   isInRing?: boolean;
   rank?: number;
@@ -22,11 +24,26 @@ interface RingReviewCardProps {
   outerRadiusKm: number;
   guesses: GuessRecord[];
   topCities: TopCityItem[];
+  metric?: GameMetric;
   className?: string;
   pinnedCityIds?: Set<string>;
   hoveredCityId?: string | null;
   onCityHover?: (city: TopCityItem | GuessRecord | null) => void;
   onCityClick?: (city: TopCityItem | GuessRecord) => void;
+}
+
+function formatMetricValue(value: number | undefined, metric: GameMetric = "population"): string {
+  if (value === undefined || value === null) return "";
+  if (metric === "airports") {
+    if (value >= 1_000_000) {
+      return `${(value / 1_000_000).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M passagers / an`;
+    }
+    if (value >= 1_000) {
+      return `${Math.round(value / 1_000).toLocaleString("fr-FR")}k passagers / an`;
+    }
+    return `${value.toLocaleString("fr-FR")} passagers / an`;
+  }
+  return `${value.toLocaleString("fr-FR")} hab.`;
 }
 
 export const RingReviewCard: React.FC<RingReviewCardProps> = ({
@@ -35,6 +52,7 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
   outerRadiusKm,
   guesses = [],
   topCities = [],
+  metric = "population",
   className = "",
   pinnedCityIds,
   hoveredCityId,
@@ -42,6 +60,7 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
   onCityClick,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const isAirports = metric === "airports";
 
   return (
     <aside
@@ -54,8 +73,9 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
           <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-600/30 text-blue-400 font-bold text-[10px]">
             {ringIndex + 1}
           </span>
-          <span className="text-xs font-bold tracking-tight text-white uppercase">
-            Vos Essais & Top 3
+          <span className="text-xs font-bold tracking-tight text-white uppercase flex items-center gap-1.5">
+            {isAirports ? <Plane className="w-3.5 h-3.5 text-sky-400" /> : null}
+            <span>Vos Essais & Top 3 {isAirports ? "Aéroports" : "Villes"}</span>
           </span>
         </div>
         <button
@@ -111,12 +131,14 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
                         ) : (
                           <XCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                         )}
-                        <span className="font-semibold text-slate-200 truncate">{g.cityName}</span>
+                        <span className="font-semibold text-slate-200 truncate">
+                          {isAirports && g.iata ? `${g.cityName} (${g.iata})` : g.cityName}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0 ml-2">
                         <span className="text-[10px] text-slate-400 font-mono">
                           {g.isTarget
-                            ? "1ʳᵉ (Cible)"
+                            ? "1ᵉʳ (Cible)"
                             : g.rank
                             ? `${g.rank}ᵉ`
                             : "Hors anneau"}
@@ -134,18 +156,24 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
 
           <div className="h-px bg-slate-800/80" />
 
-          {/* Section: Top 3 Most Populous Cities */}
+          {/* Section: Top 3 Most Populous Cities or Busiest Airports */}
           <div>
             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                <span>Villes les plus peuplées</span>
+                {isAirports ? (
+                  <Plane className="w-3.5 h-3.5 text-sky-400" />
+                ) : (
+                  <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                )}
+                <span>{isAirports ? "Aéroports les plus fréquentés" : "Villes les plus peuplées"}</span>
               </div>
               <span className="text-[9px] text-sky-400/80 font-normal">Survol / Clic</span>
             </div>
 
             {topCities.length === 0 ? (
-              <p className="text-[11px] text-slate-500 italic">Aucune ville dans cet anneau.</p>
+              <p className="text-[11px] text-slate-500 italic">
+                {isAirports ? "Aucun aéroport commercial dans cet anneau." : "Aucune ville dans cet anneau."}
+              </p>
             ) : (
               <div className="space-y-2">
                 {topCities.slice(0, 3).map((city) => {
@@ -167,6 +195,8 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
                     ? "border-emerald-500/30 bg-emerald-950/20 hover:border-emerald-500/60"
                     : "border-slate-800/80 bg-slate-900/40 hover:border-sky-500/50 hover:bg-slate-900/80";
 
+                  const countValue = isAirports ? (city.passengerCount ?? city.population) : city.population;
+
                   return (
                     <div
                       key={city.id}
@@ -174,7 +204,7 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
                       onMouseLeave={() => onCityHover?.(null)}
                       onClick={() => onCityClick?.(city)}
                       className={`p-2 rounded-xl border ${badgeBorder} flex items-center justify-between gap-2 transition-all cursor-pointer group`}
-                      title="Survolez ou cliquez pour afficher cette ville sur la carte"
+                      title={`Survolez ou cliquez pour afficher ${isAirports ? "cet aéroport" : "cette ville"} sur la carte`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <span className="text-sm shrink-0">{medal}</span>
@@ -182,11 +212,11 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
                           <p className="font-bold text-slate-100 truncate text-[11px] leading-tight flex items-center gap-1">
                             <span>{city.name}</span>
                             <span className="text-[10px] font-mono text-slate-400">
-                              ({city.countryCode})
+                              ({city.iata ? `${city.iata} · ` : ""}{city.countryCode})
                             </span>
                           </p>
                           <p className="text-[10px] text-slate-400 leading-tight">
-                            {city.population.toLocaleString("fr-FR")} hab.
+                            {formatMetricValue(countValue, metric)}
                           </p>
                         </div>
                       </div>
@@ -215,15 +245,23 @@ export const RingReviewCard: React.FC<RingReviewCardProps> = ({
             )}
           </div>
 
-          {/* Interactive Hint & Official Census Note */}
+          {/* Interactive Hint & Official Census / Pax Note */}
           <div className="pt-1 flex flex-col gap-1 border-t border-slate-800/60 text-[10px] text-slate-500 leading-tight">
             <div className="flex items-center gap-1.5 text-sky-400/90 font-medium">
               <MapPin className="w-3 h-3 shrink-0 text-sky-400" />
-              <span>Survolez ou cliquez une ville pour la situer sur la carte</span>
+              <span>
+                {isAirports
+                  ? "Survolez ou cliquez un aéroport pour le situer sur la carte"
+                  : "Survolez ou cliquez une ville pour la situer sur la carte"}
+              </span>
             </div>
             <div className="flex items-start gap-1.5">
               <Info className="w-3 h-3 text-slate-500 shrink-0 mt-0.5" />
-              <span>Populations officielles au sein des limites administratives.</span>
+              <span>
+                {isAirports
+                  ? "Trafic passagers annuel commercial officiel (DGAC / ACI / Eurostat)."
+                  : "Populations officielles au sein des limites administratives."}
+              </span>
             </div>
           </div>
         </div>

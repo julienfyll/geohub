@@ -22,6 +22,11 @@ import {
   Heart,
   Target,
   Zap,
+  Plane,
+  Users,
+  Play,
+  ArrowRight,
+  Layers,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
@@ -32,18 +37,279 @@ import { GameOverModal } from "@/components/game/GameOverModal";
 import { SettingsModal } from "@/components/game/SettingsModal";
 import { CustomGameModal } from "@/components/game/CustomGameModal";
 import { useSettings } from "@/lib/settings/useSettings";
-import { CityGuessResult, GameScale, GeoRingsInitResponse, TopCityItem } from "@/lib/games/types";
+import { CityGuessResult, GameMetric, GameScale, GeoRingsInitResponse, TopCityItem } from "@/lib/games/types";
 
+// =========================================================================
+// 1. LOBBY GEORINGS (Presented when no metric is selected)
+// =========================================================================
+function GeoRingsLobby() {
+  const router = useRouter();
+  const [selectedScalePop, setSelectedScalePop] = useState<GameScale>("fr");
+  const [selectedScaleAir, setSelectedScaleAir] = useState<GameScale>("fr");
+  const [showCustomModal, setShowCustomModal] = useState(false);
+  const [customModalMetric, setCustomModalMetric] = useState<GameMetric>("population");
+
+  const todayDate = new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(new Date());
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+      {/* Lobby Navigation */}
+      <header className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Hub Principal</span>
+            </Link>
+            <div className="flex items-center gap-2">
+              <Compass className="w-5 h-5 text-blue-500" />
+              <h1 className="text-base font-bold tracking-tight text-white">
+                Lobby GeoRings
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setCustomModalMetric("population");
+                setShowCustomModal(true);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/70 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
+            >
+              <Sliders className="w-3.5 h-3.5 text-blue-400" />
+              <span>Partie Custom</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Lobby Hero */}
+      <section className="relative overflow-hidden py-12 px-6 border-b border-slate-800/40 text-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[250px] bg-blue-600/10 blur-[100px] rounded-full pointer-events-none" />
+        <div className="max-w-3xl mx-auto relative z-10 flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold mb-4">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Défis quotidiens disponibles — {todayDate}</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
+            Choisissez votre Défi Spatial
+          </h2>
+          <p className="text-slate-400 text-sm sm:text-base max-w-xl">
+            Explorez le territoire par anneaux concentriques croissants. Deux critères de mesure pour éprouver votre intuition géographique :
+          </p>
+        </div>
+      </section>
+
+      {/* Variants Selection Grid */}
+      <main className="max-w-6xl mx-auto px-6 py-10 flex-1 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Card 1 : Villes & Population (Classique) */}
+          <div className="relative group bg-slate-900/90 border-2 border-blue-500/60 hover:border-blue-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-5 group-hover:opacity-15 transition-opacity">
+              <Users className="w-40 h-40 text-blue-400" />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5" />
+                  <span>Mode Classique</span>
+                </span>
+                <span className="text-xs text-slate-400 font-mono">5 Anneaux • 3 Vies</span>
+              </div>
+
+              <h3 className="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
+                <span>Villes & Population</span>
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                À partir d'une ville centrale, identifiez la <b>commune ou métropole la plus peuplée</b> dans chaque anneau successif.
+              </p>
+
+              {/* Scale Selection */}
+              <div className="flex flex-col gap-2 mb-6">
+                <span className="text-xs text-slate-400 font-medium">Échelle de jeu :</span>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedScalePop("fr")}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                      selectedScalePop === "fr"
+                        ? "bg-blue-600 border-blue-500 text-white shadow-md"
+                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    🇫🇷 France
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedScalePop("eu")}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                      selectedScalePop === "eu"
+                        ? "bg-blue-600 border-blue-500 text-white shadow-md"
+                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    🇪🇺 Europe
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedScalePop("world")}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                      selectedScalePop === "world"
+                        ? "bg-blue-600 border-blue-500 text-white shadow-md"
+                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    🌍 Monde
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => router.push(`/play/georings?metric=population&scale=${selectedScalePop}&mode=daily`)}
+                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 hover:scale-[1.02]"
+              >
+                <Play className="w-4 h-4 fill-white" />
+                <span>Défi du Jour</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push(`/play/georings?metric=population&scale=${selectedScalePop}&mode=free`)}
+                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all hover:scale-[1.02]"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Partie Rapide</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Card 2 : Aéroports & Trafic (Nouvelle Variante) */}
+          <div className="relative group bg-slate-900/90 border-2 border-sky-500/60 hover:border-sky-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-5 group-hover:opacity-15 transition-opacity">
+              <Plane className="w-40 h-40 text-sky-400" />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Plane className="w-3.5 h-3.5" />
+                  <span>Nouvelle Variante</span>
+                </span>
+                <span className="text-xs text-slate-400 font-mono">5 Anneaux Calibrés</span>
+              </div>
+
+              <h3 className="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
+                <span>Aéroports & Trafic</span>
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                Dans chaque zone concentrique, trouvez l'<b>aéroport au trafic passagers annuel le plus important</b> (DGAC / Eurostat / ACI).
+              </p>
+
+              {/* Scale Selection */}
+              <div className="flex flex-col gap-2 mb-6">
+                <span className="text-xs text-slate-400 font-medium">Échelle de jeu :</span>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedScaleAir("fr")}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                      selectedScaleAir === "fr"
+                        ? "bg-sky-600 border-sky-500 text-white shadow-md"
+                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    🇫🇷 France
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedScaleAir("eu")}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                      selectedScaleAir === "eu"
+                        ? "bg-sky-600 border-sky-500 text-white shadow-md"
+                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    🇪🇺 Europe
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedScaleAir("world")}
+                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                      selectedScaleAir === "world"
+                        ? "bg-sky-600 border-sky-500 text-white shadow-md"
+                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    🌍 Monde
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => router.push(`/play/georings?metric=airports&scale=${selectedScaleAir}&mode=daily`)}
+                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-sky-600/30 hover:scale-[1.02]"
+              >
+                <Play className="w-4 h-4 fill-white" />
+                <span>Défi du Jour</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push(`/play/georings?metric=airports&scale=${selectedScaleAir}&mode=free`)}
+                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all hover:scale-[1.02]"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Partie Rapide</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Custom Game Modal in Lobby */}
+      <CustomGameModal
+        isOpen={showCustomModal}
+        onClose={() => setShowCustomModal(false)}
+        currentScale={customModalMetric === "airports" ? selectedScaleAir : selectedScalePop}
+        initialMetric={customModalMetric}
+      />
+    </div>
+  );
+}
+
+// =========================================================================
+// 2. ACTIVE GAME VIEW (When metric is chosen: population or airports)
+// =========================================================================
 function GeoRingsGame() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const metricParam = searchParams.get("metric") as GameMetric | null;
   const scale = (searchParams.get("scale") || "fr") as GameScale;
   const mode = (searchParams.get("mode") || "daily") as "daily" | "free" | "custom";
   const userSeed = searchParams.get("seed") || "";
   const continent = searchParams.get("continent") || "";
   const customRadii = searchParams.get("radii") || "";
   const customLives = searchParams.get("lives") || "";
+
+  // If no metric is passed, default to rendering the Lobby
+  const isLobby = !metricParam;
+  const metric: GameMetric = metricParam || "population";
+  const isAirports = metric === "airports";
 
   const { settings, updateSetting, resetDefaults } = useSettings();
 
@@ -75,6 +341,7 @@ function GeoRingsGame() {
 
   // Initialize Session
   const initGame = async () => {
+    if (isLobby) return;
     setLoading(true);
     setFeedback(null);
     setIsGameOver(false);
@@ -89,7 +356,7 @@ function GeoRingsGame() {
     setCompletedRadii([]);
 
     try {
-      let url = `/api/games/georings/session?scale=${scale}&mode=${mode}`;
+      let url = `/api/games/georings/session?scale=${scale}&mode=${mode}&metric=${metric}`;
       if (userSeed) url += `&seed=${userSeed}`;
       if (continent) url += `&continent=${continent}`;
       if (customRadii) url += `&radii=${customRadii}`;
@@ -123,10 +390,12 @@ function GeoRingsGame() {
   };
 
   useEffect(() => {
-    initGame();
-  }, [scale, mode, userSeed, continent, customRadii, customLives]);
+    if (!isLobby) {
+      initGame();
+    }
+  }, [metric, scale, mode, userSeed, continent, customRadii, customLives, isLobby]);
 
-  // Handle City Guess
+  // Handle Guess (City or Airport)
   const handleSelectCity = async (city: SearchCityItem) => {
     if (!session || isGameOver || isSubmitting) return;
 
@@ -139,6 +408,7 @@ function GeoRingsGame() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           scale: session.scale,
+          metric: session.metric || metric,
           centerLat: session.seedCity.latitude,
           centerLon: session.seedCity.longitude,
           innerRadiusKm: activeRing.innerRadiusKm,
@@ -151,18 +421,20 @@ function GeoRingsGame() {
       if (!res.ok) throw new Error("Erreur de validation");
       const result: CityGuessResult = await res.json();
 
-      // Add tested city marker (minimalist dot + name, population available on hover)
+      // Add tested item marker
       const newMarker: MapMarker = {
         id: `guess_${city.id}`,
         lat: result.city.latitude,
         lon: result.city.longitude,
-        label: result.city.name,
+        label: result.city.iata ? `${result.city.name} (${result.city.iata})` : result.city.name,
         population: result.city.population,
+        passengerCount: result.city.passengerCount,
+        iata: result.city.iata,
+        metric: session.metric || metric,
         type: result.isTarget ? "correct" : "wrong",
       };
 
       setMarkers((prev) => {
-        // Prevent duplicate markers for the same city
         const filtered = prev.filter(
           (m) =>
             m.id !== newMarker.id &&
@@ -174,9 +446,11 @@ function GeoRingsGame() {
       // Track guess in current ring history
       const guessRecord: GuessRecord = {
         id: city.id,
-        cityName: city.name,
+        cityName: result.city.name,
         countryCode: city.countryCode,
         population: result.city.population,
+        passengerCount: result.city.passengerCount,
+        iata: result.city.iata,
         isTarget: result.isTarget,
         isInRing: result.isInRing,
         rank: result.guessRank,
@@ -200,7 +474,7 @@ function GeoRingsGame() {
           isCurrent: false,
           isCompleted: true,
           triesUsed,
-          targetCityName: result.city.name,
+          targetCityName: result.city.iata ? `${result.city.name} (${result.city.iata})` : result.city.name,
         };
 
         setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
@@ -211,7 +485,7 @@ function GeoRingsGame() {
         setTriesLeft(result.triesLeft);
 
         if (result.ringFailed) {
-          // Failed tries: Reveal target city
+          // Failed ring: Reveal target
           setFeedback({ text: result.message, type: "error" });
 
           if (result.targetCityIfRevealed) {
@@ -219,12 +493,16 @@ function GeoRingsGame() {
               id: `revealed_${result.targetCityIfRevealed.id}`,
               lat: result.targetCityIfRevealed.latitude,
               lon: result.targetCityIfRevealed.longitude,
-              label: result.targetCityIfRevealed.name,
+              label: result.targetCityIfRevealed.iata
+                ? `${result.targetCityIfRevealed.name} (${result.targetCityIfRevealed.iata})`
+                : result.targetCityIfRevealed.name,
               population: result.targetCityIfRevealed.population,
+              passengerCount: result.targetCityIfRevealed.passengerCount,
+              iata: result.targetCityIfRevealed.iata,
+              metric: session.metric || metric,
               type: "revealed",
             };
             setMarkers((prev) => {
-              // Upgrade any prior wrong guess for this city to the revealed state
               const filtered = prev.filter(
                 (m) =>
                   !(
@@ -240,13 +518,17 @@ function GeoRingsGame() {
             setCurrentRingTopCities(result.topCities);
           }
 
+          const targetDisplayName = result.targetCityIfRevealed?.iata
+            ? `${result.targetCityIfRevealed.name} (${result.targetCityIfRevealed.iata})`
+            : result.targetCityIfRevealed?.name;
+
           const updatedRings = [...rings];
           updatedRings[currentRingIndex] = {
             ...activeRing,
             isCurrent: false,
             isFailed: true,
             triesUsed: totalTries,
-            targetCityName: result.targetCityIfRevealed?.name,
+            targetCityName: targetDisplayName,
           };
 
           setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
@@ -270,7 +552,7 @@ function GeoRingsGame() {
     }
   };
 
-  // Handle Skip Ring (when user is stuck or presses Space)
+  // Handle Skip Ring
   const handleSkipRing = async () => {
     if (!session || isGameOver || isSubmitting || rings.length === 0) return;
     const activeRing = rings[currentRingIndex];
@@ -283,6 +565,7 @@ function GeoRingsGame() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           scale: session.scale,
+          metric: session.metric || metric,
           centerLat: session.seedCity.latitude,
           centerLon: session.seedCity.longitude,
           innerRadiusKm: activeRing.innerRadiusKm,
@@ -303,8 +586,13 @@ function GeoRingsGame() {
           id: `revealed_${result.targetCity.id}`,
           lat: result.targetCity.latitude,
           lon: result.targetCity.longitude,
-          label: result.targetCity.name,
+          label: result.targetCity.iata
+            ? `${result.targetCity.name} (${result.targetCity.iata})`
+            : result.targetCity.name,
           population: result.targetCity.population,
+          passengerCount: result.targetCity.passengerCount,
+          iata: result.targetCity.iata,
+          metric: session.metric || metric,
           type: "revealed",
         };
 
@@ -324,13 +612,17 @@ function GeoRingsGame() {
         setCurrentRingTopCities(result.topCities);
       }
 
+      const targetDisplayName = result.targetCity?.iata
+        ? `${result.targetCity.name} (${result.targetCity.iata})`
+        : result.targetCity?.name;
+
       const updatedRings = [...rings];
       updatedRings[currentRingIndex] = {
         ...activeRing,
         isCurrent: false,
         isFailed: true,
         triesUsed: totalTries === -1 ? 1 : totalTries,
-        targetCityName: result.targetCity?.name,
+        targetCityName: targetDisplayName,
       };
 
       setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
@@ -371,7 +663,7 @@ function GeoRingsGame() {
     }
   }, [currentRingIndex, rings.length, totalTries]);
 
-  // Keyboard shortcut listener for Space (skip when playing, next when reviewing) and Enter
+  // Keyboard shortcut listener for Space & Enter
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (e.code === "Space" || e.key === " ") {
@@ -407,7 +699,7 @@ function GeoRingsGame() {
   const getCustomShareUrl = () => {
     if (!session) return "";
     const seedParam = mode === "daily" ? session.seed : session.seedCity.id;
-    let url = `${window.location.origin}/play/georings?scale=${scale}&mode=${mode}&seed=${seedParam}`;
+    let url = `${window.location.origin}/play/georings?scale=${scale}&mode=${mode}&metric=${metric}&seed=${seedParam}`;
     if (continent) url += `&continent=${continent}`;
     const radiiParam = customRadii || (rings && rings.length > 0 ? rings.map((r) => r.outerRadiusKm).join(",") : "");
     if (radiiParam) url += `&radii=${radiiParam}`;
@@ -428,7 +720,6 @@ function GeoRingsGame() {
     }
   };
 
-  // Helper to extract unique identifier for review cities
   const getReviewCityId = (c: TopCityItem | GuessRecord) => {
     if ("id" in c && c.id) return c.id;
     if ("cityName" in c && c.cityName) return `guess_${c.cityName}`;
@@ -472,21 +763,25 @@ function GeoRingsGame() {
       const id = getReviewCityId(c);
       const name = "name" in c ? c.name : (c as GuessRecord).cityName;
       const rank = "rank" in c ? c.rank : undefined;
+      const iata = "iata" in c ? c.iata : undefined;
+      const passengerCount = "passengerCount" in c ? c.passengerCount : undefined;
+
+      const formattedLabel = iata ? `${name} (${iata})` : name;
 
       extraMarkers.push({
         id: `preview_${id}`,
         lat,
         lon,
-        label: rank ? `${rank}. ${name}` : name,
+        label: rank ? `${rank}. ${formattedLabel}` : formattedLabel,
         population: c.population,
+        passengerCount,
+        iata,
+        metric: session?.metric || metric,
         type: "top",
       });
     };
 
-    // Add pinned review cities
     pinnedReviewCities.forEach((city) => addPreview(city));
-
-    // Add hovered review city if present
     if (hoveredReviewCity) {
       addPreview(hoveredReviewCity);
     }
@@ -499,9 +794,8 @@ function GeoRingsGame() {
     });
 
     return [...filteredBase, ...extraMarkers];
-  }, [markers, isReviewing, pinnedReviewCities, hoveredReviewCity]);
+  }, [markers, isReviewing, pinnedReviewCities, hoveredReviewCity, session?.metric, metric]);
 
-  // Focused city for interactive popup in GeoMap
   const focusedCity = useMemo(() => {
     if (!isReviewing || !hoveredReviewCity) return null;
     const lat = "latitude" in hoveredReviewCity ? hoveredReviewCity.latitude : undefined;
@@ -509,31 +803,73 @@ function GeoRingsGame() {
     if (lat === undefined || lon === undefined) return null;
     const name = "name" in hoveredReviewCity ? hoveredReviewCity.name : hoveredReviewCity.cityName;
     const rank = "rank" in hoveredReviewCity ? hoveredReviewCity.rank : undefined;
+    const iata = "iata" in hoveredReviewCity ? hoveredReviewCity.iata : undefined;
+    const formattedLabel = iata ? `${name} (${iata})` : name;
+
     return {
       lat,
       lon,
-      label: rank ? `${rank}. ${name}` : name,
+      label: rank ? `${rank}. ${formattedLabel}` : formattedLabel,
       population: hoveredReviewCity.population,
+      passengerCount: "passengerCount" in hoveredReviewCity ? hoveredReviewCity.passengerCount : undefined,
+      iata,
+      metric: session?.metric || metric,
     };
-  }, [isReviewing, hoveredReviewCity]);
+  }, [isReviewing, hoveredReviewCity, session?.metric, metric]);
+
+  // If no metric is specified, render the Lobby View
+  if (isLobby) {
+    return <GeoRingsLobby />;
+  }
 
   return (
     <div className="relative w-screen h-screen overflow-hidden flex flex-col bg-slate-950 text-slate-100">
       {/* Top Navigation Bar */}
       <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            href="/"
+            href="/play/georings"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all"
+            title="Retour au lobby des variantes"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Hub</span>
+            <span className="hidden sm:inline">Variantes</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-blue-500" />
-            <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block">
-              GeoRings
-            </h1>
+
+          {/* Metric Switcher Pill: [👥 Villes] [✈️ Aéroports] */}
+          <div className="flex items-center gap-0.5 bg-slate-900/95 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+            <button
+              type="button"
+              onClick={() => {
+                if (metric !== "population") {
+                  router.push(`/play/georings?metric=population&scale=${scale}&mode=${mode}`);
+                }
+              }}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-all ${
+                metric === "population"
+                  ? "bg-blue-600 text-white font-bold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Villes</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (metric !== "airports") {
+                  router.push(`/play/georings?metric=airports&scale=${scale}&mode=${mode}`);
+                }
+              }}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-all ${
+                metric === "airports"
+                  ? "bg-sky-600 text-white font-bold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Plane className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Aéroports</span>
+            </button>
           </div>
         </div>
 
@@ -547,7 +883,7 @@ function GeoRingsGame() {
                 if (mode === "daily") {
                   initGame();
                 } else {
-                  router.push(`/play/georings?scale=${scale}&mode=daily`);
+                  router.push(`/play/georings?metric=${metric}&scale=${scale}&mode=daily`);
                 }
               }}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
@@ -555,7 +891,7 @@ function GeoRingsGame() {
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              title="Défi officiel du jour (1 ville par jour pour tous)"
+              title="Défi officiel du jour"
             >
               <span>📅 Du Jour</span>
             </button>
@@ -566,7 +902,7 @@ function GeoRingsGame() {
                 if (mode === "free") {
                   initGame();
                 } else {
-                  router.push(`/play/georings?scale=${scale}&mode=free`);
+                  router.push(`/play/georings?metric=${metric}&scale=${scale}&mode=free`);
                 }
               }}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
@@ -574,7 +910,7 @@ function GeoRingsGame() {
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              title="Partie rapide standard avec une ville aléatoire"
+              title="Partie rapide standard"
             >
               <Zap className="w-3 h-3" />
               <span>Rapide</span>
@@ -588,7 +924,7 @@ function GeoRingsGame() {
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              title="Personnaliser les anneaux, rayons, continent et vies"
+              title="Personnaliser les anneaux, rayons et règles"
             >
               <Sliders className="w-3 h-3" />
               <span>Custom</span>
@@ -596,9 +932,9 @@ function GeoRingsGame() {
           </div>
 
           {/* Scale Switcher */}
-          <div className="hidden md:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+          <div className="hidden lg:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
             <button
-              onClick={() => router.push(`/play/georings?scale=fr&mode=${mode}`)}
+              onClick={() => router.push(`/play/georings?metric=${metric}&scale=fr&mode=${mode}`)}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 scale === "fr"
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
@@ -608,7 +944,7 @@ function GeoRingsGame() {
               🇫🇷 France
             </button>
             <button
-              onClick={() => router.push(`/play/georings?scale=eu&mode=${mode}`)}
+              onClick={() => router.push(`/play/georings?metric=${metric}&scale=eu&mode=${mode}`)}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 scale === "eu"
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
@@ -618,7 +954,7 @@ function GeoRingsGame() {
               🇪🇺 Europe
             </button>
             <button
-              onClick={() => router.push(`/play/georings?scale=world&mode=${mode}`)}
+              onClick={() => router.push(`/play/georings?metric=${metric}&scale=world&mode=${mode}`)}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 scale === "world"
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
@@ -632,7 +968,6 @@ function GeoRingsGame() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
-          {/* Final Summary button when game is over */}
           {isGameOver && (
             <button
               onClick={() => setShowGameOverModal(true)}
@@ -644,16 +979,14 @@ function GeoRingsGame() {
             </button>
           )}
 
-          {/* Settings button */}
           <button
             onClick={() => setShowSettings(true)}
-            title="Réglages de jeu (Frontières, boussole, etc.)"
+            title="Réglages de jeu"
             className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all text-xs"
           >
             <Settings className="w-4 h-4" />
           </button>
 
-          {/* Help button */}
           <button
             onClick={() => setShowHelp((prev) => !prev)}
             title="Règles du jeu"
@@ -662,10 +995,9 @@ function GeoRingsGame() {
             <HelpCircle className="w-4 h-4" />
           </button>
 
-          {/* Share button */}
           <button
             onClick={handleCopyLink}
-            title="Copier le lien pour défier un ami sur cette partie"
+            title="Défier un ami sur cette même partie"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
           >
             {shareCopied ? (
@@ -676,7 +1008,7 @@ function GeoRingsGame() {
             ) : (
               <>
                 <Share2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Défier un ami</span>
+                <span className="hidden sm:inline">Défier</span>
               </>
             )}
           </button>
@@ -714,11 +1046,14 @@ function GeoRingsGame() {
             <div className="flex-1 min-w-0">
               <SearchBar
                 scale={scale}
+                metric={metric}
                 onSelectCity={handleSelectCity}
                 onSkip={isReviewing ? handleNextRing : handleSkipRing}
                 onCityNotFound={(query) =>
                   setFeedback({
-                    text: `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
+                    text: isAirports
+                      ? `Aéroport "${query}" introuvable. Essayez le nom de ville, IATA (ex: CDG) ou nom officiel.`
+                      : `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
                     type: "warning",
                   })
                 }
@@ -727,7 +1062,9 @@ function GeoRingsGame() {
                 placeholder={
                   isReviewing
                     ? "Anneau terminé — Espace pour continuer..."
-                    : `Tapez la ville la plus peuplée...`
+                    : isAirports
+                    ? "Rechercher un aéroport (ex. CDG, Orly, Heathrow, Nice)..."
+                    : "Tapez la ville la plus peuplée..."
                 }
               />
             </div>
@@ -771,7 +1108,7 @@ function GeoRingsGame() {
             </div>
           </div>
 
-          {/* Integrated Feedback / Direction Hint Row (compact, inside same card) */}
+          {/* Integrated Feedback / Direction Hint Row */}
           {feedback && (
             <div
               className={`px-3 py-2 rounded-xl border text-xs font-semibold shadow-inner flex items-center justify-between gap-2 animate-in fade-in duration-200 ${
@@ -814,6 +1151,7 @@ function GeoRingsGame() {
         isOpen={showCustomModal}
         onClose={() => setShowCustomModal(false)}
         currentScale={scale}
+        initialMetric={metric}
       />
 
       {/* Rules Modal */}
@@ -822,8 +1160,8 @@ function GeoRingsGame() {
           <div className="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6 shadow-2xl text-left flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Compass className="w-5 h-5 text-blue-500" />
-                <span>Règles de GeoRings</span>
+                {isAirports ? <Plane className="w-5 h-5 text-sky-400" /> : <Compass className="w-5 h-5 text-blue-500" />}
+                <span>Règles : {isAirports ? "Aéroports & Trafic" : "Villes & Population"}</span>
               </h3>
               <button
                 onClick={() => setShowHelp(false)}
@@ -834,16 +1172,27 @@ function GeoRingsGame() {
             </div>
             <div className="text-sm text-slate-300 space-y-2.5">
               <p>
-                🎯 <b>Objectif :</b> À partir d'une ville centrale, découvrez la <b>ville la plus peuplée</b> au sein de chaque anneau concentrique successif.
+                🎯 <b>Objectif :</b> À partir d'un centre géographique, découvrez{" "}
+                {isAirports ? (
+                  <b>l'aéroport au plus fort trafic annuel de passagers</b>
+                ) : (
+                  <b>la ville la plus peuplée</b>
+                )}{" "}
+                au sein de chaque anneau concentrique successif.
               </p>
+              {isAirports ? (
+                <p>
+                  ✈️ <b>Recherche multi-clés :</b> Tapez le nom de la ville desservie (ex: <i>Nice</i>), le nom de l'aéroport (ex: <i>Charles de Gaulle</i>, <i>Orly</i>) ou son code IATA à 3 lettres (ex: <i>CDG</i>, <i>LHR</i>).
+                </p>
+              ) : null}
               <p>
                 ⭕ <b>Anneaux :</b> Le premier anneau est un cercle proche du centre. Les anneaux suivants s'étendent de plus en plus loin.
               </p>
               <p>
-                ❤️ <b>Vies :</b> Chaque ville essayée apparaît sur la carte avec un point rouge (échec) ou vert (succès). Si vous échouez, la bonne réponse est révélée et le jeu passe à l'anneau suivant.
+                ❤️ <b>Vies :</b> Vous disposez de 3 essais par anneau. En cas d'erreur ou d'épuisement, la bonne réponse est révélée et le jeu avance.
               </p>
               <p>
-                🧭 <b>Boussole :</b> En cas d'erreur dans l'anneau, un indice vous indique la direction de la cible depuis la ville essayée.
+                🧭 <b>Boussole :</b> En cas d'erreur dans l'anneau, un indice directionnel vous guide vers la cible depuis votre essai.
               </p>
             </div>
             <button
@@ -872,6 +1221,7 @@ function GeoRingsGame() {
             markers={displayedMarkers}
             showBorders={settings.showBorders}
             mapTheme={settings.mapTheme}
+            metric={session.metric || metric}
             focusedCity={focusedCity}
           />
         ) : (
@@ -889,12 +1239,17 @@ function GeoRingsGame() {
             <span>Centre :</span>
             <b className="text-blue-400 font-semibold">{session.seedCity.name}</b>
             <span className="text-slate-600">|</span>
+            <span className="text-slate-300 font-medium">
+              {isAirports ? "✈️ Aéroports" : "👥 Villes"}
+            </span>
+            <span className="text-slate-600">|</span>
             <span className="font-mono text-[10px] text-slate-500">
               {mode === "daily" ? "Du Jour" : mode === "custom" ? "Custom" : "Partie Rapide"}
             </span>
           </div>
         )}
-        {/* Ring Review Learning Panel (Left Side, style Geocore) */}
+
+        {/* Ring Review Learning Panel (Left Side) */}
         {isReviewing && rings[currentRingIndex] && (
           <RingReviewCard
             ringIndex={currentRingIndex}
@@ -902,6 +1257,7 @@ function GeoRingsGame() {
             outerRadiusKm={rings[currentRingIndex].outerRadiusKm}
             guesses={currentRingGuesses}
             topCities={currentRingTopCities}
+            metric={session?.metric || metric}
             pinnedCityIds={pinnedCityIds}
             hoveredCityId={hoveredCityId}
             onCityHover={setHoveredReviewCity}
@@ -942,6 +1298,7 @@ function GeoRingsGame() {
           isOpen={isGameOver && showGameOverModal}
           scale={scale}
           mode={mode}
+          metric={session.metric || metric}
           seed={session.seed}
           seedCityName={session.seedCity.name}
           rings={rings}

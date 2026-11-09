@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Loader2, MapPin } from "lucide-react";
-import { GameScale } from "@/lib/games/types";
+import { Search, Loader2, MapPin, Plane } from "lucide-react";
+import { GameScale, GameMetric } from "@/lib/games/types";
 
 export interface SearchCityItem {
   id: string;
   name: string;
   countryCode: string;
   scale?: GameScale;
+  iata?: string;
+  cityName?: string;
 }
 
 interface SearchBarProps {
   scale: GameScale;
+  metric?: GameMetric;
   onSelectCity: (city: SearchCityItem) => void;
   onCityNotFound?: (query: string) => void;
   onSkip?: () => void;
@@ -23,13 +26,19 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   scale,
+  metric = "population",
   onSelectCity,
   onCityNotFound,
   onSkip,
   disabled = false,
-  placeholder = "Entrez le nom d'une ville...",
+  placeholder,
   showDropdown = true,
 }) => {
+  const defaultPlaceholder = metric === "airports"
+    ? "Rechercher un aéroport (ex. CDG, Orly, Heathrow, Nice)..."
+    : "Entrez le nom d'une ville...";
+  const finalPlaceholder = placeholder || defaultPlaceholder;
+
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchCityItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +57,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     const timer = setTimeout(async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`/api/geo/search?q=${encodeURIComponent(query)}&scale=${scale}`);
+        const res = await fetch(`/api/geo/search?q=${encodeURIComponent(query)}&scale=${scale}&metric=${metric}`);
         if (res.ok) {
           const data = await res.json();
           setResults(data.results || []);
@@ -87,7 +96,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleDirectSubmit = async (searchQuery: string) => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/geo/search?q=${encodeURIComponent(searchQuery)}&scale=${scale}&limit=8`);
+      const res = await fetch(`/api/geo/search?q=${encodeURIComponent(searchQuery)}&scale=${scale}&metric=${metric}&limit=8`);
       if (res.ok) {
         const data = await res.json();
         if (data.results && data.results.length > 0) {
@@ -196,7 +205,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim().length >= 2 && setIsOpen(true)}
-          placeholder={placeholder}
+          placeholder={finalPlaceholder}
           disabled={disabled}
           className="w-full pl-10 pr-10 py-2.5 bg-slate-900/80 hover:bg-slate-900 focus:bg-slate-900 border border-slate-700/80 focus:border-blue-500 rounded-xl text-white placeholder-slate-400 text-xs sm:text-sm font-medium shadow-sm backdrop-blur-md transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
         />
@@ -205,7 +214,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         )}
       </div>
 
-      {/* Autocomplete Dropdown - Anti-cheat: No population shown */}
+      {/* Autocomplete Dropdown - Anti-cheat: No traffic/population shown */}
       {showDropdown && isOpen && results.length > 0 && (
         <div
           onWheel={(e) => e.stopPropagation()}
@@ -224,7 +233,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                  {metric === "airports" ? (
+                    <Plane className="w-4 h-4 text-sky-400 shrink-0" />
+                  ) : (
+                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                  )}
                   <span className="font-semibold text-sm">{city.name}</span>
                 </div>
                 <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">

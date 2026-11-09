@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSeedCities, getDefaultRadii, getCityById } from "@/lib/db/sqlite";
-import { GameScale, GeoRingsInitResponse } from "@/lib/games/types";
+import { GameScale, GameMetric, GeoRingsInitResponse } from "@/lib/games/types";
 
 function simpleHash(str: string): number {
   let hash = 0;
@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const scale = (searchParams.get("scale") || "fr") as GameScale;
   const mode = (searchParams.get("mode") || "daily") as "daily" | "free" | "custom";
+  const metric = (searchParams.get("metric") || "population") as GameMetric;
   const userSeed = searchParams.get("seed");
   const continent = searchParams.get("continent") || undefined;
   const radiiParam = searchParams.get("radii");
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
 
       if (mode === "daily") {
         const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-        seedValue = `${today}-${scale}`;
+        seedValue = `${today}-${scale}-${metric}`;
         seedIndex = simpleHash(seedValue) % seedCities.length;
       } else {
         if (userSeed) {
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (radii.length === 0) {
-      radii = getDefaultRadii(scale);
+      radii = getDefaultRadii(scale, metric);
     }
 
     // Determine max tries per ring (1, 3, or -1 for infinite)
@@ -93,12 +94,13 @@ export async function GET(request: NextRequest) {
     }));
 
     const response: GeoRingsInitResponse & { seed: string } = {
-      sessionId: `georings_${mode}_${scale}_${seedCity.id}`,
+      sessionId: `georings_${metric}_${mode}_${scale}_${seedCity.id}`,
       scale,
       mode,
+      metric,
       continent,
       maxTriesPerRing,
-      seed: mode === "daily" ? (userSeed || `${new Date().toISOString().split("T")[0]}-${scale}`) : seedCity.id,
+      seed: mode === "daily" ? (userSeed || `${new Date().toISOString().split("T")[0]}-${scale}-${metric}`) : seedCity.id,
       seedCity: {
         id: seedCity.id,
         name: seedCity.name,

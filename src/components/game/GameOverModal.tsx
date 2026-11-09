@@ -2,14 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { Trophy, Share2, RotateCcw, Check, Sparkles, X } from "lucide-react";
+import { Trophy, Share2, RotateCcw, Check, Sparkles, X, Plane } from "lucide-react";
 import { RingStatus } from "./RingProgressHUD";
-import { GameScale } from "@/lib/games/types";
+import { GameMetric, GameScale } from "@/lib/games/types";
 
 interface GameOverModalProps {
   isOpen: boolean;
   scale: GameScale;
   mode: "daily" | "free" | "custom";
+  metric?: GameMetric;
   seed: string;
   seedCityName: string;
   rings: RingStatus[];
@@ -22,6 +23,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   isOpen,
   scale,
   mode,
+  metric = "population",
   seed,
   seedCityName,
   rings,
@@ -30,6 +32,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   onClose,
 }) => {
   const [copied, setCopied] = useState(false);
+  const isAirports = metric === "airports";
 
   const solvedCount = rings.filter((r) => r.isCompleted).length;
   const isPerfect = solvedCount === rings.length;
@@ -70,12 +73,13 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
 
     const shareUrl =
       customShareUrl ||
-      `${window.location.origin}/play/georings?scale=${scale}&mode=free&seed=${seed}`;
+      `${window.location.origin}/play/georings?scale=${scale}&mode=free&metric=${metric}&seed=${seed}`;
 
     const modeLabel = mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Défi Custom" : "Partie Rapide";
+    const metricPrefix = isAirports ? "✈️ GeoHub — GeoRings Aéroports" : "🌍 GeoHub — GeoRings Villes";
 
     return [
-      `🌍 GeoHub — GeoRings ${scaleNames[scale]} (${modeLabel})`,
+      `${metricPrefix} ${scaleNames[scale]} (${modeLabel})`,
       `📍 Centre : ${seedCityName}`,
       `${emojis}`,
       `Score : ${solvedCount}/${rings.length} anneaux découverts`,
@@ -120,6 +124,8 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
         <div className="mx-auto flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400">
           {solvedCount >= 4 ? (
             <Trophy className="w-8 h-8 text-amber-400" />
+          ) : isAirports ? (
+            <Plane className="w-8 h-8 text-sky-400" />
           ) : (
             <Sparkles className="w-8 h-8 text-blue-400" />
           )}
@@ -135,7 +141,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
               : "Partie terminée !"}
           </h2>
           <p className="text-sm text-slate-400 mt-1">
-            Partie {mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Custom" : "Rapide"} — Échelle {scaleNames[scale]} (Centre : {seedCityName})
+            Partie {mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Custom" : "Rapide"} — Échelle {scaleNames[scale]} ({isAirports ? "✈️ Aéroports" : "👥 Villes"} · Centre : {seedCityName})
           </p>
           <div className="mt-3 inline-block px-4 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-lg font-bold text-blue-400">
             {solvedCount} / {rings.length} <span className="text-xs font-medium text-slate-400">anneaux réussis</span>

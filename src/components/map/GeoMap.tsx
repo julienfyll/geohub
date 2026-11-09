@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import maplibregl, { StyleSpecification } from "maplibre-gl";
 import { createGeodesicCircle, getBoundingBox } from "@/lib/geo/haversine";
 import { MapStyleTheme } from "@/lib/settings/types";
+import { GameMetric } from "@/lib/games/types";
 
 const SATELLITE_STYLE: StyleSpecification = {
   version: 8,
@@ -78,6 +79,9 @@ export interface MapMarker {
   lon: number;
   label: string;
   population?: number;
+  passengerCount?: number;
+  iata?: string;
+  metric?: GameMetric;
   type: "seed" | "correct" | "wrong" | "revealed" | "top";
 }
 
@@ -86,6 +90,9 @@ export interface FocusedCity {
   lon: number;
   label: string;
   population?: number;
+  passengerCount?: number;
+  iata?: string;
+  metric?: GameMetric;
 }
 
 export interface GeoMapProps {
@@ -96,8 +103,24 @@ export interface GeoMapProps {
   markers?: MapMarker[];
   showBorders?: boolean;
   mapTheme?: MapStyleTheme;
+  metric?: GameMetric;
   focusedCity?: FocusedCity | null;
   className?: string;
+}
+
+function formatMarkerStat(rawPop: number | undefined, isAirports: boolean): string | null {
+  if (rawPop === undefined || rawPop === null) return null;
+  const num = Number(rawPop);
+  if (isAirports) {
+    if (num >= 1_000_000) {
+      return `${(num / 1_000_000).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M passagers / an`;
+    }
+    if (num >= 1_000) {
+      return `${Math.round(num / 1_000).toLocaleString("fr-FR")}k passagers / an`;
+    }
+    return `${num.toLocaleString("fr-FR")} passagers / an`;
+  }
+  return `${num.toLocaleString("fr-FR")} hab.`;
 }
 
 export const GeoMap: React.FC<GeoMapProps> = ({
@@ -108,6 +131,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
   markers = [],
   showBorders = true,
   mapTheme = "dark",
+  metric = "population",
   focusedCity = null,
   className = "w-full h-full",
 }) => {
@@ -120,8 +144,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
   const markersListenersAttachedRef = useRef<boolean>(false);
 
   // Keep latest props in refs to avoid stale closures in event listeners
-  const latestPropsRef = useRef({ center, activeRadiusKm, completedRadiiKm, seedCity, markers, mapTheme });
-  latestPropsRef.current = { center, activeRadiusKm, completedRadiiKm, seedCity, markers, mapTheme };
+  const latestPropsRef = useRef({ center, activeRadiusKm, completedRadiiKm, seedCity, markers, mapTheme, metric });
+  latestPropsRef.current = { center, activeRadiusKm, completedRadiiKm, seedCity, markers, mapTheme, metric };
 
   const updateRingsAndCamera = (fitCamera = true) => {
     const map = mapRef.current;
@@ -409,8 +433,9 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         const coords = geom.coordinates.slice() as [number, number];
         const label = feat.properties?.label || "";
         const type = feat.properties?.type || "";
-        const rawPop = feat.properties?.population;
-        const popFormatted = rawPop ? `${Number(rawPop).toLocaleString("fr-FR")} hab.` : null;
+        const rawPop = feat.properties?.population ?? feat.properties?.passengerCount;
+        const isAirports = feat.properties?.metric === "airports" || latestPropsRef.current.metric === "airports";
+        const popFormatted = formatMarkerStat(rawPop, isAirports);
 
         let badgeColor = "border-rose-500/80 text-rose-200";
         if (type === "seed") badgeColor = "border-blue-500/80 text-blue-200";
@@ -418,11 +443,13 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         else if (type === "revealed") badgeColor = "border-amber-500/80 text-amber-200";
         else if (type === "top") badgeColor = "border-sky-500/80 text-sky-200";
 
+        const icon = isAirports && type !== "seed" ? "✈️ " : "";
+
         hoverPopup
           .setLngLat(coords)
           .setHTML(
             `<div class="px-2.5 py-1.5 rounded-lg bg-slate-950/95 border ${badgeColor} text-xs font-semibold shadow-2xl backdrop-blur-md whitespace-nowrap flex items-center gap-1.5">
-              <span>${label}</span>
+              <span>${icon}${label}</span>
               ${popFormatted ? `<span class="text-slate-400 font-normal">(${popFormatted})</span>` : ""}
             </div>`
           )
@@ -469,6 +496,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           type: m.type,
           label: m.type === "revealed" ? `★ ${m.label}` : m.label,
           population: m.population,
+          passengerCount: m.passengerCount,
+          metric: m.metric ?? latestPropsRef.current.metric,
           sortKey: m.type === "top" ? 1 : m.type === "correct" ? 2 : m.type === "revealed" ? 3 : 4,
         },
       });
@@ -586,15 +615,16 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           offset: 14,
         });
       }
-      const popFormatted = focusedCity.population
-        ? `${Number(focusedCity.population).toLocaleString("fr-FR")} hab.`
-        : null;
+      const isAirports = focusedCity.metric === "airports" || latestPropsRef.current.metric === "airports";
+      const rawCount = focusedCity.passengerCount ?? focusedCity.population;
+      const popFormatted = formatMarkerStat(rawCount, isAirports);
+      const icon = isAirports ? "✈️ " : "📍 ";
 
       focusPopupRef.current
         .setLngLat([focusedCity.lon, focusedCity.lat])
         .setHTML(
           `<div class="px-2.5 py-1.5 rounded-lg bg-slate-950/95 border border-sky-400 text-xs font-semibold shadow-2xl backdrop-blur-md whitespace-nowrap flex items-center gap-1.5 text-sky-200">
-            <span>📍 ${focusedCity.label}</span>
+            <span>${icon}${focusedCity.label}</span>
             ${popFormatted ? `<span class="text-slate-400 font-normal">(${popFormatted})</span>` : ""}
           </div>`
         )

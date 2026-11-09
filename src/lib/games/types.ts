@@ -1,4 +1,5 @@
 export type GameScale = "fr" | "eu" | "world";
+export type GameMetric = "population" | "airports";
 
 export interface City {
   id: string;
@@ -12,6 +13,19 @@ export interface City {
   timezone?: string;
 }
 
+export interface Airport {
+  id: string; // IATA code, e.g. "CDG"
+  iata: string;
+  name: string;
+  cityName: string;
+  countryCode: string;
+  countryName?: string;
+  scale: GameScale;
+  passengerCount: number;
+  latitude: number;
+  longitude: number;
+}
+
 export interface TopCityItem {
   rank: number;
   id: string;
@@ -20,6 +34,9 @@ export interface TopCityItem {
   population: number;
   latitude: number;
   longitude: number;
+  iata?: string;
+  cityName?: string;
+  passengerCount?: number;
 }
 
 export interface CityGuessResult {
@@ -30,6 +47,9 @@ export interface CityGuessResult {
     population: number;
     latitude: number;
     longitude: number;
+    iata?: string;
+    cityName?: string;
+    passengerCount?: number;
   };
   isInRing: boolean;
   distanceFromCenterKm: number;
@@ -47,12 +67,16 @@ export interface CityGuessResult {
     population: number;
     latitude: number;
     longitude: number;
+    iata?: string;
+    cityName?: string;
+    passengerCount?: number;
   };
   topCities?: TopCityItem[];
   triesLeft: number;
   ringCompleted: boolean;
   ringFailed: boolean;
   message: string;
+  metric?: GameMetric;
 }
 
 export interface RingConfig {
@@ -65,6 +89,7 @@ export interface GeoRingsInitResponse {
   sessionId: string;
   scale: GameScale;
   mode: "daily" | "free" | "custom";
+  metric: GameMetric;
   continent?: string;
   maxTriesPerRing?: number;
   seedCity: {

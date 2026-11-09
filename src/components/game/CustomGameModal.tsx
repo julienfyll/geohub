@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Sliders, Globe, Heart, Play } from "lucide-react";
-import { GameScale } from "@/lib/games/types";
+import { X, Sliders, Globe, Heart, Play, Plane, Users } from "lucide-react";
+import { GameMetric, GameScale } from "@/lib/games/types";
 
 interface CustomGameModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentScale: GameScale;
+  initialMetric?: GameMetric;
 }
 
 const CONTINENTS = [
@@ -21,26 +22,21 @@ const CONTINENTS = [
   { code: "OC", label: "🌏 Océanie" },
 ];
 
-/**
- * Geographical scale boundaries and parameter ranges.
- * The final ring radius R_final = R_1 + (N - 1) * step MUST NEVER exceed maxAllowedDistance.
- */
-const SCALE_BOUNDS: Record<
-  GameScale,
-  {
-    maxAllowedDistance: number;
-    initMin: number;
-    initMax: number;
-    initStep: number;
-    stepMin: number;
-    stepMax: number;
-    stepStep: number;
-    defaultInit: number;
-    defaultStep: number;
-    defaultRings: number;
-    scaleLabel: string;
-  }
-> = {
+interface ScaleConfig {
+  maxAllowedDistance: number;
+  initMin: number;
+  initMax: number;
+  initStep: number;
+  stepMin: number;
+  stepMax: number;
+  stepStep: number;
+  defaultInit: number;
+  defaultStep: number;
+  defaultRings: number;
+  scaleLabel: string;
+}
+
+const POPULATION_BOUNDS: Record<GameScale, ScaleConfig> = {
   fr: {
     maxAllowedDistance: 1000,
     initMin: 20,
@@ -82,34 +78,80 @@ const SCALE_BOUNDS: Record<
   },
 };
 
+const AIRPORTS_BOUNDS: Record<GameScale, ScaleConfig> = {
+  fr: {
+    maxAllowedDistance: 1000,
+    initMin: 50,
+    initMax: 400,
+    initStep: 10,
+    stepMin: 30,
+    stepMax: 300,
+    stepStep: 10,
+    defaultInit: 120,
+    defaultStep: 120,
+    defaultRings: 5,
+    scaleLabel: "France métropolitaine (Aéroports)",
+  },
+  eu: {
+    maxAllowedDistance: 3500,
+    initMin: 100,
+    initMax: 1000,
+    initStep: 25,
+    stepMin: 50,
+    stepMax: 800,
+    stepStep: 25,
+    defaultInit: 250,
+    defaultStep: 250,
+    defaultRings: 5,
+    scaleLabel: "Continent européen (Aéroports)",
+  },
+  world: {
+    maxAllowedDistance: 6000,
+    initMin: 200,
+    initMax: 2500,
+    initStep: 50,
+    stepMin: 100,
+    stepMax: 2000,
+    stepStep: 50,
+    defaultInit: 800,
+    defaultStep: 800,
+    defaultRings: 5,
+    scaleLabel: "Monde entier (Aéroports)",
+  },
+};
+
 export const CustomGameModal: React.FC<CustomGameModalProps> = ({
   isOpen,
   onClose,
   currentScale,
+  initialMetric = "population",
 }) => {
   const router = useRouter();
 
+  const [metric, setMetric] = useState<GameMetric>(initialMetric);
   const [scale, setScale] = useState<GameScale>(currentScale);
   const [continent, setContinent] = useState<string>("");
   const [numRings, setNumRings] = useState<number>(5);
   const [initialRadius, setInitialRadius] = useState<number>(200);
   const [stepRadius, setStepRadius] = useState<number>(200);
-  const [lives, setLives] = useState<number>(3); // 1, 3, or -1 (infinite)
+  const [lives, setLives] = useState<number>(3);
 
-  const bounds = SCALE_BOUNDS[scale];
+  const activeBoundsMap = metric === "airports" ? AIRPORTS_BOUNDS : POPULATION_BOUNDS;
+  const bounds = activeBoundsMap[scale];
 
-  // Reset to calibrated scale defaults when scale changes or modal opens
-  const applyScaleDefaults = (targetScale: GameScale) => {
+  // Reset to calibrated scale defaults when scale or metric changes
+  const applyScaleDefaults = (targetScale: GameScale, targetMetric: GameMetric = metric) => {
     setScale(targetScale);
-    const b = SCALE_BOUNDS[targetScale];
+    setMetric(targetMetric);
+    const b = (targetMetric === "airports" ? AIRPORTS_BOUNDS : POPULATION_BOUNDS)[targetScale];
     setInitialRadius(b.defaultInit);
     setStepRadius(b.defaultStep);
     setNumRings(b.defaultRings);
   };
 
   useEffect(() => {
-    applyScaleDefaults(currentScale);
-  }, [currentScale, isOpen]);
+    applyScaleDefaults(currentScale, initialMetric);
+  }, [currentScale, initialMetric, isOpen]);
 
   // Dynamic maximum rings permitted given current stepRadius and initialRadius
   const maxPossibleRings = Math.max(
@@ -140,10 +182,8 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
     Math.floor(maxPossibleInit / bounds.initStep) * bounds.initStep
   );
 
-  // Dynamic handlers ensuring R_final = R_1 + (N - 1) * step NEVER exceeds bounds.maxAllowedDistance
   const handleStepRadiusChange = (newStep: number) => {
     setStepRadius(newStep);
-    // Increasing increment dynamically reduces the maximum number of rings allowed
     const maxRingsForNewStep = Math.max(
       2,
       Math.min(12, 1 + Math.floor((bounds.maxAllowedDistance - initialRadius) / newStep))
@@ -155,7 +195,6 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
 
   const handleNumRingsChange = (newRings: number) => {
     setNumRings(newRings);
-    // Increasing rings dynamically reduces the maximum step allowed
     const maxStepForNewRings = Math.max(
       bounds.stepMin,
       Math.floor((bounds.maxAllowedDistance - initialRadius) / Math.max(1, newRings - 1))
@@ -168,7 +207,6 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
 
   const handleInitialRadiusChange = (newInit: number) => {
     setInitialRadius(newInit);
-    // Increasing initial radius dynamically adjusts step or rings if needed
     const maxStepForNewInit = Math.max(
       bounds.stepMin,
       Math.floor((bounds.maxAllowedDistance - newInit) / Math.max(1, numRings - 1))
@@ -179,7 +217,6 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
     }
   };
 
-  // Compute active radii list
   const activeRingsCount = Math.min(numRings, maxPossibleRings);
   const computedRadii = Array.from(
     { length: activeRingsCount },
@@ -190,7 +227,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
 
   const handleLaunch = () => {
     const radiiParam = computedRadii.join(",");
-    let url = `/play/georings?mode=custom&scale=${scale}&radii=${radiiParam}&lives=${lives}`;
+    let url = `/play/georings?mode=custom&scale=${scale}&metric=${metric}&radii=${radiiParam}&lives=${lives}`;
     if (scale === "world" && continent) {
       url += `&continent=${continent}`;
     }
@@ -209,7 +246,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             <Sliders className="w-5 h-5 text-blue-500" />
             <div>
               <h2 className="text-base font-bold text-white tracking-tight">Créer une Partie Custom</h2>
-              <p className="text-xs text-slate-400">Paramétrez librement vos anneaux et vos règles</p>
+              <p className="text-xs text-slate-400">Paramétrez librement vos anneaux, votre métrique et vos règles</p>
             </div>
           </div>
           <button
@@ -220,15 +257,48 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
           </button>
         </div>
 
-        {/* 1. Scale Selector */}
+        {/* 1. Metric Selector: Villes vs Aéroports */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-            1. Échelle de Jeu
+            1. Métrique Géographique
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => applyScaleDefaults(scale, "population")}
+              className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
+                metric === "population"
+                  ? "bg-blue-600 border-blue-500 text-white shadow-md"
+                  : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+              }`}
+            >
+              <Users className="w-4 h-4" />
+              <span>Villes & Population</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => applyScaleDefaults(scale, "airports")}
+              className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
+                metric === "airports"
+                  ? "bg-blue-600 border-blue-500 text-white shadow-md"
+                  : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
+              }`}
+            >
+              <Plane className="w-4 h-4" />
+              <span>Aéroports & Trafic Pax</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 2. Scale Selector */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            2. Échelle de Jeu
           </label>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={() => applyScaleDefaults("fr")}
+              onClick={() => applyScaleDefaults("fr", metric)}
               className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 scale === "fr"
                   ? "bg-blue-600 border-blue-500 text-white shadow-md"
@@ -239,7 +309,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => applyScaleDefaults("eu")}
+              onClick={() => applyScaleDefaults("eu", metric)}
               className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 scale === "eu"
                   ? "bg-blue-600 border-blue-500 text-white shadow-md"
@@ -250,7 +320,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => applyScaleDefaults("world")}
+              onClick={() => applyScaleDefaults("world", metric)}
               className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 scale === "world"
                   ? "bg-blue-600 border-blue-500 text-white shadow-md"
@@ -262,12 +332,12 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
           </div>
         </div>
 
-        {/* 2. Continent of departure (World only) */}
+        {/* 3. Continent of departure (World only) */}
         {scale === "world" && (
           <div className="flex flex-col gap-2 animate-in fade-in duration-200">
             <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
               <Globe className="w-3.5 h-3.5 text-blue-400" />
-              <span>2. Continent de Départ (Seed)</span>
+              <span>3. Continent de Départ (Seed)</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
               {CONTINENTS.map((c) => (
@@ -288,12 +358,12 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
           </div>
         )}
 
-        {/* 3. Dynamic Ring Parameters - Guaranteed <= bounds.maxAllowedDistance */}
+        {/* 4. Dynamic Ring Parameters */}
         <div className="flex flex-col gap-3.5 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                3. Géométrie des Anneaux
+                4. Géométrie des Anneaux
               </span>
               <p className="text-[11px] text-slate-400 mt-0.5">
                 Calcul : {initialRadius} km + ({activeRingsCount - 1} × {stepRadius} km)
@@ -319,7 +389,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             />
           </div>
 
-          {/* Number of rings (dynamically bounded by stepRadius) */}
+          {/* Number of rings */}
           <div className="flex flex-col gap-1">
             <div className="flex justify-between items-center text-xs">
               <span className="text-slate-400">Nombre d'anneaux</span>
@@ -340,7 +410,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             />
           </div>
 
-          {/* Increment per ring (increasing it automatically pulls down numRings) */}
+          {/* Increment per ring */}
           <div className="flex flex-col gap-1">
             <div className="flex justify-between items-center text-xs">
               <span className="text-slate-400">Incrément par anneau (pas)</span>
@@ -397,11 +467,11 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
           </div>
         </div>
 
-        {/* 4. Lives Rule */}
+        {/* 5. Lives Rule */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
             <Heart className="w-3.5 h-3.5 text-rose-400" />
-            <span>4. Nombre de Vies</span>
+            <span>5. Nombre de Vies</span>
           </label>
           <div className="grid grid-cols-3 gap-2">
             <button
@@ -455,7 +525,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02]"
           >
             <Play className="w-4 h-4 fill-white" />
-            <span>Lancer la Partie Custom ({activeRingsCount} anneaux · {finalRadius.toLocaleString("fr-FR")} km)</span>
+            <span>Lancer ({activeRingsCount} anneaux · {finalRadius.toLocaleString("fr-FR")} km)</span>
           </button>
         </div>
       </div>

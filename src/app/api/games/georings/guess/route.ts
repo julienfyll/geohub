@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCityById, getCitiesInRing } from "@/lib/db/sqlite";
+import { getCityById, getCitiesInRing, getAirportById, getAirportsInRing } from "@/lib/db/sqlite";
 import { getDistanceKm, getBearingDegrees, getCompassDirection } from "@/lib/geo/haversine";
-import { CityGuessResult, GameScale } from "@/lib/games/types";
+import { CityGuessResult, GameScale, GameMetric } from "@/lib/games/types";
+
+function formatPax(pax: number): string {
+  if (pax >= 1_000_000) {
+    return `${(pax / 1_000_000).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M`;
+  }
+  return `${Math.round(pax / 1_000).toLocaleString("fr-FR")}k`;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
       scale,
+      metric = "population",
       centerLat,
       centerLon,
       innerRadiusKm,
@@ -16,6 +24,7 @@ export async function POST(request: NextRequest) {
       currentTriesLeft,
     } = body as {
       scale: GameScale;
+      metric?: GameMetric;
       centerLat: number;
       centerLon: number;
       innerRadiusKm: number;
@@ -28,6 +37,168 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
+    if (metric === "airports") {
+      const airport = getAirportById(cityId);
+      if (!airport) {
+        return NextResponse.json({ error: "Airport not found" }, { status: 404 });
+      }
+
+      const distance = getDistanceKm(centerLat, centerLon, airport.latitude, airport.longitude);
+      const isInRing = distance > innerRadiusKm && distance <= outerRadiusKm;
+
+      const inRingAirports = getAirportsInRing(
+        centerLat,
+        centerLon,
+        innerRadiusKm,
+        outerRadiusKm,
+        scale
+      );
+
+      const airportDisplayName = `${airport.cityName} — ${airport.name} (${airport.iata})`;
+
+      if (!inRingAirports || inRingAirports.length === 0) {
+        return NextResponse.json({
+          city: {
+            id: airport.id,
+            name: airportDisplayName,
+            countryCode: airport.countryCode,
+            population: airport.passengerCount,
+            passengerCount: airport.passengerCount,
+            iata: airport.iata,
+            cityName: airport.cityName,
+            latitude: airport.latitude,
+            longitude: airport.longitude,
+          },
+          isInRing: false,
+          distanceFromCenterKm: Math.round(distance),
+          isTarget: false,
+          triesLeft: currentTriesLeft,
+          ringCompleted: true,
+          ringFailed: false,
+          metric: "airports",
+          message: "Cet anneau ne contient aucun aéroport répertorié. Anneau validé automatiquement !",
+        });
+      }
+
+      const targetAirport = inRingAirports[0];
+      const isTarget = airport.id === targetAirport.id;
+      const targetDisplayName = `${targetAirport.cityName} — ${targetAirport.name} (${targetAirport.iata})`;
+
+      const topCities = inRingAirports.slice(0, 3).map((ap, idx) => ({
+        rank: idx + 1,
+        id: ap.id,
+        name: `${ap.cityName} — ${ap.name} (${ap.iata})`,
+        countryCode: ap.countryCode,
+        population: ap.passengerCount,
+        passengerCount: ap.passengerCount,
+        iata: ap.iata,
+        cityName: ap.cityName,
+        latitude: ap.latitude,
+        longitude: ap.longitude,
+      }));
+
+      if (isTarget) {
+        const response: CityGuessResult = {
+          city: {
+            id: airport.id,
+            name: airportDisplayName,
+            countryCode: airport.countryCode,
+            population: airport.passengerCount,
+            passengerCount: airport.passengerCount,
+            iata: airport.iata,
+            cityName: airport.cityName,
+            latitude: airport.latitude,
+            longitude: airport.longitude,
+          },
+          isInRing: true,
+          distanceFromCenterKm: Math.round(distance),
+          isTarget: true,
+          guessRank: 1,
+          topCities,
+          triesLeft: currentTriesLeft,
+          ringCompleted: true,
+          ringFailed: false,
+          metric: "airports",
+          message: `Félicitations ! ${airportDisplayName} est bien le 1ᵉʳ aéroport le plus fréquenté (${formatPax(airport.passengerCount)} passagers / an) !`,
+        };
+        return NextResponse.json(response);
+      }
+
+      // Not the target airport
+      const isInfiniteLives = currentTriesLeft === -1;
+      const newTriesLeft = isInfiniteLives ? -1 : Math.max(0, currentTriesLeft - 1);
+      const ringFailed = !isInfiniteLives && newTriesLeft === 0;
+
+      let message = "";
+      let directionHint: { code: string; label: string; arrow: string } | undefined = undefined;
+      const paxFormatted = `${formatPax(airport.passengerCount)} passagers / an`;
+
+      if (!isInRing) {
+        message = `${airportDisplayName} est hors de l'anneau (${Math.round(distance)} km du centre, attendu entre ${innerRadiusKm} et ${outerRadiusKm} km).`;
+      } else {
+        const bearing = getBearingDegrees(airport.latitude, airport.longitude, targetAirport.latitude, targetAirport.longitude);
+        directionHint = getCompassDirection(bearing);
+
+        const rank = inRingAirports.findIndex((ap) => ap.id === airport.id) + 1;
+        if (rank === 2) {
+          message = `${airportDisplayName} (${paxFormatted}) est 2ᵉ de cet anneau (si proche !).`;
+        } else if (rank > 0 && rank <= 10) {
+          message = `${airportDisplayName} (${paxFormatted}) est ${rank}ᵉ de cet anneau.`;
+        } else if (rank > 10) {
+          message = `${airportDisplayName} (${paxFormatted}) n'est que ${rank}ᵉ de cet anneau.`;
+        } else {
+          message = `${airportDisplayName} (${paxFormatted}) n'est pas le plus fréquenté de cet anneau.`;
+        }
+      }
+
+      if (ringFailed) {
+        message += ` Essais épuisés ! La bonne réponse était ${targetDisplayName} (${formatPax(targetAirport.passengerCount)} passagers / an).`;
+      } else if (!isInfiniteLives) {
+        message += ` Il vous reste ${newTriesLeft} essai${newTriesLeft > 1 ? "s" : ""}.`;
+      }
+
+      const response: CityGuessResult = {
+        city: {
+          id: airport.id,
+          name: airportDisplayName,
+          countryCode: airport.countryCode,
+          population: airport.passengerCount,
+          passengerCount: airport.passengerCount,
+          iata: airport.iata,
+          cityName: airport.cityName,
+          latitude: airport.latitude,
+          longitude: airport.longitude,
+        },
+        isInRing,
+        distanceFromCenterKm: Math.round(distance),
+        isTarget: false,
+        guessRank: isInRing ? inRingAirports.findIndex((ap) => ap.id === airport.id) + 1 : undefined,
+        directionHint,
+        targetCityIfRevealed: ringFailed
+          ? {
+              id: targetAirport.id,
+              name: targetDisplayName,
+              countryCode: targetAirport.countryCode,
+              population: targetAirport.passengerCount,
+              passengerCount: targetAirport.passengerCount,
+              iata: targetAirport.iata,
+              cityName: targetAirport.cityName,
+              latitude: targetAirport.latitude,
+              longitude: targetAirport.longitude,
+            }
+          : undefined,
+        topCities: ringFailed ? topCities : undefined,
+        triesLeft: newTriesLeft,
+        ringCompleted: false,
+        ringFailed,
+        metric: "airports",
+        message,
+      };
+
+      return NextResponse.json(response);
+    }
+
+    // Population metric (Default)
     const city = getCityById(cityId);
     if (!city) {
       return NextResponse.json({ error: "City not found" }, { status: 404 });
@@ -61,6 +232,7 @@ export async function POST(request: NextRequest) {
         triesLeft: currentTriesLeft,
         ringCompleted: true,
         ringFailed: false,
+        metric: "population",
         message: "Cet anneau ne contient aucune ville répertoriée. Anneau validé automatiquement !",
       });
     }
@@ -96,6 +268,7 @@ export async function POST(request: NextRequest) {
         triesLeft: currentTriesLeft,
         ringCompleted: true,
         ringFailed: false,
+        metric: "population",
         message: `Félicitations ! ${city.name} est bien la 1ʳᵉ ville la plus peuplée (${city.population.toLocaleString("fr-FR")} hab.) !`,
       };
       return NextResponse.json(response);
@@ -128,8 +301,6 @@ export async function POST(request: NextRequest) {
       } else {
         message = `${city.name} (${popFormatted} hab.) n'est pas la plus peuplée de cet anneau.`;
       }
-      // Note: directionHint is NOT added to message string directly so that disabling
-      // compass hints in user settings completely suppresses any directional clues.
     }
 
     if (ringFailed) {
@@ -166,6 +337,7 @@ export async function POST(request: NextRequest) {
       triesLeft: newTriesLeft,
       ringCompleted: false,
       ringFailed,
+      metric: "population",
       message,
     };
 
