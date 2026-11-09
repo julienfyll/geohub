@@ -425,8 +425,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           duration: 0,
         });
       } else {
-        // Two-finger pan: smooth lateral and vertical translation
-        map.panBy([-e.deltaX, -e.deltaY], { duration: 0 });
+        // Two-finger pan: natural reversed scrolling direction
+        map.panBy([e.deltaX, e.deltaY], { duration: 0 });
       }
     };
 
