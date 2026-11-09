@@ -192,13 +192,22 @@ export default function Home() {
               </div>
             </div>
 
-            <Link
-              href="/play/blindpoint?pack=villes_france&mode=daily"
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all shadow-lg shadow-emerald-600/20"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Jouer Maintenant</span>
-            </Link>
+            <div className="grid grid-cols-2 gap-2.5">
+              <Link
+                href="/play/blindpoint?pack=villes_france&mode=daily"
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-600/20"
+              >
+                <Play className="w-4 h-4 fill-white" />
+                <span>Défi du Jour</span>
+              </Link>
+              <Link
+                href="/play/blindpoint?pack=villes_france&mode=free"
+                className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Partie Rapide</span>
+              </Link>
+            </div>
           </div>
 
           {/* Game 3 : BorderPath (Coming Soon) */}
