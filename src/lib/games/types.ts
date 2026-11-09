@@ -59,6 +59,7 @@ export interface GeoRingsInitResponse {
     id: string;
     name: string;
     countryCode: string;
+    population: number;
     latitude: number;
     longitude: number;
   };

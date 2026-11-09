@@ -103,6 +103,7 @@ export async function GET(request: NextRequest) {
         id: seedCity.id,
         name: seedCity.name,
         countryCode: seedCity.countryCode,
+        population: seedCity.population,
         latitude: seedCity.latitude,
         longitude: seedCity.longitude,
       },

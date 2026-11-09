@@ -130,12 +130,13 @@ function GeoRingsGame() {
       if (!res.ok) throw new Error("Erreur de validation");
       const result: CityGuessResult = await res.json();
 
-      // Add tested city marker (minimalist dot + name, NO population on the map)
+      // Add tested city marker (minimalist dot + name, population available on hover)
       const newMarker: MapMarker = {
         id: `guess_${city.id}`,
         lat: result.city.latitude,
         lon: result.city.longitude,
         label: result.city.name,
+        population: result.city.population,
         type: result.isTarget ? "correct" : "wrong",
       };
 
@@ -188,6 +189,7 @@ function GeoRingsGame() {
               lat: result.targetCityIfRevealed.latitude,
               lon: result.targetCityIfRevealed.longitude,
               label: result.targetCityIfRevealed.name,
+              population: result.targetCityIfRevealed.population,
               type: "revealed",
             };
             setMarkers((prev) => {
@@ -516,6 +518,7 @@ function GeoRingsGame() {
               name: session.seedCity.name,
               lat: session.seedCity.latitude,
               lon: session.seedCity.longitude,
+              population: session.seedCity.population,
             }}
             activeRadiusKm={rings[currentRingIndex]?.outerRadiusKm}
             completedRadiiKm={completedRadii}

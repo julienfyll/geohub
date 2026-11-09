@@ -11,12 +11,13 @@ export interface MapMarker {
   lat: number;
   lon: number;
   label: string;
+  population?: number;
   type: "seed" | "correct" | "wrong" | "revealed";
 }
 
 export interface GeoMapProps {
   center: [number, number]; // [lon, lat]
-  seedCity?: { name: string; lat: number; lon: number };
+  seedCity?: { name: string; lat: number; lon: number; population?: number };
   activeRadiusKm?: number;
   completedRadiiKm?: number[];
   markers?: MapMarker[];
@@ -290,6 +291,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         const coords = geom.coordinates.slice() as [number, number];
         const label = feat.properties?.label || "";
         const type = feat.properties?.type || "";
+        const rawPop = feat.properties?.population;
+        const popFormatted = rawPop ? `${Number(rawPop).toLocaleString("fr-FR")} hab.` : null;
 
         let badgeColor = "border-rose-500/80 text-rose-200";
         if (type === "seed") badgeColor = "border-blue-500/80 text-blue-200";
@@ -299,7 +302,10 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         hoverPopup
           .setLngLat(coords)
           .setHTML(
-            `<div class="px-2 py-1 rounded-md bg-slate-950/95 border ${badgeColor} text-xs font-semibold shadow-xl backdrop-blur-md whitespace-nowrap">${label}</div>`
+            `<div class="px-2.5 py-1.5 rounded-lg bg-slate-950/95 border ${badgeColor} text-xs font-semibold shadow-2xl backdrop-blur-md whitespace-nowrap flex items-center gap-1.5">
+              <span>${label}</span>
+              ${popFormatted ? `<span class="text-slate-400 font-normal">(${popFormatted})</span>` : ""}
+            </div>`
           )
           .addTo(map);
       });
@@ -327,6 +333,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           id: "seed",
           type: "seed",
           label: `${curSeed.name} (Centre)`,
+          population: curSeed.population,
           sortKey: 1,
         },
       });
@@ -344,6 +351,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           id: m.id,
           type: m.type,
           label: m.type === "revealed" ? `★ ${m.label}` : m.label,
+          population: m.population,
           sortKey: m.type === "correct" ? 2 : m.type === "revealed" ? 3 : 4,
         },
       });
