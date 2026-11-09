@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Sliders, Globe, Heart, Shield, Play } from "lucide-react";
+import { X, Sliders, Globe, Heart, Play } from "lucide-react";
 import { GameScale } from "@/lib/games/types";
 
 interface CustomGameModalProps {
@@ -292,15 +292,9 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
         <div className="flex flex-col gap-3.5 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                  3. Géométrie des Anneaux
-                </span>
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded-full font-medium">
-                  <Shield className="w-3 h-3" />
-                  Garde-fou actif
-                </span>
-              </div>
+              <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                3. Géométrie des Anneaux
+              </span>
               <p className="text-[11px] text-slate-400 mt-0.5">
                 Calcul : {initialRadius} km + ({activeRingsCount - 1} × {stepRadius} km)
               </p>
