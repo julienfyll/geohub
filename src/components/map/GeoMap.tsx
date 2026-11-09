@@ -1,10 +1,76 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import maplibregl from "maplibre-gl";
+import maplibregl, { StyleSpecification } from "maplibre-gl";
 import { createGeodesicCircle, getBoundingBox } from "@/lib/geo/haversine";
+import { MapStyleTheme } from "@/lib/settings/types";
 
-const BASEMAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json";
+const SATELLITE_STYLE: StyleSpecification = {
+  version: 8,
+  glyphs: "https://tiles.basemaps.cartocdn.com/v/20261026-01/fonts/{fontstack}/{range}.pbf",
+  sources: {
+    "esri-satellite": {
+      type: "raster",
+      tiles: [
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      ],
+      tileSize: 256,
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+      maxzoom: 19,
+    },
+    protomaps: {
+      type: "vector",
+      tiles: [
+        "https://tiles.basemaps.cartocdn.com/v/20261026-01/vectortiles/carto.streets/v2/{z}/{x}/{y}.mvt",
+      ],
+      minzoom: 0,
+      maxzoom: 15,
+    },
+  },
+  layers: [
+    {
+      id: "satellite-tiles",
+      type: "raster",
+      source: "esri-satellite",
+      minzoom: 0,
+      maxzoom: 19,
+    },
+    {
+      id: "boundary_country_outline",
+      type: "line",
+      source: "protomaps",
+      "source-layer": "boundaries",
+      minzoom: 3,
+      paint: {
+        "line-color": "#000000",
+        "line-width": 3,
+        "line-opacity": 0.6,
+      },
+      filter: ["==", ["get", "kind_detail"], 2],
+    },
+    {
+      id: "boundary_country_inner",
+      type: "line",
+      source: "protomaps",
+      "source-layer": "boundaries",
+      minzoom: 0,
+      paint: {
+        "line-color": "#ffffff",
+        "line-width": 1.5,
+        "line-opacity": 0.85,
+        "line-dasharray": [2, 1],
+      },
+      filter: ["==", ["get", "kind_detail"], 2],
+    },
+  ],
+};
+
+const BASEMAP_STYLES: Record<MapStyleTheme, string | StyleSpecification> = {
+  dark: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
+  satellite: SATELLITE_STYLE,
+  light: "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json",
+};
 
 export interface MapMarker {
   id: string;
@@ -29,6 +95,7 @@ export interface GeoMapProps {
   completedRadiiKm?: number[];
   markers?: MapMarker[];
   showBorders?: boolean;
+  mapTheme?: MapStyleTheme;
   focusedCity?: FocusedCity | null;
   className?: string;
 }
@@ -40,22 +107,26 @@ export const GeoMap: React.FC<GeoMapProps> = ({
   completedRadiiKm = [],
   markers = [],
   showBorders = true,
+  mapTheme = "dark",
   focusedCity = null,
   className = "w-full h-full",
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const isLoadedRef = useRef<boolean>(false);
+  const currentThemeRef = useRef<MapStyleTheme>(mapTheme);
   const hoverPopupRef = useRef<maplibregl.Popup | null>(null);
   const focusPopupRef = useRef<maplibregl.Popup | null>(null);
 
   // Keep latest props in refs to avoid stale closures in event listeners
-  const latestPropsRef = useRef({ center, activeRadiusKm, completedRadiiKm, seedCity, markers });
-  latestPropsRef.current = { center, activeRadiusKm, completedRadiiKm, seedCity, markers };
+  const latestPropsRef = useRef({ center, activeRadiusKm, completedRadiiKm, seedCity, markers, mapTheme });
+  latestPropsRef.current = { center, activeRadiusKm, completedRadiiKm, seedCity, markers, mapTheme };
 
   const updateRingsAndCamera = () => {
     const map = mapRef.current;
     if (!map || !isLoadedRef.current) return;
+
+    const isLight = latestPropsRef.current.mapTheme === "light";
 
     let source = map.getSource("rings-source") as maplibregl.GeoJSONSource | undefined;
     if (!source) {
@@ -75,16 +146,16 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           "fill-color": [
             "case",
             ["==", ["get", "type"], "active"],
-            "#3b82f6",
+            isLight ? "#2563eb" : "#3b82f6",
             ["==", ["get", "type"], "completed"],
-            "#10b981",
+            isLight ? "#059669" : "#10b981",
             "#64748b",
           ],
           "fill-opacity": [
             "case",
             ["==", ["get", "type"], "active"],
-            0.12,
-            0.05,
+            isLight ? 0.16 : 0.12,
+            isLight ? 0.08 : 0.05,
           ],
         },
       });
@@ -97,9 +168,9 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           "line-color": [
             "case",
             ["==", ["get", "type"], "active"],
-            "#60a5fa",
+            isLight ? "#2563eb" : "#60a5fa",
             ["==", ["get", "type"], "completed"],
-            "#34d399",
+            isLight ? "#059669" : "#34d399",
             "#64748b",
           ],
           "line-width": [
@@ -181,6 +252,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     const map = mapRef.current;
     if (!map || !isLoadedRef.current) return;
 
+    const isLight = latestPropsRef.current.mapTheme === "light";
+
     let source = map.getSource("markers-source") as maplibregl.GeoJSONSource | undefined;
     if (!source) {
       map.addSource("markers-source", {
@@ -204,7 +277,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         },
       });
 
-      // Outer contrasting white border for all city dots
+      // Outer contrasting border for all city dots
       map.addLayer({
         id: "markers-dot-outer",
         type: "circle",
@@ -216,7 +289,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
             8,
             6,
           ],
-          "circle-color": "#ffffff",
+          "circle-color": isLight ? "#0f172a" : "#ffffff",
           "circle-opacity": 0.95,
         },
       });
@@ -271,19 +344,32 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           "icon-allow-overlap": true,
         },
         paint: {
-          "text-color": [
-            "case",
-            ["==", ["get", "type"], "seed"],
-            "#93c5fd",
-            ["==", ["get", "type"], "correct"],
-            "#6ee7b7",
-            ["==", ["get", "type"], "revealed"],
-            "#fcd34d",
-            ["==", ["get", "type"], "top"],
-            "#7dd3fc",
-            "#fca5a5",
-          ],
-          "text-halo-color": "#020617",
+          "text-color": isLight
+            ? [
+                "case",
+                ["==", ["get", "type"], "seed"],
+                "#1d4ed8",
+                ["==", ["get", "type"], "correct"],
+                "#047857",
+                ["==", ["get", "type"], "revealed"],
+                "#b45309",
+                ["==", ["get", "type"], "top"],
+                "#0284c7",
+                "#b91c1c",
+              ]
+            : [
+                "case",
+                ["==", ["get", "type"], "seed"],
+                "#93c5fd",
+                ["==", ["get", "type"], "correct"],
+                "#6ee7b7",
+                ["==", ["get", "type"], "revealed"],
+                "#fcd34d",
+                ["==", ["get", "type"], "top"],
+                "#7dd3fc",
+                "#fca5a5",
+              ],
+          "text-halo-color": isLight ? "#ffffff" : "#020617",
           "text-halo-width": 2.5,
           "text-halo-blur": 0.5,
         },
@@ -387,7 +473,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     // Strict orientation lock: North is strictly up, 0 deg bearing, 0 deg pitch
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: BASEMAP_STYLE,
+      style: BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark,
       center: center,
       zoom: 6,
       bearing: 0,
@@ -552,6 +638,23 @@ export const GeoMap: React.FC<GeoMapProps> = ({
       updateMarkers();
     }
   }, [markers, seedCity]);
+
+  // Dynamic Map Theme Switcher
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+    if (currentThemeRef.current === mapTheme) return;
+
+    currentThemeRef.current = mapTheme;
+    const nextStyle = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
+
+    map.setStyle(nextStyle);
+    map.once("style.load", () => {
+      updateBasemapLayers();
+      updateRingsAndCamera();
+      updateMarkers();
+    });
+  }, [mapTheme]);
 
   return (
     <div className={`relative overflow-hidden ${className}`}>

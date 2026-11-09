@@ -871,6 +871,7 @@ function GeoRingsGame() {
             completedRadiiKm={completedRadii}
             markers={displayedMarkers}
             showBorders={settings.showBorders}
+            mapTheme={settings.mapTheme}
             focusedCity={focusedCity}
           />
         ) : (
