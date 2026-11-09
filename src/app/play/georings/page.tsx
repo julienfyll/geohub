@@ -246,10 +246,13 @@ function GeoRingsGame() {
 
   const getCustomShareUrl = () => {
     if (!session) return "";
-    let url = `${window.location.origin}/play/georings?scale=${scale}&mode=${mode}&seed=${session.seed}`;
+    const seedParam = mode === "daily" ? session.seed : session.seedCity.id;
+    let url = `${window.location.origin}/play/georings?scale=${scale}&mode=${mode}&seed=${seedParam}`;
     if (continent) url += `&continent=${continent}`;
-    if (customRadii) url += `&radii=${customRadii}`;
+    const radiiParam = customRadii || (rings && rings.length > 0 ? rings.map((r) => r.outerRadiusKm).join(",") : "");
+    if (radiiParam) url += `&radii=${radiiParam}`;
     if (customLives) url += `&lives=${customLives}`;
+    else if (totalTries !== 3) url += `&lives=${totalTries}`;
     return url;
   };
 

@@ -26,6 +26,12 @@ export async function GET(request: NextRequest) {
 
     if (cityIdParam) {
       seedCity = getCityById(cityIdParam);
+    } else if (userSeed && mode !== "daily") {
+      // Direct city ID lookup: if userSeed matches a city ID in SQLite, use it directly!
+      const directCity = getCityById(userSeed);
+      if (directCity) {
+        seedCity = directCity;
+      }
     }
 
     if (!seedCity) {
@@ -87,12 +93,12 @@ export async function GET(request: NextRequest) {
     }));
 
     const response: GeoRingsInitResponse & { seed: string } = {
-      sessionId: `georings_${mode}_${scale}_${userSeed || seedCity.id}`,
+      sessionId: `georings_${mode}_${scale}_${seedCity.id}`,
       scale,
       mode,
       continent,
       maxTriesPerRing,
-      seed: userSeed || seedCity.id,
+      seed: mode === "daily" ? (userSeed || `${new Date().toISOString().split("T")[0]}-${scale}`) : seedCity.id,
       seedCity: {
         id: seedCity.id,
         name: seedCity.name,
