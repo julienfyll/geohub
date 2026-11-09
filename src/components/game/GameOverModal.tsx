@@ -72,7 +72,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
       customShareUrl ||
       `${window.location.origin}/play/georings?scale=${scale}&mode=free&seed=${seed}`;
 
-    const modeLabel = mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Défi Custom" : "Partie Libre";
+    const modeLabel = mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Défi Custom" : "Partie Rapide";
 
     return [
       `🌍 GeoHub — GeoRings ${scaleNames[scale]} (${modeLabel})`,
@@ -135,7 +135,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
               : "Partie terminée !"}
           </h2>
           <p className="text-sm text-slate-400 mt-1">
-            Partie {mode === "daily" ? "Défi du Jour" : "Libre"} — Échelle {scaleNames[scale]} (Centre : {seedCityName})
+            Partie {mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Custom" : "Rapide"} — Échelle {scaleNames[scale]} (Centre : {seedCityName})
           </p>
           <div className="mt-3 inline-block px-4 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-lg font-bold text-blue-400">
             {solvedCount} / {rings.length} <span className="text-xs font-medium text-slate-400">anneaux réussis</span>

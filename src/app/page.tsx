@@ -7,7 +7,6 @@ import {
   MapPin,
   Zap,
   Layers,
-  ArrowRight,
   Flame,
 } from "lucide-react";
 
@@ -64,28 +63,9 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="text-slate-400 text-base sm:text-lg max-w-2xl mb-8 leading-relaxed">
+          <p className="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed">
             Défiez votre intuition territoriale, trouvez les métropoles cachées dans des cercles concentriques, et comparez vos scores avec vos amis en un clic.
           </p>
-
-          {/* Quick Launch CTA */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/play/georings?scale=fr&mode=daily"
-              className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold text-sm shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02]"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Lancer le Défi du Jour (France)</span>
-            </Link>
-
-            <Link
-              href="/play/georings?scale=world&mode=free"
-              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold text-sm border border-slate-700/80 transition-all hover:border-slate-600"
-            >
-              <span>Mode Libre (Monde)</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" />
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -125,35 +105,47 @@ export default function Home() {
               </p>
 
               {/* Scales selection */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                <Link
-                  href="/play/georings?scale=fr&mode=daily"
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                >
-                  🇫🇷 France
-                </Link>
-                <Link
-                  href="/play/georings?scale=eu&mode=daily"
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                >
-                  🇪🇺 Europe
-                </Link>
-                <Link
-                  href="/play/georings?scale=world&mode=daily"
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                >
-                  🌍 Monde
-                </Link>
+              <div className="flex flex-col gap-2.5 mb-6">
+                <span className="text-xs text-slate-400 font-medium">Échelle de jeu (Défi du Jour) :</span>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/play/georings?scale=fr&mode=daily"
+                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                  >
+                    🇫🇷 France
+                  </Link>
+                  <Link
+                    href="/play/georings?scale=eu&mode=daily"
+                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                  >
+                    🇪🇺 Europe
+                  </Link>
+                  <Link
+                    href="/play/georings?scale=world&mode=daily"
+                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                  >
+                    🌍 Monde
+                  </Link>
+                </div>
               </div>
             </div>
 
-            <Link
-              href="/play/georings?scale=fr&mode=daily"
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-600/20"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Jouer Maintenant</span>
-            </Link>
+            <div className="grid grid-cols-2 gap-2.5">
+              <Link
+                href="/play/georings?scale=fr&mode=daily"
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/20"
+              >
+                <Play className="w-4 h-4 fill-white" />
+                <span>Défi du Jour</span>
+              </Link>
+              <Link
+                href="/play/georings?scale=fr&mode=free"
+                className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Partie Rapide</span>
+              </Link>
+            </div>
           </div>
 
           {/* Game 2 : Blind Point (Active) */}

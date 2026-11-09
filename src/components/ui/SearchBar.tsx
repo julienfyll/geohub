@@ -198,7 +198,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onFocus={() => query.trim().length >= 2 && setIsOpen(true)}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full pl-10 pr-10 py-3 bg-slate-900/90 hover:bg-slate-900 focus:bg-slate-900 border border-slate-700 focus:border-blue-500 rounded-xl text-white placeholder-slate-400 text-sm font-medium shadow-xl backdrop-blur-md transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full pl-10 pr-10 py-2.5 bg-slate-900/80 hover:bg-slate-900 focus:bg-slate-900 border border-slate-700/80 focus:border-blue-500 rounded-xl text-white placeholder-slate-400 text-xs sm:text-sm font-medium shadow-sm backdrop-blur-md transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
         />
         {isLoading && (
           <Loader2 className="absolute right-3.5 w-4 h-4 text-blue-400 animate-spin pointer-events-none" />

@@ -38,6 +38,38 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
         </div>
 
+        {/* Basemap Style Theme Selector */}
+        <div>
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">
+            Calque visuel de la carte
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { id: "dark", label: "Sombre", icon: "🌑", desc: "Contraste arcade" },
+              { id: "satellite", label: "Satellite", icon: "🛰️", desc: "Imagerie réelle" },
+              { id: "light", label: "Clair", icon: "☀️", desc: "Atlas épuré" },
+            ].map((theme) => {
+              const isSelected = (settings.mapTheme || "dark") === theme.id;
+              return (
+                <button
+                  key={theme.id}
+                  type="button"
+                  onClick={() => onUpdateSetting("mapTheme", theme.id as any)}
+                  className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
+                    isSelected
+                      ? "bg-blue-600/25 border-blue-500 text-white ring-1 ring-blue-500/60 shadow-lg shadow-blue-500/20"
+                      : "bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-800"
+                  }`}
+                >
+                  <span className="text-lg mb-1">{theme.icon}</span>
+                  <span className="font-bold text-xs">{theme.label}</span>
+                  <span className="text-[10px] text-slate-500 mt-0.5 leading-tight">{theme.desc}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Toggles list */}
         <div className="flex flex-col gap-4 text-sm divide-y divide-slate-800/80">
           {/* Borders */}
