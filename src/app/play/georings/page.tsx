@@ -19,6 +19,8 @@ import {
   Sparkles,
   SkipForward,
   Trophy,
+  Heart,
+  Target,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
@@ -649,86 +651,121 @@ function GeoRingsGame() {
         </div>
       </header>
 
-      {/* Floating Game Control Panel (HUD & Search) */}
-      <div className="absolute top-[68px] left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4 flex flex-col gap-3 pointer-events-none">
-        {/* Progress Bar & Lives */}
-        {rings.length > 0 && (
-          <div className="pointer-events-auto">
-            <RingProgressHUD
-              rings={rings}
-              currentRingIndex={currentRingIndex}
-              triesLeft={triesLeft}
-              totalTries={totalTries}
-            />
-          </div>
-        )}
+      {/* Vertical Ring Progress Bar (Right Side) */}
+      {rings.length > 0 && (
+        <aside className="absolute top-20 right-4 z-30 pointer-events-auto hidden sm:block">
+          <RingProgressHUD
+            rings={rings}
+            currentRingIndex={currentRingIndex}
+          />
+        </aside>
+      )}
 
-        {/* Search Box & Skip Button */}
-        <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="flex-1">
-            <SearchBar
-              scale={scale}
-              onSelectCity={handleSelectCity}
-              onSkip={isReviewing ? handleNextRing : handleSkipRing}
-              onCityNotFound={(query) =>
-                setFeedback({
-                  text: `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
-                  type: "warning",
-                })
-              }
-              showDropdown={settings.showAutocompleteDropdown}
-              disabled={isGameOver || isSubmitting || loading || isReviewing}
-              placeholder={
-                isReviewing
-                  ? "Anneau terminé — Appuyez sur Espace pour continuer..."
-                  : `Tapez une ville pour l'anneau ${currentRingIndex + 1}...`
-              }
-            />
-          </div>
-          {!isReviewing && (
-            <button
-              type="button"
-              onClick={handleSkipRing}
-              disabled={isGameOver || isSubmitting || loading}
-              title="Passer au cercle suivant (Espace)"
-              className="flex items-center gap-1.5 px-3 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-xl backdrop-blur-md shrink-0 disabled:opacity-40 disabled:cursor-not-allowed group"
-            >
-              <SkipForward className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
-              <span className="hidden sm:inline">Passer</span>
-              <kbd className="hidden md:inline px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[9px] text-slate-400">
-                Espace
-              </kbd>
-            </button>
-          )}
-        </div>
+      {/* Unified Compact Top Control Bar (Center) */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl sm:max-w-2xl px-4 pointer-events-none">
+        <div className="pointer-events-auto bg-slate-950/95 border border-slate-800/90 rounded-2xl p-2 shadow-2xl backdrop-blur-xl flex flex-col gap-2 transition-all">
+          {/* Main Controls Row: [Target Radius] | [SearchBar] | [Passer] | [Lives] */}
+          <div className="flex items-center gap-2">
+            {/* 1. Active Ring & Radius Badge */}
+            {rings[currentRingIndex] && (
+              <div className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-blue-600/15 border border-blue-500/30 text-blue-300 font-semibold text-xs shrink-0 whitespace-nowrap shadow-sm">
+                <Target className="w-3.5 h-3.5 text-blue-400 shrink-0 animate-spin-slow" />
+                <span>
+                  {rings[currentRingIndex].innerRadiusKm === 0
+                    ? `< ${rings[currentRingIndex].outerRadiusKm} km`
+                    : `${rings[currentRingIndex].innerRadiusKm}-${rings[currentRingIndex].outerRadiusKm} km`}
+                </span>
+              </div>
+            )}
 
-        {/* Feedback Banner with optional Compass Direction Hint */}
-        {feedback && (
-          <div
-            className={`pointer-events-auto px-4 py-3 rounded-xl border text-xs font-semibold shadow-2xl backdrop-blur-md animate-in slide-in-from-top-2 duration-200 flex items-center justify-between gap-2.5 ${
-              feedback.type === "success"
-                ? "bg-emerald-950/95 border-emerald-500/80 text-emerald-200"
-                : feedback.type === "error"
-                ? "bg-rose-950/95 border-rose-500/80 text-rose-200"
-                : feedback.type === "warning"
-                ? "bg-amber-950/95 border-amber-500/80 text-amber-200"
-                : "bg-slate-900/95 border-slate-700 text-slate-200"
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{feedback.text}</span>
+            {/* 2. Search Input */}
+            <div className="flex-1 min-w-0">
+              <SearchBar
+                scale={scale}
+                onSelectCity={handleSelectCity}
+                onSkip={isReviewing ? handleNextRing : handleSkipRing}
+                onCityNotFound={(query) =>
+                  setFeedback({
+                    text: `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
+                    type: "warning",
+                  })
+                }
+                showDropdown={settings.showAutocompleteDropdown}
+                disabled={isGameOver || isSubmitting || loading || isReviewing}
+                placeholder={
+                  isReviewing
+                    ? "Anneau terminé — Espace pour continuer..."
+                    : `Tapez la ville la plus peuplée...`
+                }
+              />
             </div>
 
-            {/* Compass direction badge if available & enabled */}
-            {settings.showDirectionHints && feedback.directionHint && (
-              <span className="shrink-0 px-2.5 py-1 rounded-lg bg-blue-600/30 border border-blue-500/60 text-blue-200 font-bold flex items-center gap-1.5 shadow-sm">
-                <span>{feedback.directionHint.arrow}</span>
-                <span>Plus au {feedback.directionHint.label}</span>
-              </span>
+            {/* 3. Skip Button (active during play) */}
+            {!isReviewing && !isGameOver && (
+              <button
+                type="button"
+                onClick={handleSkipRing}
+                disabled={isSubmitting || loading}
+                title="Passer au cercle suivant (Espace)"
+                className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-md shrink-0 disabled:opacity-40 disabled:cursor-not-allowed group"
+              >
+                <SkipForward className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
+                <span className="hidden sm:inline">Passer</span>
+                <kbd className="hidden lg:inline px-1 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[9px] text-slate-400">
+                  Espace
+                </kbd>
+              </button>
             )}
+
+            {/* 4. Lives Counter */}
+            <div
+              className="flex items-center gap-1 px-3 py-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs shrink-0 shadow-sm"
+              title={totalTries === -1 ? "Vies illimitées" : `${triesLeft}/${totalTries} vie(s) restante(s)`}
+            >
+              {totalTries === -1 ? (
+                <span className="text-emerald-400 font-bold text-xs">♾️</span>
+              ) : (
+                Array.from({ length: totalTries }).map((_, i) => (
+                  <Heart
+                    key={i}
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                      i < triesLeft
+                        ? "text-rose-500 fill-rose-500"
+                        : "text-slate-700 fill-slate-800"
+                    }`}
+                  />
+                ))
+              )}
+            </div>
           </div>
-        )}
+
+          {/* Integrated Feedback / Direction Hint Row (compact, inside same card) */}
+          {feedback && (
+            <div
+              className={`px-3 py-2 rounded-xl border text-xs font-semibold shadow-inner flex items-center justify-between gap-2 animate-in fade-in duration-200 ${
+                feedback.type === "success"
+                  ? "bg-emerald-950/80 border-emerald-500/50 text-emerald-200"
+                  : feedback.type === "error"
+                  ? "bg-rose-950/80 border-rose-500/50 text-rose-200"
+                  : feedback.type === "warning"
+                  ? "bg-amber-950/80 border-amber-500/50 text-amber-200"
+                  : "bg-slate-900/80 border-slate-700 text-slate-200"
+              }`}
+            >
+              <div className="flex items-center gap-2 truncate">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">{feedback.text}</span>
+              </div>
+
+              {settings.showDirectionHints && feedback.directionHint && (
+                <span className="shrink-0 px-2 py-0.5 rounded-lg bg-blue-600/30 border border-blue-500/50 text-blue-200 font-bold text-[11px] flex items-center gap-1 shadow-sm">
+                  <span>{feedback.directionHint.arrow}</span>
+                  <span>Vers le {feedback.directionHint.label}</span>
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Settings Modal */}

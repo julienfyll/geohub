@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Heart, CheckCircle2, XCircle, Target } from "lucide-react";
+import { CheckCircle2, XCircle, Target } from "lucide-react";
 
 export interface RingStatus {
   index: number;
@@ -17,50 +17,67 @@ export interface RingStatus {
 interface RingProgressHUDProps {
   rings: RingStatus[];
   currentRingIndex: number;
-  triesLeft: number;
-  totalTries: number;
+  className?: string;
 }
 
 export const RingProgressHUD: React.FC<RingProgressHUDProps> = ({
   rings,
-  currentRingIndex,
-  triesLeft,
-  totalTries = 3,
+  className = "",
 }) => {
-  const activeRing = rings[currentRingIndex];
-
   return (
-    <div className="w-full flex flex-col gap-3">
-      {/* Rings Navigation Bar (Adaptive & scrollable for custom games up to 12+ rings) */}
-      <div className="flex items-stretch gap-1.5 overflow-x-auto no-scrollbar bg-slate-900/80 p-2 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md">
-        {rings.map((ring) => {
-          let ringBadgeBg = "bg-slate-800/60 border-slate-700/50 text-slate-400";
-          let icon = <span className="text-xs font-bold font-mono">#{ring.index + 1}</span>;
+    <aside
+      aria-label="Progression des anneaux"
+      className={`flex flex-col gap-2 p-2 bg-slate-950/90 border border-slate-800/90 rounded-2xl shadow-2xl backdrop-blur-xl text-slate-200 pointer-events-auto max-h-[calc(100vh-140px)] overflow-y-auto no-scrollbar ${className}`}
+    >
+      <div className="px-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider text-center">
+        Anneaux
+      </div>
 
-          if (ring.isCompleted) {
-            ringBadgeBg = "bg-emerald-500/20 border-emerald-500/50 text-emerald-300";
-            icon = <CheckCircle2 className="w-4 h-4 text-emerald-400" />;
-          } else if (ring.isFailed) {
-            ringBadgeBg = "bg-rose-500/20 border-rose-500/50 text-rose-300";
-            icon = <XCircle className="w-4 h-4 text-rose-400" />;
-          } else if (ring.isCurrent) {
-            ringBadgeBg = "bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-500/40";
-            icon = <Target className="w-4 h-4 animate-spin-slow" />;
+      <div className="flex flex-col gap-1.5">
+        {rings.map((ring) => {
+          const isCurrent = ring.isCurrent;
+          const isCompleted = ring.isCompleted;
+          const isFailed = ring.isFailed;
+
+          let badgeStyle = "bg-slate-900/50 border-slate-800/80 text-slate-500";
+          let icon = <span className="font-mono text-xs font-bold text-slate-500">#{ring.index + 1}</span>;
+
+          if (isCompleted) {
+            badgeStyle = "bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-sm";
+            icon = <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />;
+          } else if (isFailed) {
+            badgeStyle = "bg-rose-500/15 border-rose-500/40 text-rose-300 shadow-sm";
+            icon = <XCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />;
+          } else if (isCurrent) {
+            badgeStyle = "bg-blue-600/30 border-blue-500 text-white ring-1 ring-blue-500/60 shadow-lg shadow-blue-500/20";
+            icon = <Target className="w-3.5 h-3.5 text-blue-400 shrink-0 animate-spin-slow" />;
           }
 
           return (
             <div
               key={ring.index}
-              className={`flex-1 min-w-[58px] sm:min-w-[66px] flex flex-col items-center justify-center py-2 px-1 rounded-xl border transition-all shrink-0 ${ringBadgeBg}`}
+              className={`w-16 sm:w-20 py-2 px-1.5 rounded-xl border flex flex-col items-center justify-center transition-all ${badgeStyle}`}
+              title={
+                isCompleted
+                  ? `Anneau ${ring.index + 1} réussi (${ring.triesUsed} essai(s))`
+                  : isFailed
+                  ? `Anneau ${ring.index + 1} échoué`
+                  : isCurrent
+                  ? `Anneau ${ring.index + 1} en cours`
+                  : `Anneau ${ring.index + 1}`
+              }
             >
-              <div className="flex items-center gap-1 mb-0.5">{icon}</div>
-              <span className="text-[10px] font-semibold tracking-tight text-center truncate max-w-full">
+              <div className="flex items-center gap-1 mb-0.5">
+                {icon}
+                <span className="text-[10px] font-bold font-mono">#{ring.index + 1}</span>
+              </div>
+              <span className="text-[9px] font-semibold tracking-tight text-center truncate max-w-full leading-tight">
                 {ring.index === 0
-                  ? `< ${ring.outerRadiusKm} km`
-                  : `${ring.innerRadiusKm}-${ring.outerRadiusKm} km`}
+                  ? `< ${ring.outerRadiusKm}km`
+                  : `${ring.innerRadiusKm}-${ring.outerRadiusKm}km`}
               </span>
-              {ring.isCompleted && (
-                <span className="text-[9px] font-mono text-emerald-400/90 font-medium">
+              {isCompleted && (
+                <span className="text-[8px] font-mono text-emerald-400 font-bold mt-0.5">
                   {ring.triesUsed > 0 ? `${ring.triesUsed}e` : "✓"}
                 </span>
               )}
@@ -68,46 +85,6 @@ export const RingProgressHUD: React.FC<RingProgressHUDProps> = ({
           );
         })}
       </div>
-
-      {/* Active Ring Sub-HUD & Lives */}
-      {activeRing && (
-        <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900/90 rounded-xl border border-slate-800 shadow-lg backdrop-blur-md text-xs">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 font-bold text-[10px]">
-              {activeRing.index + 1}
-            </span>
-            <span className="text-slate-200 font-medium">
-              Trouvez la ville la plus peuplée{" "}
-              {activeRing.index === 0 ? (
-                <>dans un rayon de <b className="text-blue-400">{activeRing.outerRadiusKm} km</b></>
-              ) : (
-                <>entre <b className="text-blue-400">{activeRing.innerRadiusKm}</b> et <b className="text-blue-400">{activeRing.outerRadiusKm} km</b></>
-              )}
-            </span>
-          </div>
-
-          {/* Lives Counter */}
-          <div className="flex items-center gap-1.5 shrink-0 pl-2">
-            <span className="text-slate-400 text-[11px] font-medium mr-1">Vies :</span>
-            {totalTries === -1 ? (
-              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold text-[11px]">
-                ♾️ Illimitées
-              </span>
-            ) : (
-              Array.from({ length: totalTries }).map((_, i) => (
-                <Heart
-                  key={i}
-                  className={`w-4 h-4 transition-transform duration-300 ${
-                    i < triesLeft
-                      ? "text-rose-500 fill-rose-500 scale-100"
-                      : "text-slate-700 fill-slate-800 scale-90"
-                  }`}
-                />
-              ))
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+    </aside>
   );
 };
