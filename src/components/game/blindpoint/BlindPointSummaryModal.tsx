@@ -15,27 +15,31 @@ import {
   Flame,
   ArrowRight,
 } from "lucide-react";
-import { BlindPointRoundResult, BlindPointPack } from "@/lib/games/blindpoint/types";
+import { BlindPointRoundResult, BlindPointPack, BlindPointDifficulty } from "@/lib/games/blindpoint/types";
 import { formatDistance } from "@/lib/games/blindpoint/scoring";
 
 interface BlindPointSummaryModalProps {
   isOpen: boolean;
   pack: BlindPointPack;
   mode: "daily" | "free";
+  difficulty?: BlindPointDifficulty;
   seed: string;
   rounds: BlindPointRoundResult[];
   onRestartGame: () => void;
   onCloseToMap: () => void;
+  onBackToLobby?: () => void;
 }
 
 export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   isOpen,
   pack,
   mode,
+  difficulty = "moyen",
   seed,
   rounds,
   onRestartGame,
   onCloseToMap,
+  onBackToLobby,
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -60,16 +64,28 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
 
   const packLabels: Record<BlindPointPack, string> = {
     villes_france: "Villes de France",
+    villes_monde: "Villes du Monde",
+    lieux_france: "Lieux emblématiques (France)",
+    lieux_paris: "Monuments de Paris",
+    lieux_monde: "Lieux emblématiques (Monde)",
     monuments_monde: "Monuments du Monde",
     chateaux_france: "Châteaux & Patrimoine",
   };
 
-  const packName = packLabels[pack] || "Blind Point";
+  const diffLabels: Record<BlindPointDifficulty, string> = {
+    facile: "Facile",
+    moyen: "Moyen",
+    difficile: "Difficile",
+  };
+
+  const isLieuxPack = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
+  const packName = packLabels[pack] || "Villes de France";
+  const diffName = isLieuxPack ? "Patrimoine" : diffLabels[difficulty] || "Moyen";
 
   const generateShareText = () => {
     const today = new Date().toISOString().split("T")[0];
     const modeLabel = mode === "daily" ? `#${today}` : "(Libre)";
-    const shareUrl = `${window.location.origin}/play/blindpoint?pack=${pack}&mode=daily`;
+    const shareUrl = `${window.location.origin}/play/blindpoint?pack=${pack}${isLieuxPack ? "" : `&difficulty=${difficulty}`}&mode=daily`;
 
     const roundLines = rounds
       .map((r, i) => {
@@ -79,8 +95,8 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
       .join("\n");
 
     return [
-      `📍 Blind Point ${modeLabel} (${packName})`,
-      `Score : ${totalScore.toLocaleString("fr-FR")} / 25,000 pts`,
+      `📍 Blind Point ${modeLabel} • ${packName}${isLieuxPack ? "" : ` (${diffName})`}`,
+      `Score : ${totalScore.toLocaleString("fr-FR")} / 25 000 pts`,
       `Erreur totale : ${formatDistance(totalDistance)}`,
       ``,
       roundLines,
@@ -167,9 +183,18 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
           <div className="flex flex-col gap-1.5 divide-y divide-slate-800/60">
             {rounds.map((r, i) => (
               <div key={i} className="pt-1.5 first:pt-0 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-slate-500 w-4">{i + 1}.</span>
-                  <span className="text-base">{r.ratingEmoji}</span>
+                <div className="flex items-center gap-2.5">
+                  <span className="font-mono text-slate-500 w-3">{i + 1}.</span>
+                  {r.target.imageUrl ? (
+                    <img
+                      src={r.target.imageUrl}
+                      alt={r.target.name}
+                      className="w-7 h-7 rounded-lg object-cover border border-slate-700 shrink-0"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <span className="text-base shrink-0">{r.ratingEmoji}</span>
+                  )}
                   <div>
                     <span className="font-bold text-white block truncate max-w-[170px] sm:max-w-[240px]">
                       {r.target.name}
@@ -223,11 +248,12 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Tester un autre pack
             </span>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-4 gap-1.5">
               {[
-                { id: "villes_france", label: "🇫🇷 Villes", full: "Villes de France" },
-                { id: "chateaux_france", label: "🏰 Châteaux", full: "Châteaux & Patrimoine" },
-                { id: "monuments_monde", label: "🌍 Monuments", full: "Monuments du Monde" },
+                { id: "villes_france", label: "🇫🇷 Villes" },
+                { id: "lieux_france", label: "🏰 France" },
+                { id: "lieux_paris", label: "🗼 Paris" },
+                { id: "lieux_monde", label: "🏛️ Monde" },
               ]
                 .filter((p) => p.id !== pack)
                 .map((p) => (
@@ -253,19 +279,29 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
             <button
               type="button"
               onClick={onCloseToMap}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
             >
               <Eye className="w-4 h-4 text-slate-400" />
               <span>Observer la carte</span>
             </button>
 
+            {onBackToLobby ? (
+              <button
+                type="button"
+                onClick={onBackToLobby}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
+              >
+                <span>Changer de mode</span>
+              </button>
+            ) : null}
+
             <button
               type="button"
               onClick={onRestartGame}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors shadow-lg shadow-blue-600/30"
             >
-              <RotateCcw className="w-4 h-4 text-slate-400" />
-              <span>Rejouer une partie</span>
+              <RotateCcw className="w-4 h-4 text-white" />
+              <span>Rejouer</span>
             </button>
           </div>
         </div>
