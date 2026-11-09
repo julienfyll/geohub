@@ -21,6 +21,7 @@ import {
   Trophy,
   Heart,
   Target,
+  Zap,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
@@ -538,25 +539,56 @@ function GeoRingsGame() {
 
         {/* Center: Mode Indicator & Scale Switcher */}
         <div className="flex items-center gap-2">
-          {/* Daily vs Custom Button */}
-          <div className="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+          {/* Mode Switcher : Daily | Rapide | Custom */}
+          <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
             <button
-              onClick={() => router.push(`/play/georings?scale=${scale}&mode=daily`)}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
+              type="button"
+              onClick={() => {
+                if (mode === "daily") {
+                  initGame();
+                } else {
+                  router.push(`/play/georings?scale=${scale}&mode=daily`);
+                }
+              }}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
                 mode === "daily"
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
+              title="Défi officiel du jour (1 ville par jour pour tous)"
             >
-              📅 Daily
+              <span>📅 Du Jour</span>
             </button>
+
             <button
+              type="button"
+              onClick={() => {
+                if (mode === "free") {
+                  initGame();
+                } else {
+                  router.push(`/play/georings?scale=${scale}&mode=free`);
+                }
+              }}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                mode === "free"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Partie rapide standard avec une ville aléatoire"
+            >
+              <Zap className="w-3 h-3" />
+              <span>Rapide</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setShowCustomModal(true)}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
                 mode === "custom"
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
+              title="Personnaliser les anneaux, rayons, continent et vies"
             >
               <Sliders className="w-3 h-3" />
               <span>Custom</span>
@@ -857,7 +889,7 @@ function GeoRingsGame() {
             <b className="text-blue-400 font-semibold">{session.seedCity.name}</b>
             <span className="text-slate-600">|</span>
             <span className="font-mono text-[10px] text-slate-500">
-              {mode === "daily" ? "Daily" : mode === "custom" ? "Custom" : "Free"}
+              {mode === "daily" ? "Du Jour" : mode === "custom" ? "Custom" : "Partie Rapide"}
             </span>
           </div>
         )}
