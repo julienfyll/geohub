@@ -15,6 +15,7 @@ interface SearchBarProps {
   scale: GameScale;
   onSelectCity: (city: SearchCityItem) => void;
   onCityNotFound?: (query: string) => void;
+  onSkip?: () => void;
   disabled?: boolean;
   placeholder?: string;
   showDropdown?: boolean;
@@ -24,6 +25,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   scale,
   onSelectCity,
   onCityNotFound,
+  onSkip,
   disabled = false,
   placeholder = "Entrez le nom d'une ville...",
   showDropdown = true,
@@ -120,6 +122,12 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       setIsOpen(false);
+      return;
+    }
+
+    if ((e.key === " " || e.code === "Space") && query.trim().length === 0 && onSkip) {
+      e.preventDefault();
+      onSkip();
       return;
     }
 

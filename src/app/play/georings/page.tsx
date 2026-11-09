@@ -15,6 +15,7 @@ import {
   Settings,
   Sliders,
   Sparkles,
+  SkipForward,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
@@ -246,6 +247,109 @@ function GeoRingsGame() {
     }
   };
 
+  // Handle Skip Ring (when user is stuck or presses Space)
+  const handleSkipRing = async () => {
+    if (!session || isGameOver || isSubmitting || rings.length === 0) return;
+    const activeRing = rings[currentRingIndex];
+    if (!activeRing || activeRing.isCompleted || activeRing.isFailed) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/games/georings/skip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scale: session.scale,
+          centerLat: session.seedCity.latitude,
+          centerLon: session.seedCity.longitude,
+          innerRadiusKm: activeRing.innerRadiusKm,
+          outerRadiusKm: activeRing.outerRadiusKm,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Erreur lors du saut d'anneau");
+      const result = await res.json();
+
+      setFeedback({
+        text: result.message || "Anneau passé !",
+        type: "warning",
+      });
+
+      if (result.targetCity) {
+        const revealedMarker: MapMarker = {
+          id: `revealed_${result.targetCity.id}`,
+          lat: result.targetCity.latitude,
+          lon: result.targetCity.longitude,
+          label: result.targetCity.name,
+          population: result.targetCity.population,
+          type: "revealed",
+        };
+
+        setMarkers((prev) => {
+          const filtered = prev.filter(
+            (m) =>
+              !(
+                Math.abs(m.lat - revealedMarker.lat) < 0.005 &&
+                Math.abs(m.lon - revealedMarker.lon) < 0.005
+              )
+          );
+          return [...filtered, revealedMarker];
+        });
+      }
+
+      const updatedRings = [...rings];
+      updatedRings[currentRingIndex] = {
+        ...activeRing,
+        isCurrent: false,
+        isFailed: true,
+        triesUsed: totalTries === -1 ? 1 : totalTries,
+        targetCityName: result.targetCity?.name,
+      };
+
+      setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
+
+      setTimeout(() => {
+        if (currentRingIndex < rings.length - 1) {
+          updatedRings[currentRingIndex + 1].isCurrent = true;
+          setRings(updatedRings);
+          setCurrentRingIndex((prev) => prev + 1);
+          setTriesLeft(totalTries);
+          setFeedback(null);
+        } else {
+          setRings(updatedRings);
+          setIsGameOver(true);
+        }
+      }, 1800);
+    } catch (err) {
+      console.error(err);
+      setFeedback({ text: "Erreur lors du saut de l'anneau.", type: "error" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Keyboard shortcut listener for Space (skip when not typing)
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space" || e.key === " ") {
+        const activeEl = document.activeElement;
+        const isInput =
+          activeEl &&
+          (activeEl.tagName === "INPUT" ||
+            activeEl.tagName === "TEXTAREA" ||
+            (activeEl as HTMLElement).isContentEditable);
+
+        if (!isInput) {
+          e.preventDefault();
+          handleSkipRing();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [session, currentRingIndex, rings, isGameOver, isSubmitting, totalTries]);
+
   const getCustomShareUrl = () => {
     if (!session) return "";
     const seedParam = mode === "daily" ? session.seed : session.seedCity.id;
@@ -407,21 +511,37 @@ function GeoRingsGame() {
           </div>
         )}
 
-        {/* Search Box */}
-        <div className="pointer-events-auto">
-          <SearchBar
-            scale={scale}
-            onSelectCity={handleSelectCity}
-            onCityNotFound={(query) =>
-              setFeedback({
-                text: `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
-                type: "warning",
-              })
-            }
-            showDropdown={settings.showAutocompleteDropdown}
+        {/* Search Box & Skip Button */}
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <div className="flex-1">
+            <SearchBar
+              scale={scale}
+              onSelectCity={handleSelectCity}
+              onSkip={handleSkipRing}
+              onCityNotFound={(query) =>
+                setFeedback({
+                  text: `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
+                  type: "warning",
+                })
+              }
+              showDropdown={settings.showAutocompleteDropdown}
+              disabled={isGameOver || isSubmitting || loading}
+              placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1}...`}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleSkipRing}
             disabled={isGameOver || isSubmitting || loading}
-            placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1}...`}
-          />
+            title="Passer au cercle suivant (Espace)"
+            className="flex items-center gap-1.5 px-3 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-xl backdrop-blur-md shrink-0 disabled:opacity-40 disabled:cursor-not-allowed group"
+          >
+            <SkipForward className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
+            <span className="hidden sm:inline">Passer</span>
+            <kbd className="hidden md:inline px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[9px] text-slate-400">
+              Espace
+            </kbd>
+          </button>
         </div>
 
         {/* Feedback Banner with optional Compass Direction Hint */}
