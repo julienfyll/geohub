@@ -15,6 +15,13 @@ export interface MapMarker {
   type: "seed" | "correct" | "wrong" | "revealed" | "top";
 }
 
+export interface FocusedCity {
+  lat: number;
+  lon: number;
+  label: string;
+  population?: number;
+}
+
 export interface GeoMapProps {
   center: [number, number]; // [lon, lat]
   seedCity?: { name: string; lat: number; lon: number; population?: number };
@@ -22,6 +29,7 @@ export interface GeoMapProps {
   completedRadiiKm?: number[];
   markers?: MapMarker[];
   showBorders?: boolean;
+  focusedCity?: FocusedCity | null;
   className?: string;
 }
 
@@ -32,12 +40,14 @@ export const GeoMap: React.FC<GeoMapProps> = ({
   completedRadiiKm = [],
   markers = [],
   showBorders = true,
+  focusedCity = null,
   className = "w-full h-full",
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const isLoadedRef = useRef<boolean>(false);
   const hoverPopupRef = useRef<maplibregl.Popup | null>(null);
+  const focusPopupRef = useRef<maplibregl.Popup | null>(null);
 
   // Keep latest props in refs to avoid stale closures in event listeners
   const latestPropsRef = useRef({ center, activeRadiusKm, completedRadiiKm, seedCity, markers });
@@ -357,7 +367,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           type: m.type,
           label: m.type === "revealed" ? `★ ${m.label}` : m.label,
           population: m.population,
-          sortKey: m.type === "correct" ? 2 : m.type === "revealed" ? 3 : m.type === "top" ? 5 : 4,
+          sortKey: m.type === "top" ? 1 : m.type === "correct" ? 2 : m.type === "revealed" ? 3 : 4,
         },
       });
     });
@@ -451,11 +461,46 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         hoverPopupRef.current.remove();
         hoverPopupRef.current = null;
       }
+      if (focusPopupRef.current) {
+        focusPopupRef.current.remove();
+        focusPopupRef.current = null;
+      }
       map.remove();
       mapRef.current = null;
       isLoadedRef.current = false;
     };
   }, []);
+
+  // Show interactive highlight popup when hovering or focusing a city from the review card
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+
+    if (focusedCity) {
+      if (!focusPopupRef.current) {
+        focusPopupRef.current = new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 14,
+        });
+      }
+      const popFormatted = focusedCity.population
+        ? `${Number(focusedCity.population).toLocaleString("fr-FR")} hab.`
+        : null;
+
+      focusPopupRef.current
+        .setLngLat([focusedCity.lon, focusedCity.lat])
+        .setHTML(
+          `<div class="px-2.5 py-1.5 rounded-lg bg-slate-950/95 border border-sky-400 text-xs font-semibold shadow-2xl backdrop-blur-md whitespace-nowrap flex items-center gap-1.5 text-sky-200">
+            <span>📍 ${focusedCity.label}</span>
+            ${popFormatted ? `<span class="text-slate-400 font-normal">(${popFormatted})</span>` : ""}
+          </div>`
+        )
+        .addTo(map);
+    } else if (focusPopupRef.current) {
+      focusPopupRef.current.remove();
+    }
+  }, [focusedCity]);
 
   // Update Basemap Layers: permanently hide roads, toggle political borders
   const updateBasemapLayers = () => {

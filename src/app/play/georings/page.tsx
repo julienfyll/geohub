@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import React, { useState, useEffect, useCallback, Suspense } from "react";
+import React, { useState, useEffect, useCallback, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -60,6 +60,8 @@ function GeoRingsGame() {
   const [isReviewing, setIsReviewing] = useState(false);
   const [currentRingGuesses, setCurrentRingGuesses] = useState<GuessRecord[]>([]);
   const [currentRingTopCities, setCurrentRingTopCities] = useState<TopCityItem[]>([]);
+  const [hoveredReviewCity, setHoveredReviewCity] = useState<TopCityItem | GuessRecord | null>(null);
+  const [pinnedReviewCities, setPinnedReviewCities] = useState<Map<string, TopCityItem | GuessRecord>>(new Map());
   const [shareCopied, setShareCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -74,6 +76,8 @@ function GeoRingsGame() {
     setIsReviewing(false);
     setCurrentRingGuesses([]);
     setCurrentRingTopCities([]);
+    setHoveredReviewCity(null);
+    setPinnedReviewCities(new Map());
     setCurrentRingIndex(0);
     setMarkers([]);
     setCompletedRadii([]);
@@ -163,12 +167,15 @@ function GeoRingsGame() {
 
       // Track guess in current ring history
       const guessRecord: GuessRecord = {
+        id: city.id,
         cityName: city.name,
         countryCode: city.countryCode,
         population: result.city.population,
         isTarget: result.isTarget,
         isInRing: result.isInRing,
         rank: result.guessRank,
+        latitude: result.city.latitude,
+        longitude: result.city.longitude,
       };
       setCurrentRingGuesses((prev) => [...prev, guessRecord]);
 
@@ -346,9 +353,13 @@ function GeoRingsGame() {
       setIsReviewing(false);
       setCurrentRingGuesses([]);
       setCurrentRingTopCities([]);
+      setHoveredReviewCity(null);
+      setPinnedReviewCities(new Map());
       setFeedback(null);
     } else {
       setIsReviewing(false);
+      setHoveredReviewCity(null);
+      setPinnedReviewCities(new Map());
       setIsGameOver(true);
     }
   }, [currentRingIndex, rings.length, totalTries]);
@@ -409,6 +420,95 @@ function GeoRingsGame() {
       console.error(e);
     }
   };
+
+  // Helper to extract unique identifier for review cities
+  const getReviewCityId = (c: TopCityItem | GuessRecord) => {
+    if ("id" in c && c.id) return c.id;
+    if ("cityName" in c && c.cityName) return `guess_${c.cityName}`;
+    if ("name" in c && c.name) return `top_${c.name}`;
+    return "";
+  };
+
+  const handleReviewCityClick = (city: TopCityItem | GuessRecord) => {
+    const id = getReviewCityId(city);
+    if (!id) return;
+    setPinnedReviewCities((prev) => {
+      const next = new Map(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.set(id, city);
+      }
+      return next;
+    });
+  };
+
+  const pinnedCityIds = useMemo(() => new Set(pinnedReviewCities.keys()), [pinnedReviewCities]);
+  const hoveredCityId = hoveredReviewCity ? getReviewCityId(hoveredReviewCity) : null;
+
+  // Ephemeral markers displayed during ring review mode
+  const displayedMarkers = useMemo(() => {
+    if (!isReviewing) return markers;
+
+    const extraMarkers: MapMarker[] = [];
+    const addedCoords = new Set<string>();
+
+    const addPreview = (c: TopCityItem | GuessRecord) => {
+      const lat = "latitude" in c ? c.latitude : undefined;
+      const lon = "longitude" in c ? c.longitude : undefined;
+      if (lat === undefined || lon === undefined) return;
+
+      const coordKey = `${lat.toFixed(4)},${lon.toFixed(4)}`;
+      if (addedCoords.has(coordKey)) return;
+      addedCoords.add(coordKey);
+
+      const id = getReviewCityId(c);
+      const name = "name" in c ? c.name : (c as GuessRecord).cityName;
+      const rank = "rank" in c ? c.rank : undefined;
+
+      extraMarkers.push({
+        id: `preview_${id}`,
+        lat,
+        lon,
+        label: rank ? `${rank}. ${name}` : name,
+        population: c.population,
+        type: "top",
+      });
+    };
+
+    // Add pinned review cities
+    pinnedReviewCities.forEach((city) => addPreview(city));
+
+    // Add hovered review city if present
+    if (hoveredReviewCity) {
+      addPreview(hoveredReviewCity);
+    }
+
+    if (extraMarkers.length === 0) return markers;
+
+    const filteredBase = markers.filter((m) => {
+      const key = `${m.lat.toFixed(4)},${m.lon.toFixed(4)}`;
+      return !addedCoords.has(key);
+    });
+
+    return [...filteredBase, ...extraMarkers];
+  }, [markers, isReviewing, pinnedReviewCities, hoveredReviewCity]);
+
+  // Focused city for interactive popup in GeoMap
+  const focusedCity = useMemo(() => {
+    if (!isReviewing || !hoveredReviewCity) return null;
+    const lat = "latitude" in hoveredReviewCity ? hoveredReviewCity.latitude : undefined;
+    const lon = "longitude" in hoveredReviewCity ? hoveredReviewCity.longitude : undefined;
+    if (lat === undefined || lon === undefined) return null;
+    const name = "name" in hoveredReviewCity ? hoveredReviewCity.name : hoveredReviewCity.cityName;
+    const rank = "rank" in hoveredReviewCity ? hoveredReviewCity.rank : undefined;
+    return {
+      lat,
+      lon,
+      label: rank ? `${rank}. ${name}` : name,
+      population: hoveredReviewCity.population,
+    };
+  }, [isReviewing, hoveredReviewCity]);
 
   return (
     <div className="relative w-screen h-screen overflow-hidden flex flex-col bg-slate-950 text-slate-100">
@@ -684,8 +784,9 @@ function GeoRingsGame() {
             }}
             activeRadiusKm={rings[currentRingIndex]?.outerRadiusKm}
             completedRadiiKm={completedRadii}
-            markers={markers}
+            markers={displayedMarkers}
             showBorders={settings.showBorders}
+            focusedCity={focusedCity}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-slate-950 text-slate-400">
@@ -715,6 +816,10 @@ function GeoRingsGame() {
             outerRadiusKm={rings[currentRingIndex].outerRadiusKm}
             guesses={currentRingGuesses}
             topCities={currentRingTopCities}
+            pinnedCityIds={pinnedCityIds}
+            hoveredCityId={hoveredCityId}
+            onCityHover={setHoveredReviewCity}
+            onCityClick={handleReviewCityClick}
           />
         )}
 
