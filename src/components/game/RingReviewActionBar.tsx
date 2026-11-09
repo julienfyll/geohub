@@ -16,7 +16,7 @@ export const RingReviewActionBar: React.FC<RingReviewActionBarProps> = ({
   autoAdvance,
   onNextRing,
   onToggleAutoAdvance,
-  autoAdvanceDelayMs = 3500,
+  autoAdvanceDelayMs = 1500,
 }) => {
   const [timeLeftMs, setTimeLeftMs] = useState(autoAdvanceDelayMs);
 

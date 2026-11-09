@@ -151,7 +151,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div>
                 <p className="font-semibold text-white">Passage automatique d'anneau</p>
                 <p className="text-xs text-slate-400">
-                  Passe automatiquement au cercle suivant après 3,5s au lieu d'attendre l'appui sur <i>Espace</i>.
+                  Passe automatiquement au cercle suivant après 1,5s au lieu d'attendre l'appui sur <i>Espace</i>.
                 </p>
               </div>
             </div>

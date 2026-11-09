@@ -12,6 +12,16 @@ export interface City {
   timezone?: string;
 }
 
+export interface TopCityItem {
+  rank: number;
+  id: string;
+  name: string;
+  countryCode: string;
+  population: number;
+  latitude: number;
+  longitude: number;
+}
+
 export interface CityGuessResult {
   city: {
     id: string;
@@ -24,6 +34,7 @@ export interface CityGuessResult {
   isInRing: boolean;
   distanceFromCenterKm: number;
   isTarget: boolean;
+  guessRank?: number;
   directionHint?: {
     code: string;
     label: string;
@@ -37,6 +48,7 @@ export interface CityGuessResult {
     latitude: number;
     longitude: number;
   };
+  topCities?: TopCityItem[];
   triesLeft: number;
   ringCompleted: boolean;
   ringFailed: boolean;

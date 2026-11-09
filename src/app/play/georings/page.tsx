@@ -21,11 +21,12 @@ import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
 import { RingProgressHUD, RingStatus } from "@/components/game/RingProgressHUD";
 import { RingReviewActionBar } from "@/components/game/RingReviewActionBar";
+import { RingReviewCard, GuessRecord } from "@/components/game/RingReviewCard";
 import { GameOverModal } from "@/components/game/GameOverModal";
 import { SettingsModal } from "@/components/game/SettingsModal";
 import { CustomGameModal } from "@/components/game/CustomGameModal";
 import { useSettings } from "@/lib/settings/useSettings";
-import { CityGuessResult, GameScale, GeoRingsInitResponse } from "@/lib/games/types";
+import { CityGuessResult, GameScale, GeoRingsInitResponse, TopCityItem } from "@/lib/games/types";
 
 function GeoRingsGame() {
   const searchParams = useSearchParams();
@@ -55,6 +56,8 @@ function GeoRingsGame() {
   } | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [currentRingGuesses, setCurrentRingGuesses] = useState<GuessRecord[]>([]);
+  const [currentRingTopCities, setCurrentRingTopCities] = useState<TopCityItem[]>([]);
   const [shareCopied, setShareCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -67,6 +70,8 @@ function GeoRingsGame() {
     setFeedback(null);
     setIsGameOver(false);
     setIsReviewing(false);
+    setCurrentRingGuesses([]);
+    setCurrentRingTopCities([]);
     setCurrentRingIndex(0);
     setMarkers([]);
     setCompletedRadii([]);
@@ -154,10 +159,35 @@ function GeoRingsGame() {
         return [...filtered, newMarker];
       });
 
+      // Track guess in current ring history
+      const guessRecord: GuessRecord = {
+        cityName: city.name,
+        countryCode: city.countryCode,
+        population: result.city.population,
+        isTarget: result.isTarget,
+        isInRing: result.isInRing,
+        rank: result.guessRank,
+      };
+      setCurrentRingGuesses((prev) => [...prev, guessRecord]);
+
       if (result.isTarget) {
         // Success !
         const triesUsed = totalTries === -1 ? 1 : totalTries - triesLeft + 1;
         setFeedback({ text: result.message, type: "success" });
+
+        if (result.topCities) {
+          setCurrentRingTopCities(result.topCities);
+          // Add rank 2 & 3 markers to the map
+          const topMarkers: MapMarker[] = result.topCities.slice(1).map((tc) => ({
+            id: `top_${tc.id}`,
+            lat: tc.latitude,
+            lon: tc.longitude,
+            label: `${tc.rank}. ${tc.name}`,
+            population: tc.population,
+            type: "top",
+          }));
+          setMarkers((prev) => [...prev, ...topMarkers]);
+        }
 
         const updatedRings = [...rings];
         updatedRings[currentRingIndex] = {
@@ -199,6 +229,20 @@ function GeoRingsGame() {
               );
               return [...filtered, revealedMarker];
             });
+          }
+
+          if (result.topCities) {
+            setCurrentRingTopCities(result.topCities);
+            // Add rank 2 & 3 markers to the map
+            const topMarkers: MapMarker[] = result.topCities.slice(1).map((tc) => ({
+              id: `top_${tc.id}`,
+              lat: tc.latitude,
+              lon: tc.longitude,
+              label: `${tc.rank}. ${tc.name}`,
+              population: tc.population,
+              type: "top",
+            }));
+            setMarkers((prev) => [...prev, ...topMarkers]);
           }
 
           const updatedRings = [...rings];
@@ -281,6 +325,20 @@ function GeoRingsGame() {
         });
       }
 
+      if (result.topCities) {
+        setCurrentRingTopCities(result.topCities);
+        // Add rank 2 & 3 markers to the map
+        const topMarkers: MapMarker[] = result.topCities.slice(1).map((tc: TopCityItem) => ({
+          id: `top_${tc.id}`,
+          lat: tc.latitude,
+          lon: tc.longitude,
+          label: `${tc.rank}. ${tc.name}`,
+          population: tc.population,
+          type: "top",
+        }));
+        setMarkers((prev) => [...prev, ...topMarkers]);
+      }
+
       const updatedRings = [...rings];
       updatedRings[currentRingIndex] = {
         ...activeRing,
@@ -314,6 +372,8 @@ function GeoRingsGame() {
       setCurrentRingIndex((prev) => prev + 1);
       setTriesLeft(totalTries);
       setIsReviewing(false);
+      setCurrentRingGuesses([]);
+      setCurrentRingTopCities([]);
       setFeedback(null);
     } else {
       setIsReviewing(false);
@@ -675,6 +735,17 @@ function GeoRingsGame() {
             </span>
           </div>
         )}
+        {/* Ring Review Learning Panel (Left Side, style Geocore) */}
+        {isReviewing && rings[currentRingIndex] && (
+          <RingReviewCard
+            ringIndex={currentRingIndex}
+            innerRadiusKm={rings[currentRingIndex].innerRadiusKm}
+            outerRadiusKm={rings[currentRingIndex].outerRadiusKm}
+            guesses={currentRingGuesses}
+            topCities={currentRingTopCities}
+          />
+        )}
+
         {/* Ring Review Action Bar (Bottom Center) */}
         {isReviewing && (
           <RingReviewActionBar

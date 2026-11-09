@@ -68,6 +68,16 @@ export async function POST(request: NextRequest) {
     const targetCity = inRingCities[0];
     const isTarget = city.id === targetCity.id;
 
+    const topCities = inRingCities.slice(0, 3).map((c, idx) => ({
+      rank: idx + 1,
+      id: c.id,
+      name: c.name,
+      countryCode: c.countryCode,
+      population: c.population,
+      latitude: c.latitude,
+      longitude: c.longitude,
+    }));
+
     if (isTarget) {
       const response: CityGuessResult = {
         city: {
@@ -81,6 +91,8 @@ export async function POST(request: NextRequest) {
         isInRing: true,
         distanceFromCenterKm: Math.round(distance),
         isTarget: true,
+        guessRank: 1,
+        topCities,
         triesLeft: currentTriesLeft,
         ringCompleted: true,
         ringFailed: false,
@@ -138,6 +150,7 @@ export async function POST(request: NextRequest) {
       isInRing,
       distanceFromCenterKm: Math.round(distance),
       isTarget: false,
+      guessRank: isInRing ? inRingCities.findIndex((c) => c.id === city.id) + 1 : undefined,
       directionHint,
       targetCityIfRevealed: ringFailed
         ? {
@@ -149,6 +162,7 @@ export async function POST(request: NextRequest) {
             longitude: targetCity.longitude,
           }
         : undefined,
+      topCities: ringFailed ? topCities : undefined,
       triesLeft: newTriesLeft,
       ringCompleted: false,
       ringFailed,

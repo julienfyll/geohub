@@ -12,7 +12,7 @@ export interface MapMarker {
   lon: number;
   label: string;
   population?: number;
-  type: "seed" | "correct" | "wrong" | "revealed";
+  type: "seed" | "correct" | "wrong" | "revealed" | "top";
 }
 
 export interface GeoMapProps {
@@ -231,6 +231,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
             "#10b981",
             ["==", ["get", "type"], "revealed"],
             "#f59e0b",
+            ["==", ["get", "type"], "top"],
+            "#38bdf8",
             "#ef4444",
           ],
         },
@@ -267,6 +269,8 @@ export const GeoMap: React.FC<GeoMapProps> = ({
             "#6ee7b7",
             ["==", ["get", "type"], "revealed"],
             "#fcd34d",
+            ["==", ["get", "type"], "top"],
+            "#7dd3fc",
             "#fca5a5",
           ],
           "text-halo-color": "#020617",
@@ -298,6 +302,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         if (type === "seed") badgeColor = "border-blue-500/80 text-blue-200";
         else if (type === "correct") badgeColor = "border-emerald-500/80 text-emerald-200";
         else if (type === "revealed") badgeColor = "border-amber-500/80 text-amber-200";
+        else if (type === "top") badgeColor = "border-sky-500/80 text-sky-200";
 
         hoverPopup
           .setLngLat(coords)
@@ -352,7 +357,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           type: m.type,
           label: m.type === "revealed" ? `★ ${m.label}` : m.label,
           population: m.population,
-          sortKey: m.type === "correct" ? 2 : m.type === "revealed" ? 3 : 4,
+          sortKey: m.type === "correct" ? 2 : m.type === "revealed" ? 3 : m.type === "top" ? 5 : 4,
         },
       });
     });
