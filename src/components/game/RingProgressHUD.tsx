@@ -31,11 +31,8 @@ export const RingProgressHUD: React.FC<RingProgressHUDProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-3">
-      {/* Rings Navigation Bar (Dynamic columns for 3 to 8 rings) */}
-      <div
-        className="grid gap-2 bg-slate-900/80 p-2 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md"
-        style={{ gridTemplateColumns: `repeat(${rings.length}, minmax(0, 1fr))` }}
-      >
+      {/* Rings Navigation Bar (Adaptive & scrollable for custom games up to 12+ rings) */}
+      <div className="flex items-stretch gap-1.5 overflow-x-auto no-scrollbar bg-slate-900/80 p-2 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md">
         {rings.map((ring) => {
           let ringBadgeBg = "bg-slate-800/60 border-slate-700/50 text-slate-400";
           let icon = <span className="text-xs font-bold font-mono">#{ring.index + 1}</span>;
@@ -54,7 +51,7 @@ export const RingProgressHUD: React.FC<RingProgressHUDProps> = ({
           return (
             <div
               key={ring.index}
-              className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl border transition-all ${ringBadgeBg}`}
+              className={`flex-1 min-w-[58px] sm:min-w-[66px] flex flex-col items-center justify-center py-2 px-1 rounded-xl border transition-all shrink-0 ${ringBadgeBg}`}
             >
               <div className="flex items-center gap-1 mb-0.5">{icon}</div>
               <span className="text-[10px] font-semibold tracking-tight text-center truncate max-w-full">

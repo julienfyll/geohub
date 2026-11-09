@@ -439,9 +439,9 @@ function GeoRingsGame() {
 
             {/* Compass direction badge if available & enabled */}
             {settings.showDirectionHints && feedback.directionHint && (
-              <span className="shrink-0 px-2.5 py-1 rounded-lg bg-blue-600/30 border border-blue-500/60 text-blue-200 font-bold flex items-center gap-1.5">
+              <span className="shrink-0 px-2.5 py-1 rounded-lg bg-blue-600/30 border border-blue-500/60 text-blue-200 font-bold flex items-center gap-1.5 shadow-sm">
                 <span>{feedback.directionHint.arrow}</span>
-                <span>{feedback.directionHint.label}</span>
+                <span>Plus au {feedback.directionHint.label}</span>
               </span>
             )}
           </div>

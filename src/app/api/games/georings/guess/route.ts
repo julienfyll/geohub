@@ -45,10 +45,24 @@ export async function POST(request: NextRequest) {
     );
 
     if (!inRingCities || inRingCities.length === 0) {
-      return NextResponse.json(
-        { error: "No target city found in this ring" },
-        { status: 500 }
-      );
+      // Graceful fallback for custom rings that might not enclose any city
+      return NextResponse.json({
+        city: {
+          id: city.id,
+          name: city.name,
+          countryCode: city.countryCode,
+          population: city.population,
+          latitude: city.latitude,
+          longitude: city.longitude,
+        },
+        isInRing: false,
+        distanceFromCenterKm: Math.round(distance),
+        isTarget: false,
+        triesLeft: currentTriesLeft,
+        ringCompleted: true,
+        ringFailed: false,
+        message: "Cet anneau ne contient aucune ville répertoriée. Anneau validé automatiquement !",
+      });
     }
 
     const targetCity = inRingCities[0];
@@ -102,10 +116,8 @@ export async function POST(request: NextRequest) {
       } else {
         message = `${city.name} (${popFormatted} hab.) n'est pas la plus peuplée de cet anneau.`;
       }
-
-      if (!ringFailed) {
-        message += ` Cible : plus au ${directionHint.label} ${directionHint.arrow}.`;
-      }
+      // Note: directionHint is NOT added to message string directly so that disabling
+      // compass hints in user settings completely suppresses any directional clues.
     }
 
     if (ringFailed) {
