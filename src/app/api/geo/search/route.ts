@@ -22,10 +22,15 @@ export async function GET(request: NextRequest) {
         displayName = `${city.matchedAlias} (${city.name})`;
       }
 
+      let displayCountryCode = city.countryCode;
+      if (city.countryCode === "RU") {
+        displayCountryCode = city.longitude > 60.0 ? "RU (Asie)" : "RU (Europe)";
+      }
+
       return {
         id: city.id,
         name: displayName,
-        countryCode: city.countryCode,
+        countryCode: displayCountryCode,
         scale: city.scale,
       };
     });

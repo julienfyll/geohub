@@ -129,15 +129,19 @@ def process_and_seed_db():
 
                 # Assign scales:
                 # 'fr': French cities (Metropolitan France & Corsica filter: lat 41-52, lon -5 to 10)
-                # 'eu': European countries
-                # 'world': Globally all cities > 15k pop (or > 5k)
+                # 'eu': European countries (for Russia, strictly European Russia west of Urals: lon <= 60.0)
+                # 'world': Globally all cities >= 25k pop
                 assigned_scales = []
                 if country_code == "FR" and (41.0 <= lat <= 51.5) and (-5.5 <= lon <= 10.0):
                     cid = f"fr_{geoname_id}"
                     records.append((cid, name, norm_name, country_code, "fr", pop, lat, lon, timezone))
                     assigned_scales.append((cid, "fr"))
                 
-                if country_code in EUROPE_COUNTRIES and pop >= 15000:
+                is_european = (country_code in EUROPE_COUNTRIES)
+                if country_code == "RU" and lon > 60.0:
+                    is_european = False
+
+                if is_european and pop >= 15000:
                     cid = f"eu_{geoname_id}"
                     records.append((cid, name, norm_name, country_code, "eu", pop, lat, lon, timezone))
                     assigned_scales.append((cid, "eu"))

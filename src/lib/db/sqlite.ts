@@ -240,6 +240,9 @@ export function getDefaultRadii(scale: GameScale): number[] {
 /**
  * Returns a curated list of seed cities for starting games.
  * Supports continent filtering for custom world scale.
+ * - Europe: all prominent European cities >= 200,000 inhabitants (330 cities).
+ * - France: top 80 major regional centers (>= ~60,000 inhabitants).
+ * - World: top 120 global metropolises (or top 100 for specific continent).
  */
 export function getSeedCities(scale: GameScale, continent?: string): City[] {
   const db = getDb();
@@ -249,17 +252,28 @@ export function getSeedCities(scale: GameScale, continent?: string): City[] {
       FROM cities
       WHERE scale = ? AND continent = ?
       ORDER BY population DESC
-      LIMIT 80
+      LIMIT 100
     `);
     return stmt.all(scale, continent) as unknown as City[];
   }
 
+  if (scale === "eu") {
+    const stmt = db.prepare(`
+      SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
+      FROM cities
+      WHERE scale = 'eu' AND population >= 200000
+      ORDER BY population DESC
+    `);
+    return stmt.all() as unknown as City[];
+  }
+
+  const limit = scale === "fr" ? 80 : 120;
   const stmt = db.prepare(`
     SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
     FROM cities
     WHERE scale = ?
     ORDER BY population DESC
-    LIMIT 80
+    LIMIT ?
   `);
-  return stmt.all(scale) as unknown as City[];
+  return stmt.all(scale, limit) as unknown as City[];
 }
