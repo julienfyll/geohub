@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Sliders, Globe, Heart, AlertTriangle, Play } from "lucide-react";
+import { X, Sliders, Globe, Heart, Shield, Play } from "lucide-react";
 import { GameScale } from "@/lib/games/types";
 
 interface CustomGameModalProps {
@@ -21,6 +21,67 @@ const CONTINENTS = [
   { code: "OC", label: "🌏 Océanie" },
 ];
 
+/**
+ * Geographical scale boundaries and parameter ranges.
+ * The final ring radius R_final = R_1 + (N - 1) * step MUST NEVER exceed maxAllowedDistance.
+ */
+const SCALE_BOUNDS: Record<
+  GameScale,
+  {
+    maxAllowedDistance: number;
+    initMin: number;
+    initMax: number;
+    initStep: number;
+    stepMin: number;
+    stepMax: number;
+    stepStep: number;
+    defaultInit: number;
+    defaultStep: number;
+    defaultRings: number;
+    scaleLabel: string;
+  }
+> = {
+  fr: {
+    maxAllowedDistance: 1000,
+    initMin: 20,
+    initMax: 300,
+    initStep: 10,
+    stepMin: 10,
+    stepMax: 250,
+    stepStep: 10,
+    defaultInit: 80,
+    defaultStep: 80,
+    defaultRings: 5,
+    scaleLabel: "France métropolitaine",
+  },
+  eu: {
+    maxAllowedDistance: 3000,
+    initMin: 50,
+    initMax: 800,
+    initStep: 25,
+    stepMin: 25,
+    stepMax: 600,
+    stepStep: 25,
+    defaultInit: 200,
+    defaultStep: 200,
+    defaultRings: 5,
+    scaleLabel: "Continent européen",
+  },
+  world: {
+    maxAllowedDistance: 5000,
+    initMin: 100,
+    initMax: 2000,
+    initStep: 50,
+    stepMin: 50,
+    stepMax: 1500,
+    stepStep: 50,
+    defaultInit: 600,
+    defaultStep: 600,
+    defaultRings: 5,
+    scaleLabel: "Monde entier",
+  },
+};
+
 export const CustomGameModal: React.FC<CustomGameModalProps> = ({
   isOpen,
   onClose,
@@ -35,42 +96,97 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
   const [stepRadius, setStepRadius] = useState<number>(200);
   const [lives, setLives] = useState<number>(3); // 1, 3, or -1 (infinite)
 
-  // Initialize with Daily defaults when scale changes or modal opens
+  const bounds = SCALE_BOUNDS[scale];
+
+  // Reset to calibrated scale defaults when scale changes or modal opens
+  const applyScaleDefaults = (targetScale: GameScale) => {
+    setScale(targetScale);
+    const b = SCALE_BOUNDS[targetScale];
+    setInitialRadius(b.defaultInit);
+    setStepRadius(b.defaultStep);
+    setNumRings(b.defaultRings);
+  };
+
   useEffect(() => {
-    setScale(currentScale);
-    if (currentScale === "fr") {
-      setInitialRadius(80);
-      setStepRadius(80);
-      setNumRings(5);
-    } else if (currentScale === "eu") {
-      setInitialRadius(200);
-      setStepRadius(200);
-      setNumRings(5);
-    } else {
-      setInitialRadius(600);
-      setStepRadius(600);
-      setNumRings(5);
-    }
+    applyScaleDefaults(currentScale);
   }, [currentScale, isOpen]);
 
-  // Compute radii list dynamically from the 3 parameters (R_final = R_1 + (N - 1) * step)
-  const computedRadii = Array.from({ length: numRings }, (_, i) => initialRadius + i * stepRadius);
+  // Dynamic maximum rings permitted given current stepRadius and initialRadius
+  const maxPossibleRings = Math.max(
+    2,
+    Math.min(12, 1 + Math.floor((bounds.maxAllowedDistance - initialRadius) / stepRadius))
+  );
+
+  // Dynamic maximum step permitted given current numRings and initialRadius
+  const maxPossibleStep = Math.max(
+    bounds.stepMin,
+    Math.min(
+      bounds.stepMax,
+      Math.floor((bounds.maxAllowedDistance - initialRadius) / Math.max(1, numRings - 1))
+    )
+  );
+  const snappedMaxStep = Math.max(
+    bounds.stepMin,
+    Math.floor(maxPossibleStep / bounds.stepStep) * bounds.stepStep
+  );
+
+  // Dynamic maximum initial radius permitted given current numRings and stepRadius
+  const maxPossibleInit = Math.max(
+    bounds.initMin,
+    Math.min(bounds.initMax, bounds.maxAllowedDistance - (numRings - 1) * stepRadius)
+  );
+  const snappedMaxInit = Math.max(
+    bounds.initMin,
+    Math.floor(maxPossibleInit / bounds.initStep) * bounds.initStep
+  );
+
+  // Dynamic handlers ensuring R_final = R_1 + (N - 1) * step NEVER exceeds bounds.maxAllowedDistance
+  const handleStepRadiusChange = (newStep: number) => {
+    setStepRadius(newStep);
+    // Increasing increment dynamically reduces the maximum number of rings allowed
+    const maxRingsForNewStep = Math.max(
+      2,
+      Math.min(12, 1 + Math.floor((bounds.maxAllowedDistance - initialRadius) / newStep))
+    );
+    if (numRings > maxRingsForNewStep) {
+      setNumRings(maxRingsForNewStep);
+    }
+  };
+
+  const handleNumRingsChange = (newRings: number) => {
+    setNumRings(newRings);
+    // Increasing rings dynamically reduces the maximum step allowed
+    const maxStepForNewRings = Math.max(
+      bounds.stepMin,
+      Math.floor((bounds.maxAllowedDistance - initialRadius) / Math.max(1, newRings - 1))
+    );
+    const snapped = Math.floor(maxStepForNewRings / bounds.stepStep) * bounds.stepStep;
+    if (stepRadius > snapped) {
+      setStepRadius(Math.max(bounds.stepMin, snapped));
+    }
+  };
+
+  const handleInitialRadiusChange = (newInit: number) => {
+    setInitialRadius(newInit);
+    // Increasing initial radius dynamically adjusts step or rings if needed
+    const maxStepForNewInit = Math.max(
+      bounds.stepMin,
+      Math.floor((bounds.maxAllowedDistance - newInit) / Math.max(1, numRings - 1))
+    );
+    const snapped = Math.floor(maxStepForNewInit / bounds.stepStep) * bounds.stepStep;
+    if (stepRadius > snapped) {
+      setStepRadius(Math.max(bounds.stepMin, snapped));
+    }
+  };
+
+  // Compute active radii list
+  const activeRingsCount = Math.min(numRings, maxPossibleRings);
+  const computedRadii = Array.from(
+    { length: activeRingsCount },
+    (_, i) => initialRadius + i * stepRadius
+  );
   const finalRadius = computedRadii[computedRadii.length - 1];
-
-  // Informative scale guidance (non-blocking)
-  const isWarning =
-    (scale === "fr" && finalRadius > 1000) ||
-    (scale === "eu" && finalRadius > 3500) ||
-    (scale === "world" && finalRadius > 15000);
-
-  const warningText =
-    scale === "fr" && finalRadius > 1000
-      ? "À plus de 1 000 km, les anneaux lointains dépassent les frontières de l'Hexagone."
-      : scale === "eu" && finalRadius > 3500
-      ? "À plus de 3 500 km, les anneaux lointains atteignent les limites du continent européen."
-      : scale === "world" && finalRadius > 15000
-      ? "À plus de 15 000 km, les anneaux couvrent les antipodes du globe."
-      : null;
+  const coveragePercent = Math.min(100, Math.round((finalRadius / bounds.maxAllowedDistance) * 100));
 
   const handleLaunch = () => {
     const radiiParam = computedRadii.join(",");
@@ -112,11 +228,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={() => {
-                setScale("fr");
-                setInitialRadius(80);
-                setStepRadius(80);
-              }}
+              onClick={() => applyScaleDefaults("fr")}
               className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 scale === "fr"
                   ? "bg-blue-600 border-blue-500 text-white shadow-md"
@@ -127,11 +239,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => {
-                setScale("eu");
-                setInitialRadius(200);
-                setStepRadius(200);
-              }}
+              onClick={() => applyScaleDefaults("eu")}
               className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 scale === "eu"
                   ? "bg-blue-600 border-blue-500 text-white shadow-md"
@@ -142,11 +250,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => {
-                setScale("world");
-                setInitialRadius(600);
-                setStepRadius(600);
-              }}
+              onClick={() => applyScaleDefaults("world")}
               className={`py-2 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
                 scale === "world"
                   ? "bg-blue-600 border-blue-500 text-white shadow-md"
@@ -184,79 +288,104 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
           </div>
         )}
 
-        {/* 3. Ring Parameters - Fully calculated from the 3 inputs */}
+        {/* 3. Dynamic Ring Parameters - Guaranteed <= bounds.maxAllowedDistance */}
         <div className="flex flex-col gap-3.5 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                3. Géométrie des Anneaux
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  3. Géométrie des Anneaux
+                </span>
+                <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded-full font-medium">
+                  <Shield className="w-3 h-3" />
+                  Garde-fou actif
+                </span>
+              </div>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Calculé : {initialRadius} km + ({numRings - 1} × {stepRadius} km)
+                Calcul : {initialRadius} km + ({activeRingsCount - 1} × {stepRadius} km)
               </p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] text-slate-400 block uppercase">Rayon final</span>
+              <span className="text-[10px] text-slate-400 block uppercase">
+                Limite {bounds.scaleLabel}
+              </span>
               <span className="text-xs font-bold text-blue-400 font-mono bg-blue-950/80 border border-blue-500/50 px-2.5 py-1 rounded-lg inline-block">
-                {finalRadius.toLocaleString("fr-FR")} km
+                {finalRadius.toLocaleString("fr-FR")} km / {bounds.maxAllowedDistance.toLocaleString("fr-FR")} km
               </span>
             </div>
           </div>
 
-          {/* Warning badge if final radius extends beyond territory scale */}
-          {isWarning && warningText && (
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-amber-950/40 border border-amber-600/40 text-amber-200 text-xs">
-              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>{warningText}</span>
-            </div>
-          )}
+          {/* Dynamic Geographic Progress Bar */}
+          <div className="w-full bg-slate-800/90 rounded-full h-2 overflow-hidden flex items-center">
+            <div
+              className={`h-full transition-all duration-300 rounded-full ${
+                coveragePercent >= 95 ? "bg-amber-500" : "bg-blue-500"
+              }`}
+              style={{ width: `${coveragePercent}%` }}
+            />
+          </div>
 
-          {/* Number of rings */}
+          {/* Number of rings (dynamically bounded by stepRadius) */}
           <div className="flex flex-col gap-1">
-            <div className="flex justify-between text-xs">
+            <div className="flex justify-between items-center text-xs">
               <span className="text-slate-400">Nombre d'anneaux</span>
-              <span className="font-bold text-white">{numRings} anneaux</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white">{activeRingsCount} anneaux</span>
+                <span className="text-[10px] text-blue-400/90 font-mono">
+                  (max : {maxPossibleRings})
+                </span>
+              </div>
             </div>
             <input
               type="range"
               min={2}
-              max={12}
-              value={numRings}
-              onChange={(e) => setNumRings(parseInt(e.target.value, 10))}
+              max={maxPossibleRings}
+              value={activeRingsCount}
+              onChange={(e) => handleNumRingsChange(parseInt(e.target.value, 10))}
+              className="w-full accent-blue-500 cursor-pointer"
+            />
+          </div>
+
+          {/* Increment per ring (increasing it automatically pulls down numRings) */}
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-slate-400">Incrément par anneau (pas)</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white">+{stepRadius} km</span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  (max : +{snappedMaxStep} km pour {activeRingsCount} anneaux)
+                </span>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={bounds.stepMin}
+              max={bounds.stepMax}
+              step={bounds.stepStep}
+              value={stepRadius}
+              onChange={(e) => handleStepRadiusChange(parseInt(e.target.value, 10))}
               className="w-full accent-blue-500 cursor-pointer"
             />
           </div>
 
           {/* Initial Radius */}
           <div className="flex flex-col gap-1">
-            <div className="flex justify-between text-xs">
+            <div className="flex justify-between items-center text-xs">
               <span className="text-slate-400">Rayon 1er anneau (centre)</span>
-              <span className="font-bold text-white">{initialRadius} km</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white">{initialRadius} km</span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  (max : {snappedMaxInit} km)
+                </span>
+              </div>
             </div>
             <input
               type="range"
-              min={scale === "fr" ? 20 : scale === "eu" ? 50 : 100}
-              max={scale === "fr" ? 300 : scale === "eu" ? 800 : 2000}
-              step={scale === "fr" ? 10 : 25}
+              min={bounds.initMin}
+              max={bounds.initMax}
+              step={bounds.initStep}
               value={initialRadius}
-              onChange={(e) => setInitialRadius(parseInt(e.target.value, 10))}
-              className="w-full accent-blue-500 cursor-pointer"
-            />
-          </div>
-
-          {/* Step Radius */}
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between text-xs">
-              <span className="text-slate-400">Incrément par anneau (pas)</span>
-              <span className="font-bold text-white">+{stepRadius} km</span>
-            </div>
-            <input
-              type="range"
-              min={scale === "fr" ? 10 : scale === "eu" ? 25 : 50}
-              max={scale === "fr" ? 250 : scale === "eu" ? 600 : 1500}
-              step={scale === "fr" ? 10 : 25}
-              value={stepRadius}
-              onChange={(e) => setStepRadius(parseInt(e.target.value, 10))}
+              onChange={(e) => handleInitialRadiusChange(parseInt(e.target.value, 10))}
               className="w-full accent-blue-500 cursor-pointer"
             />
           </div>
@@ -332,7 +461,7 @@ export const CustomGameModal: React.FC<CustomGameModalProps> = ({
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02]"
           >
             <Play className="w-4 h-4 fill-white" />
-            <span>Lancer la Partie Custom ({numRings} anneaux · {finalRadius.toLocaleString("fr-FR")} km)</span>
+            <span>Lancer la Partie Custom ({activeRingsCount} anneaux · {finalRadius.toLocaleString("fr-FR")} km)</span>
           </button>
         </div>
       </div>
