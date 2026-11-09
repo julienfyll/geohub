@@ -179,16 +179,6 @@ function GeoRingsGame() {
 
         if (result.topCities) {
           setCurrentRingTopCities(result.topCities);
-          // Add rank 2 & 3 markers to the map
-          const topMarkers: MapMarker[] = result.topCities.slice(1).map((tc) => ({
-            id: `top_${tc.id}`,
-            lat: tc.latitude,
-            lon: tc.longitude,
-            label: `${tc.rank}. ${tc.name}`,
-            population: tc.population,
-            type: "top",
-          }));
-          setMarkers((prev) => [...prev, ...topMarkers]);
         }
 
         const updatedRings = [...rings];
@@ -235,16 +225,6 @@ function GeoRingsGame() {
 
           if (result.topCities) {
             setCurrentRingTopCities(result.topCities);
-            // Add rank 2 & 3 markers to the map
-            const topMarkers: MapMarker[] = result.topCities.slice(1).map((tc) => ({
-              id: `top_${tc.id}`,
-              lat: tc.latitude,
-              lon: tc.longitude,
-              label: `${tc.rank}. ${tc.name}`,
-              population: tc.population,
-              type: "top",
-            }));
-            setMarkers((prev) => [...prev, ...topMarkers]);
           }
 
           const updatedRings = [...rings];
@@ -329,16 +309,6 @@ function GeoRingsGame() {
 
       if (result.topCities) {
         setCurrentRingTopCities(result.topCities);
-        // Add rank 2 & 3 markers to the map
-        const topMarkers: MapMarker[] = result.topCities.slice(1).map((tc: TopCityItem) => ({
-          id: `top_${tc.id}`,
-          lat: tc.latitude,
-          lon: tc.longitude,
-          label: `${tc.rank}. ${tc.name}`,
-          population: tc.population,
-          type: "top",
-        }));
-        setMarkers((prev) => [...prev, ...topMarkers]);
       }
 
       const updatedRings = [...rings];
