@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { Trophy, Share2, RotateCcw, Check, Sparkles } from "lucide-react";
+import { Trophy, Share2, RotateCcw, Check, Sparkles, X } from "lucide-react";
 import { RingStatus } from "./RingProgressHUD";
 import { GameScale } from "@/lib/games/types";
 
@@ -15,6 +15,7 @@ interface GameOverModalProps {
   rings: RingStatus[];
   customShareUrl?: string;
   onRestart: () => void;
+  onClose?: () => void;
 }
 
 export const GameOverModal: React.FC<GameOverModalProps> = ({
@@ -26,6 +27,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   rings,
   customShareUrl,
   onRestart,
+  onClose,
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -42,6 +44,16 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
       });
     }
   }, [isOpen, solvedCount, isPerfect, rings.length]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen && onClose) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -83,8 +95,27 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget && onClose) {
+          onClose();
+        }
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300"
+    >
       <div className="relative w-full max-w-md bg-slate-900 border border-slate-700/80 rounded-3xl p-6 shadow-2xl text-center flex flex-col gap-5">
+        {/* Close Button to inspect map */}
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            title="Fermer pour observer la carte"
+            aria-label="Fermer le bilan"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
         {/* Header Icon */}
         <div className="mx-auto flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400">
           {solvedCount >= 4 ? (

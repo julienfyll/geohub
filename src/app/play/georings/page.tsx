@@ -18,6 +18,7 @@ import {
   Sliders,
   Sparkles,
   SkipForward,
+  Trophy,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
@@ -57,6 +58,7 @@ function GeoRingsGame() {
     directionHint?: { code: string; label: string; arrow: string };
   } | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [showGameOverModal, setShowGameOverModal] = useState(true);
   const [isReviewing, setIsReviewing] = useState(false);
   const [currentRingGuesses, setCurrentRingGuesses] = useState<GuessRecord[]>([]);
   const [currentRingTopCities, setCurrentRingTopCities] = useState<TopCityItem[]>([]);
@@ -73,6 +75,7 @@ function GeoRingsGame() {
     setLoading(true);
     setFeedback(null);
     setIsGameOver(false);
+    setShowGameOverModal(true);
     setIsReviewing(false);
     setCurrentRingGuesses([]);
     setCurrentRingTopCities([]);
@@ -361,6 +364,7 @@ function GeoRingsGame() {
       setHoveredReviewCity(null);
       setPinnedReviewCities(new Map());
       setIsGameOver(true);
+      setShowGameOverModal(true);
     }
   }, [currentRingIndex, rings.length, totalTries]);
 
@@ -594,6 +598,18 @@ function GeoRingsGame() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+          {/* Final Summary button when game is over */}
+          {isGameOver && (
+            <button
+              onClick={() => setShowGameOverModal(true)}
+              title="Voir le bilan final de la partie"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-xs font-semibold text-amber-300 transition-all shadow-sm"
+            >
+              <Trophy className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Bilan</span>
+            </button>
+          )}
+
           {/* Settings button */}
           <button
             onClick={() => setShowSettings(true)}
@@ -834,10 +850,26 @@ function GeoRingsGame() {
         )}
       </main>
 
+      {/* Re-open Game Over Button (when closed to observe map) */}
+      {isGameOver && !showGameOverModal && (
+        <button
+          type="button"
+          onClick={() => setShowGameOverModal(true)}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm border border-slate-700/80 shadow-2xl backdrop-blur-xl transition-all hover:scale-105 active:scale-95 animate-in fade-in slide-in-from-bottom-4 duration-200"
+          title="Rouvrir le bilan final de la partie"
+        >
+          <Trophy className="w-4 h-4 text-amber-400" />
+          <span>Afficher le bilan</span>
+          <span className="px-2 py-0.5 rounded-md bg-blue-600/30 text-blue-400 text-xs font-mono font-bold">
+            {rings.filter((r) => r.isCompleted).length}/{rings.length}
+          </span>
+        </button>
+      )}
+
       {/* Game Over Modal */}
       {session && (
         <GameOverModal
-          isOpen={isGameOver}
+          isOpen={isGameOver && showGameOverModal}
           scale={scale}
           mode={mode}
           seed={session.seed}
@@ -845,6 +877,7 @@ function GeoRingsGame() {
           rings={rings}
           customShareUrl={getCustomShareUrl()}
           onRestart={initGame}
+          onClose={() => setShowGameOverModal(false)}
         />
       )}
     </div>
