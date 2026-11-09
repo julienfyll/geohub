@@ -71,7 +71,7 @@ function GeoRingsLobby() {
             <div className="flex items-center gap-2">
               <Compass className="w-5 h-5 text-blue-500" />
               <h1 className="text-base font-bold tracking-tight text-white">
-                Lobby GeoRings
+                GeoRings — Choix du Critère
               </h1>
             </div>
           </div>
@@ -101,10 +101,10 @@ function GeoRingsLobby() {
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
-            Choisissez votre Défi Spatial
+            Choisissez votre Critère de Jeu
           </h2>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl">
-            Explorez le territoire par anneaux concentriques croissants. Deux critères de mesure pour éprouver votre intuition géographique :
+            Explorez le territoire par anneaux concentriques. Sélectionnez la déclinaison souhaitée pour démarrer votre partie :
           </p>
         </div>
       </section>
@@ -122,7 +122,7 @@ function GeoRingsLobby() {
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5" />
-                  <span>Mode Classique</span>
+                  <span>Critère : Population</span>
                 </span>
                 <span className="text-xs text-slate-400 font-mono">5 Anneaux • 3 Vies</span>
               </div>
@@ -205,7 +205,7 @@ function GeoRingsLobby() {
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                   <Plane className="w-3.5 h-3.5" />
-                  <span>Nouvelle Variante</span>
+                  <span>Critère : Trafic Aérien</span>
                 </span>
                 <span className="text-xs text-slate-400 font-mono">5 Anneaux Calibrés</span>
               </div>

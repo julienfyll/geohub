@@ -10,6 +10,7 @@ import {
   Flame,
   Plane,
   Users,
+  ArrowRight,
 } from "lucide-react";
 
 export default function Home() {
@@ -85,75 +86,61 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Game 1 : GeoRings (Active - 2 Variants) */}
-          <div className="relative group bg-slate-900/90 border-2 border-blue-500/50 hover:border-blue-500 rounded-3xl p-6 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+          {/* Game 1 : GeoRings (Active - 2 Variants Selection) */}
+          <Link
+            href="/play/georings"
+            className="relative group bg-slate-900/90 border-2 border-blue-500/50 hover:border-blue-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden cursor-pointer hover:shadow-blue-500/10"
+          >
             <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
               <Compass className="w-32 h-32 text-blue-400" />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3" />
-                  <span>★ 2 Variantes Jouables</span>
+                  <span>★ Jeu Phare • 2 Critères</span>
                 </span>
                 <span className="text-xs text-slate-400 font-mono">5 Anneaux • 3 Vies</span>
               </div>
 
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
                 GeoRings — Cercles Concentriques
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-5">
-                À partir d'un centre, 5 anneaux concentriques s'étendent. Testez votre intuition sur les <b>Villes les plus peuplées</b> ou les <b>Aéroports au trafic le plus intense</b> !
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                À partir d'un centre géographique, 5 anneaux concentriques s'étendent. Débusquez la cible maximale à chaque niveau en fonction du critère choisi.
               </p>
 
-              {/* Variants Quick Picker */}
-              <div className="grid grid-cols-2 gap-2 mb-6">
-                <Link
-                  href="/play/georings?metric=population&scale=fr&mode=daily"
-                  className="p-3 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-blue-500/60 transition-all flex flex-col gap-1 group/v"
-                >
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-white group-hover/v:text-blue-400">
+              {/* Informative Criteria Badges (No direct game launch on hub) */}
+              <div className="grid grid-cols-2 gap-2.5 mb-6">
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200">
                     <Users className="w-3.5 h-3.5 text-blue-400" />
                     <span>👥 Villes</span>
                   </div>
                   <span className="text-[11px] text-slate-400 leading-tight">
-                    Populations officielles & métropoles
+                    Population officielle & métropoles
                   </span>
-                </Link>
+                </div>
 
-                <Link
-                  href="/play/georings?metric=airports&scale=fr&mode=daily"
-                  className="p-3 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-sky-500/60 transition-all flex flex-col gap-1 group/a"
-                >
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-white group-hover/a:text-sky-400">
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200">
                     <Plane className="w-3.5 h-3.5 text-sky-400" />
                     <span>✈️ Aéroports</span>
                   </div>
                   <span className="text-[11px] text-slate-400 leading-tight">
                     Trafic passagers annuel commercial
                   </span>
-                </Link>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
-              <Link
-                href="/play/georings"
-                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/20"
-              >
-                <Play className="w-4 h-4 fill-white" />
-                <span>Ouvrir GeoRings</span>
-              </Link>
-              <Link
-                href="/play/georings?metric=airports&scale=fr&mode=daily"
-                className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-sky-950/80 hover:bg-sky-900/80 text-sky-200 border border-sky-600/50 font-semibold text-xs sm:text-sm transition-all"
-              >
-                <Plane className="w-4 h-4 text-sky-400" />
-                <span>Défi Aéroports</span>
-              </Link>
+            {/* Single CTA to choose variation & play on the dedicated page */}
+            <div className="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-blue-600 group-hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-600/25">
+              <span>Choisir le critère & Jouer</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
-          </div>
+          </Link>
 
           {/* Game 2 : Blind Point (Active) */}
           <div className="relative group bg-slate-900/90 border-2 border-emerald-500/50 hover:border-emerald-500 rounded-3xl p-6 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
