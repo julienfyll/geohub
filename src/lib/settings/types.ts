@@ -3,6 +3,7 @@ export interface GameSettings {
   showAutocompleteDropdown: boolean;
   preferFrenchNames: boolean;
   showDirectionHints: boolean;
+  autoAdvance: boolean;
 }
 
 export const DEFAULT_SETTINGS: GameSettings = {
@@ -10,4 +11,5 @@ export const DEFAULT_SETTINGS: GameSettings = {
   showAutocompleteDropdown: true,
   preferFrenchNames: true,
   showDirectionHints: true,
+  autoAdvance: false,
 };

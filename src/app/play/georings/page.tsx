@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -20,6 +20,7 @@ import {
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
 import { RingProgressHUD, RingStatus } from "@/components/game/RingProgressHUD";
+import { RingReviewActionBar } from "@/components/game/RingReviewActionBar";
 import { GameOverModal } from "@/components/game/GameOverModal";
 import { SettingsModal } from "@/components/game/SettingsModal";
 import { CustomGameModal } from "@/components/game/CustomGameModal";
@@ -53,6 +54,7 @@ function GeoRingsGame() {
     directionHint?: { code: string; label: string; arrow: string };
   } | null>(null);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isReviewing, setIsReviewing] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -64,6 +66,7 @@ function GeoRingsGame() {
     setLoading(true);
     setFeedback(null);
     setIsGameOver(false);
+    setIsReviewing(false);
     setCurrentRingIndex(0);
     setMarkers([]);
     setCompletedRadii([]);
@@ -166,16 +169,8 @@ function GeoRingsGame() {
         };
 
         setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
-
-        if (currentRingIndex < rings.length - 1) {
-          updatedRings[currentRingIndex + 1].isCurrent = true;
-          setRings(updatedRings);
-          setCurrentRingIndex((prev) => prev + 1);
-          setTriesLeft(totalTries);
-        } else {
-          setRings(updatedRings);
-          setTimeout(() => setIsGameOver(true), 1000);
-        }
+        setRings(updatedRings);
+        setIsReviewing(true);
       } else {
         // Wrong Guess
         setTriesLeft(result.triesLeft);
@@ -216,19 +211,8 @@ function GeoRingsGame() {
           };
 
           setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
-
-          setTimeout(() => {
-            if (currentRingIndex < rings.length - 1) {
-              updatedRings[currentRingIndex + 1].isCurrent = true;
-              setRings(updatedRings);
-              setCurrentRingIndex((prev) => prev + 1);
-              setTriesLeft(totalTries);
-              setFeedback(null);
-            } else {
-              setRings(updatedRings);
-              setIsGameOver(true);
-            }
-          }, 2400);
+          setRings(updatedRings);
+          setIsReviewing(true);
         } else {
           // Failed try, but has lives left
           const feedbackType = !result.isInRing ? "warning" : "error";
@@ -307,19 +291,8 @@ function GeoRingsGame() {
       };
 
       setCompletedRadii((prev) => [...prev, activeRing.outerRadiusKm]);
-
-      setTimeout(() => {
-        if (currentRingIndex < rings.length - 1) {
-          updatedRings[currentRingIndex + 1].isCurrent = true;
-          setRings(updatedRings);
-          setCurrentRingIndex((prev) => prev + 1);
-          setTriesLeft(totalTries);
-          setFeedback(null);
-        } else {
-          setRings(updatedRings);
-          setIsGameOver(true);
-        }
-      }, 1800);
+      setRings(updatedRings);
+      setIsReviewing(true);
     } catch (err) {
       console.error(err);
       setFeedback({ text: "Erreur lors du saut de l'anneau.", type: "error" });
@@ -328,10 +301,36 @@ function GeoRingsGame() {
     }
   };
 
-  // Keyboard shortcut listener for Space (skip when not typing)
+  // Advance to next ring from Review Mode
+  const handleNextRing = useCallback(() => {
+    if (currentRingIndex < rings.length - 1) {
+      setRings((prev) => {
+        const next = [...prev];
+        if (next[currentRingIndex + 1]) {
+          next[currentRingIndex + 1].isCurrent = true;
+        }
+        return next;
+      });
+      setCurrentRingIndex((prev) => prev + 1);
+      setTriesLeft(totalTries);
+      setIsReviewing(false);
+      setFeedback(null);
+    } else {
+      setIsReviewing(false);
+      setIsGameOver(true);
+    }
+  }, [currentRingIndex, rings.length, totalTries]);
+
+  // Keyboard shortcut listener for Space (skip when playing, next when reviewing) and Enter
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (e.code === "Space" || e.key === " ") {
+        if (isReviewing) {
+          e.preventDefault();
+          handleNextRing();
+          return;
+        }
+
         const activeEl = document.activeElement;
         const isInput =
           activeEl &&
@@ -339,16 +338,21 @@ function GeoRingsGame() {
             activeEl.tagName === "TEXTAREA" ||
             (activeEl as HTMLElement).isContentEditable);
 
-        if (!isInput) {
+        if (!isInput && !isGameOver && !isSubmitting) {
           e.preventDefault();
           handleSkipRing();
         }
+      }
+
+      if (e.key === "Enter" && isReviewing) {
+        e.preventDefault();
+        handleNextRing();
       }
     };
 
     window.addEventListener("keydown", handleGlobalKeyDown);
     return () => window.removeEventListener("keydown", handleGlobalKeyDown);
-  }, [session, currentRingIndex, rings, isGameOver, isSubmitting, totalTries]);
+  }, [isReviewing, isGameOver, isSubmitting, handleNextRing, handleSkipRing]);
 
   const getCustomShareUrl = () => {
     if (!session) return "";
@@ -517,7 +521,7 @@ function GeoRingsGame() {
             <SearchBar
               scale={scale}
               onSelectCity={handleSelectCity}
-              onSkip={handleSkipRing}
+              onSkip={isReviewing ? handleNextRing : handleSkipRing}
               onCityNotFound={(query) =>
                 setFeedback({
                   text: `Ville "${query}" introuvable. Vérifiez l'orthographe.`,
@@ -525,23 +529,29 @@ function GeoRingsGame() {
                 })
               }
               showDropdown={settings.showAutocompleteDropdown}
-              disabled={isGameOver || isSubmitting || loading}
-              placeholder={`Tapez une ville pour l'anneau ${currentRingIndex + 1}...`}
+              disabled={isGameOver || isSubmitting || loading || isReviewing}
+              placeholder={
+                isReviewing
+                  ? "Anneau terminé — Appuyez sur Espace pour continuer..."
+                  : `Tapez une ville pour l'anneau ${currentRingIndex + 1}...`
+              }
             />
           </div>
-          <button
-            type="button"
-            onClick={handleSkipRing}
-            disabled={isGameOver || isSubmitting || loading}
-            title="Passer au cercle suivant (Espace)"
-            className="flex items-center gap-1.5 px-3 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-xl backdrop-blur-md shrink-0 disabled:opacity-40 disabled:cursor-not-allowed group"
-          >
-            <SkipForward className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
-            <span className="hidden sm:inline">Passer</span>
-            <kbd className="hidden md:inline px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[9px] text-slate-400">
-              Espace
-            </kbd>
-          </button>
+          {!isReviewing && (
+            <button
+              type="button"
+              onClick={handleSkipRing}
+              disabled={isGameOver || isSubmitting || loading}
+              title="Passer au cercle suivant (Espace)"
+              className="flex items-center gap-1.5 px-3 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-xl backdrop-blur-md shrink-0 disabled:opacity-40 disabled:cursor-not-allowed group"
+            >
+              <SkipForward className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
+              <span className="hidden sm:inline">Passer</span>
+              <kbd className="hidden md:inline px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[9px] text-slate-400">
+                Espace
+              </kbd>
+            </button>
+          )}
         </div>
 
         {/* Feedback Banner with optional Compass Direction Hint */}
@@ -664,6 +674,15 @@ function GeoRingsGame() {
               {mode === "daily" ? "Daily" : mode === "custom" ? "Custom" : "Free"}
             </span>
           </div>
+        )}
+        {/* Ring Review Action Bar (Bottom Center) */}
+        {isReviewing && (
+          <RingReviewActionBar
+            isLastRing={currentRingIndex === rings.length - 1}
+            autoAdvance={settings.autoAdvance}
+            onNextRing={handleNextRing}
+            onToggleAutoAdvance={(val) => updateSetting("autoAdvance", val)}
+          />
         )}
       </main>
 

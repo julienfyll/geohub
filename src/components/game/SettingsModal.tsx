@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { X, Settings, RotateCcw, Map, Compass, Search, Globe } from "lucide-react";
+import { X, Settings, RotateCcw, Map, Compass, Search, Globe, FastForward } from "lucide-react";
 import { GameSettings } from "@/lib/settings/types";
 
 interface SettingsModalProps {
@@ -139,6 +139,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <span
                 className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
                   settings.preferFrenchNames ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Auto-advance */}
+          <div className="flex items-center justify-between pt-3">
+            <div className="flex items-start gap-3 pr-2">
+              <FastForward className="w-4 h-4 text-cyan-400 mt-1 shrink-0" />
+              <div>
+                <p className="font-semibold text-white">Passage automatique d'anneau</p>
+                <p className="text-xs text-slate-400">
+                  Passe automatiquement au cercle suivant après 3,5s au lieu d'attendre l'appui sur <i>Espace</i>.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => onUpdateSetting("autoAdvance", !settings.autoAdvance)}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                settings.autoAdvance ? "bg-blue-600" : "bg-slate-700"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                  settings.autoAdvance ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
