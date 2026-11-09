@@ -149,12 +149,19 @@ def process_and_seed_db():
 
                 # Parse alternate names (French, local, exonyms)
                 if assigned_scales and raw_alts:
+                    JUNK_NICKNAMES = {
+                        "ville lumiere", "paname", "pantruche", "cite des papes",
+                        "saint jean sur mer", "rochefort des vignes", "rochefort la vigne"
+                    }
                     for raw_alt in raw_alts:
                         alt = raw_alt.strip()
                         if not alt or len(alt) < 2:
                             continue
+                        # Skip 3-letter airport codes (CDG, ORY, PAR, MRS, etc.)
+                        if len(alt) == 3 and alt.isupper() and alt.isalpha():
+                            continue
                         norm_alt = normalize_text(alt)
-                        if not norm_alt or len(norm_alt) < 2:
+                        if not norm_alt or len(norm_alt) < 2 or norm_alt in JUNK_NICKNAMES:
                             continue
                         if norm_alt == norm_name:
                             continue

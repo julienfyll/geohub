@@ -85,12 +85,26 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleDirectSubmit = async (searchQuery: string) => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/geo/search?q=${encodeURIComponent(searchQuery)}&scale=${scale}&limit=1`);
+      const res = await fetch(`/api/geo/search?q=${encodeURIComponent(searchQuery)}&scale=${scale}&limit=8`);
       if (res.ok) {
         const data = await res.json();
         if (data.results && data.results.length > 0) {
-          handleSelect(data.results[0]);
-          return;
+          const topResult = data.results[0];
+          const trimmed = searchQuery.trim().toLowerCase();
+          const cleanName = topResult.name.toLowerCase().replace(/\s*\(.*\)/, "").trim();
+          const isExact = trimmed === cleanName || topResult.name.toLowerCase().includes(`(${trimmed})`);
+          const isFullWord = trimmed.length >= 4;
+
+          // Option A: Direct validation on exact match or full word (>= 4 chars), guard on ambiguous 2-3 letters
+          if (isExact || isFullWord) {
+            handleSelect(topResult);
+            return;
+          } else {
+            setResults(data.results);
+            setIsOpen(true);
+            setSelectedIndex(0);
+            return;
+          }
         }
       }
       if (onCityNotFound) {
@@ -127,15 +141,33 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
     if (e.key === "Enter") {
       e.preventDefault();
-      // 1. If an item was explicitly highlighted via arrows
+      // 1. If an item was explicitly highlighted via arrows or hover
       if (selectedIndex >= 0 && results[selectedIndex]) {
         handleSelect(results[selectedIndex]);
         return;
       }
 
-      // 2. If suggestions are loaded, auto-pick the 1st (top match) without requiring arrow/click!
+      // 2. Option A: Secure Enter validation
       if (results.length > 0) {
-        handleSelect(results[0]);
+        const topResult = results[0];
+        const trimmedQuery = query.trim().toLowerCase();
+        const topResultClean = topResult.name.toLowerCase().replace(/\s*\(.*\)/, "").trim();
+
+        const isExactMatch =
+          trimmedQuery === topResultClean ||
+          topResult.name.toLowerCase().includes(`(${trimmedQuery})`);
+        const isFullWord = trimmedQuery.length >= 4;
+
+        // If it is a short 2-3 letter ambiguous prefix and not an exact match:
+        // Do not burn a life blindly! Open the dropdown and highlight the top match.
+        if (!isExactMatch && !isFullWord) {
+          setIsOpen(true);
+          setSelectedIndex(0);
+          return;
+        }
+
+        // Full word, typo-corrected word, or exact match: Direct instant validation!
+        handleSelect(topResult);
         return;
       }
 

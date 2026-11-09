@@ -5,10 +5,31 @@ import { City, GameScale } from "@/lib/games/types";
 
 let dbInstance: DatabaseSync | null = null;
 
+function levenshtein(a: string, b: string): number {
+  if (!a || !b) return (a || b || "").length;
+  if (Math.abs(a.length - b.length) > 2) return 99;
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => new Int32Array(n + 1));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
 export function getDb(): DatabaseSync {
   if (!dbInstance) {
     const dbPath = path.join(process.cwd(), "data", "geohub.db");
     dbInstance = new DatabaseSync(dbPath, { open: true, readOnly: true });
+    dbInstance.function("levenshtein", (a: unknown, b: unknown) => {
+      if (typeof a !== "string" || typeof b !== "string") return 99;
+      return levenshtein(a, b);
+    });
   }
   return dbInstance;
 }
@@ -25,7 +46,8 @@ export function normalizeText(text: string): string {
 
 /**
  * Autocomplete search for cities in the given scale.
- * Searches both official names and alternate names (French names, exonyms, transliterations).
+ * 1. Fast tiered prefix matching: Official Name (Tier 0-2) > Canonical Alias (Tier 3-4) > Population DESC.
+ * 2. Fuzzy fallback: Levenshtein distance <= 2 for typo tolerance (e.g. "montpelier", "bourdeaux", "stasbourg").
  */
 export function searchCities(
   query: string,
@@ -39,51 +61,91 @@ export function searchCities(
   const startsWith = `${norm}%`;
   const contains = `% ${norm}%`;
 
+  // 1. Fast tiered match: Official Name ALWAYS strictly outranks aliases
   const stmt = db.prepare(`
     WITH matches AS (
-      -- Direct city name match
-      SELECT id, name, NULL as matchedAlias, country_code as countryCode, scale, population, latitude, longitude, timezone,
-             CASE 
-               WHEN normalized_name = ? THEN 0 
-               WHEN normalized_name LIKE ? THEN 1 
-               ELSE 2 
-             END as rank_score
+      -- Tier 0: Exact match on official city name
+      SELECT id, name, NULL as matchedAlias, country_code as countryCode, scale, population, latitude, longitude, timezone, 0 as tier
       FROM cities
-      WHERE scale = ? AND (normalized_name LIKE ? OR normalized_name LIKE ?)
+      WHERE scale = ? AND normalized_name = ?
 
       UNION ALL
 
-      -- Alias match (French names, local exonyms, transliterations)
-      SELECT c.id, c.name, a.alias as matchedAlias, c.country_code as countryCode, c.scale, c.population, c.latitude, c.longitude, c.timezone,
-             CASE 
-               WHEN a.normalized_alias = ? THEN 0 
-               WHEN a.normalized_alias LIKE ? THEN 1 
-               ELSE 2 
-             END as rank_score
+      -- Tier 1: Official name starts with query
+      SELECT id, name, NULL as matchedAlias, country_code as countryCode, scale, population, latitude, longitude, timezone, 1 as tier
+      FROM cities
+      WHERE scale = ? AND normalized_name LIKE ? AND normalized_name != ?
+
+      UNION ALL
+
+      -- Tier 2: Official name contains query at word boundary
+      SELECT id, name, NULL as matchedAlias, country_code as countryCode, scale, population, latitude, longitude, timezone, 2 as tier
+      FROM cities
+      WHERE scale = ? AND normalized_name LIKE ? AND normalized_name NOT LIKE ?
+
+      UNION ALL
+
+      -- Tier 3: Canonical alias exact match (e.g. "Londres" for London)
+      SELECT c.id, c.name, a.alias as matchedAlias, c.country_code as countryCode, c.scale, c.population, c.latitude, c.longitude, c.timezone, 3 as tier
       FROM city_aliases a
       JOIN cities c ON a.city_id = c.id
-      WHERE a.scale = ? AND (a.normalized_alias LIKE ? OR a.normalized_alias LIKE ?)
+      WHERE a.scale = ? AND a.normalized_alias = ? AND c.normalized_name != ?
+
+      UNION ALL
+
+      -- Tier 4: Canonical alias starts with query
+      SELECT c.id, c.name, a.alias as matchedAlias, c.country_code as countryCode, c.scale, c.population, c.latitude, c.longitude, c.timezone, 4 as tier
+      FROM city_aliases a
+      JOIN cities c ON a.city_id = c.id
+      WHERE a.scale = ? AND a.normalized_alias LIKE ? AND a.normalized_alias != ? AND c.normalized_name NOT LIKE ?
     )
-    SELECT id, name, matchedAlias, countryCode, scale, population, latitude, longitude, timezone
+    SELECT id, name, matchedAlias, countryCode, scale, population, latitude, longitude, timezone, min(tier) as best_tier
     FROM matches
     GROUP BY id
-    ORDER BY min(rank_score) ASC, population DESC
+    ORDER BY best_tier ASC, population DESC
     LIMIT ?
   `);
 
-  const rows = stmt.all(
-    norm,
-    startsWith,
-    scale,
-    startsWith,
-    contains,
-    norm,
-    startsWith,
-    scale,
-    startsWith,
-    contains,
+  let rows = stmt.all(
+    scale, norm,
+    scale, startsWith, norm,
+    scale, contains, startsWith,
+    scale, norm, norm,
+    scale, startsWith, norm, startsWith,
     limit
   ) as unknown as (City & { matchedAlias?: string })[];
+
+  // 2. Fuzzy typo-tolerance fallback (if 0 direct results and query has >= 4 chars)
+  if (rows.length === 0 && norm.length >= 4) {
+    const maxDist = norm.length >= 8 ? 2 : 1;
+    const fuzzyStmt = db.prepare(`
+      WITH fuzzy_matches AS (
+        SELECT id, name, NULL as matchedAlias, country_code as countryCode, scale, population, latitude, longitude, timezone,
+               levenshtein(normalized_name, ?) as dist
+        FROM cities
+        WHERE scale = ? AND levenshtein(normalized_name, ?) <= ?
+
+        UNION ALL
+
+        SELECT c.id, c.name, a.alias as matchedAlias, c.country_code as countryCode, c.scale, c.population, c.latitude, c.longitude, c.timezone,
+               levenshtein(a.normalized_alias, ?) as dist
+        FROM city_aliases a
+        JOIN cities c ON a.city_id = c.id
+        WHERE a.scale = ? AND levenshtein(a.normalized_alias, ?) <= ?
+      )
+      SELECT id, name, matchedAlias, countryCode, scale, population, latitude, longitude, timezone, min(dist) as best_dist
+      FROM fuzzy_matches
+      GROUP BY id
+      ORDER BY best_dist ASC, population DESC
+      LIMIT ?
+    `);
+
+    rows = fuzzyStmt.all(
+      norm, scale, norm, maxDist,
+      norm, scale, norm, maxDist,
+      limit
+    ) as unknown as (City & { matchedAlias?: string })[];
+  }
 
   return rows;
 }
