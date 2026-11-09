@@ -1,0 +1,452 @@
+[
+  {
+    "id": "castle_chambord",
+    "name": "Château de Chambord",
+    "subtitle": "Loir-et-Cher, Centre-Val de Loire, France",
+    "latitude": 47.6161,
+    "longitude": 1.5172,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chenonceau",
+    "name": "Château de Chenonceau",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.3249,
+    "longitude": 1.0703,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_carcassonne",
+    "name": "Cité Médiévale de Carcassonne",
+    "subtitle": "Aude, Occitanie, France",
+    "latitude": 43.2064,
+    "longitude": 2.3639,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_mont_saint_michel",
+    "name": "Abbaye du Mont-Saint-Michel",
+    "subtitle": "Manche, Normandie, France",
+    "latitude": 48.636,
+    "longitude": -1.5115,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_versailles",
+    "name": "Château de Versailles",
+    "subtitle": "Yvelines, Île-de-France, France",
+    "latitude": 48.8049,
+    "longitude": 2.1204,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_haut_koenigsbourg",
+    "name": "Château du Haut-Kœnigsbourg",
+    "subtitle": "Bas-Rhin, Grand Est, France",
+    "latitude": 48.2495,
+    "longitude": 7.3444,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_fontainebleau",
+    "name": "Château de Fontainebleau",
+    "subtitle": "Seine-et-Marne, Île-de-France, France",
+    "latitude": 48.4022,
+    "longitude": 2.7003,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chantilly",
+    "name": "Château de Chantilly",
+    "subtitle": "Oise, Hauts-de-France, France",
+    "latitude": 49.1939,
+    "longitude": 2.4853,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_vaux_le_vicomte",
+    "name": "Château de Vaux-le-Vicomte",
+    "subtitle": "Seine-et-Marne, Île-de-France, France",
+    "latitude": 48.5658,
+    "longitude": 2.7142,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_pierrefonds",
+    "name": "Château de Pierrefonds",
+    "subtitle": "Oise, Hauts-de-France, France",
+    "latitude": 49.3469,
+    "longitude": 2.9803,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_amboise",
+    "name": "Château Royal d'Amboise",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.4132,
+    "longitude": 0.9858,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_blois",
+    "name": "Château Royal de Blois",
+    "subtitle": "Loir-et-Cher, Centre-Val de Loire, France",
+    "latitude": 47.5861,
+    "longitude": 1.3308,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_cheverny",
+    "name": "Château de Cheverny",
+    "subtitle": "Loir-et-Cher, Centre-Val de Loire, France",
+    "latitude": 47.5002,
+    "longitude": 1.4608,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_villandry",
+    "name": "Château et Jardins de Villandry",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.3406,
+    "longitude": 0.5147,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_azay_le_rideau",
+    "name": "Château d'Azay-le-Rideau",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.2592,
+    "longitude": 0.4664,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chateau_gaillard",
+    "name": "Château-Gaillard (Les Andelys)",
+    "subtitle": "Eure, Normandie, France",
+    "latitude": 49.2372,
+    "longitude": 1.4025,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_angers",
+    "name": "Château d'Angers (Forteresse du Roi René)",
+    "subtitle": "Maine-et-Loire, Pays de la Loire, France",
+    "latitude": 47.47,
+    "longitude": -0.56,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_saumur",
+    "name": "Château de Saumur",
+    "subtitle": "Maine-et-Loire, Pays de la Loire, France",
+    "latitude": 47.2567,
+    "longitude": -0.0725,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_peyrepertuse",
+    "name": "Forteresse de Peyrepertuse",
+    "subtitle": "Aude, Occitanie, France",
+    "latitude": 42.8711,
+    "longitude": 2.6611,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_queribus",
+    "name": "Château de Quéribus",
+    "subtitle": "Aude, Occitanie, France",
+    "latitude": 42.8372,
+    "longitude": 2.6217,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_montsegur",
+    "name": "Château de Montségur",
+    "subtitle": "Ariège, Occitanie, France",
+    "latitude": 42.8753,
+    "longitude": 1.8328,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_foix",
+    "name": "Château de Foix",
+    "subtitle": "Ariège, Occitanie, France",
+    "latitude": 42.9656,
+    "longitude": 1.6053,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_castelnaud",
+    "name": "Château de Castelnaud",
+    "subtitle": "Dordogne, Nouvelle-Aquitaine, France",
+    "latitude": 44.8058,
+    "longitude": 1.1492,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_beynac",
+    "name": "Château de Beynac",
+    "subtitle": "Dordogne, Nouvelle-Aquitaine, France",
+    "latitude": 44.8706,
+    "longitude": 1.1444,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_bonaguil",
+    "name": "Château de Bonaguil",
+    "subtitle": "Lot-et-Garonne, Nouvelle-Aquitaine, France",
+    "latitude": 44.5322,
+    "longitude": 1.0142,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_murol",
+    "name": "Château de Murol",
+    "subtitle": "Puy-de-Dôme, Auvergne-Rhône-Alpes, France",
+    "latitude": 45.5772,
+    "longitude": 2.9467,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_baux_de_provence",
+    "name": "Château des Baux-de-Provence",
+    "subtitle": "Bouches-du-Rhône, Provence-Alpes-Côte d'Azur, France",
+    "latitude": 43.7439,
+    "longitude": 4.7956,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_tarascon",
+    "name": "Château du Roi René à Tarascon",
+    "subtitle": "Bouches-du-Rhône, Provence-Alpes-Côte d'Azur, France",
+    "latitude": 43.8058,
+    "longitude": 4.6533,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chateau_d_if",
+    "name": "Château d'If",
+    "subtitle": "Marseille, Bouches-du-Rhône, France",
+    "latitude": 43.2798,
+    "longitude": 5.3253,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_palais_des_papes",
+    "name": "Palais des Papes",
+    "subtitle": "Avignon, Vaucluse, France",
+    "latitude": 43.9508,
+    "longitude": 4.8075,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_citadelle_besancon",
+    "name": "Citadelle de Besançon (Vauban)",
+    "subtitle": "Doubs, Bourgogne-Franche-Comté, France",
+    "latitude": 47.2319,
+    "longitude": 6.0319,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_citadelle_belfort",
+    "name": "Citadelle et Lion de Belfort",
+    "subtitle": "Territoire de Belfort, Bourgogne-Franche-Comté, France",
+    "latitude": 47.6367,
+    "longitude": 6.8653,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_citadelle_blaye",
+    "name": "Citadelle de Blaye (Vauban)",
+    "subtitle": "Gironde, Nouvelle-Aquitaine, France",
+    "latitude": 45.1281,
+    "longitude": -0.6664,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_fort_boyard",
+    "name": "Fort Boyard",
+    "subtitle": "Charente-Maritime, Nouvelle-Aquitaine, France",
+    "latitude": 45.9997,
+    "longitude": -1.2139,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chateau_vincennes",
+    "name": "Château de Vincennes",
+    "subtitle": "Val-de-Marne, Île-de-France, France",
+    "latitude": 48.8428,
+    "longitude": 2.4358,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_compiegne",
+    "name": "Palais de Compiègne",
+    "subtitle": "Oise, Hauts-de-France, France",
+    "latitude": 49.4183,
+    "longitude": 2.8317,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_rambouillet",
+    "name": "Château de Rambouillet",
+    "subtitle": "Yvelines, Île-de-France, France",
+    "latitude": 48.6444,
+    "longitude": 1.8175,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chateaubriant",
+    "name": "Château de Châteaubriant",
+    "subtitle": "Loire-Atlantique, Pays de la Loire, France",
+    "latitude": 47.7192,
+    "longitude": -1.3739,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_fougeres",
+    "name": "Château de Fougères",
+    "subtitle": "Ille-et-Vilaine, Bretagne, France",
+    "latitude": 48.3542,
+    "longitude": -1.2094,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_josselin",
+    "name": "Château de Josselin",
+    "subtitle": "Morbihan, Bretagne, France",
+    "latitude": 47.9519,
+    "longitude": -2.5483,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_suscinio",
+    "name": "Château de Suscinio",
+    "subtitle": "Morbihan, Bretagne, France",
+    "latitude": 47.5147,
+    "longitude": -2.7292,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chinon",
+    "name": "Forteresse Royale de Chinon",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.1683,
+    "longitude": 0.2372,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_valencay",
+    "name": "Château de Valençay",
+    "subtitle": "Indre, Centre-Val de Loire, France",
+    "latitude": 47.1581,
+    "longitude": 1.5622,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_usse",
+    "name": "Château d'Ussé",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.2514,
+    "longitude": 0.2917,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_langeais",
+    "name": "Château de Langeais",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.325,
+    "longitude": 0.4058,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_fort_la_latte",
+    "name": "Fort La Latte (Château de la Roche Goyon)",
+    "subtitle": "Côtes-d'Armor, Bretagne, France",
+    "latitude": 48.6681,
+    "longitude": -2.285,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_vitre",
+    "name": "Château de Vitré",
+    "subtitle": "Ille-et-Vilaine, Bretagne, France",
+    "latitude": 48.125,
+    "longitude": -1.215,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_sedan",
+    "name": "Château Fort de Sedan",
+    "subtitle": "Ardennes, Grand Est, France",
+    "latitude": 49.7019,
+    "longitude": 4.9492,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_chateaudun",
+    "name": "Château de Châteaudun",
+    "subtitle": "Eure-et-Loir, Centre-Val de Loire, France",
+    "latitude": 48.0706,
+    "longitude": 1.3267,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  },
+  {
+    "id": "castle_sullysurlatour",
+    "name": "Château de Sully-sur-Loire",
+    "subtitle": "Loiret, Centre-Val de Loire, France",
+    "latitude": 47.7667,
+    "longitude": 2.375,
+    "scale": "fr",
+    "pack": "chateaux_france"
+  }
+]

@@ -1,0 +1,452 @@
+[
+  {
+    "id": "monument_taj_mahal",
+    "name": "Taj Mahal",
+    "subtitle": "Agra, Uttar Pradesh, Inde",
+    "latitude": 27.1751,
+    "longitude": 78.0421,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_machu_picchu",
+    "name": "Machu Picchu",
+    "subtitle": "Région de Cusco, Pérou",
+    "latitude": -13.1631,
+    "longitude": -72.545,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_colisee",
+    "name": "Le Colisée",
+    "subtitle": "Rome, Latium, Italie",
+    "latitude": 41.8902,
+    "longitude": 12.4922,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_pyramides_gizeh",
+    "name": "Pyramides de Gizeh",
+    "subtitle": "Le Caire, Égypte",
+    "latitude": 29.9792,
+    "longitude": 31.1342,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_statue_liberte",
+    "name": "Statue de la Liberté",
+    "subtitle": "New York, État de New York, États-Unis",
+    "latitude": 40.6892,
+    "longitude": -74.0445,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_opera_sydney",
+    "name": "Opéra de Sydney",
+    "subtitle": "Sydney, Nouvelle-Galles du Sud, Australie",
+    "latitude": -33.8568,
+    "longitude": 151.2153,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_sagrada_familia",
+    "name": "Sagrada Família",
+    "subtitle": "Barcelone, Catalogne, Espagne",
+    "latitude": 41.4036,
+    "longitude": 2.1744,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_petra",
+    "name": "Cité antique de Pétra",
+    "subtitle": "Gouvernorat de Ma'an, Jordanie",
+    "latitude": 30.3285,
+    "longitude": 35.4444,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_grande_muraille",
+    "name": "Grande Muraille de Chine (Mutianyu)",
+    "subtitle": "Pékin, Chine",
+    "latitude": 40.4319,
+    "longitude": 116.5704,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_angkor_wat",
+    "name": "Angkor Wat",
+    "subtitle": "Siem Reap, Cambodge",
+    "latitude": 13.4125,
+    "longitude": 103.867,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_christ_redempteur",
+    "name": "Christ Rédempteur (Corcovado)",
+    "subtitle": "Rio de Janeiro, Brésil",
+    "latitude": -22.9519,
+    "longitude": -43.2105,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_acropole_athenes",
+    "name": "Parthénon & Acropole",
+    "subtitle": "Athènes, Attique, Grèce",
+    "latitude": 37.9715,
+    "longitude": 23.7257,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_tour_eiffel",
+    "name": "Tour Eiffel",
+    "subtitle": "Paris, Île-de-France, France",
+    "latitude": 48.8584,
+    "longitude": 2.2945,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_big_ben",
+    "name": "Big Ben & Westminster",
+    "subtitle": "Londres, Angleterre, Royaume-Uni",
+    "latitude": 51.5007,
+    "longitude": -0.1246,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_sainte_sophie",
+    "name": "Sainte-Sophie (Ayasofya)",
+    "subtitle": "Istanbul, Turquie",
+    "latitude": 41.0086,
+    "longitude": 28.9802,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_chichen_itza",
+    "name": "Chichén Itzá (El Castillo)",
+    "subtitle": "Yucatán, Mexique",
+    "latitude": 20.6843,
+    "longitude": -88.5678,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_stonehenge",
+    "name": "Stonehenge",
+    "subtitle": "Wiltshire, Angleterre, Royaume-Uni",
+    "latitude": 51.1789,
+    "longitude": -1.8262,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_alhambra",
+    "name": "L'Alhambra",
+    "subtitle": "Grenade, Andalousie, Espagne",
+    "latitude": 37.1773,
+    "longitude": -3.5898,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_neuschwanstein",
+    "name": "Château de Neuschwanstein",
+    "subtitle": "Bavière, Allemagne",
+    "latitude": 47.5576,
+    "longitude": 10.7498,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_ile_de_paques",
+    "name": "Moaïs d'Ahu Tongariki",
+    "subtitle": "Île de Pâques (Rapa Nui), Chili",
+    "latitude": -27.1258,
+    "longitude": -109.2769,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_mont_fuji",
+    "name": "Mont Fuji",
+    "subtitle": "Préfectures de Shizuoka & Yamanashi, Japon",
+    "latitude": 35.3606,
+    "longitude": 138.7274,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_burj_khalifa",
+    "name": "Burj Khalifa",
+    "subtitle": "Dubaï, Émirats Arabes Unis",
+    "latitude": 25.1972,
+    "longitude": 55.2744,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_kremlin_moscou",
+    "name": "Place Rouge & Kremlin",
+    "subtitle": "Moscou, Russie",
+    "latitude": 55.7525,
+    "longitude": 37.6231,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_pont_golden_gate",
+    "name": "Golden Gate Bridge",
+    "subtitle": "San Francisco, Californie, États-Unis",
+    "latitude": 37.8199,
+    "longitude": -122.4783,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_chutes_victoria",
+    "name": "Chutes Victoria",
+    "subtitle": "Frontière Zambie & Zimbabwe",
+    "latitude": -17.9243,
+    "longitude": 25.8572,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_chutes_iguazu",
+    "name": "Chutes d'Iguazú",
+    "subtitle": "Frontière Argentine & Brésil",
+    "latitude": -25.6953,
+    "longitude": -54.4367,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_chutes_niagara",
+    "name": "Chutes du Niagara",
+    "subtitle": "Frontière Ontario (Canada) & New York (USA)",
+    "latitude": 43.0799,
+    "longitude": -79.0747,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_mont_saint_michel",
+    "name": "Mont-Saint-Michel",
+    "subtitle": "Manche, Normandie, France",
+    "latitude": 48.636,
+    "longitude": -1.5115,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_cite_interdite",
+    "name": "Cité Interdite",
+    "subtitle": "Pékin, Chine",
+    "latitude": 39.9163,
+    "longitude": 116.3972,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_kinkaku_ji",
+    "name": "Pavillon d'Or (Kinkaku-ji)",
+    "subtitle": "Kyoto, Préfecture de Kyoto, Japon",
+    "latitude": 35.0394,
+    "longitude": 135.7292,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_lalibela",
+    "name": "Églises rupestres de Lalibela",
+    "subtitle": "Région Amhara, Éthiopie",
+    "latitude": 12.0319,
+    "longitude": 39.0411,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_djenn_mosquee",
+    "name": "Grande Mosquée de Djenné",
+    "subtitle": "Région de Mopti, Mali",
+    "latitude": 13.9051,
+    "longitude": -4.5552,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_table_mountain",
+    "name": "Montagne de la Table (Table Mountain)",
+    "subtitle": "Le Cap, Afrique du Sud",
+    "latitude": -33.9628,
+    "longitude": 18.4098,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_tombouctou",
+    "name": "Mosquée Sankoré (Tombouctou)",
+    "subtitle": "Région de Tombouctou, Mali",
+    "latitude": 16.7758,
+    "longitude": -3.0028,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_teotihuacan",
+    "name": "Pyramide du Soleil (Teotihuacan)",
+    "subtitle": "État de Mexico, Mexique",
+    "latitude": 19.6925,
+    "longitude": -98.8437,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_tikal",
+    "name": "Grand Temple de Tikal",
+    "subtitle": "Petén, Guatemala",
+    "latitude": 17.2221,
+    "longitude": -89.6237,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_lignes_nazca",
+    "name": "Géoglyphes de Nazca",
+    "subtitle": "Région d'Ica, Pérou",
+    "latitude": -14.739,
+    "longitude": -75.13,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_salar_uyuni",
+    "name": "Salar d'Uyuni",
+    "subtitle": "Département de Potosí, Bolivie",
+    "latitude": -20.1338,
+    "longitude": -67.4891,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_tours_petronas",
+    "name": "Tours jumelles Petronas",
+    "subtitle": "Kuala Lumpur, Malaisie",
+    "latitude": 3.1579,
+    "longitude": 101.7116,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_borobudur",
+    "name": "Temple de Borobudur",
+    "subtitle": "Java central, Indonésie",
+    "latitude": -7.6079,
+    "longitude": 110.2038,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_baalbek",
+    "name": "Temple de Bacchus à Baalbek",
+    "subtitle": "Gouvernorat de Baalbek-Hermel, Liban",
+    "latitude": 34.0069,
+    "longitude": 36.2044,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_persepolis",
+    "name": "Persépolis",
+    "subtitle": "Province du Fars, Iran",
+    "latitude": 29.9357,
+    "longitude": 52.8914,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_saint_pierre_rome",
+    "name": "Basilique Saint-Pierre",
+    "subtitle": "Cité du Vatican",
+    "latitude": 41.9022,
+    "longitude": 12.4539,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_chateau_versailles",
+    "name": "Château de Versailles",
+    "subtitle": "Yvelines, Île-de-France, France",
+    "latitude": 48.8049,
+    "longitude": 2.1204,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_tour_de_pise",
+    "name": "Tour penchée de Pise",
+    "subtitle": "Pise, Toscane, Italie",
+    "latitude": 43.723,
+    "longitude": 10.3966,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_porte_brandebourg",
+    "name": "Porte de Brandebourg",
+    "subtitle": "Berlin, Allemagne",
+    "latitude": 52.5163,
+    "longitude": 13.3777,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_uluru",
+    "name": "Uluru (Ayers Rock)",
+    "subtitle": "Territoire du Nord, Australie",
+    "latitude": -25.3444,
+    "longitude": 131.0369,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_mont_rushmore",
+    "name": "Mont Rushmore",
+    "subtitle": "Dakota du Sud, États-Unis",
+    "latitude": 43.8791,
+    "longitude": -103.4591,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_grand_canyon",
+    "name": "Grand Canyon (South Rim)",
+    "subtitle": "Arizona, États-Unis",
+    "latitude": 36.0544,
+    "longitude": -112.1401,
+    "scale": "world",
+    "pack": "monuments_monde"
+  },
+  {
+    "id": "monument_mile_met_york",
+    "name": "Empire State Building",
+    "subtitle": "New York, État de New York, États-Unis",
+    "latitude": 40.7484,
+    "longitude": -73.9857,
+    "scale": "world",
+    "pack": "monuments_monde"
+  }
+]

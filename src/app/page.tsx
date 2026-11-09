@@ -156,30 +156,57 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Game 2 : Blind Point (Coming Soon) */}
-          <div className="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between opacity-80 hover:opacity-100 transition-opacity">
+          {/* Game 2 : Blind Point (Active) */}
+          <div className="relative group bg-slate-900/90 border-2 border-emerald-500/50 hover:border-emerald-500 rounded-3xl p-6 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+              <MapPin className="w-32 h-32 text-emerald-400" />
+            </div>
+
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-medium uppercase tracking-wider">
-                  Sprint 2 • Bientôt
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-bold uppercase tracking-wider">
+                  ★ Nouveau (Jouable)
                 </span>
-                <MapPin className="w-5 h-5 text-slate-500" />
+                <span className="text-xs text-slate-400 font-mono">5 Manches • 25 000 pts</span>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-200 mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2">
                 Blind Point — Précision Aveugle
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                Une cible géographique vous est imposée sur une carte muette sans aucune frontière ni texte. Pointez au plus près pour marquer un maximum de points.
+                Une cible géographique vous est imposée sur une carte muette. Visez au plus près pour maximiser votre score exponentiel et décrochez le <i>Bullseye</i> parfait !
               </p>
+
+              {/* Packs selection */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                <Link
+                  href="/play/blindpoint?pack=villes_france&mode=daily"
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                >
+                  🇫🇷 Villes
+                </Link>
+                <Link
+                  href="/play/blindpoint?pack=chateaux_france&mode=daily"
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                >
+                  🏰 Châteaux
+                </Link>
+                <Link
+                  href="/play/blindpoint?pack=monuments_monde&mode=daily"
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                >
+                  🌍 Monuments
+                </Link>
+              </div>
             </div>
 
-            <button
-              disabled
-              className="w-full py-3 px-4 rounded-xl bg-slate-800/60 text-slate-500 font-semibold text-xs border border-slate-700/50 cursor-not-allowed"
+            <Link
+              href="/play/blindpoint?pack=villes_france&mode=daily"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all shadow-lg shadow-emerald-600/20"
             >
-              En cours de développement
-            </button>
+              <Play className="w-4 h-4 fill-white" />
+              <span>Jouer Maintenant</span>
+            </Link>
           </div>
 
           {/* Game 3 : BorderPath (Coming Soon) */}

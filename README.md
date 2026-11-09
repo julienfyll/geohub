@@ -9,8 +9,9 @@
 
 ---
 
-## 🎯 Jeu Phare : GeoRings (Cercles de Population)
+## 🎯 Jeux Disponibles
 
+### 1. GeoRings (Cercles de Population)
 Inspiré des jeux de déduction territoriale et de calcul géodésique :
 1. **Une ville centre de départ** vous est assignée (fixe pour le défi quotidien, aléatoire en mode libre).
 2. **5 anneaux concentriques réguliers** s'étendent progressivement.
@@ -20,10 +21,26 @@ Inspiré des jeux de déduction territoriale et de calcul géodésique :
    - Les essais hors de l'anneau indiquent la distance sans révéler la population (anti-triche pour les anneaux suivants).
    - En cas d'échec sur les 3 vies, la bonne réponse est révélée et le jeu enchaîne sur l'anneau suivant.
 
-### 📏 Échelles Multi-Périmètres Calibrées
+#### 📏 Échelles Multi-Périmètres Calibrées
 - 🇫🇷 **France Métropolitaine :** 5 anneaux équidistants de **+80 km** (`[80, 160, 240, 320, 400 km]`)
 - 🇪🇺 **Europe :** 5 anneaux équidistants de **~240 km** (`[250, 490, 730, 970, 1 200 km]`)
 - 🌍 **Monde :** 5 anneaux équidistants de **+1 050 km** (`[800, 1 850, 2 900, 3 950, 5 000 km]`)
+
+---
+
+### 2. Blind Point (Précision Aveugle)
+Testez votre mémoire spatiale et votre précision chirurgicale sur carte muette :
+1. **Une cible textuelle** (Nom officiel + Région / Pays) vous est soumise (ex: *Château de Chambord*, *Taj Mahal*, *Brest*).
+2. **Pointez librement** sur la carte vectorielle muette sans noms ni routes pour marquer un maximum de points.
+3. **Scoring exponentiel ultra-calibré :** 5 000 pts max par manche $\rightarrow$ **25 000 pts** par partie.
+   - Zone « Bullseye » ($d \le 1\text{ km}$) = **5 000 pts**.
+   - Échelle France ($D_{scale} = 120\text{ km}$) : 10 km $\approx$ 4 600 pts, 50 km $\approx$ 3 300 pts.
+   - Échelle Monde ($D_{scale} = 1\,500\text{ km}$) : 100 km $\approx$ 4 680 pts, 500 km $\approx$ 3 580 pts.
+4. **3 Packs Thématiques :**
+   - 🇫🇷 **Villes de France :** Préfectures et métropoles.
+   - 🏰 **Châteaux & Patrimoine :** Chambord, Carcassonne, Mont-Saint-Michel...
+   - 🌍 **Monuments du Monde :** Pétra, Machu Picchu, Angkor Wat, Colisée...
+5. **Partage Wordle viral :** Copiez vos 5 tirs avec emojis d'évaluation en 1 clic.
 
 ---
 
