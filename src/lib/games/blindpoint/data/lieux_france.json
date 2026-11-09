@@ -1,0 +1,582 @@
+[
+  {
+    "id": "castle_chambord",
+    "name": "Château de Chambord",
+    "subtitle": "Loir-et-Cher, Centre-Val de Loire, France",
+    "latitude": 47.6161,
+    "longitude": 1.5172,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Chambord_Castle_Northwest_facade.jpg/960px-Chambord_Castle_Northwest_facade.jpg"
+  },
+  {
+    "id": "castle_chenonceau",
+    "name": "Château de Chenonceau",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.3249,
+    "longitude": 1.0703,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Chenonceau-20050320.jpg/960px-Chenonceau-20050320.jpg"
+  },
+  {
+    "id": "castle_carcassonne",
+    "name": "Cité Médiévale de Carcassonne",
+    "subtitle": "Aude, Occitanie, France",
+    "latitude": 43.2064,
+    "longitude": 2.3639,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/1_carcassonne_aerial_2016.jpg/960px-1_carcassonne_aerial_2016.jpg"
+  },
+  {
+    "id": "castle_mont_saint_michel",
+    "name": "Abbaye du Mont-Saint-Michel",
+    "subtitle": "Manche, Normandie, France",
+    "latitude": 48.636,
+    "longitude": -1.5115,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Mont_Saint-Michel_-_Abbaye_-_vue_externe.jpg/960px-Mont_Saint-Michel_-_Abbaye_-_vue_externe.jpg"
+  },
+  {
+    "id": "castle_versailles",
+    "name": "Château de Versailles",
+    "subtitle": "Yvelines, Île-de-France, France",
+    "latitude": 48.8049,
+    "longitude": 2.1204,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Vue_a%C3%A9rienne_du_domaine_de_Versailles_par_ToucanWings_-_Creative_Commons_By_Sa_3.0_-_083.jpg/960px-Vue_a%C3%A9rienne_du_domaine_de_Versailles_par_ToucanWings_-_Creative_Commons_By_Sa_3.0_-_083.jpg"
+  },
+  {
+    "id": "castle_haut_koenigsbourg",
+    "name": "Château du Haut-Kœnigsbourg",
+    "subtitle": "Bas-Rhin, Grand Est, France",
+    "latitude": 48.2495,
+    "longitude": 7.3444,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Vue_du_ch%C3%A2teau_sur_la_plaine_d%27Alsace_%28au_fond%2C_la_For%C3%AAt-Noire%29.jpg/960px-Vue_du_ch%C3%A2teau_sur_la_plaine_d%27Alsace_%28au_fond%2C_la_For%C3%AAt-Noire%29.jpg"
+  },
+  {
+    "id": "castle_fontainebleau",
+    "name": "Château de Fontainebleau",
+    "subtitle": "Seine-et-Marne, Île-de-France, France",
+    "latitude": 48.4022,
+    "longitude": 2.7003,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Ch%C3%A2teau_de_Fontainebleau_%28Fontainebleau%29_edited_%282%29.jpg/960px-Ch%C3%A2teau_de_Fontainebleau_%28Fontainebleau%29_edited_%282%29.jpg"
+  },
+  {
+    "id": "castle_chantilly",
+    "name": "Château de Chantilly",
+    "subtitle": "Oise, Hauts-de-France, France",
+    "latitude": 49.1939,
+    "longitude": 2.4853,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Ch%C3%A2teau_de_Chantilly_2.jpg/960px-Ch%C3%A2teau_de_Chantilly_2.jpg"
+  },
+  {
+    "id": "castle_vaux_le_vicomte",
+    "name": "Château de Vaux-le-Vicomte",
+    "subtitle": "Seine-et-Marne, Île-de-France, France",
+    "latitude": 48.5658,
+    "longitude": 2.7142,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/0_Maincy_-_Ch%C3%A2teau_de_Vaux-le-Vicomte_%282%29.JPG/960px-0_Maincy_-_Ch%C3%A2teau_de_Vaux-le-Vicomte_%282%29.JPG"
+  },
+  {
+    "id": "castle_pierrefonds",
+    "name": "Château de Pierrefonds",
+    "subtitle": "Oise, Hauts-de-France, France",
+    "latitude": 49.3469,
+    "longitude": 2.9803,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Ch%C3%A2teau_de_Pierrefonds_exterior_Oise.jpg/960px-Ch%C3%A2teau_de_Pierrefonds_exterior_Oise.jpg"
+  },
+  {
+    "id": "castle_amboise",
+    "name": "Château Royal d'Amboise",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.4132,
+    "longitude": 0.9858,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Ch%C3%A2teau_et_tour_des_Minimes_%28Amboise%29.jpg/960px-Ch%C3%A2teau_et_tour_des_Minimes_%28Amboise%29.jpg"
+  },
+  {
+    "id": "castle_blois",
+    "name": "Château Royal de Blois",
+    "subtitle": "Loir-et-Cher, Centre-Val de Loire, France",
+    "latitude": 47.5861,
+    "longitude": 1.3308,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Louis_XII_wing_of_the_castle_of_Blois_01.jpg/960px-Louis_XII_wing_of_the_castle_of_Blois_01.jpg"
+  },
+  {
+    "id": "castle_cheverny",
+    "name": "Château de Cheverny",
+    "subtitle": "Loir-et-Cher, Centre-Val de Loire, France",
+    "latitude": 47.5002,
+    "longitude": 1.4608,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Le_ch%C3%A2teau_de_Cheverny_%281%29.jpg/960px-Le_ch%C3%A2teau_de_Cheverny_%281%29.jpg"
+  },
+  {
+    "id": "castle_villandry",
+    "name": "Château et Jardins de Villandry",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.3406,
+    "longitude": 0.5147,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Chateau-Villandry-VueGenerale-Jardins.jpg/960px-Chateau-Villandry-VueGenerale-Jardins.jpg"
+  },
+  {
+    "id": "castle_azay_le_rideau",
+    "name": "Château d'Azay-le-Rideau",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.2592,
+    "longitude": 0.4664,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Ch%C3%A2teau_d%27Azay-le-Rideau_001.jpg/960px-Ch%C3%A2teau_d%27Azay-le-Rideau_001.jpg"
+  },
+  {
+    "id": "castle_chateau_gaillard",
+    "name": "Château-Gaillard (Les Andelys)",
+    "subtitle": "Eure, Normandie, France",
+    "latitude": 49.2372,
+    "longitude": 1.4025,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/93/Ch%C3%A2teau_Gaillard_%28Les_Andelys%29%2C_vu_du_ciel.JPG"
+  },
+  {
+    "id": "castle_angers",
+    "name": "Château d'Angers (Forteresse du Roi René)",
+    "subtitle": "Maine-et-Loire, Pays de la Loire, France",
+    "latitude": 47.47,
+    "longitude": -0.56,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Ch%C3%A2teau_d%27Angers%2C_South_view_20170611_1.jpg/960px-Ch%C3%A2teau_d%27Angers%2C_South_view_20170611_1.jpg"
+  },
+  {
+    "id": "castle_saumur",
+    "name": "Château de Saumur",
+    "subtitle": "Maine-et-Loire, Pays de la Loire, France",
+    "latitude": 47.2567,
+    "longitude": -0.0725,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Saumur_%2849%29_Ch%C3%A2teau_-_Ext%C3%A9rieur_-_01.jpg/960px-Saumur_%2849%29_Ch%C3%A2teau_-_Ext%C3%A9rieur_-_01.jpg"
+  },
+  {
+    "id": "castle_peyrepertuse",
+    "name": "Forteresse de Peyrepertuse",
+    "subtitle": "Aude, Occitanie, France",
+    "latitude": 42.8711,
+    "longitude": 2.6611,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/ChateauPeyrepertuse.JPG/960px-ChateauPeyrepertuse.JPG"
+  },
+  {
+    "id": "castle_queribus",
+    "name": "Château de Quéribus",
+    "subtitle": "Aude, Occitanie, France",
+    "latitude": 42.8372,
+    "longitude": 2.6217,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/130610-Queribus-03.jpg/960px-130610-Queribus-03.jpg"
+  },
+  {
+    "id": "castle_montsegur",
+    "name": "Château de Montségur",
+    "subtitle": "Ariège, Occitanie, France",
+    "latitude": 42.8753,
+    "longitude": 1.8328,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Ch%C3%A2teau_de_Monts%C3%A9gur_-_vue_a%C3%A9rienne.jpg/960px-Ch%C3%A2teau_de_Monts%C3%A9gur_-_vue_a%C3%A9rienne.jpg"
+  },
+  {
+    "id": "castle_foix",
+    "name": "Château de Foix",
+    "subtitle": "Ariège, Occitanie, France",
+    "latitude": 42.9656,
+    "longitude": 1.6053,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Castle_of_Foix_05.jpg/960px-Castle_of_Foix_05.jpg"
+  },
+  {
+    "id": "castle_castelnaud",
+    "name": "Château de Castelnaud",
+    "subtitle": "Dordogne, Nouvelle-Aquitaine, France",
+    "latitude": 44.8058,
+    "longitude": 1.1492,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Vue_d%27ensemble_Ch%C3%A2teau_de_Castelnaud.jpg/960px-Vue_d%27ensemble_Ch%C3%A2teau_de_Castelnaud.jpg"
+  },
+  {
+    "id": "castle_beynac",
+    "name": "Château de Beynac",
+    "subtitle": "Dordogne, Nouvelle-Aquitaine, France",
+    "latitude": 44.8706,
+    "longitude": 1.1444,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Castle_of_Beynac_27.jpg/960px-Castle_of_Beynac_27.jpg"
+  },
+  {
+    "id": "castle_bonaguil",
+    "name": "Château de Bonaguil",
+    "subtitle": "Lot-et-Garonne, Nouvelle-Aquitaine, France",
+    "latitude": 44.5322,
+    "longitude": 1.0142,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Saint-Front-sur-L%C3%A9mance_-_Ch%C3%A2teau_de_Bonaguil_-_Vue_d%27ensemble.jpg/960px-Saint-Front-sur-L%C3%A9mance_-_Ch%C3%A2teau_de_Bonaguil_-_Vue_d%27ensemble.jpg"
+  },
+  {
+    "id": "castle_murol",
+    "name": "Château de Murol",
+    "subtitle": "Puy-de-Dôme, Auvergne-Rhône-Alpes, France",
+    "latitude": 45.5772,
+    "longitude": 2.9467,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Murol_Ch%C3%A2teau7.JPG/960px-Murol_Ch%C3%A2teau7.JPG"
+  },
+  {
+    "id": "castle_baux_de_provence",
+    "name": "Château des Baux-de-Provence",
+    "subtitle": "Bouches-du-Rhône, Provence-Alpes-Côte d'Azur, France",
+    "latitude": 43.7439,
+    "longitude": 4.7956,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Castle_of_Les_Baux-de-Provence_cf01.jpg/960px-Castle_of_Les_Baux-de-Provence_cf01.jpg"
+  },
+  {
+    "id": "castle_tarascon",
+    "name": "Château du Roi René à Tarascon",
+    "subtitle": "Bouches-du-Rhône, Provence-Alpes-Côte d'Azur, France",
+    "latitude": 43.8058,
+    "longitude": 4.6533,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Tarascon_Le_Chateau.jpg/960px-Tarascon_Le_Chateau.jpg"
+  },
+  {
+    "id": "castle_chateau_d_if",
+    "name": "Château d'If",
+    "subtitle": "Marseille, Bouches-du-Rhône, France",
+    "latitude": 43.2798,
+    "longitude": 5.3253,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Chateau_d%27If_view.jpg/960px-Chateau_d%27If_view.jpg"
+  },
+  {
+    "id": "castle_palais_des_papes",
+    "name": "Palais des Papes",
+    "subtitle": "Avignon, Vaucluse, France",
+    "latitude": 43.9508,
+    "longitude": 4.8075,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Avignon_Palais_des_Papes_2013.jpg/960px-Avignon_Palais_des_Papes_2013.jpg"
+  },
+  {
+    "id": "castle_citadelle_besancon",
+    "name": "Citadelle de Besançon (Vauban)",
+    "subtitle": "Doubs, Bourgogne-Franche-Comté, France",
+    "latitude": 47.2319,
+    "longitude": 6.0319,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Aerial_image_of_the_Citadel_of_Besan%C3%A7on_%28view_from_the_southwest%29.jpg/960px-Aerial_image_of_the_Citadel_of_Besan%C3%A7on_%28view_from_the_southwest%29.jpg"
+  },
+  {
+    "id": "castle_citadelle_belfort",
+    "name": "Citadelle et Lion de Belfort",
+    "subtitle": "Territoire de Belfort, Bourgogne-Franche-Comté, France",
+    "latitude": 47.6367,
+    "longitude": 6.8653,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/2014-09-15_16-14-55_lion-belfort.jpg/960px-2014-09-15_16-14-55_lion-belfort.jpg"
+  },
+  {
+    "id": "castle_citadelle_blaye",
+    "name": "Citadelle de Blaye (Vauban)",
+    "subtitle": "Gironde, Nouvelle-Aquitaine, France",
+    "latitude": 45.1281,
+    "longitude": -0.6664,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/France_-_Blaye_-_La_Gironde_depuis_la_citadelle.jpg/960px-France_-_Blaye_-_La_Gironde_depuis_la_citadelle.jpg"
+  },
+  {
+    "id": "castle_fort_boyard",
+    "name": "Fort Boyard",
+    "subtitle": "Charente-Maritime, Nouvelle-Aquitaine, France",
+    "latitude": 45.9997,
+    "longitude": -1.2139,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Jean_Maucl%C3%A8re%2C_Fort-Boyard%2C_Paris%2C_Maison_de_la_Bonne_Presse%2C_1934.pdf/page1-960px-Jean_Maucl%C3%A8re%2C_Fort-Boyard%2C_Paris%2C_Maison_de_la_Bonne_Presse%2C_1934.pdf.jpg"
+  },
+  {
+    "id": "castle_chateau_vincennes",
+    "name": "Château de Vincennes",
+    "subtitle": "Val-de-Marne, Île-de-France, France",
+    "latitude": 48.8428,
+    "longitude": 2.4358,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Vincennes_-_Chateau_02.jpg/960px-Vincennes_-_Chateau_02.jpg"
+  },
+  {
+    "id": "castle_compiegne",
+    "name": "Palais de Compiègne",
+    "subtitle": "Oise, Hauts-de-France, France",
+    "latitude": 49.4183,
+    "longitude": 2.8317,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Fa%C3%A7ade_c%C3%B4t%C3%A9_jardin_du_ch%C3%A2teau_de_Compi%C3%A8gne-2.jpg/960px-Fa%C3%A7ade_c%C3%B4t%C3%A9_jardin_du_ch%C3%A2teau_de_Compi%C3%A8gne-2.jpg"
+  },
+  {
+    "id": "castle_rambouillet",
+    "name": "Château de Rambouillet",
+    "subtitle": "Yvelines, Île-de-France, France",
+    "latitude": 48.6444,
+    "longitude": 1.8175,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Ch%C3%A2teau_de_Rambouillet_%28DSC_7006%29.jpg/960px-Ch%C3%A2teau_de_Rambouillet_%28DSC_7006%29.jpg"
+  },
+  {
+    "id": "castle_chateaubriant",
+    "name": "Château de Châteaubriant",
+    "subtitle": "Loire-Atlantique, Pays de la Loire, France",
+    "latitude": 47.7192,
+    "longitude": -1.3739,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/France-001356_-_Final_View_of_the_Chateau_%2815104166130%29.jpg/960px-France-001356_-_Final_View_of_the_Chateau_%2815104166130%29.jpg"
+  },
+  {
+    "id": "castle_fougeres",
+    "name": "Château de Fougères",
+    "subtitle": "Ille-et-Vilaine, Bretagne, France",
+    "latitude": 48.3542,
+    "longitude": -1.2094,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/58/Fougeres_chateau.jpg"
+  },
+  {
+    "id": "castle_josselin",
+    "name": "Château de Josselin",
+    "subtitle": "Morbihan, Bretagne, France",
+    "latitude": 47.9519,
+    "longitude": -2.5483,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/W0205-Josselin_Chateau_4713.JPG/960px-W0205-Josselin_Chateau_4713.JPG"
+  },
+  {
+    "id": "castle_suscinio",
+    "name": "Château de Suscinio",
+    "subtitle": "Morbihan, Bretagne, France",
+    "latitude": 47.5147,
+    "longitude": -2.7292,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Ch%C3%A2teau_Suscinio.jpg/960px-Ch%C3%A2teau_Suscinio.jpg"
+  },
+  {
+    "id": "castle_chinon",
+    "name": "Forteresse Royale de Chinon",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.1683,
+    "longitude": 0.2372,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Chinon_-_Ch%C3%A2teau_vu_depuis_la_plage.jpg/960px-Chinon_-_Ch%C3%A2teau_vu_depuis_la_plage.jpg"
+  },
+  {
+    "id": "castle_valencay",
+    "name": "Château de Valençay",
+    "subtitle": "Indre, Centre-Val de Loire, France",
+    "latitude": 47.1581,
+    "longitude": 1.5622,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Ch%C3%A2teau_de_Valancay_Ao%C3%BBt_2020.jpg/960px-Ch%C3%A2teau_de_Valancay_Ao%C3%BBt_2020.jpg"
+  },
+  {
+    "id": "castle_usse",
+    "name": "Château d'Ussé",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.2514,
+    "longitude": 0.2917,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Aerial_image_of_Ch%C3%A2teau_d%27Uss%C3%A9_%28view_from_the_east%29.jpg/960px-Aerial_image_of_Ch%C3%A2teau_d%27Uss%C3%A9_%28view_from_the_east%29.jpg"
+  },
+  {
+    "id": "castle_langeais",
+    "name": "Château de Langeais",
+    "subtitle": "Indre-et-Loire, Centre-Val de Loire, France",
+    "latitude": 47.325,
+    "longitude": 0.4058,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Ch%C3%A2teau_de_Langeais._Indre-et-Loire%2C_France.jpg/960px-Ch%C3%A2teau_de_Langeais._Indre-et-Loire%2C_France.jpg"
+  },
+  {
+    "id": "castle_fort_la_latte",
+    "name": "Fort La Latte (Château de la Roche Goyon)",
+    "subtitle": "Côtes-d'Armor, Bretagne, France",
+    "latitude": 48.6681,
+    "longitude": -2.285,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fort-LaLatte-byRundvald.jpg/960px-Fort-LaLatte-byRundvald.jpg"
+  },
+  {
+    "id": "castle_vitre",
+    "name": "Château de Vitré",
+    "subtitle": "Ille-et-Vilaine, Bretagne, France",
+    "latitude": 48.125,
+    "longitude": -1.215,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Le_Ch%C3%A2teau_de_Vitr%C3%A9_-_L%27entr%C3%A9e_principale_et_le_Ch%C3%A2telet_-_Ao%C3%BBt_2019.jpg/960px-Le_Ch%C3%A2teau_de_Vitr%C3%A9_-_L%27entr%C3%A9e_principale_et_le_Ch%C3%A2telet_-_Ao%C3%BBt_2019.jpg"
+  },
+  {
+    "id": "castle_sedan",
+    "name": "Château Fort de Sedan",
+    "subtitle": "Ardennes, Grand Est, France",
+    "latitude": 49.7019,
+    "longitude": 4.9492,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Ch%C3%A2teau_de_Sedan_-_Vue_a%C3%A9rienne_2_%C2%A9_Pierre_Holley.jpg/960px-Ch%C3%A2teau_de_Sedan_-_Vue_a%C3%A9rienne_2_%C2%A9_Pierre_Holley.jpg"
+  },
+  {
+    "id": "castle_chateaudun",
+    "name": "Château de Châteaudun",
+    "subtitle": "Eure-et-Loir, Centre-Val de Loire, France",
+    "latitude": 48.0706,
+    "longitude": 1.3267,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Le_ch%C3%A2teau_de_Ch%C3%A2teaudun_%28La_cour_du_ch%C3%A2teau%29.jpg/960px-Le_ch%C3%A2teau_de_Ch%C3%A2teaudun_%28La_cour_du_ch%C3%A2teau%29.jpg"
+  },
+  {
+    "id": "castle_sullysurlatour",
+    "name": "Château de Sully-sur-Loire",
+    "subtitle": "Loiret, Centre-Val de Loire, France",
+    "latitude": 47.7667,
+    "longitude": 2.375,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Ch%C3%A2teau_de_Sully_sur_Loire.jpg/960px-Ch%C3%A2teau_de_Sully_sur_Loire.jpg"
+  },
+  {
+    "id": "landmark_tour_eiffel",
+    "name": "Tour Eiffel",
+    "subtitle": "Paris, Île-de-France, France",
+    "latitude": 48.85837,
+    "longitude": 2.29448,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/960px-Tour_Eiffel_Wikimedia_Commons.jpg"
+  },
+  {
+    "id": "landmark_pont_du_gard",
+    "name": "Pont du Gard",
+    "subtitle": "Vers-Pont-du-Gard, Gard, Occitanie",
+    "latitude": 43.94757,
+    "longitude": 4.53501,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Pont_du_Gard_%2830%29.jpg/960px-Pont_du_Gard_%2830%29.jpg"
+  },
+  {
+    "id": "landmark_arenes_nimes",
+    "name": "Arènes de Nîmes",
+    "subtitle": "Nîmes, Gard, Occitanie",
+    "latitude": 43.83492,
+    "longitude": 4.35965,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Arenes_de_Nimes_panorama.jpg/960px-Arenes_de_Nimes_panorama.jpg"
+  },
+  {
+    "id": "landmark_cathedrale_strasbourg",
+    "name": "Cathédrale Notre-Dame de Strasbourg",
+    "subtitle": "Strasbourg, Bas-Rhin, Grand Est",
+    "latitude": 48.58178,
+    "longitude": 7.75091,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Strasbourg_Cathedral_Exterior_-_Diliff.jpg/960px-Strasbourg_Cathedral_Exterior_-_Diliff.jpg"
+  },
+  {
+    "id": "landmark_viaduc_millau",
+    "name": "Viaduc de Millau",
+    "subtitle": "Millau, Aveyron, Occitanie",
+    "latitude": 44.07722,
+    "longitude": 3.02278,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/a6/ViaducdeMillau.jpg/960px-ViaducdeMillau.jpg"
+  },
+  {
+    "id": "landmark_carnac_alignements",
+    "name": "Alignements de Carnac",
+    "subtitle": "Carnac, Morbihan, Bretagne",
+    "latitude": 47.59194,
+    "longitude": -3.08194,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/France-Carnac-Alignement_de_Kermario.jpg/960px-France-Carnac-Alignement_de_Kermario.jpg"
+  },
+  {
+    "id": "landmark_phare_cordouan",
+    "name": "Phare de Cordouan",
+    "subtitle": "Estuaire de la Gironde, Nouvelle-Aquitaine",
+    "latitude": 45.58667,
+    "longitude": -1.17389,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Phare_de_Cordouan_32.jpg/960px-Phare_de_Cordouan_32.jpg"
+  },
+  {
+    "id": "landmark_grotte_lascaux",
+    "name": "Grotte de Lascaux (Montignac)",
+    "subtitle": "Montignac-Lascaux, Dordogne, Nouvelle-Aquitaine",
+    "latitude": 45.05389,
+    "longitude": 1.16861,
+    "scale": "fr",
+    "pack": "lieux_france",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Montignac.jpg/960px-Montignac.jpg"
+  }
+]

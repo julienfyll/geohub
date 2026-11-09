@@ -5,14 +5,14 @@ import {
   BlindPointGuessRequest,
   BlindPointGuessResponse,
 } from "@/lib/games/blindpoint/types";
-import { getSessionTargets, toClientTarget } from "@/lib/games/blindpoint/targets";
+import { getSessionTargets, toClientTarget, getProxyImageUrl } from "@/lib/games/blindpoint/targets";
 import { getDistanceKm } from "@/lib/geo/haversine";
 import { calculateBlindPointScore, getScoreRating } from "@/lib/games/blindpoint/scoring";
 
 export async function POST(request: NextRequest) {
   try {
     const body: BlindPointGuessRequest = await request.json();
-    const { pack, mode, seed, roundIndex, targetId, guessLat, guessLon } = body;
+    const { pack, mode, difficulty, seed, roundIndex, targetId, guessLat, guessLon } = body;
 
     if (
       typeof guessLat !== "number" ||
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid round index" }, { status: 400 });
     }
 
-    const { targets } = getSessionTargets(pack, mode, seed);
+    const { targets } = getSessionTargets(pack, mode, difficulty, seed);
     if (!targets || targets.length < 5) {
       return NextResponse.json({ error: "Failed to load targets for session" }, { status: 500 });
     }
@@ -46,14 +46,17 @@ export async function POST(request: NextRequest) {
 
     // Exponential scoring
     const score = calculateBlindPointScore(distanceKm, target.scale);
-    const rating = getScoreRating(distanceKm, score);
+    const rating = getScoreRating(distanceKm, score, target.scale);
 
     const isGameOver = roundIndex >= 4;
     const nextTarget = isGameOver ? null : toClientTarget(targets[roundIndex + 1], roundIndex + 1, 5);
 
     const response: BlindPointGuessResponse = {
       roundIndex,
-      target,
+      target: {
+        ...target,
+        imageUrl: getProxyImageUrl(target.imageUrl),
+      },
       guess: {
         lat: guessLat,
         lon: guessLon,

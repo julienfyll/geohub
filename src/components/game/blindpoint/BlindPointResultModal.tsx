@@ -44,9 +44,23 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
       <div className="pointer-events-auto max-w-2xl w-full bg-slate-950/95 border border-slate-700/90 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Left: Rating Emoji, Target & Distance */}
         <div className="flex items-center gap-3.5 w-full sm:w-auto">
-          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 text-2xl shrink-0">
-            {roundResult.ratingEmoji}
-          </div>
+          {roundResult.target.imageUrl ? (
+            <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-slate-700/80 shrink-0 shadow-xl group">
+              <img
+                src={roundResult.target.imageUrl}
+                alt={roundResult.target.name}
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+              <span className="absolute bottom-0 right-0 bg-slate-950/85 px-1 rounded-tl-lg text-xs leading-none py-0.5">
+                {roundResult.ratingEmoji}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 text-2xl shrink-0">
+              {roundResult.ratingEmoji}
+            </div>
+          )}
 
           <div className="text-left min-w-0">
             <div className="flex items-center gap-2">

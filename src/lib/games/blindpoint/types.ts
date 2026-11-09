@@ -1,4 +1,15 @@
-export type BlindPointPack = "villes_france" | "monuments_monde" | "chateaux_france";
+export type BlindPointCategory = "villes" | "lieux_emblematiques";
+
+export type BlindPointPack =
+  | "villes_france"
+  | "villes_monde"
+  | "lieux_france"
+  | "lieux_monde"
+  | "lieux_paris"
+  | "monuments_monde"
+  | "chateaux_france";
+
+export type BlindPointDifficulty = "facile" | "moyen" | "difficile";
 
 export type BlindPointMode = "daily" | "free";
 
@@ -8,9 +19,13 @@ export interface BlindPointTarget {
   subtitle: string; // e.g. "Loir-et-Cher, Centre-Val de Loire, France" or "Agra, Inde"
   latitude: number;
   longitude: number;
-  scale: "fr" | "world";
+  scale: "fr" | "world" | "paris";
   pack: BlindPointPack;
+  difficulty?: BlindPointDifficulty;
+  continent?: string;
   funFact?: string;
+  imageUrl?: string;
+  imageCredit?: string;
 }
 
 export interface BlindPointClientTarget {
@@ -18,14 +33,18 @@ export interface BlindPointClientTarget {
   name: string;
   subtitle: string;
   pack: BlindPointPack;
-  scale: "fr" | "world";
+  scale: "fr" | "world" | "paris";
+  difficulty?: BlindPointDifficulty;
   roundIndex: number;
   totalRounds: number;
+  imageUrl?: string;
+  imageCredit?: string;
 }
 
 export interface BlindPointGuessRequest {
   pack: BlindPointPack;
   mode: BlindPointMode;
+  difficulty?: BlindPointDifficulty;
   seed: string;
   roundIndex: number;
   targetId: string;
@@ -50,7 +69,8 @@ export interface BlindPointSessionInitResponse {
   sessionId: string;
   pack: BlindPointPack;
   mode: BlindPointMode;
-  scale: "fr" | "world";
+  difficulty?: BlindPointDifficulty;
+  scale: "fr" | "world" | "paris";
   seed: string;
   totalRounds: number;
   currentTarget: BlindPointClientTarget;
@@ -71,14 +91,22 @@ export interface BlindPointGuessResponse {
   isGameOver: boolean;
 }
 
+export type BlindPointMapTheme = "voyager" | "positron" | "dark";
+
 export interface BlindPointSettings {
   showBorders: boolean;
   showRegionHints: boolean; // Afficher le département / région / pays
+  showTargetPhoto: boolean; // Afficher la photo de l'édifice
+  showTargetName: boolean; // Afficher le nom de l'édifice
   timerDurationSeconds: 0 | 30 | 60; // 0 = off
+  mapTheme: BlindPointMapTheme;
 }
 
 export const DEFAULT_BLINDPOINT_SETTINGS: BlindPointSettings = {
   showBorders: true,
   showRegionHints: false, // Désactivé par défaut pour ne pas donner trop d'indices
+  showTargetPhoto: true,
+  showTargetName: true,
   timerDurationSeconds: 0,
+  mapTheme: "voyager",
 };

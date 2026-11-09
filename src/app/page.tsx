@@ -169,39 +169,72 @@ export default function Home() {
                 Une cible géographique vous est imposée sur une carte muette. Visez au plus près pour maximiser votre score exponentiel et décrochez le <i>Bullseye</i> parfait !
               </p>
 
-              {/* Packs selection */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                <Link
-                  href="/play/blindpoint?pack=villes_france&mode=daily"
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                >
-                  🇫🇷 Villes
-                </Link>
-                <Link
-                  href="/play/blindpoint?pack=chateaux_france&mode=daily"
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                >
-                  🏰 Châteaux
-                </Link>
-                <Link
-                  href="/play/blindpoint?pack=monuments_monde&mode=daily"
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                >
-                  🌍 Monuments
-                </Link>
+              {/* Thématiques disponibles */}
+              <div className="flex flex-col gap-3 mb-6">
+                <div>
+                  <span className="text-xs text-slate-400 font-medium block mb-1.5">🏙️ Villes & Agglomérations :</span>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href="/play/blindpoint?pack=villes_france"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🇫🇷</span>
+                      <span>France</span>
+                      <span className="text-[10px] text-emerald-400 font-bold ml-0.5">• 3 Niveaux</span>
+                    </Link>
+                    <Link
+                      href="/play/blindpoint?pack=villes_monde"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🌍</span>
+                      <span>Monde</span>
+                      <span className="text-[10px] text-blue-400 font-bold ml-0.5">• 6 Continents</span>
+                    </Link>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-xs text-slate-400 font-medium block mb-1.5">🏛️ Lieux emblématiques :</span>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href="/play/blindpoint?pack=lieux_france"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🏰</span>
+                      <span>France</span>
+                      <span className="text-[10px] text-purple-400 font-bold ml-0.5">• 58 sites</span>
+                    </Link>
+                    <Link
+                      href="/play/blindpoint?pack=lieux_paris"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🗼</span>
+                      <span>Paris Intra-muros</span>
+                      <span className="text-[10px] text-purple-400 font-bold ml-0.5">• 60 sites</span>
+                    </Link>
+                    <Link
+                      href="/play/blindpoint?pack=lieux_monde"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🏛️</span>
+                      <span>Monde (UNESCO)</span>
+                      <span className="text-[10px] text-purple-400 font-bold ml-0.5">• 50 sites</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2.5">
               <Link
-                href="/play/blindpoint?pack=villes_france&mode=daily"
+                href="/play/blindpoint"
                 className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-600/20"
               >
                 <Play className="w-4 h-4 fill-white" />
-                <span>Défi du Jour</span>
+                <span>Jouer à Blind Point</span>
               </Link>
               <Link
-                href="/play/blindpoint?pack=villes_france&mode=free"
+                href="/play/blindpoint?pack=villes_france&difficulty=moyen&mode=free&play=1"
                 className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all"
               >
                 <Zap className="w-4 h-4 text-amber-400" />

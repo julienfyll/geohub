@@ -1,0 +1,601 @@
+[
+  {
+    "id": "paris_tour_eiffel",
+    "name": "Tour Eiffel",
+    "subtitle": "7e arrondissement, Paris",
+    "latitude": 48.8584,
+    "longitude": 2.2945,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/960px-Tour_Eiffel_Wikimedia_Commons.jpg"
+  },
+  {
+    "id": "paris_notre_dame",
+    "name": "Cathédrale Notre-Dame de Paris",
+    "subtitle": "Île de la Cité, 4e arrondissement, Paris",
+    "latitude": 48.853,
+    "longitude": 2.3499,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Notre-Dame_de_Paris_2013-07-24.jpg/960px-Notre-Dame_de_Paris_2013-07-24.jpg"
+  },
+  {
+    "id": "paris_louvre_pyramide",
+    "name": "Musée du Louvre & Pyramide",
+    "subtitle": "1er arrondissement, Paris",
+    "latitude": 48.8606,
+    "longitude": 2.3376,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Louvre_museum_01.jpg/960px-Louvre_museum_01.jpg"
+  },
+  {
+    "id": "paris_arc_de_triomphe",
+    "name": "Arc de Triomphe de l'Étoile",
+    "subtitle": "Place Charles-de-Gaulle, 8e arrondissement, Paris",
+    "latitude": 48.8738,
+    "longitude": 2.295,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Arc_de_Triomphe_-_Ao%C3%BBt_2026.jpg/960px-Arc_de_Triomphe_-_Ao%C3%BBt_2026.jpg"
+  },
+  {
+    "id": "paris_sacre_coeur",
+    "name": "Basilique du Sacré-Cœur de Montmartre",
+    "subtitle": "Montmartre, 18e arrondissement, Paris",
+    "latitude": 48.8867,
+    "longitude": 2.3431,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Sacr%C3%A9_Coeur_Fa%C3%A7ade_1.jpg/960px-Sacr%C3%A9_Coeur_Fa%C3%A7ade_1.jpg"
+  },
+  {
+    "id": "paris_pantheon",
+    "name": "Le Panthéon",
+    "subtitle": "Montagne Sainte-Geneviève, 5e arrondissement, Paris",
+    "latitude": 48.8462,
+    "longitude": 2.3464,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Pantheon_of_Paris_007.JPG/960px-Pantheon_of_Paris_007.JPG"
+  },
+  {
+    "id": "paris_invalides",
+    "name": "Hôtel National des Invalides (Dôme)",
+    "subtitle": "7e arrondissement, Paris",
+    "latitude": 48.8566,
+    "longitude": 2.3126,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Invalides_aerial_view.jpg"
+  },
+  {
+    "id": "paris_opera_garnier",
+    "name": "Opéra Garnier (Palais Garnier)",
+    "subtitle": "Place de l'Opéra, 9e arrondissement, Paris",
+    "latitude": 48.8719,
+    "longitude": 2.3316,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Paris_Opera_full_frontal_architecture%2C_May_2009.jpg/960px-Paris_Opera_full_frontal_architecture%2C_May_2009.jpg"
+  },
+  {
+    "id": "paris_sainte_chapelle",
+    "name": "La Sainte-Chapelle",
+    "subtitle": "Palais de la Cité, 1er arrondissement, Paris",
+    "latitude": 48.8554,
+    "longitude": 2.345,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Sainte-Chapelle_de_Paris_vue_du_Palais_de_justice.JPG/960px-Sainte-Chapelle_de_Paris_vue_du_Palais_de_justice.JPG"
+  },
+  {
+    "id": "paris_centre_pompidou",
+    "name": "Centre Pompidou (Beaubourg)",
+    "subtitle": "4e arrondissement, Paris",
+    "latitude": 48.8606,
+    "longitude": 2.3522,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Le_logo_du_Centre_Pompidou_redessin%C3%A9_en_2019_%285_bandes%29_avec_son_typogramme.svg/960px-Le_logo_du_Centre_Pompidou_redessin%C3%A9_en_2019_%285_bandes%29_avec_son_typogramme.svg.png"
+  },
+  {
+    "id": "paris_palais_luxembourg",
+    "name": "Palais du Luxembourg (Sénat)",
+    "subtitle": "Jardin du Luxembourg, 6e arrondissement, Paris",
+    "latitude": 48.8484,
+    "longitude": 2.3372,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Facade_of_Palais_du_Luxembourg%2C_Paris_5th_006.jpg/960px-Facade_of_Palais_du_Luxembourg%2C_Paris_5th_006.jpg"
+  },
+  {
+    "id": "paris_palais_bourbon",
+    "name": "Palais Bourbon (Assemblée Nationale)",
+    "subtitle": "Quai d'Orsay, 7e arrondissement, Paris",
+    "latitude": 48.8619,
+    "longitude": 2.3186,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Fa%C3%A7ade_Palais_Bourbon_3.jpg/960px-Fa%C3%A7ade_Palais_Bourbon_3.jpg"
+  },
+  {
+    "id": "paris_hotel_de_ville",
+    "name": "Hôtel de Ville de Paris",
+    "subtitle": "Place de l'Hôtel-de-Ville, 4e arrondissement, Paris",
+    "latitude": 48.8566,
+    "longitude": 2.3522,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/H%C3%B4tel_ville_fa%C3%A7ade_principale_Paris_11.jpg/960px-H%C3%B4tel_ville_fa%C3%A7ade_principale_Paris_11.jpg"
+  },
+  {
+    "id": "paris_grand_palais",
+    "name": "Grand Palais",
+    "subtitle": "Avenue des Champs-Élysées, 8e arrondissement, Paris",
+    "latitude": 48.8661,
+    "longitude": 2.3125,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/PanoramiqueGrandPalais_Cropped.jpg/960px-PanoramiqueGrandPalais_Cropped.jpg"
+  },
+  {
+    "id": "paris_petit_palais",
+    "name": "Petit Palais (Musée des Beaux-Arts)",
+    "subtitle": "Avenue Winston-Churchill, 8e arrondissement, Paris",
+    "latitude": 48.866,
+    "longitude": 2.3146,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Petit-Palais-Paris-02-2018.jpg/960px-Petit-Palais-Paris-02-2018.jpg"
+  },
+  {
+    "id": "paris_conciergerie",
+    "name": "La Conciergerie",
+    "subtitle": "Quai de l'Horloge, 1er arrondissement, Paris",
+    "latitude": 48.856,
+    "longitude": 2.3456,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Conciergerie%2C_Par%C3%ADs%2C_Francia%2C_2022-10-29%2C_DD_134.jpg/960px-Conciergerie%2C_Par%C3%ADs%2C_Francia%2C_2022-10-29%2C_DD_134.jpg"
+  },
+  {
+    "id": "paris_place_des_vosges",
+    "name": "Place des Vosges",
+    "subtitle": "Le Marais, 4e arrondissement, Paris",
+    "latitude": 48.8556,
+    "longitude": 2.3656,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Place_des_Vosges_vue_a%C3%A9rienne.png/960px-Place_des_Vosges_vue_a%C3%A9rienne.png"
+  },
+  {
+    "id": "paris_place_vendome",
+    "name": "Place Vendôme (Colonne Vendôme)",
+    "subtitle": "1er arrondissement, Paris",
+    "latitude": 48.8675,
+    "longitude": 2.3294,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Place_Vend%C3%B4me_vue_a%C3%A9rienne.png/960px-Place_Vend%C3%B4me_vue_a%C3%A9rienne.png"
+  },
+  {
+    "id": "paris_place_concorde",
+    "name": "Place de la Concorde (Obélisque)",
+    "subtitle": "8e arrondissement, Paris",
+    "latitude": 48.8656,
+    "longitude": 2.3211,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Place_de_la_Concorde_from_the_Eiffel_Tower%2C_Paris_April_2011.jpg/960px-Place_de_la_Concorde_from_the_Eiffel_Tower%2C_Paris_April_2011.jpg"
+  },
+  {
+    "id": "paris_pont_alexandre_iii",
+    "name": "Pont Alexandre III",
+    "subtitle": "Entre 7e et 8e arrondissements, Paris",
+    "latitude": 48.8639,
+    "longitude": 2.3136,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Pont_Alexandre_III_from_pont_de_la_Concorde%2C_Paris_17_May_2012.jpg/960px-Pont_Alexandre_III_from_pont_de_la_Concorde%2C_Paris_17_May_2012.jpg"
+  },
+  {
+    "id": "paris_palais_royal",
+    "name": "Domaine National du Palais-Royal",
+    "subtitle": "Colonnes de Buren, 1er arrondissement, Paris",
+    "latitude": 48.8633,
+    "longitude": 2.3369,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Palais_Royal%2C_Paris_8_September_2019.jpg/960px-Palais_Royal%2C_Paris_8_September_2019.jpg"
+  },
+  {
+    "id": "paris_musee_orsay",
+    "name": "Musée d'Orsay (Ancienne Gare)",
+    "subtitle": "7e arrondissement, Paris",
+    "latitude": 48.86,
+    "longitude": 2.3266,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/7/73/Logo_mus%C3%A9e_d%27Orsay.png/960px-Logo_mus%C3%A9e_d%27Orsay.png"
+  },
+  {
+    "id": "paris_bourse_commerce",
+    "name": "Bourse de Commerce (Pinault Collection)",
+    "subtitle": "2 rue de Viarmes, 1er arrondissement, Paris",
+    "latitude": 48.8628,
+    "longitude": 2.3431,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Bourse_Commerce_-_Paris_I_%28FR75%29_-_2021-06-05_-_1.jpg/960px-Bourse_Commerce_-_Paris_I_%28FR75%29_-_2021-06-05_-_1.jpg"
+  },
+  {
+    "id": "paris_institut_de_france",
+    "name": "Institut de France (Coupole)",
+    "subtitle": "Quai de Conti, 6e arrondissement, Paris",
+    "latitude": 48.8575,
+    "longitude": 2.3369,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/bf/Logo_Institut_de_France.svg/960px-Logo_Institut_de_France.svg.png"
+  },
+  {
+    "id": "paris_madeleine",
+    "name": "Église de la Madeleine",
+    "subtitle": "Place de la Madeleine, 8e arrondissement, Paris",
+    "latitude": 48.87,
+    "longitude": 2.325,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Eglise_de_la_Madeleine_2024.jpg/960px-Eglise_de_la_Madeleine_2024.jpg"
+  },
+  {
+    "id": "paris_saint_sulpice",
+    "name": "Église Saint-Sulpice",
+    "subtitle": "Place Saint-Sulpice, 6e arrondissement, Paris",
+    "latitude": 48.8508,
+    "longitude": 2.3347,
+    "scale": "paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/%C3%89glise_Saint-Sulpice_-_Fa%C3%A7ade_-_F%C3%A9vrier_2025.jpg/960px-%C3%89glise_Saint-Sulpice_-_Fa%C3%A7ade_-_F%C3%A9vrier_2025.jpg"
+  },
+  {
+    "id": "paris_arenes_lutece",
+    "name": "Arènes de Lutèce",
+    "subtitle": "Quartier Latin, 5e arrondissement, Paris",
+    "latitude": 48.845,
+    "longitude": 2.3528,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/P1090451_Paris_V_arenes_de_Lut%C3%A8ce_rwk.JPG/960px-P1090451_Paris_V_arenes_de_Lut%C3%A8ce_rwk.JPG"
+  },
+  {
+    "id": "paris_catacombes",
+    "name": "Les Catacombes de Paris",
+    "subtitle": "Place Denfert-Rochereau, 14e arrondissement, Paris",
+    "latitude": 48.8339,
+    "longitude": 2.3325,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Catacumbas%2C_Par%C3%ADs%2C_Francia%2C_2022-11-01%2C_DD_111-113_HDR.jpg/960px-Catacumbas%2C_Par%C3%ADs%2C_Francia%2C_2022-11-01%2C_DD_111-113_HDR.jpg"
+  },
+  {
+    "id": "paris_tour_montparnasse",
+    "name": "Tour Montparnasse",
+    "subtitle": "15e arrondissement, Paris",
+    "latitude": 48.8422,
+    "longitude": 2.3219,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Tour_Montparnasse_20250513.jpg/960px-Tour_Montparnasse_20250513.jpg"
+  },
+  {
+    "id": "paris_tour_saint_jacques",
+    "name": "Tour Saint-Jacques",
+    "subtitle": "Square de la Tour Saint-Jacques, 4e arrondissement, Paris",
+    "latitude": 48.8581,
+    "longitude": 2.3489,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Tour_Saint-Jacques_2008.jpg/960px-Tour_Saint-Jacques_2008.jpg"
+  },
+  {
+    "id": "paris_fondation_louis_vuitton",
+    "name": "Fondation Louis Vuitton",
+    "subtitle": "Bois de Boulogne, 16e arrondissement, Paris",
+    "latitude": 48.8767,
+    "longitude": 2.2633,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/1/14/2014-10-26_Fondation_d%27entreprise_Louis_Vuitton_week-end_inaugural_%28vue_du_jardin_d%27acclimatation%29.JPG/960px-2014-10-26_Fondation_d%27entreprise_Louis_Vuitton_week-end_inaugural_%28vue_du_jardin_d%27acclimatation%29.JPG"
+  },
+  {
+    "id": "paris_palais_chaillot",
+    "name": "Palais de Chaillot & Trocadéro",
+    "subtitle": "Place du Trocadéro, 16e arrondissement, Paris",
+    "latitude": 48.8625,
+    "longitude": 2.2883,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Trocadero_2016_%284%29.jpg/960px-Trocadero_2016_%284%29.jpg"
+  },
+  {
+    "id": "paris_palais_tokyo",
+    "name": "Palais de Tokyo (Musée d'Art Moderne)",
+    "subtitle": "Avenue du Président-Wilson, 16e arrondissement, Paris",
+    "latitude": 48.8642,
+    "longitude": 2.2967,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Palais_de_Tokyo_20030101w.JPG/960px-Palais_de_Tokyo_20030101w.JPG"
+  },
+  {
+    "id": "paris_college_bernardins",
+    "name": "Collège des Bernardins",
+    "subtitle": "Rue de Poissy, 5e arrondissement, Paris",
+    "latitude": 48.8497,
+    "longitude": 2.3508,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/College_des_Bernardins.jpg/960px-College_des_Bernardins.jpg"
+  },
+  {
+    "id": "paris_st_germain_pres",
+    "name": "Église Saint-Germain-des-Prés",
+    "subtitle": "Boulevard Saint-Germain, 6e arrondissement, Paris",
+    "latitude": 48.8539,
+    "longitude": 2.3333,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Abbaye_de_Saint-Germain-des-Pr%C3%A9s_140131_1.jpg/960px-Abbaye_de_Saint-Germain-des-Pr%C3%A9s_140131_1.jpg"
+  },
+  {
+    "id": "paris_st_eustache",
+    "name": "Église Saint-Eustache",
+    "subtitle": "Les Halles, 1er arrondissement, Paris",
+    "latitude": 48.8633,
+    "longitude": 2.345,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Paris_-_Eglise_Saint-Eustache_-_Vue_g%C3%A9n%C3%A9rale.jpg/960px-Paris_-_Eglise_Saint-Eustache_-_Vue_g%C3%A9n%C3%A9rale.jpg"
+  },
+  {
+    "id": "paris_colonne_juillet_bastille",
+    "name": "Colonne de Juillet (Place de la Bastille)",
+    "subtitle": "Place de la Bastille, 11e arrondissement, Paris",
+    "latitude": 48.8533,
+    "longitude": 2.3692,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Colonne_Juillet_-_Paris_IV_%28FR75%29_-_2021-05-23_-_1.jpg/960px-Colonne_Juillet_-_Paris_IV_%28FR75%29_-_2021-05-23_-_1.jpg"
+  },
+  {
+    "id": "paris_cirque_hiver",
+    "name": "Cirque d'Hiver Bouglione",
+    "subtitle": "Rue Amelot, 11e arrondissement, Paris",
+    "latitude": 48.8636,
+    "longitude": 2.3686,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Cirque_d%27hiver%2C_Paris_11e%2C_Southwest_view_20140316_1.jpg/960px-Cirque_d%27hiver%2C_Paris_11e%2C_Southwest_view_20140316_1.jpg"
+  },
+  {
+    "id": "paris_institut_monde_arabe",
+    "name": "Institut du Monde Arabe",
+    "subtitle": "Rue des Fossés-Saint-Bernard, 5e arrondissement, Paris",
+    "latitude": 48.8492,
+    "longitude": 2.3567,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/c/cb/Institut_du_monde_arabe_1987_logo.svg/960px-Institut_du_monde_arabe_1987_logo.svg.png"
+  },
+  {
+    "id": "paris_bnf_mitterrand",
+    "name": "Bibliothèque Nationale (Site François-Mitterrand)",
+    "subtitle": "Quai François-Mauriac, 13e arrondissement, Paris",
+    "latitude": 48.8336,
+    "longitude": 2.3758,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/President_Mitterand_bij_slotzitting_Europa_Congres_Mitterand%2C_kop%2C_Bestanddeelnr_934-2444_%28portrait_crop%29.jpg/960px-President_Mitterand_bij_slotzitting_Europa_Congres_Mitterand%2C_kop%2C_Bestanddeelnr_934-2444_%28portrait_crop%29.jpg"
+  },
+  {
+    "id": "paris_bnf_richelieu",
+    "name": "Bibliothèque Nationale (Site Richelieu / Salle Ovale)",
+    "subtitle": "Rue de Richelieu, 2e arrondissement, Paris",
+    "latitude": 48.8672,
+    "longitude": 2.3381,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Cardinal_de_Richelieu.jpg/960px-Cardinal_de_Richelieu.jpg"
+  },
+  {
+    "id": "paris_philharmonie",
+    "name": "Philharmonie de Paris (Cité de la Musique)",
+    "subtitle": "Parc de la Villette, 19e arrondissement, Paris",
+    "latitude": 48.8917,
+    "longitude": 2.3939,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/3/38/Philharmonie_de_Paris_2010_logo.png"
+  },
+  {
+    "id": "paris_cite_sciences",
+    "name": "Cité des Sciences et de l'Industrie",
+    "subtitle": "Parc de la Villette, 19e arrondissement, Paris",
+    "latitude": 48.8956,
+    "longitude": 2.3878,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Logo_Cit%C3%A9_des_sciences.svg/960px-Logo_Cit%C3%A9_des_sciences.svg.png"
+  },
+  {
+    "id": "paris_moulin_rouge",
+    "name": "Moulin Rouge",
+    "subtitle": "Boulevard de Clichy, 18e arrondissement, Paris",
+    "latitude": 48.8842,
+    "longitude": 2.3322,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Moulin_rouge.jpg/960px-Moulin_rouge.jpg"
+  },
+  {
+    "id": "paris_quai_branly",
+    "name": "Musée du Quai Branly - Jacques Chirac",
+    "subtitle": "Quai Branly, 7e arrondissement, Paris",
+    "latitude": 48.8608,
+    "longitude": 2.2978,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Mus%C3%A9e_du_quai_Branly_-_20150801_16h07_%2810629%29.jpg/960px-Mus%C3%A9e_du_quai_Branly_-_20150801_16h07_%2810629%29.jpg"
+  },
+  {
+    "id": "paris_jardin_plantes",
+    "name": "Grande Galerie de l'Évolution (Jardin des Plantes)",
+    "subtitle": "5e arrondissement, Paris",
+    "latitude": 48.8425,
+    "longitude": 2.3569,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Grande_galerie_de_l%27%C3%89volution_Fa%C3%A7ade.jpg/960px-Grande_galerie_de_l%27%C3%89volution_Fa%C3%A7ade.jpg"
+  },
+  {
+    "id": "paris_pont_neuf",
+    "name": "Le Pont-Neuf (Plus ancien pont de Paris)",
+    "subtitle": "Île de la Cité, 1er arrondissement, Paris",
+    "latitude": 48.8569,
+    "longitude": 2.3411,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/The_western_sides_of_the_%C3%8Ele_de_la_Cit%C3%A9_and_the_Pont_Neuf%2C_14_July_2008.jpg/960px-The_western_sides_of_the_%C3%8Ele_de_la_Cit%C3%A9_and_the_Pont_Neuf%2C_14_July_2008.jpg"
+  },
+  {
+    "id": "paris_pont_des_arts",
+    "name": "Passerelle des Arts (Pont des Arts)",
+    "subtitle": "Face à l'Institut de France, 6e arrondissement, Paris",
+    "latitude": 48.8583,
+    "longitude": 2.3375,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Pont_des_Arts%2C_6e_Arrondissement%2C_Paris_%28HDR%29_20140320_1.jpg/960px-Pont_des_Arts%2C_6e_Arrondissement%2C_Paris_%28HDR%29_20140320_1.jpg"
+  },
+  {
+    "id": "paris_elysee",
+    "name": "Palais de l'Élysée (Présidence de la République)",
+    "subtitle": "Rue du Faubourg Saint-Honoré, 8e arrondissement, Paris",
+    "latitude": 48.8703,
+    "longitude": 2.3167,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Secretary_Pompeo_Arrives_to_Meet_with_French_Foreign_Minister_Le_Drian_in_Paris_%2850610423656%29_%28cropped%29.jpg/960px-Secretary_Pompeo_Arrives_to_Meet_with_French_Foreign_Minister_Le_Drian_in_Paris_%2850610423656%29_%28cropped%29.jpg"
+  },
+  {
+    "id": "paris_hotel_matignon",
+    "name": "Hôtel de Matignon (Premier Ministre)",
+    "subtitle": "Rue de Varenne, 7e arrondissement, Paris",
+    "latitude": 48.855,
+    "longitude": 2.3208,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Matignon_gala.jpg/960px-Matignon_gala.jpg"
+  },
+  {
+    "id": "paris_musee_rodin",
+    "name": "Musée Rodin (Hôtel Biron)",
+    "subtitle": "Rue de Varenne, 7e arrondissement, Paris",
+    "latitude": 48.8553,
+    "longitude": 2.3158,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Le_mus%C3%A9e_Rodin.jpg/960px-Le_mus%C3%A9e_Rodin.jpg"
+  },
+  {
+    "id": "paris_musee_carnavalet",
+    "name": "Musée Carnavalet (Histoire de Paris)",
+    "subtitle": "Rue de Sévigné, 3e arrondissement, Paris",
+    "latitude": 48.8572,
+    "longitude": 2.3628,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Cour_Louis_XIV_au_Mus%C3%A9e_Carnavalet_%C3%A0_Paris_le_30_septembre_2016_-_17.jpg/960px-Cour_Louis_XIV_au_Mus%C3%A9e_Carnavalet_%C3%A0_Paris_le_30_septembre_2016_-_17.jpg"
+  },
+  {
+    "id": "paris_buttes_chaumont_sibylle",
+    "name": "Temple de la Sibylle (Buttes-Chaumont)",
+    "subtitle": "Parc des Buttes-Chaumont, 19e arrondissement, Paris",
+    "latitude": 48.8808,
+    "longitude": 2.3831,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3c/ParcDesButtesChaumont.JPG"
+  },
+  {
+    "id": "paris_parc_monceau_rotonde",
+    "name": "Rotonde du Parc Monceau",
+    "subtitle": "8e arrondissement, Paris",
+    "latitude": 48.8794,
+    "longitude": 2.3089,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Barri%C3%A8re_Chartres_-_Paris_VIII_%28FR75%29_-_2024-04-13_-_1.jpg/960px-Barri%C3%A8re_Chartres_-_Paris_VIII_%28FR75%29_-_2024-04-13_-_1.jpg"
+  },
+  {
+    "id": "paris_theatre_chatelet",
+    "name": "Théâtre du Châtelet",
+    "subtitle": "Place du Châtelet, 1er arrondissement, Paris",
+    "latitude": 48.8578,
+    "longitude": 2.3469,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Th%C3%A9%C3%A2tre_du_Ch%C3%A2telet_Fa%C3%A7ade_%28cropped%29.jpg/960px-Th%C3%A9%C3%A2tre_du_Ch%C3%A2telet_Fa%C3%A7ade_%28cropped%29.jpg"
+  },
+  {
+    "id": "paris_opera_bastille",
+    "name": "Opéra Bastille",
+    "subtitle": "Place de la Bastille, 12e arrondissement, Paris",
+    "latitude": 48.8519,
+    "longitude": 2.3697,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Place_de_la_Bastille_in_July_2022_4.jpg/960px-Place_de_la_Bastille_in_July_2022_4.jpg"
+  },
+  {
+    "id": "paris_chapelle_expiatoire",
+    "name": "Chapelle Expiatoire",
+    "subtitle": "Square Louis-XVI, 8e arrondissement, Paris",
+    "latitude": 48.8736,
+    "longitude": 2.3236,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Chapelle_expiatoire_-_Ao%C3%BBt_2024.jpg/960px-Chapelle_expiatoire_-_Ao%C3%BBt_2024.jpg"
+  },
+  {
+    "id": "paris_observatoire",
+    "name": "Observatoire de Paris",
+    "subtitle": "Avenue de l'Observatoire, 14e arrondissement, Paris",
+    "latitude": 48.8364,
+    "longitude": 2.3364,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Observatoire_de_Paris.JPG/960px-Observatoire_de_Paris.JPG"
+  },
+  {
+    "id": "paris_st_augustin",
+    "name": "Église Saint-Augustin",
+    "subtitle": "Place Saint-Augustin, 8e arrondissement, Paris",
+    "latitude": 48.8756,
+    "longitude": 2.3183,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Paris%2C_Saint-Augustin%2C_Au%C3%9Fenansicht_%281%29.jpg/960px-Paris%2C_Saint-Augustin%2C_Au%C3%9Fenansicht_%281%29.jpg"
+  },
+  {
+    "id": "paris_maison_victor_hugo",
+    "name": "Maison de Victor Hugo",
+    "subtitle": "Hôtel de Rohan-Guéménée, 4e arrondissement, Paris",
+    "latitude": 48.855,
+    "longitude": 2.3661,
+    "scale": "paris",
+    "pack": "lieux_paris",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Maison_de_Victor_Hugo%2C_place_des_Vosges_%C3%A0_Paris.jpg/960px-Maison_de_Victor_Hugo%2C_place_des_Vosges_%C3%A0_Paris.jpg"
+  }
+]

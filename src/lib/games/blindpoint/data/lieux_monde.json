@@ -1,0 +1,502 @@
+[
+  {
+    "id": "monument_taj_mahal",
+    "name": "Taj Mahal",
+    "subtitle": "Agra, Uttar Pradesh, Inde",
+    "latitude": 27.1751,
+    "longitude": 78.0421,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Taj_Mahal%2C_Agra%2C_India_edit3.jpg/960px-Taj_Mahal%2C_Agra%2C_India_edit3.jpg"
+  },
+  {
+    "id": "monument_machu_picchu",
+    "name": "Machu Picchu",
+    "subtitle": "Région de Cusco, Pérou",
+    "latitude": -13.1631,
+    "longitude": -72.545,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Before_Machu_Picchu.jpg/960px-Before_Machu_Picchu.jpg"
+  },
+  {
+    "id": "monument_colisee",
+    "name": "Le Colisée",
+    "subtitle": "Rome, Latium, Italie",
+    "latitude": 41.8902,
+    "longitude": 12.4922,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Elan_Chalon_-_Elan_B%C3%A9arnais_17.jpg/960px-Elan_Chalon_-_Elan_B%C3%A9arnais_17.jpg"
+  },
+  {
+    "id": "monument_pyramides_gizeh",
+    "name": "Pyramides de Gizeh",
+    "subtitle": "Le Caire, Égypte",
+    "latitude": 29.9792,
+    "longitude": 31.1342,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/960px-All_Gizah_Pyramids.jpg"
+  },
+  {
+    "id": "monument_statue_liberte",
+    "name": "Statue de la Liberté",
+    "subtitle": "New York, État de New York, États-Unis",
+    "latitude": 40.6892,
+    "longitude": -74.0445,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Statue_of_Liberty%2C_statue%2C_Liberty_Island%2C_New_York.jpg/960px-Statue_of_Liberty%2C_statue%2C_Liberty_Island%2C_New_York.jpg"
+  },
+  {
+    "id": "monument_opera_sydney",
+    "name": "Opéra de Sydney",
+    "subtitle": "Sydney, Nouvelle-Galles du Sud, Australie",
+    "latitude": -33.8568,
+    "longitude": 151.2153,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Sydney_Opera_House_from_Circular_Quay%2C_2023%2C_10.jpg/960px-Sydney_Opera_House_from_Circular_Quay%2C_2023%2C_10.jpg"
+  },
+  {
+    "id": "monument_sagrada_familia",
+    "name": "Sagrada Família",
+    "subtitle": "Barcelone, Catalogne, Espagne",
+    "latitude": 41.4036,
+    "longitude": 2.1744,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/SF_maig_2026.jpg/960px-SF_maig_2026.jpg"
+  },
+  {
+    "id": "monument_petra",
+    "name": "Cité antique de Pétra",
+    "subtitle": "Gouvernorat de Ma'an, Jordanie",
+    "latitude": 30.3285,
+    "longitude": 35.4444,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Maurice_sartre_caf%C3%A9_st_Maurice_06576.jpg/960px-Maurice_sartre_caf%C3%A9_st_Maurice_06576.jpg"
+  },
+  {
+    "id": "monument_grande_muraille",
+    "name": "Grande Muraille de Chine (Mutianyu)",
+    "subtitle": "Pékin, Chine",
+    "latitude": 40.4319,
+    "longitude": 116.5704,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Great_Wall_of_China_July_2006.JPG/960px-Great_Wall_of_China_July_2006.JPG"
+  },
+  {
+    "id": "monument_angkor_wat",
+    "name": "Angkor Wat",
+    "subtitle": "Siem Reap, Cambodge",
+    "latitude": 13.4125,
+    "longitude": 103.867,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Angkor_Wat.jpg/960px-Angkor_Wat.jpg"
+  },
+  {
+    "id": "monument_christ_redempteur",
+    "name": "Christ Rédempteur (Corcovado)",
+    "subtitle": "Rio de Janeiro, Brésil",
+    "latitude": -22.9519,
+    "longitude": -43.2105,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Christ_the_Redeemer_-_Cristo_Redentor.jpg/960px-Christ_the_Redeemer_-_Cristo_Redentor.jpg"
+  },
+  {
+    "id": "monument_acropole_athenes",
+    "name": "Parthénon & Acropole",
+    "subtitle": "Athènes, Attique, Grèce",
+    "latitude": 37.9715,
+    "longitude": 23.7257,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/960px-The_Parthenon_in_Athens.jpg"
+  },
+  {
+    "id": "monument_tour_eiffel",
+    "name": "Tour Eiffel",
+    "subtitle": "Paris, Île-de-France, France",
+    "latitude": 48.8584,
+    "longitude": 2.2945,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/960px-Tour_Eiffel_Wikimedia_Commons.jpg"
+  },
+  {
+    "id": "monument_big_ben",
+    "name": "Big Ben & Westminster",
+    "subtitle": "Londres, Angleterre, Royaume-Uni",
+    "latitude": 51.5007,
+    "longitude": -0.1246,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Elizabeth_Tower_and_the_north_front_of_the_Palace_of_Westminster%2C_London.jpg/960px-Elizabeth_Tower_and_the_north_front_of_the_Palace_of_Westminster%2C_London.jpg"
+  },
+  {
+    "id": "monument_sainte_sophie",
+    "name": "Sainte-Sophie (Ayasofya)",
+    "subtitle": "Istanbul, Turquie",
+    "latitude": 41.0086,
+    "longitude": 28.9802,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Hagia_Sophia_%28228968325%29.jpeg/960px-Hagia_Sophia_%28228968325%29.jpeg"
+  },
+  {
+    "id": "monument_chichen_itza",
+    "name": "Chichén Itzá (El Castillo)",
+    "subtitle": "Yucatán, Mexique",
+    "latitude": 20.6843,
+    "longitude": -88.5678,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/El_Castillo_Stitch_2008_Edit_1.jpg/960px-El_Castillo_Stitch_2008_Edit_1.jpg"
+  },
+  {
+    "id": "monument_stonehenge",
+    "name": "Stonehenge",
+    "subtitle": "Wiltshire, Angleterre, Royaume-Uni",
+    "latitude": 51.1789,
+    "longitude": -1.8262,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Stonehenge2007_07_30.jpg/960px-Stonehenge2007_07_30.jpg"
+  },
+  {
+    "id": "monument_alhambra",
+    "name": "L'Alhambra",
+    "subtitle": "Grenade, Andalousie, Espagne",
+    "latitude": 37.1773,
+    "longitude": -3.5898,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/03/Sargent_-_Alhambra%2C_patio_de_los_Arrayanes_%28Court_of_the_Myrtles%29%2C_1879%2C_nr._752.jpg"
+  },
+  {
+    "id": "monument_neuschwanstein",
+    "name": "Château de Neuschwanstein",
+    "subtitle": "Bavière, Allemagne",
+    "latitude": 47.5576,
+    "longitude": 10.7498,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Schloss_Neuschwanstein_2013.jpg/960px-Schloss_Neuschwanstein_2013.jpg"
+  },
+  {
+    "id": "monument_ile_de_paques",
+    "name": "Moaïs d'Ahu Tongariki",
+    "subtitle": "Île de Pâques (Rapa Nui), Chili",
+    "latitude": -27.1258,
+    "longitude": -109.2769,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Ahu_Tongariki_%28Rapa_Nui%29.jpg/960px-Ahu_Tongariki_%28Rapa_Nui%29.jpg"
+  },
+  {
+    "id": "monument_mont_fuji",
+    "name": "Mont Fuji",
+    "subtitle": "Préfectures de Shizuoka & Yamanashi, Japon",
+    "latitude": 35.3606,
+    "longitude": 138.7274,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Fuji_Kawaguchi_357.JPG/960px-Fuji_Kawaguchi_357.JPG"
+  },
+  {
+    "id": "monument_burj_khalifa",
+    "name": "Burj Khalifa",
+    "subtitle": "Dubaï, Émirats Arabes Unis",
+    "latitude": 25.1972,
+    "longitude": 55.2744,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Vue_du_haut_Burj.jpg/960px-Vue_du_haut_Burj.jpg"
+  },
+  {
+    "id": "monument_kremlin_moscou",
+    "name": "Place Rouge & Kremlin",
+    "subtitle": "Moscou, Russie",
+    "latitude": 55.7525,
+    "longitude": 37.6231,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Red_Square_-_Moscow_2024.jpg/960px-Red_Square_-_Moscow_2024.jpg"
+  },
+  {
+    "id": "monument_pont_golden_gate",
+    "name": "Golden Gate Bridge",
+    "subtitle": "San Francisco, Californie, États-Unis",
+    "latitude": 37.8199,
+    "longitude": -122.4783,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Golden_Gate_Bridge_as_seen_from_Battery_East.jpg/960px-Golden_Gate_Bridge_as_seen_from_Battery_East.jpg"
+  },
+  {
+    "id": "monument_chutes_victoria",
+    "name": "Chutes Victoria",
+    "subtitle": "Frontière Zambie & Zimbabwe",
+    "latitude": -17.9243,
+    "longitude": 25.8572,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/VictoriaFalls3.JPG/960px-VictoriaFalls3.JPG"
+  },
+  {
+    "id": "monument_chutes_iguazu",
+    "name": "Chutes d'Iguazú",
+    "subtitle": "Frontière Argentine & Brésil",
+    "latitude": -25.6953,
+    "longitude": -54.4367,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Iguacu-004.jpg/960px-Iguacu-004.jpg"
+  },
+  {
+    "id": "monument_chutes_niagara",
+    "name": "Chutes du Niagara",
+    "subtitle": "Frontière Ontario (Canada) & New York (USA)",
+    "latitude": 43.0799,
+    "longitude": -79.0747,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Niagara_Falls_Sunset_%28cropped%29.jpg/960px-Niagara_Falls_Sunset_%28cropped%29.jpg"
+  },
+  {
+    "id": "monument_mont_saint_michel",
+    "name": "Mont-Saint-Michel",
+    "subtitle": "Manche, Normandie, France",
+    "latitude": 48.636,
+    "longitude": -1.5115,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Mont-Saint-Michel_vu_du_ciel.jpg/960px-Mont-Saint-Michel_vu_du_ciel.jpg"
+  },
+  {
+    "id": "monument_cite_interdite",
+    "name": "Cité Interdite",
+    "subtitle": "Pékin, Chine",
+    "latitude": 39.9163,
+    "longitude": 116.3972,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/%E6%99%AF%E5%B1%B1%E5%85%AC%E5%9B%AD_%2820315852831%29-_cropped.jpg/960px-%E6%99%AF%E5%B1%B1%E5%85%AC%E5%9B%AD_%2820315852831%29-_cropped.jpg"
+  },
+  {
+    "id": "monument_kinkaku_ji",
+    "name": "Pavillon d'Or (Kinkaku-ji)",
+    "subtitle": "Kyoto, Préfecture de Kyoto, Japon",
+    "latitude": 35.0394,
+    "longitude": 135.7292,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Water_reflection_of_Kinkaku-ji_Temple_a_sunny_day%2C_Kyoto%2C_Japan.jpg/960px-Water_reflection_of_Kinkaku-ji_Temple_a_sunny_day%2C_Kyoto%2C_Japan.jpg"
+  },
+  {
+    "id": "monument_lalibela",
+    "name": "Églises rupestres de Lalibela",
+    "subtitle": "Région Amhara, Éthiopie",
+    "latitude": 12.0319,
+    "longitude": 39.0411,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Lalibela%2C_san_giorgio%2C_esterno_24.jpg/960px-Lalibela%2C_san_giorgio%2C_esterno_24.jpg"
+  },
+  {
+    "id": "monument_djenn_mosquee",
+    "name": "Grande Mosquée de Djenné",
+    "subtitle": "Région de Mopti, Mali",
+    "latitude": 13.9051,
+    "longitude": -4.5552,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Great_Mosque_of_Djenn%C3%A9_1.jpg/960px-Great_Mosque_of_Djenn%C3%A9_1.jpg"
+  },
+  {
+    "id": "monument_table_mountain",
+    "name": "Montagne de la Table (Table Mountain)",
+    "subtitle": "Le Cap, Afrique du Sud",
+    "latitude": -33.9628,
+    "longitude": 18.4098,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/94/View_from_Signal_Hill.jpg"
+  },
+  {
+    "id": "monument_tombouctou",
+    "name": "Mosquée Sankoré (Tombouctou)",
+    "subtitle": "Région de Tombouctou, Mali",
+    "latitude": 16.7758,
+    "longitude": -3.0028,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Mosqueetombou_01.JPG"
+  },
+  {
+    "id": "monument_teotihuacan",
+    "name": "Pyramide du Soleil (Teotihuacan)",
+    "subtitle": "État de Mexico, Mexique",
+    "latitude": 19.6925,
+    "longitude": -98.8437,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/2020-02-11_Teotihuacan_la_Avenida_de_los_Muertos_y_la_Pir%C3%A1mide_del_Sol.jpg/960px-2020-02-11_Teotihuacan_la_Avenida_de_los_Muertos_y_la_Pir%C3%A1mide_del_Sol.jpg"
+  },
+  {
+    "id": "monument_tikal",
+    "name": "Grand Temple de Tikal",
+    "subtitle": "Petén, Guatemala",
+    "latitude": 17.2221,
+    "longitude": -89.6237,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Tikal_Temple1_2006_08_11.JPG/960px-Tikal_Temple1_2006_08_11.JPG"
+  },
+  {
+    "id": "monument_lignes_nazca",
+    "name": "Géoglyphes de Nazca",
+    "subtitle": "Région d'Ica, Pérou",
+    "latitude": -14.739,
+    "longitude": -75.13,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Nazca_monkey.jpg"
+  },
+  {
+    "id": "monument_salar_uyuni",
+    "name": "Salar d'Uyuni",
+    "subtitle": "Département de Potosí, Bolivie",
+    "latitude": -20.1338,
+    "longitude": -67.4891,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Uyuni_landsat.JPG"
+  },
+  {
+    "id": "monument_tours_petronas",
+    "name": "Tours jumelles Petronas",
+    "subtitle": "Kuala Lumpur, Malaisie",
+    "latitude": 3.1579,
+    "longitude": 101.7116,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Petronas_Towers_Logo.svg/960px-Petronas_Towers_Logo.svg.png"
+  },
+  {
+    "id": "monument_borobudur",
+    "name": "Temple de Borobudur",
+    "subtitle": "Java central, Indonésie",
+    "latitude": -7.6079,
+    "longitude": 110.2038,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Borobudur_Northwest_View.jpg/960px-Borobudur_Northwest_View.jpg"
+  },
+  {
+    "id": "monument_baalbek",
+    "name": "Temple de Bacchus à Baalbek",
+    "subtitle": "Gouvernorat de Baalbek-Hermel, Liban",
+    "latitude": 34.0069,
+    "longitude": 36.2044,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Baalbek-109914.jpg/960px-Baalbek-109914.jpg"
+  },
+  {
+    "id": "monument_persepolis",
+    "name": "Persépolis",
+    "subtitle": "Province du Fars, Iran",
+    "latitude": 29.9357,
+    "longitude": 52.8914,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Map_Achaemenids_Capitals_locations.png"
+  },
+  {
+    "id": "monument_saint_pierre_rome",
+    "name": "Basilique Saint-Pierre",
+    "subtitle": "Cité du Vatican",
+    "latitude": 41.9022,
+    "longitude": 12.4539,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg/960px-Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg"
+  },
+  {
+    "id": "monument_chateau_versailles",
+    "name": "Château de Versailles",
+    "subtitle": "Yvelines, Île-de-France, France",
+    "latitude": 48.8049,
+    "longitude": 2.1204,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Vue_a%C3%A9rienne_du_domaine_de_Versailles_par_ToucanWings_-_Creative_Commons_By_Sa_3.0_-_083.jpg/960px-Vue_a%C3%A9rienne_du_domaine_de_Versailles_par_ToucanWings_-_Creative_Commons_By_Sa_3.0_-_083.jpg"
+  },
+  {
+    "id": "monument_tour_de_pise",
+    "name": "Tour penchée de Pise",
+    "subtitle": "Pise, Toscane, Italie",
+    "latitude": 43.723,
+    "longitude": 10.3966,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Exterior_of_the_Leaning_Tower_%28Pisa%29_in_April_2024.jpg/960px-Exterior_of_the_Leaning_Tower_%28Pisa%29_in_April_2024.jpg"
+  },
+  {
+    "id": "monument_porte_brandebourg",
+    "name": "Porte de Brandebourg",
+    "subtitle": "Berlin, Allemagne",
+    "latitude": 52.5163,
+    "longitude": 13.3777,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Berlin_-_0266_-_16052015_-_Brandenburger_Tor.jpg/960px-Berlin_-_0266_-_16052015_-_Brandenburger_Tor.jpg"
+  },
+  {
+    "id": "monument_uluru",
+    "name": "Uluru (Ayers Rock)",
+    "subtitle": "Territoire du Nord, Australie",
+    "latitude": -25.3444,
+    "longitude": 131.0369,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Uluru%2C_helicopter_view%2C_cropped.jpg/960px-Uluru%2C_helicopter_view%2C_cropped.jpg"
+  },
+  {
+    "id": "monument_mont_rushmore",
+    "name": "Mont Rushmore",
+    "subtitle": "Dakota du Sud, États-Unis",
+    "latitude": 43.8791,
+    "longitude": -103.4591,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Mount_Rushmore_detail_view_%28100MP%29.jpg/960px-Mount_Rushmore_detail_view_%28100MP%29.jpg"
+  },
+  {
+    "id": "monument_grand_canyon",
+    "name": "Grand Canyon (South Rim)",
+    "subtitle": "Arizona, États-Unis",
+    "latitude": 36.0544,
+    "longitude": -112.1401,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Grand_Canyon_%283%29.jpg/960px-Grand_Canyon_%283%29.jpg"
+  },
+  {
+    "id": "monument_mile_met_york",
+    "name": "Empire State Building",
+    "subtitle": "New York, État de New York, États-Unis",
+    "latitude": 40.7484,
+    "longitude": -73.9857,
+    "scale": "world",
+    "pack": "lieux_monde",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/10/Empire_State_Building_%28aerial_view%29.jpg"
+  }
+]

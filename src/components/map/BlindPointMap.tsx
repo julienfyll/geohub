@@ -2,17 +2,29 @@
 
 import React, { useEffect, useRef, useCallback } from "react";
 import maplibregl from "maplibre-gl";
-import { Maximize2, ZoomIn, ZoomOut } from "lucide-react";
+import { Maximize2, ZoomIn, ZoomOut, Compass, Sun, Moon } from "lucide-react";
 import { createGreatCircleArc, formatDistance } from "@/lib/games/blindpoint/scoring";
-import { BlindPointRoundResult } from "@/lib/games/blindpoint/types";
+import { BlindPointRoundResult, BlindPointMapTheme } from "@/lib/games/blindpoint/types";
 
-const BASEMAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json";
+export const BASEMAP_STYLES: Record<BlindPointMapTheme, string> = {
+  voyager: "https://basemaps.cartocdn.com/gl/voyager-nolabels-gl-style/style.json",
+  positron: "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json",
+  dark: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
+};
+
+export const THEME_NAMES: Record<BlindPointMapTheme, string> = {
+  voyager: "Voyageur (Naturel & Détaillé)",
+  positron: "Clair (Minimaliste)",
+  dark: "Sombre (Midnight)",
+};
 
 // Bounding box for Metropolitan France + Corsica [minLon, minLat, maxLon, maxLat]
 const FRANCE_BOUNDS: [number, number, number, number] = [-5.2, 41.3, 9.6, 51.1];
+// Bounding box for Paris Intra-muros + close ring
+const PARIS_BOUNDS: [number, number, number, number] = [2.22, 48.815, 2.47, 48.905];
 
 export interface BlindPointMapProps {
-  scale: "fr" | "world";
+  scale: "fr" | "world" | "paris";
   roundIndex?: number;
   isRevealing: boolean;
   isGameOverReview: boolean;
@@ -21,6 +33,8 @@ export interface BlindPointMapProps {
   currentTargetName?: string;
   allRounds?: BlindPointRoundResult[];
   showBorders?: boolean;
+  mapTheme?: BlindPointMapTheme;
+  onChangeMapTheme?: (theme: BlindPointMapTheme) => void;
   onPlaceGuess: (coords: { lat: number; lon: number }) => void;
   className?: string;
 }
@@ -35,12 +49,15 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
   currentTargetName = "Cible réelle",
   allRounds = [],
   showBorders = true,
+  mapTheme = "voyager",
+  onChangeMapTheme,
   onPlaceGuess,
   className = "w-full h-full",
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const isLoadedRef = useRef<boolean>(false);
+  const currentThemeRef = useRef<BlindPointMapTheme>(mapTheme);
   const hoverPopupRef = useRef<maplibregl.Popup | null>(null);
   const prevRoundIndexRef = useRef<number>(roundIndex);
 
@@ -55,7 +72,15 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     const map = mapRef.current;
     if (!map) return;
 
-    if (scale === "fr") {
+    if (scale === "paris") {
+      map.flyTo({
+        center: [2.3488, 48.8534],
+        zoom: 12.8,
+        duration: 900,
+        bearing: 0,
+        pitch: 0,
+      });
+    } else if (scale === "fr") {
       map.fitBounds(
         [
           [FRANCE_BOUNDS[0], FRANCE_BOUNDS[1]],
@@ -80,20 +105,45 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     }
   }, [scale]);
 
-  // Smoothly reset camera to original overview whenever a new round starts
+  // Smoothly reset camera to original overview whenever a new round starts or game restarts
   useEffect(() => {
     if (!isLoadedRef.current) return;
-    if (prevRoundIndexRef.current !== roundIndex && !isRevealing && !isGameOverReview) {
+    if (
+      (prevRoundIndexRef.current !== roundIndex || roundIndex === 0) &&
+      !isRevealing &&
+      !isGameOverReview
+    ) {
       resetCamera();
     }
     prevRoundIndexRef.current = roundIndex;
   }, [roundIndex, isRevealing, isGameOverReview, resetCamera]);
 
+  // Whenever scale changes (e.g. switching between Paris, France, Monde), immediately reframe camera
+  useEffect(() => {
+    if (!isLoadedRef.current) return;
+    resetCamera();
+  }, [scale, resetCamera]);
+
+  // Keep map canvas cursor in sync with game state (precision crosshair during guess, default otherwise)
+  const updateCanvasCursor = useCallback(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+    const canvas = map.getCanvas();
+    if (!canvas) return;
+    canvas.style.cursor = !isRevealing && !isGameOverReview ? "crosshair" : "default";
+  }, [isRevealing, isGameOverReview]);
+
+  useEffect(() => {
+    updateCanvasCursor();
+  }, [updateCanvasCursor]);
+
   /**
    * Hardware-accelerated WebGL layers setup.
    * Completely eliminates DOM marker drift on zoom/pan.
    */
-  const setupLayers = (map: maplibregl.Map) => {
+  const setupLayers = (map: maplibregl.Map, currentTheme: BlindPointMapTheme = mapTheme) => {
+    const isDark = currentTheme === "dark";
+
     // 1. Geodesic Arcs Source & Layers
     if (!map.getSource("arc-source")) {
       map.addSource("arc-source", {
@@ -110,9 +160,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         type: "line",
         source: "arc-source",
         paint: {
-          "line-color": "#38bdf8",
+          "line-color": isDark ? "#38bdf8" : "#0284c7",
           "line-width": 6,
-          "line-opacity": 0.4,
+          "line-opacity": isDark ? 0.4 : 0.35,
           "line-blur": 3,
         },
       });
@@ -123,7 +173,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         type: "line",
         source: "arc-source",
         paint: {
-          "line-color": "#67e8f9",
+          "line-color": isDark ? "#67e8f9" : "#0369a1",
           "line-width": 2.5,
           "line-dasharray": [2, 1],
         },
@@ -140,20 +190,15 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         },
       });
 
-      // Outer glow circle
+      // Outer drop-shadow ring for guaranteed contrast on any background (light, dark, satellite)
       map.addLayer({
-        id: "points-glow",
+        id: "points-shadow",
         type: "circle",
         source: "points-source",
         paint: {
-          "circle-radius": 18,
-          "circle-color": [
-            "case",
-            ["==", ["get", "type"], "target"],
-            "#10b981",
-            "#3b82f6",
-          ],
-          "circle-opacity": 0.35,
+          "circle-radius": 13,
+          "circle-color": "#020617",
+          "circle-opacity": isDark ? 0.5 : 0.25,
         },
       });
 
@@ -165,7 +210,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         paint: {
           "circle-radius": 10,
           "circle-color": "#ffffff",
-          "circle-opacity": 0.95,
+          "circle-opacity": 0.98,
         },
       });
 
@@ -175,7 +220,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         type: "circle",
         source: "points-source",
         paint: {
-          "circle-radius": 8,
+          "circle-radius": 7.5,
           "circle-color": [
             "case",
             ["==", ["get", "type"], "target"],
@@ -203,7 +248,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         },
       });
 
-      // Text labels (above / below point with dark halo)
+      // Text labels (above / below point with adaptive halo)
       map.addLayer({
         id: "points-labels",
         type: "symbol",
@@ -218,13 +263,20 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           "text-ignore-placement": false,
         },
         paint: {
-          "text-color": [
-            "case",
-            ["==", ["get", "type"], "target"],
-            "#6ee7b7",
-            "#93c5fd",
-          ],
-          "text-halo-color": "#020617",
+          "text-color": isDark
+            ? [
+                "case",
+                ["==", ["get", "type"], "target"],
+                "#6ee7b7",
+                "#93c5fd",
+              ]
+            : [
+                "case",
+                ["==", ["get", "type"], "target"],
+                "#047857",
+                "#1d4ed8",
+              ],
+          "text-halo-color": isDark ? "#020617" : "#ffffff",
           "text-halo-width": 2.5,
           "text-halo-blur": 0.5,
         },
@@ -270,12 +322,17 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    const initialCenter: [number, number] = scale === "fr" ? [2.2137, 46.2276] : [10, 20];
-    const initialZoom = scale === "fr" ? 5.2 : 1.8;
+    const initialCenter: [number, number] =
+      scale === "paris"
+        ? [2.3488, 48.8534]
+        : scale === "fr"
+        ? [2.2137, 46.2276]
+        : [10, 20];
+    const initialZoom = scale === "paris" ? 12.8 : scale === "fr" ? 5.2 : 1.8;
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: BASEMAP_STYLE,
+      style: BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.voyager,
       center: initialCenter,
       zoom: initialZoom,
       bearing: 0,
@@ -287,6 +344,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       pitchWithRotate: false,
       attributionControl: false,
     });
+
+    // Enforce precision crosshair cursor immediately on canvas creation
+    map.getCanvas().style.cursor = "crosshair";
 
     // Disable rotation
     map.dragRotate.disable();
@@ -332,10 +392,15 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
 
     map.on("load", () => {
       isLoadedRef.current = true;
-      updateBasemapBorders();
-      setupLayers(map);
+      setupLayers(map, mapTheme);
       updateMapData();
+      updateBasemapBorders();
       resetCamera();
+      updateCanvasCursor();
+    });
+
+    map.on("dragend", () => {
+      updateCanvasCursor();
     });
 
     mapRef.current = map;
@@ -352,7 +417,25 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     };
   }, [scale]);
 
-  // Update borders visibility and hide road layers
+  // Switch basemap style dynamically when mapTheme prop changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+    if (currentThemeRef.current === mapTheme) return;
+
+    currentThemeRef.current = mapTheme;
+    const styleUrl = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.voyager;
+    map.setStyle(styleUrl);
+
+    map.once("style.load", () => {
+      setupLayers(map, mapTheme);
+      updateMapData();
+      updateBasemapBorders();
+      updateCanvasCursor();
+    });
+  }, [mapTheme]);
+
+  // Update borders visibility and enhance contrast based on theme
   const updateBasemapBorders = () => {
     const map = mapRef.current;
     if (!map || !isLoadedRef.current) return;
@@ -361,23 +444,22 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     if (!style || !style.layers) return;
 
     style.layers.forEach((layer) => {
-      if (
-        layer.id.startsWith("road_") ||
-        layer.id.startsWith("tunnel_") ||
-        layer.id.startsWith("bridge_") ||
-        layer.id.startsWith("aeroway")
-      ) {
-        if (map.getLayer(layer.id)) {
-          map.setLayoutProperty(layer.id, "visibility", "none");
-        }
-      }
-
+      // Political boundaries visibility (Muet vs Frontières)
       if (layer.id.startsWith("boundary_")) {
         if (map.getLayer(layer.id)) {
           map.setLayoutProperty(layer.id, "visibility", showBorders ? "visible" : "none");
         }
       }
     });
+
+    // In dark theme, boost water contrast so rivers and seas stand out crisply
+    if (mapTheme === "dark" && map.getLayer("water")) {
+      try {
+        map.setPaintProperty("water", "fill-color", "#1e293b");
+      } catch (e) {
+        // ignore
+      }
+    }
   };
 
   useEffect(() => {
@@ -481,7 +563,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
             {
               padding: { top: 120, bottom: 140, left: 80, right: 80 },
               duration: 1000,
-              maxZoom: scale === "fr" ? 7 : 4,
+              maxZoom: scale === "paris" ? 13.2 : scale === "fr" ? 7 : 4,
             }
           );
         } catch (e) {
@@ -553,7 +635,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           {
             padding: { top: 120, bottom: 200, left: 100, right: 100 },
             duration: 1200,
-            maxZoom: 10,
+            maxZoom: scale === "paris" ? 15.5 : 10,
           }
         );
       } catch (e) {
@@ -594,6 +676,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
   useEffect(() => {
     updateMapData();
   }, [
+    roundIndex,
     currentGuess,
     currentTargetCoords,
     currentTargetName,
@@ -608,12 +691,36 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       <div
         ref={mapContainerRef}
         className={`w-full h-full ${
-          !isRevealing && !isGameOverReview ? "cursor-crosshair" : "cursor-default"
+          !isRevealing && !isGameOverReview
+            ? "cursor-crosshair [&_.maplibregl-canvas]:cursor-crosshair"
+            : "cursor-default [&_.maplibregl-canvas]:cursor-default"
         }`}
       />
 
       {/* Floating Map Controls */}
       <div className="absolute right-4 bottom-24 z-20 flex flex-col gap-2">
+        {onChangeMapTheme && (
+          <button
+            type="button"
+            onClick={() => {
+              const themeCycle: BlindPointMapTheme[] = ["voyager", "positron", "dark"];
+              const nextTheme = themeCycle[(themeCycle.indexOf(mapTheme) + 1) % themeCycle.length];
+              onChangeMapTheme(nextTheme);
+            }}
+            className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 shadow-xl backdrop-blur-md transition-all active:scale-95 flex items-center justify-center group"
+            title={`Style de carte : ${THEME_NAMES[mapTheme]} (Cliquer pour alterner)`}
+            aria-label="Changer le style de carte"
+          >
+            {mapTheme === "voyager" ? (
+              <Compass className="w-5 h-5 text-emerald-400 group-hover:rotate-45 transition-transform" />
+            ) : mapTheme === "positron" ? (
+              <Sun className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" />
+            ) : (
+              <Moon className="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" />
+            )}
+          </button>
+        )}
+
         <button
           type="button"
           onClick={() => {

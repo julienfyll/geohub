@@ -7,23 +7,30 @@ import { BlindPointPack } from "./types";
 const EARTH_RADIUS_KM = 6371.0088;
 
 /**
- * Calculates exponential score based on distance and pack scale.
- * Formula from blind-point-spec.md:
- * Score = min(5000, round(5000 * exp(- d / D_scale)))
+ * Calculates stretched exponential score based on distance and pack scale.
+ * Formula:
+ * Score = min(5000, max(0, round(5000 * exp(- (d / D)^p))))
  * - d <= 1 km: score = 5000 (Bullseye)
- * - France scale (D_scale = 120 km)
- * - World scale (D_scale = 1500 km)
+ * - France scale: D = 170 km, p = 1.2
+ *   (Douceur à courte distance : ~4 740 pts à 15 km, sanction nette à 400 km : ~290 pts)
+ * - World scale: D = 2200 km, p = 1.2
+ *   (~4 720 pts à 200 km, ~2 050 pts à 2 000 km, ~180 pts à 6 000 km)
  */
 export function calculateBlindPointScore(
   distanceKm: number,
-  scale: "fr" | "world"
+  scale: "fr" | "world" | "paris"
 ): number {
-  if (distanceKm <= 1.0) {
+  const bullseyeThreshold = scale === "paris" ? 0.05 : 1.0;
+  if (distanceKm <= bullseyeThreshold) {
     return 5000;
   }
 
-  const dScale = scale === "fr" ? 120 : 1500;
-  const rawScore = 5000 * Math.exp(-distanceKm / dScale);
+  // Paris tolerance: D = 1.5 km (~4600 pts à 300m, ~1840 pts à 1.5 km)
+  // France tolerance: D = 170 km (~4740 pts à 15km, ~290 pts à 400km)
+  // World tolerance: D = 2200 km (~4720 pts à 200km, ~2050 pts à 2000km)
+  const D = scale === "paris" ? 1.5 : scale === "fr" ? 170 : 2200;
+  const p = 1.2;
+  const rawScore = 5000 * Math.exp(-Math.pow(distanceKm / D, p));
   const rounded = Math.round(rawScore);
 
   return Math.min(5000, Math.max(0, rounded));
@@ -31,13 +38,16 @@ export function calculateBlindPointScore(
 
 export function getScoreRating(
   distanceKm: number,
-  score: number
+  score: number,
+  scale?: "fr" | "world" | "paris"
 ): {
   emoji: string;
   label: string;
   colorClass: string;
 } {
-  if (distanceKm <= 1.0 || score === 5000) {
+  const isBullseye =
+    (scale === "paris" ? distanceKm <= 0.05 : distanceKm <= 1.0) || score === 5000;
+  if (isBullseye) {
     return {
       emoji: "🎯",
       label: "Bullseye parfait !",
