@@ -7,7 +7,6 @@ import {
   MapPin,
   Zap,
   Layers,
-  ArrowRight,
   Flame,
 } from "lucide-react";
 
@@ -64,29 +63,9 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="text-slate-400 text-base sm:text-lg max-w-2xl mb-8 leading-relaxed">
+          <p className="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed">
             Défiez votre intuition territoriale, trouvez les métropoles cachées dans des cercles concentriques, et comparez vos scores avec vos amis en un clic.
           </p>
-
-          {/* Quick Launch CTA */}
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/play/georings?scale=fr&mode=daily"
-              className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold text-sm shadow-xl shadow-blue-600/30 transition-all hover:scale-[1.02]"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Lancer le Défi du Jour (France)</span>
-            </Link>
-
-            <Link
-              href="/play/georings?scale=world&mode=free"
-              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold text-sm border border-slate-700/80 transition-all hover:border-slate-600"
-            >
-              <Zap className="w-4 h-4 text-amber-400" />
-              <span>Partie Rapide (Monde)</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" />
-            </Link>
-          </div>
         </div>
       </section>
 
