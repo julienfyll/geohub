@@ -28,6 +28,8 @@ import {
   BlindPointDifficulty,
   BlindPointMode,
 } from "@/lib/games/blindpoint/types";
+import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
+import { UserNav } from "@/components/navigation/UserNav";
 
 interface BlindPointHUDProps {
   currentTarget: BlindPointClientTarget | null;
@@ -157,12 +159,14 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   return (
     <>
       {/* Top Fixed Navigation Header */}
-      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        {/* Left: Hub back button & Logo */}
-        <div className="flex items-center gap-2.5">
+      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
+        {/* Left: Quick Menu Drawer & Hub link */}
+        <div className="flex items-center gap-2">
+          <QuickMenuDrawer />
+
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
+            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
             title="Retour au Hub d'accueil"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
@@ -173,7 +177,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
               <MapPin className="w-3.5 h-3.5" />
             </div>
-            <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block">
+            <h1 className="text-sm font-bold tracking-tight text-white hidden lg:block">
               Blind Point
             </h1>
           </div>
@@ -227,7 +231,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
           <div className="hidden md:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
             {[
               { id: "villes_france" as const, label: "🇫🇷 Villes", desc: "139 villes & métropoles de France" },
-              { id: "lieux_paris" as const, label: "🗼 Paris", desc: "60 monuments de Paris intra-muros" },
+              { id: "lieux_paris" as const, label: "🗼 Paris", desc: "105 monuments & lieux de Paris intra-muros" },
               { id: "lieux_france" as const, label: "🏰 Patrimoine", desc: "58 châteaux & édifices de France" },
               { id: "villes_monde" as const, label: "🌍 Monde", desc: "167 métropoles des 6 continents" },
             ].map((p) => {
@@ -322,7 +326,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
                     <div className="space-y-1">
                       {[
                         { id: "lieux_france", name: "Patrimoine de France", icon: "🏰", desc: "58 châteaux de la Loire, citadelles & monuments" },
-                        { id: "lieux_paris", name: "Monuments de Paris", icon: "🗼", desc: "60 trésors emblématiques intra-muros" },
+                        { id: "lieux_paris", name: "Monuments de Paris", icon: "🗼", desc: "105 trésors emblématiques des 20 arrondissements" },
                         { id: "lieux_monde", name: "Merveilles du Monde", icon: "🏛️", desc: "50 merveilles de l'humanité & sites UNESCO" },
                       ].map((p) => (
                         <button
@@ -479,7 +483,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             type="button"
             onClick={handleCopyLink}
             title="Copier le lien pour défier un ami sur cette partie"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
           >
             {shareCopied ? (
               <>
@@ -489,10 +493,13 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             ) : (
               <>
                 <Share2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Défier un ami</span>
+                <span className="hidden md:inline">Défier</span>
               </>
             )}
           </button>
+
+          {/* User Profile / Auth Button */}
+          <UserNav compact />
         </div>
       </header>
 

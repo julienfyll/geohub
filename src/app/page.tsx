@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { UserNav } from "@/components/navigation/UserNav";
+import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 
 export default function Home() {
   const todayDate = new Intl.DateTimeFormat("fr-FR", {
@@ -26,16 +27,19 @@ export default function Home() {
       <nav className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400">
-              <Compass className="w-6 h-6 animate-spin-slow" />
-            </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-white block leading-none">
-                GeoHub
-              </span>
-              <span className="text-[11px] font-medium text-slate-400 tracking-wider uppercase">
-                Arcade Géographique
-              </span>
+            <QuickMenuDrawer />
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400">
+                <Compass className="w-5 h-5 animate-spin-slow" />
+              </div>
+              <div>
+                <span className="text-base font-bold tracking-tight text-white block leading-none">
+                  GeoHub
+                </span>
+                <span className="text-[10px] font-medium text-slate-400 tracking-wider uppercase">
+                  Arcade Géographique
+                </span>
+              </div>
             </div>
           </div>
 

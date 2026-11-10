@@ -31,6 +31,7 @@ import { BlindPointResultModal } from "@/components/game/blindpoint/BlindPointRe
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
 import { UserNav } from "@/components/navigation/UserNav";
+import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import {
   BlindPointCategory,
   BlindPointPack,
@@ -459,19 +460,22 @@ function BlindPointGame() {
         {/* Navigation Bar */}
         <nav className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl sticky top-0 z-40">
           <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors text-xs font-semibold"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Retour au Hub</span>
-            </Link>
+            <div className="flex items-center gap-2.5">
+              <QuickMenuDrawer />
+              <Link
+                href="/"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors text-xs font-semibold"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Hub</span>
+              </Link>
+            </div>
 
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/40 text-emerald-400">
                 <MapPin className="w-4 h-4" />
               </div>
-              <span className="font-bold text-sm tracking-tight text-white">Blind Point</span>
+              <span className="font-bold text-sm tracking-tight text-white hidden sm:inline">Blind Point</span>
             </div>
 
             <div className="flex items-center gap-3">

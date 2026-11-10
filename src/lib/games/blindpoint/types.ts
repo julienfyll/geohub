@@ -26,6 +26,10 @@ export interface BlindPointTarget {
   funFact?: string;
   imageUrl?: string;
   imageCredit?: string;
+  arrondissement?: number;
+  bank?: "rive_droite" | "rive_gauche" | "ile" | "pont";
+  category?: string;
+  yearBuilt?: number;
 }
 
 export interface BlindPointClientTarget {
@@ -39,6 +43,11 @@ export interface BlindPointClientTarget {
   totalRounds: number;
   imageUrl?: string;
   imageCredit?: string;
+  funFact?: string;
+  arrondissement?: number;
+  bank?: "rive_droite" | "rive_gauche" | "ile" | "pont";
+  category?: string;
+  yearBuilt?: number;
 }
 
 export interface BlindPointGuessRequest {

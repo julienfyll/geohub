@@ -37,6 +37,7 @@ import { GameOverModal } from "@/components/game/GameOverModal";
 import { SettingsModal } from "@/components/game/SettingsModal";
 import { CustomGameModal } from "@/components/game/CustomGameModal";
 import { UserNav } from "@/components/navigation/UserNav";
+import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { useSettings } from "@/lib/settings/useSettings";
 import { CityGuessResult, GameMetric, GameScale, GeoRingsInitResponse, TopCityItem } from "@/lib/games/types";
 
@@ -61,17 +62,18 @@ function GeoRingsLobby() {
       {/* Lobby Navigation */}
       <header className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <QuickMenuDrawer />
             <Link
               href="/"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Hub Principal</span>
             </Link>
             <div className="flex items-center gap-2">
               <Compass className="w-5 h-5 text-blue-500" />
-              <h1 className="text-base font-bold tracking-tight text-white">
+              <h1 className="text-base font-bold tracking-tight text-white hidden sm:block">
                 GeoRings — Choix du Critère
               </h1>
             </div>
@@ -827,22 +829,24 @@ function GeoRingsGame() {
   return (
     <div className="relative w-screen h-screen overflow-hidden flex flex-col bg-slate-950 text-slate-100">
       {/* Top Navigation Bar */}
-      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        <div className="flex items-center gap-2 sm:gap-3">
+      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
+        <div className="flex items-center gap-2">
+          <QuickMenuDrawer />
+
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
+            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
             title="Retour au Hub d'accueil"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Hub</span>
+            <span>Hub</span>
           </Link>
 
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-blue-500/15 border border-blue-500/30 text-blue-400">
               <Compass className="w-3.5 h-3.5" />
             </div>
-            <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block">
+            <h1 className="text-sm font-bold tracking-tight text-white hidden lg:block">
               GeoRings
             </h1>
           </div>
@@ -1018,7 +1022,7 @@ function GeoRingsGame() {
             type="button"
             onClick={handleCopyLink}
             title="Défier un ami sur cette même partie"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
           >
             {shareCopied ? (
               <>
@@ -1028,10 +1032,13 @@ function GeoRingsGame() {
             ) : (
               <>
                 <Share2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Défier</span>
+                <span className="hidden md:inline">Défier</span>
               </>
             )}
           </button>
+
+          {/* User Profile / Auth Button */}
+          <UserNav compact />
         </div>
       </header>
 

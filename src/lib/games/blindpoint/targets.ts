@@ -176,6 +176,11 @@ export function toClientTarget(
     totalRounds,
     imageUrl: getProxyImageUrl(target.imageUrl),
     imageCredit: target.imageCredit,
+    funFact: target.funFact,
+    arrondissement: target.arrondissement,
+    bank: target.bank,
+    category: target.category,
+    yearBuilt: target.yearBuilt,
   };
 }
 
