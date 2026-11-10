@@ -302,29 +302,33 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Manches */}
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>2. Nombre de Manches</span>
-            </label>
-            <div className="grid grid-cols-4 gap-1.5">
-              {[3, 5, 10, 15].map((count) => (
-                <button
-                  key={count}
-                  type="button"
-                  onClick={() => setRoundsCount(count)}
-                  className={`py-2 px-1 rounded-xl border text-xs font-bold text-center transition-all ${
-                    roundsCount === count
-                      ? "bg-amber-600 border-amber-500 text-white shadow-sm"
-                      : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
-                  }`}
-                >
-                  {count} {count === 5 ? "★" : "pts"}
-                </button>
-              ))}
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>2. Nombre de Manches</span>
+              </label>
+              <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 font-extrabold text-xs">
+                {roundsCount} manches
+              </span>
             </div>
-            <span className="text-[10px] text-slate-500 mt-1 block">
-              Max : {(roundsCount * 5000).toLocaleString("fr-FR")} pts possibles
-            </span>
+            <div className="space-y-1.5 pt-1">
+              <input
+                type="range"
+                min={3}
+                max={50}
+                step={1}
+                value={roundsCount}
+                onChange={(e) => setRoundsCount(parseInt(e.target.value, 10))}
+                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              />
+              <div className="flex justify-between items-center text-[10px] text-slate-500">
+                <span className="font-mono">3 min</span>
+                <span className="text-slate-400 font-medium">
+                  Max : {(roundsCount * 5000).toLocaleString("fr-FR")} pts
+                </span>
+                <span className="font-mono">50 max</span>
+              </div>
+            </div>
           </div>
 
           {/* Difficulté */}

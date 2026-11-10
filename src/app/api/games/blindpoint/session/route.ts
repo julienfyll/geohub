@@ -49,9 +49,9 @@ export async function GET(request: NextRequest) {
       ? (rawDiff as BlindPointDifficulty)
       : "moyen";
 
-  // Total rounds: 3, 5, 10, 15 (default 5)
+  // Total rounds: 3 to 50 (default 5)
   const parsedRounds = rawRounds ? parseInt(rawRounds, 10) : 5;
-  const totalRounds = isNaN(parsedRounds) ? 5 : Math.max(3, Math.min(20, parsedRounds));
+  const totalRounds = isNaN(parsedRounds) ? 5 : Math.max(3, Math.min(50, parsedRounds));
 
   // Timer duration (0 = infinite / off)
   const timerSeconds = rawTimer ? parseInt(rawTimer, 10) : undefined;
@@ -65,11 +65,12 @@ export async function GET(request: NextRequest) {
     continent
   );
 
-  if (!targets || targets.length < totalRounds) {
+  const actualTotalRounds = targets ? Math.min(totalRounds, targets.length) : 0;
+  if (!targets || actualTotalRounds < 3) {
     return NextResponse.json({ error: "Failed to initialize game targets" }, { status: 500 });
   }
 
-  const currentTarget = toClientTarget(targets[0], 0, totalRounds);
+  const currentTarget = toClientTarget(targets[0], 0, actualTotalRounds);
 
   const response: BlindPointSessionInitResponse = {
     sessionId: `bp_${mode}_${packsToUse.join("_")}_${difficulty}_${hashString(seed)}`,
@@ -79,7 +80,7 @@ export async function GET(request: NextRequest) {
     difficulty,
     scale,
     seed,
-    totalRounds,
+    totalRounds: actualTotalRounds,
     timerSeconds: timerSeconds !== undefined && !isNaN(timerSeconds) ? timerSeconds : undefined,
     currentTarget,
   };

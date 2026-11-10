@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       guessLon,
     } = body;
 
-    const totalRounds = typeof rawTotalRounds === "number" && rawTotalRounds >= 3 ? rawTotalRounds : 5;
+    const requestedRounds = typeof rawTotalRounds === "number" && rawTotalRounds >= 3 ? Math.min(50, rawTotalRounds) : 5;
 
     if (
       typeof guessLat !== "number" ||
@@ -41,14 +41,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Coordinates out of bounds" }, { status: 400 });
     }
 
-    if (typeof roundIndex !== "number" || roundIndex < 0 || roundIndex >= totalRounds) {
-      return NextResponse.json({ error: "Invalid round index" }, { status: 400 });
+    const packsToUse = packs && packs.length > 0 ? packs : pack;
+    const { targets } = getSessionTargets(packsToUse, mode, difficulty, seed, requestedRounds, continent);
+    const totalRounds = targets ? Math.min(requestedRounds, targets.length) : 0;
+    if (!targets || totalRounds < 3) {
+      return NextResponse.json({ error: "Failed to load targets for session" }, { status: 500 });
     }
 
-    const packsToUse = packs && packs.length > 0 ? packs : pack;
-    const { targets } = getSessionTargets(packsToUse, mode, difficulty, seed, totalRounds, continent);
-    if (!targets || targets.length < totalRounds) {
-      return NextResponse.json({ error: "Failed to load targets for session" }, { status: 500 });
+    if (typeof roundIndex !== "number" || roundIndex < 0 || roundIndex >= totalRounds) {
+      return NextResponse.json({ error: "Invalid round index" }, { status: 400 });
     }
 
     const target = targets[roundIndex];
