@@ -81,7 +81,7 @@ function BlindPointGame() {
       : "france";
 
   // Lobby vs Active Game State
-  const [isPlaying, setIsPlaying] = useState(rawPlay);
+  const isPlaying = rawPlay;
   const [selectedCategory, setSelectedCategory] = useState<BlindPointCategory>(
     isLieuxInitial ? "lieux_emblematiques" : "villes"
   );
@@ -92,21 +92,22 @@ function BlindPointGame() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<BlindPointDifficulty>(difficulty);
   const [selectedMode, setSelectedMode] = useState<BlindPointMode>(mode);
 
-  // Sync state if URL changes
+  // Sync lobby state if URL changes while in lobby
   useEffect(() => {
-    setSelectedPack(pack);
-    setSelectedDifficulty(difficulty);
-    setSelectedMode(mode);
-    setIsPlaying(rawPlay);
-    const isL = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
-    setSelectedCategory(isL ? "lieux_emblematiques" : "villes");
-    const terr: "france" | "paris" | "monde" =
-      pack === "lieux_paris"
-        ? "paris"
-        : pack === "villes_monde" || pack === "lieux_monde" || pack === "monuments_monde"
-        ? "monde"
-        : "france";
-    setSelectedTerritory(terr);
+    if (!rawPlay) {
+      setSelectedPack(pack);
+      setSelectedDifficulty(difficulty);
+      setSelectedMode(mode);
+      const isL = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
+      setSelectedCategory(isL ? "lieux_emblematiques" : "villes");
+      const terr: "france" | "paris" | "monde" =
+        pack === "lieux_paris"
+          ? "paris"
+          : pack === "villes_monde" || pack === "lieux_monde" || pack === "monuments_monde"
+          ? "monde"
+          : "france";
+      setSelectedTerritory(terr);
+    }
   }, [pack, difficulty, mode, rawPlay]);
 
   const handleSelectCategory = (cat: BlindPointCategory) => {
@@ -200,17 +201,14 @@ function BlindPointGame() {
   // Timer State
   const [timerSecondsLeft, setTimerSecondsLeft] = useState<number | null>(null);
 
-  // Restart / Start game with guaranteed fresh map and state
-  const restartGame = useCallback(
+  // Load Game Session from parameters
+  const loadGameSession = useCallback(
     async (
-      targetPack?: BlindPointPack,
-      targetDiff?: BlindPointDifficulty,
-      targetMode?: BlindPointMode
+      targetPack: BlindPointPack,
+      targetDiff: BlindPointDifficulty,
+      targetMode: BlindPointMode,
+      targetSeed?: string
     ) => {
-      const p = targetPack || pack;
-      const d = targetDiff || difficulty;
-      const m = targetMode || mode;
-
       setLoading(true);
       setErrorMessage(null);
       setCurrentGuess(null);
@@ -224,21 +222,15 @@ function BlindPointGame() {
       setShowSummaryModal(false);
       setRoundIndex(0);
       setCurrentTarget(null);
-      setIsPlaying(true);
-      setSelectedPack(p);
-      setSelectedDifficulty(d);
-      setSelectedMode(m);
 
       // Increment gameSessionId to guarantee that BlindPointMap unmounts and remounts clean
       setGameSessionId((prev) => prev + 1);
 
-      const freeSeed = m === "free" ? `&seed=${Date.now()}` : "";
-      router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}&play=1`);
-
       try {
-        let url = `/api/games/blindpoint/session?pack=${p}&difficulty=${d}&mode=${m}`;
-        if (m === "free") url += `&seed=${Date.now()}`;
-        else if (userSeed) url += `&seed=${userSeed}`;
+        let url = `/api/games/blindpoint/session?pack=${targetPack}&difficulty=${targetDiff}&mode=${targetMode}`;
+        if (targetSeed) {
+          url += `&seed=${targetSeed}`;
+        }
 
         const res = await fetch(url);
         if (!res.ok) throw new Error("Erreur de chargement de session");
@@ -260,19 +252,15 @@ function BlindPointGame() {
         setLoading(false);
       }
     },
-    [pack, difficulty, mode, userSeed, router, settings.timerDurationSeconds]
+    [settings.timerDurationSeconds]
   );
 
-  // Initialize Game Session on initial direct URL visit with play=1
-  const initGame = useCallback(async () => {
-    restartGame(pack, difficulty, mode);
-  }, [pack, difficulty, mode, restartGame]);
-
+  // Load game session whenever in active play mode (play=1) and parameters are defined
   useEffect(() => {
-    if (isPlaying && !session) {
-      initGame();
+    if (isPlaying) {
+      loadGameSession(pack, difficulty, mode, userSeed || undefined);
     }
-  }, [isPlaying, session, initGame]);
+  }, [isPlaying, pack, difficulty, mode, userSeed, loadGameSession]);
 
   // Handle Placing Pin on Map
   const handlePlaceGuess = (coords: { lat: number; lon: number }) => {
@@ -405,7 +393,7 @@ function BlindPointGame() {
   );
 
   const activePack = isPlaying
-    ? (currentTarget?.pack || session?.pack || selectedPack || pack)
+    ? (session?.pack || currentTarget?.pack || pack)
     : selectedPack;
 
   const scale =
@@ -416,11 +404,41 @@ function BlindPointGame() {
       : "fr";
 
   const handleStartGame = (p: BlindPointPack, d: BlindPointDifficulty, m: BlindPointMode) => {
-    restartGame(p, d, m);
+    const freeSeed = m === "free" ? `&seed=${Date.now()}` : "";
+    router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}&play=1`);
+  };
+
+  const handleChangeGameConfig = (
+    p: BlindPointPack,
+    d: BlindPointDifficulty,
+    m: BlindPointMode
+  ) => {
+    if (m === mode && p === pack && d === difficulty) {
+      if (m === "free") {
+        router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=free&seed=${Date.now()}&play=1`);
+      } else {
+        loadGameSession(p, d, m, undefined);
+      }
+      return;
+    }
+
+    const freeSeed = m === "free" ? `&seed=${Date.now()}` : "";
+    router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}&play=1`);
+  };
+
+  const handleRestartCurrentGame = () => {
+    const p = session?.pack || pack;
+    const d = session?.difficulty || difficulty;
+    const m = session?.mode || mode;
+
+    if (m === "free") {
+      router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=free&seed=${Date.now()}&play=1`);
+    } else {
+      loadGameSession(p, d, m, undefined);
+    }
   };
 
   const handleBackToLobby = () => {
-    setIsPlaying(false);
     setShowSummaryModal(false);
     setShowResultModal(false);
     setIsGameOver(false);
@@ -429,6 +447,7 @@ function BlindPointGame() {
     setCurrentTargetCoords(null);
     setIsRevealing(false);
     setRoundIndex(0);
+    setSession(null);
     router.push("/play/blindpoint");
   };
 
@@ -972,9 +991,9 @@ function BlindPointGame() {
           isGameOver={isGameOver}
           timerSecondsLeft={timerSecondsLeft}
           pack={activePack}
-          difficulty={isPlaying ? (session?.difficulty || selectedDifficulty || difficulty) : selectedDifficulty}
-          mode={isPlaying ? (session?.mode || selectedMode || mode) : selectedMode}
-          seed={session?.seed || ""}
+          difficulty={session?.difficulty || difficulty}
+          mode={session?.mode || mode}
+          seed={session?.seed || userSeed}
           showRegionHints={settings.showRegionHints}
           showTargetPhoto={settings.showTargetPhoto}
           showTargetName={settings.showTargetName}
@@ -982,7 +1001,7 @@ function BlindPointGame() {
           onOpenSettings={() => setShowSettingsModal(true)}
           onOpenSummary={() => setShowSummaryModal(true)}
           onBackToLobby={handleBackToLobby}
-          onChangeMode={(p, d, m) => restartGame(p, d, m)}
+          onChangeMode={handleChangeGameConfig}
         />
       )}
 
@@ -1012,12 +1031,12 @@ function BlindPointGame() {
       {/* Final Summary Modal (Game Over) */}
       <BlindPointSummaryModal
         isOpen={showSummaryModal}
-        pack={pack}
-        difficulty={difficulty}
-        mode={mode}
-        seed={session?.seed || ""}
+        pack={session?.pack || pack}
+        difficulty={session?.difficulty || difficulty}
+        mode={session?.mode || mode}
+        seed={session?.seed || userSeed}
         rounds={roundsHistory}
-        onRestartGame={() => restartGame(pack, difficulty, mode)}
+        onRestartGame={handleRestartCurrentGame}
         onCloseToMap={() => setShowSummaryModal(false)}
         onBackToLobby={handleBackToLobby}
       />
