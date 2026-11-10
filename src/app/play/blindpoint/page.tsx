@@ -1141,6 +1141,7 @@ function BlindPointGame() {
           isGameOver={isGameOver}
           timerSecondsLeft={timerSecondsLeft}
           pack={activePack}
+          packs={session?.packs}
           difficulty={session?.difficulty || difficulty}
           mode={session?.mode || mode}
           seed={session?.seed || userSeed}

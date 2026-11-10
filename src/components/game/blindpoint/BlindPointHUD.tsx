@@ -42,6 +42,7 @@ interface BlindPointHUDProps {
   isGameOver?: boolean;
   timerSecondsLeft: number | null;
   pack: BlindPointPack;
+  packs?: BlindPointPack[];
   mode: BlindPointMode;
   seed?: string;
   difficulty?: BlindPointDifficulty | "all";
@@ -67,6 +68,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   isGameOver = false,
   timerSecondsLeft,
   pack,
+  packs,
   mode,
   seed = "",
   difficulty = "moyen",
@@ -138,14 +140,14 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [hasPlacedGuess, isSubmitting, isRevealing, onValidateGuess]);
 
-  const packLabels: Record<BlindPointPack, { name: string; icon: string }> = {
-    villes_france: { name: "Villes de France", icon: "🇫🇷" },
-    villes_monde: { name: "Villes du Monde", icon: "🌍" },
-    lieux_france: { name: "Patrimoine de France", icon: "🏰" },
-    lieux_paris: { name: "Monuments de Paris", icon: "🗼" },
-    lieux_monde: { name: "Merveilles du Monde", icon: "🏛️" },
-    monuments_monde: { name: "Monuments du Monde", icon: "🏛️" },
-    chateaux_france: { name: "Châteaux de France", icon: "🏰" },
+  const packLabels: Record<BlindPointPack, { name: string; shortName: string; icon: string }> = {
+    villes_france: { name: "Villes de France", shortName: "Villes France", icon: "🇫🇷" },
+    villes_monde: { name: "Villes du Monde", shortName: "Villes Monde", icon: "🌍" },
+    lieux_france: { name: "Patrimoine de France", shortName: "Patrimoine", icon: "🏰" },
+    lieux_paris: { name: "Monuments de Paris", shortName: "Paris", icon: "🗼" },
+    lieux_monde: { name: "Merveilles du Monde", shortName: "Merveilles", icon: "🏛️" },
+    monuments_monde: { name: "Monuments du Monde", shortName: "Monuments", icon: "🏛️" },
+    chateaux_france: { name: "Châteaux de France", shortName: "Châteaux", icon: "🏰" },
   };
 
   const diffLabels: Record<string, { label: string; badge: string }> = {
@@ -156,7 +158,11 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   };
 
   const isLieuxPack = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
-  const currentPackMeta = packLabels[pack] || { name: "Villes de France", icon: "🇫🇷" };
+  const defaultPackMeta = packLabels[pack] || { name: "Villes de France", shortName: "Villes France", icon: "🇫🇷" };
+  const currentPackMeta =
+    mode === "custom" && packs && packs.length > 1
+      ? { name: `${packs.length} packs combinés`, shortName: `${packs.length} packs`, icon: "🎲" }
+      : defaultPackMeta;
   const currentDiffMeta = diffLabels[difficulty] || diffLabels.moyen;
 
   return (
@@ -248,57 +254,28 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             </button>
           </div>
 
-          {/* Pack / Territoire Switcher */}
-          <div className="hidden md:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
-            {[
-              { id: "villes_france" as const, label: "🇫🇷 Villes", desc: "139 villes & métropoles de France" },
-              { id: "lieux_paris" as const, label: "🗼 Paris", desc: "105 monuments & lieux de Paris intra-muros" },
-              { id: "lieux_france" as const, label: "🏰 Patrimoine", desc: "58 châteaux & édifices de France" },
-              { id: "villes_monde" as const, label: "🌍 Monde", desc: "167 métropoles des 6 continents" },
-            ].map((p) => {
-              const isSelected = pack === p.id;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => {
-                    if (onChangeMode) {
-                      onChangeMode(p.id, difficulty, mode);
-                    } else {
-                      router.push(`/play/blindpoint?pack=${p.id}&difficulty=${difficulty}&mode=${mode}&play=1`);
-                    }
-                  }}
-                  className={`px-2.5 py-1 rounded-lg transition-all ${
-                    isSelected
-                      ? "bg-blue-600 text-white font-semibold shadow-sm"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                  title={p.desc}
-                >
-                  {p.label}
-                </button>
-              );
-            })}
-
-            {/* Plus / All packs dropdown trigger */}
-            <div className="relative" ref={packMenuRef}>
-              <button
-                type="button"
-                onClick={() => setIsPackMenuOpen((prev) => !prev)}
-                className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all ${
-                  pack === "lieux_monde" || pack === "monuments_monde" || pack === "chateaux_france" || isPackMenuOpen
-                    ? "bg-blue-600 text-white font-semibold shadow-sm"
-                    : "text-slate-400 hover:text-white"
+          {/* Sélecteur de Territoire / Pack en Dropdown Dynamique (Concept 2 - Switcher Hybride) */}
+          <div className="relative" ref={packMenuRef}>
+            <button
+              type="button"
+              onClick={() => setIsPackMenuOpen((prev) => !prev)}
+              className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer"
+              title="Changer de territoire / pack ou de niveau de difficulté"
+            >
+              <span className="text-base">{currentPackMeta.icon}</span>
+              <span className="font-bold text-white group-hover:text-blue-300 transition-colors">
+                {currentPackMeta.shortName}
+              </span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform ${
+                  isPackMenuOpen ? "rotate-180 text-white" : ""
                 }`}
-                title="Autres packs, difficulté et configuration"
-              >
-                <Sliders className="w-3 h-3" />
-                <span className="hidden lg:inline">Plus</span>
-              </button>
+              />
+            </button>
 
-              {/* Dropdown Menu for extra packs & full config */}
-              {isPackMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-80 bg-slate-900/95 border border-slate-700/90 rounded-2xl p-2.5 shadow-2xl backdrop-blur-xl z-50 flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-150 text-left">
+            {/* Dropdown Menu for Packs & Difficulty */}
+            {isPackMenuOpen && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-80 bg-slate-900/95 border border-slate-700/90 rounded-2xl p-2.5 shadow-2xl backdrop-blur-2xl z-50 flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-150 text-left">
                   {/* Category 1 : Villes */}
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1 block mb-1">
@@ -432,7 +409,6 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
               )}
             </div>
           </div>
-        </div>
 
         {/* Right: Round Counter, Score, Timer & Actions */}
         <div className="flex items-center gap-2">

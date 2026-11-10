@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept 2 — Switcher Hybride (Modes Visibles + Pack Dropdown) | GeoHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 overflow-hidden w-screen h-screen relative select-none">
+
+  <!-- Interactive Map Background -->
+  <div id="map" class="absolute inset-0 z-0 bg-slate-950"></div>
+
+  <!-- Switcher between prototypes -->
+  <div class="absolute bottom-4 left-4 z-50 bg-slate-900/90 border border-slate-700/80 backdrop-blur-xl p-2 rounded-2xl shadow-2xl flex items-center gap-2 text-xs">
+    <span class="text-slate-400 font-bold px-2">Prototypes :</span>
+    <a href="bandeau-1.html" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition-all">1. Cockpit Dropdown</a>
+    <a href="bandeau-2.html" class="px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30">2. Switcher Hybride</a>
+    <a href="bandeau-3.html" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition-all">3. Pill Expansible</a>
+    <a href="index.html" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all">📋 Comparatif</a>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- CONCEPT 2 BANDEAU : HYBRIDE (MODES 1-CLIC + PACKS DÉROULANTS)        -->
+  <!-- =================================================================== -->
+  <header class="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-5 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
+    
+    <!-- GAUCHE : Identité & Sortie -->
+    <div class="flex items-center gap-2.5">
+      <button class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+      <a href="/" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <span>Hub</span>
+      </a>
+
+      <div class="flex items-center gap-2 pl-1">
+        <div class="w-6 h-6 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h1 class="text-sm font-bold tracking-tight text-white hidden md:block">
+          Blind Point
+        </h1>
+      </div>
+    </div>
+
+    <!-- CENTRE : 2 BLOCS DISTINCTS & ULTRA ÉPURÉS -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      
+      <!-- 1. Switcher de Modes (1-Clic immédiat) -->
+      <div class="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium shadow-sm">
+        <button 
+          id="btn-daily"
+          onclick="setMode('daily')" 
+          class="px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition-all flex items-center gap-1"
+          title="Défi officiel du jour"
+        >
+          <span>📅 Du Jour</span>
+        </button>
+
+        <button 
+          id="btn-free"
+          onclick="setMode('free')" 
+          class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1 font-medium hover:bg-slate-800"
+          title="Mode libre illimité"
+        >
+          <span>⚡ Libre</span>
+        </button>
+
+        <button 
+          id="btn-custom"
+          onclick="setMode('custom')" 
+          class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1 font-medium hover:bg-slate-800"
+          title="Mode personnalisé (manches, filtres, chrono)"
+        >
+          <span>⚙️ Custom</span>
+        </button>
+      </div>
+
+      <!-- 2. Sélecteur de Territoire / Pack en Dropdown Dynamique (Compact !) -->
+      <div class="relative" id="pack-dropdown-container">
+        <button 
+          id="pack-dropdown-btn"
+          onclick="togglePackDropdown()" 
+          class="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer"
+        >
+          <span id="current-pack-flag">🇫🇷</span>
+          <span class="font-bold text-white group-hover:text-blue-300 transition-colors" id="current-pack-name">Villes</span>
+          <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-white group-hover:translate-y-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+
+        <!-- Dropdown des Packs -->
+        <div 
+          id="pack-dropdown-menu"
+          class="hidden absolute top-full left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-72 bg-slate-900/95 border border-slate-700/90 rounded-2xl p-2.5 shadow-2xl backdrop-blur-2xl z-50 flex flex-col gap-1.5 animate-in fade-in duration-150"
+        >
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-1">
+            Changer de territoire
+          </span>
+
+          <button onclick="pickPack('🇫🇷', 'Villes')" class="pack-item w-full flex items-center justify-between p-2 rounded-xl bg-blue-600/15 border border-blue-500/40 text-left transition-all">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🇫🇷</span>
+              <div>
+                <p class="text-xs font-bold text-white">Villes de France</p>
+                <p class="text-[10px] text-slate-400">139 villes & préfectures</p>
+              </div>
+            </div>
+            <span class="text-xs text-blue-400 font-bold check">✓</span>
+          </button>
+
+          <button onclick="pickPack('🗼', 'Paris')" class="pack-item w-full flex items-center justify-between p-2 rounded-xl bg-slate-950/40 border border-slate-800 text-left transition-all hover:bg-slate-800/60">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🗼</span>
+              <div>
+                <p class="text-xs font-bold text-white">Monuments de Paris</p>
+                <p class="text-[10px] text-slate-400">105 édifices des 20 arr.</p>
+              </div>
+            </div>
+            <span class="text-xs text-blue-400 font-bold hidden check">✓</span>
+          </button>
+
+          <button onclick="pickPack('🏰', 'Patrimoine')" class="pack-item w-full flex items-center justify-between p-2 rounded-xl bg-slate-950/40 border border-slate-800 text-left transition-all hover:bg-slate-800/60">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🏰</span>
+              <div>
+                <p class="text-xs font-bold text-white">Patrimoine de France</p>
+                <p class="text-[10px] text-slate-400">58 châteaux de la Loire & sites</p>
+              </div>
+            </div>
+            <span class="text-xs text-blue-400 font-bold hidden check">✓</span>
+          </button>
+
+          <button onclick="pickPack('🌍', 'Monde')" class="pack-item w-full flex items-center justify-between p-2 rounded-xl bg-slate-950/40 border border-slate-800 text-left transition-all hover:bg-slate-800/60">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🌍</span>
+              <div>
+                <p class="text-xs font-bold text-white">Villes du Monde</p>
+                <p class="text-[10px] text-slate-400">167 métropoles globales</p>
+              </div>
+            </div>
+            <span class="text-xs text-blue-400 font-bold hidden check">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DROITE : TÉLÉMÉTRIE DE MANCHE & ACTIONS -->
+    <div class="flex items-center gap-2">
+      <!-- Chrono -->
+      <div class="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-xs font-bold font-mono text-amber-300">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>15s</span>
+      </div>
+
+      <!-- Manche Counter -->
+      <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-xs font-semibold text-slate-300">
+        <span class="text-slate-400 font-normal hidden sm:inline">Manche</span>
+        <span class="text-blue-400 font-bold font-mono">1/5</span>
+      </div>
+
+      <!-- Score Pill -->
+      <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-blue-500/40 text-xs font-bold text-white shadow-sm font-mono">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        <span>4 250 pts</span>
+      </div>
+
+      <!-- Bouton Paramètres ⚙️ -->
+      <button class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs" title="Paramètres & Règles">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </button>
+
+      <!-- Avatar Utilisateur -->
+      <button class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-400/40 flex items-center justify-center font-bold text-xs text-white shadow-sm">
+        JF
+      </button>
+    </div>
+  </header>
+
+  <!-- QUESTION CARD -->
+  <div class="absolute top-20 inset-x-0 z-20 pointer-events-none flex justify-center px-4">
+    <div class="pointer-events-auto max-w-xl w-full bg-slate-950/90 border border-slate-700/80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-lg">
+          📍
+        </div>
+        <div>
+          <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Où se situe précisément ?</p>
+          <h2 class="text-xl font-black text-white tracking-tight">Lyon</h2>
+        </div>
+      </div>
+      <span class="text-xs text-slate-400 font-medium bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+        Cliquez sur la carte pour pointer
+      </span>
+    </div>
+  </div>
+
+  <script>
+    const map = L.map('map', { zoomControl: false }).setView([46.603354, 1.888334], 6);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd',
+    }).addTo(map);
+
+    function togglePackDropdown() {
+      const menu = document.getElementById('pack-dropdown-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('pack-dropdown-container');
+      const menu = document.getElementById('pack-dropdown-menu');
+      if (!container.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    function setMode(mode) {
+      const btnDaily = document.getElementById('btn-daily');
+      const btnFree = document.getElementById('btn-free');
+      const btnCustom = document.getElementById('btn-custom');
+
+      [btnDaily, btnFree, btnCustom].forEach(b => {
+        b.className = 'px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1 font-medium hover:bg-slate-800';
+      });
+
+      if (mode === 'daily') {
+        btnDaily.className = 'px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition-all flex items-center gap-1';
+      } else if (mode === 'free') {
+        btnFree.className = 'px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white shadow-sm transition-all flex items-center gap-1';
+      } else if (mode === 'custom') {
+        btnCustom.className = 'px-2.5 py-1 rounded-lg font-bold bg-purple-600 text-white shadow-sm transition-all flex items-center gap-1';
+        alert("Ouvre le modal de configuration Custom (nombre de manches, packs, chrono...)");
+      }
+    }
+
+    function pickPack(flag, name) {
+      document.getElementById('current-pack-flag').textContent = flag;
+      document.getElementById('current-pack-name').textContent = name;
+
+      document.querySelectorAll('.pack-item').forEach(el => {
+        el.className = 'pack-item w-full flex items-center justify-between p-2 rounded-xl bg-slate-950/40 border border-slate-800 text-left transition-all hover:bg-slate-800/60';
+        el.querySelector('.check').classList.add('hidden');
+      });
+      event.currentTarget.className = 'pack-item w-full flex items-center justify-between p-2 rounded-xl bg-blue-600/15 border border-blue-500/40 text-left transition-all';
+      event.currentTarget.querySelector('.check').classList.remove('hidden');
+
+      setTimeout(() => {
+        document.getElementById('pack-dropdown-menu').classList.add('hidden');
+      }, 150);
+    }
+  </script>
+</body>
+</html>
