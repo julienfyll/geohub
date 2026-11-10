@@ -87,16 +87,6 @@ function GeoRingsLobby() {
               label="Classement"
               initialGame="georings"
             />
-            <button
-              onClick={() => {
-                setCustomModalMetric("population");
-                setShowCustomModal(true);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/70 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
-            >
-              <Sliders className="w-3.5 h-3.5 text-blue-400" />
-              <span>Partie Custom</span>
-            </button>
             <UserNav />
           </div>
         </div>

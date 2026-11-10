@@ -580,15 +580,6 @@ function BlindPointGame() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => setShowCustomModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-all shadow-sm"
-                title="Créer un défi personnalisé"
-              >
-                <Sliders className="w-3.5 h-3.5 text-purple-400" />
-                <span className="hidden sm:inline">Partie Custom</span>
-              </button>
               <LeaderboardTriggerButton
                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all shadow-sm cursor-pointer"
                 label="Classement"
