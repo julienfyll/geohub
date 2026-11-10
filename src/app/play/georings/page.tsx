@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import React, { useState, useEffect, useCallback, useMemo, Suspense } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -27,6 +27,7 @@ import {
   Play,
   ArrowRight,
   Layers,
+  ChevronDown,
 } from "lucide-react";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
@@ -348,6 +349,41 @@ function GeoRingsGame() {
   const [showHelp, setShowHelp] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showCustomModal, setShowCustomModal] = useState(false);
+
+  // Dropdown states for Scale & Metric (Concept 2 - Switcher Hybride)
+  const [isScaleMenuOpen, setIsScaleMenuOpen] = useState(false);
+  const [isMetricMenuOpen, setIsMetricMenuOpen] = useState(false);
+  const scaleMenuRef = useRef<HTMLDivElement>(null);
+  const metricMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (scaleMenuRef.current && !scaleMenuRef.current.contains(e.target as Node)) {
+        setIsScaleMenuOpen(false);
+      }
+      if (metricMenuRef.current && !metricMenuRef.current.contains(e.target as Node)) {
+        setIsMetricMenuOpen(false);
+      }
+    };
+    if (isScaleMenuOpen || isMetricMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isScaleMenuOpen, isMetricMenuOpen]);
+
+  const scaleMeta: Record<GameScale, { flag: string; label: string; desc: string }> = {
+    fr: { flag: "🇫🇷", label: "France", desc: "Communes métropolitaines" },
+    eu: { flag: "🇪🇺", label: "Europe", desc: "Grandes agglomérations UE" },
+    world: { flag: "🌍", label: "Monde", desc: "Métropoles des 6 continents" },
+  };
+
+  const metricMeta: Record<GameMetric, { icon: string; label: string; desc: string }> = {
+    population: { icon: "👥", label: "Villes", desc: "Classées par population" },
+    airports: { icon: "✈️", label: "Aéroports", desc: "Classés par trafic passagers" },
+  };
+
+  const currentScaleMeta = scaleMeta[scale] || scaleMeta.fr;
+  const currentMetricMeta = metricMeta[metric] || metricMeta.population;
 
   // Initialize Session
   const initGame = async () => {
@@ -856,48 +892,12 @@ function GeoRingsGame() {
               GeoRings
             </h1>
           </div>
-
-          {/* Metric Switcher Pill: [👥 Villes] [✈️ Aéroports] */}
-          <div className="flex items-center gap-0.5 bg-slate-900/95 p-1 rounded-xl border border-slate-800 text-xs font-medium">
-            <button
-              type="button"
-              onClick={() => {
-                if (metric !== "population") {
-                  router.push(`/play/georings?metric=population&scale=${scale}&mode=${mode}`);
-                }
-              }}
-              className={`px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-all ${
-                metric === "population"
-                  ? "bg-blue-600 text-white font-bold shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Users className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Villes</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (metric !== "airports") {
-                  router.push(`/play/georings?metric=airports&scale=${scale}&mode=${mode}`);
-                }
-              }}
-              className={`px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-all ${
-                metric === "airports"
-                  ? "bg-sky-600 text-white font-bold shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Plane className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Aéroports</span>
-            </button>
-          </div>
         </div>
 
-        {/* Center: Mode Indicator & Scale Switcher (Visual Segmented Pills) */}
-        <div className="flex items-center gap-2">
-          {/* Mode Switcher : Daily | Rapide | Custom */}
-          <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+        {/* Center: Mode Indicator, Scale Switcher & Metric Switcher (Concept 2 - Switcher Hybride) */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Mode Switcher : Daily | Rapide | Custom (1-Clic direct) */}
+          <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium shadow-sm">
             <button
               type="button"
               onClick={() => {
@@ -909,8 +909,8 @@ function GeoRingsGame() {
               }}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
                 mode === "daily"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-blue-600 text-white font-bold shadow-sm"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium"
               }`}
               title="Défi officiel du jour"
             >
@@ -928,8 +928,8 @@ function GeoRingsGame() {
               }}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
                 mode === "free"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-blue-600 text-white font-bold shadow-sm"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium"
               }`}
               title="Partie rapide standard"
             >
@@ -942,51 +942,134 @@ function GeoRingsGame() {
               onClick={() => setShowCustomModal(true)}
               className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
                 mode === "custom"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-purple-600 text-white font-bold shadow-sm"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium"
               }`}
               title="Personnaliser les anneaux, rayons et règles"
             >
-              <Sliders className="w-3 h-3" />
+              <Sliders className="w-3 h-3 text-purple-400" />
               <span>Custom</span>
             </button>
           </div>
 
-          {/* Scale Switcher */}
-          <div className="hidden lg:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+          {/* Sélecteur de Territoire / Échelle en Dropdown */}
+          <div className="relative" ref={scaleMenuRef}>
             <button
               type="button"
-              onClick={() => router.push(`/play/georings?metric=${metric}&scale=fr&mode=${mode}`)}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                scale === "fr"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              onClick={() => {
+                setIsMetricMenuOpen(false);
+                setIsScaleMenuOpen((prev) => !prev);
+              }}
+              className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer"
+              title="Changer d'échelle géographique"
             >
-              🇫🇷 France
+              <span className="text-base">{currentScaleMeta.flag}</span>
+              <span className="font-bold text-white group-hover:text-blue-300 transition-colors">
+                {currentScaleMeta.label}
+              </span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform ${
+                  isScaleMenuOpen ? "rotate-180 text-white" : ""
+                }`}
+              />
             </button>
+
+            {isScaleMenuOpen && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-64 bg-slate-900/95 border border-slate-700/90 rounded-2xl p-2 shadow-2xl backdrop-blur-2xl z-50 flex flex-col gap-1 text-left animate-in fade-in duration-150">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-1">
+                  Échelle Géographique
+                </span>
+                {(["fr", "eu", "world"] as GameScale[]).map((s) => {
+                  const meta = scaleMeta[s];
+                  const isSelected = scale === s;
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => {
+                        setIsScaleMenuOpen(false);
+                        router.push(`/play/georings?metric=${metric}&scale=${s}&mode=${mode}`);
+                      }}
+                      className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
+                        isSelected
+                          ? "bg-blue-600/20 border border-blue-500/40 text-blue-300"
+                          : "hover:bg-slate-800 text-slate-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{meta.flag}</span>
+                        <div>
+                          <p className="text-xs font-bold text-white leading-tight">{meta.label}</p>
+                          <p className="text-[10px] text-slate-400 leading-tight">{meta.desc}</p>
+                        </div>
+                      </div>
+                      {isSelected && <span className="text-xs text-blue-400 font-bold">✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Sélecteur de Critère / Métrique en Dropdown (Évolutif pour futurs critères) */}
+          <div className="relative" ref={metricMenuRef}>
             <button
               type="button"
-              onClick={() => router.push(`/play/georings?metric=${metric}&scale=eu&mode=${mode}`)}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                scale === "eu"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              onClick={() => {
+                setIsScaleMenuOpen(false);
+                setIsMetricMenuOpen((prev) => !prev);
+              }}
+              className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer"
+              title="Changer de critère de jeu (Villes, Aéroports...)"
             >
-              🇪🇺 Europe
+              <span className="text-base">{currentMetricMeta.icon}</span>
+              <span className="font-bold text-white group-hover:text-blue-300 transition-colors">
+                {currentMetricMeta.label}
+              </span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform ${
+                  isMetricMenuOpen ? "rotate-180 text-white" : ""
+                }`}
+              />
             </button>
-            <button
-              type="button"
-              onClick={() => router.push(`/play/georings?metric=${metric}&scale=world&mode=${mode}`)}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                scale === "world"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              🌍 Monde
-            </button>
+
+            {isMetricMenuOpen && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-72 bg-slate-900/95 border border-slate-700/90 rounded-2xl p-2 shadow-2xl backdrop-blur-2xl z-50 flex flex-col gap-1 text-left animate-in fade-in duration-150">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-1">
+                  Données & Critères Cibles
+                </span>
+                {(["population", "airports"] as GameMetric[]).map((m) => {
+                  const meta = metricMeta[m];
+                  const isSelected = metric === m;
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => {
+                        setIsMetricMenuOpen(false);
+                        if (metric !== m) {
+                          router.push(`/play/georings?metric=${m}&scale=${scale}&mode=${mode}`);
+                        }
+                      }}
+                      className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
+                        isSelected
+                          ? "bg-blue-600/20 border border-blue-500/40 text-blue-300"
+                          : "hover:bg-slate-800 text-slate-300"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-base">{meta.icon}</span>
+                        <div>
+                          <p className="text-xs font-bold text-white leading-tight">{meta.label}</p>
+                          <p className="text-[10px] text-slate-400 leading-tight">{meta.desc}</p>
+                        </div>
+                      </div>
+                      {isSelected && <span className="text-xs text-blue-400 font-bold">✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
