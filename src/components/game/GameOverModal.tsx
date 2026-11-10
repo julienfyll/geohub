@@ -80,7 +80,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
 
     return [
       `${metricPrefix} ${scaleNames[scale]} (${modeLabel})`,
-      `📍 Centre : ${seedCityName}`,
+      `📍 ${isAirports ? "Hub de départ" : "Centre"} : ${seedCityName}`,
       `${emojis}`,
       `Score : ${solvedCount}/${rings.length} anneaux découverts`,
       `Défie-moi sur cette même partie :`,
@@ -141,7 +141,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
               : "Partie terminée !"}
           </h2>
           <p className="text-sm text-slate-400 mt-1">
-            Partie {mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Custom" : "Rapide"} — Échelle {scaleNames[scale]} ({isAirports ? "✈️ Aéroports" : "👥 Villes"} · Centre : {seedCityName})
+            Partie {mode === "daily" ? "Défi du Jour" : mode === "custom" ? "Custom" : "Rapide"} — Échelle {scaleNames[scale]} ({isAirports ? "✈️ Aéroports" : "👥 Villes"} · {isAirports ? "Hub" : "Centre"} : {seedCityName})
           </p>
           <div className="mt-3 inline-block px-4 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-lg font-bold text-blue-400">
             {solvedCount} / {rings.length} <span className="text-xs font-medium text-slate-400">anneaux réussis</span>

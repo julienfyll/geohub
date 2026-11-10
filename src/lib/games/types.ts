@@ -99,6 +99,9 @@ export interface GeoRingsInitResponse {
     population: number;
     latitude: number;
     longitude: number;
+    iata?: string;
+    cityName?: string;
+    passengerCount?: number;
   };
   radii: number[];
   rings: {

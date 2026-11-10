@@ -355,7 +355,8 @@ export function getAirportsInRing(
   centerLon: number,
   innerRadiusKm: number,
   outerRadiusKm: number,
-  scale: GameScale
+  scale: GameScale,
+  excludeAirportId?: string
 ): Airport[] {
   const db = getDb();
   const [minLon, minLat, maxLon, maxLat] = getBoundingBox(
@@ -380,6 +381,9 @@ export function getAirportsInRing(
 
   const minAllowedDist = Math.max(1.0, innerRadiusKm);
   const inRing = candidates.filter((airport) => {
+    if (excludeAirportId && (airport.id === excludeAirportId || airport.iata === excludeAirportId)) {
+      return false;
+    }
     const dist = getDistanceKm(centerLat, centerLon, airport.latitude, airport.longitude);
     return dist > minAllowedDist && dist <= outerRadiusKm;
   });
@@ -393,10 +397,82 @@ export function getMostPopulatedAirportInRing(
   centerLon: number,
   innerRadiusKm: number,
   outerRadiusKm: number,
-  scale: GameScale
+  scale: GameScale,
+  excludeAirportId?: string
 ): Airport | null {
-  const airports = getAirportsInRing(centerLat, centerLon, innerRadiusKm, outerRadiusKm, scale);
+  const airports = getAirportsInRing(centerLat, centerLon, innerRadiusKm, outerRadiusKm, scale, excludeAirportId);
   return airports.length > 0 ? airports[0] : null;
+}
+
+/**
+ * Returns a curated list of seed commercial airports for starting games.
+ * - France: top 55 commercial regional airports.
+ * - Europe: top 150 major hubs (>= 500k passengers / year).
+ * - World (stratified): balanced pool of ~150 iconic international hubs across all continents.
+ * - World (specific continent): top 100 hubs for that continent.
+ */
+export function getSeedAirports(scale: GameScale, continent?: string): Airport[] {
+  const db = getDb();
+
+  if (scale === "fr") {
+    const stmt = db.prepare(`
+      SELECT id, iata, name, city_name as cityName, country_code as countryCode, country_name as countryName,
+             scale, passenger_count as passengerCount, latitude, longitude
+      FROM airports
+      WHERE scale = 'fr'
+      ORDER BY passenger_count DESC
+      LIMIT 55
+    `);
+    return stmt.all() as unknown as Airport[];
+  }
+
+  if (scale === "eu") {
+    const stmt = db.prepare(`
+      SELECT id, iata, name, city_name as cityName, country_code as countryCode, country_name as countryName,
+             scale, passenger_count as passengerCount, latitude, longitude
+      FROM airports
+      WHERE scale IN ('fr', 'eu') AND passenger_count >= 500000
+      ORDER BY passenger_count DESC
+      LIMIT 150
+    `);
+    return stmt.all() as unknown as Airport[];
+  }
+
+  // World with specific continent filter
+  if (continent) {
+    const stmt = db.prepare(`
+      SELECT a.id, a.iata, a.name, a.city_name as cityName, a.country_code as countryCode, a.country_name as countryName,
+             a.scale, a.passenger_count as passengerCount, a.latitude, a.longitude
+      FROM airports a
+      JOIN (SELECT DISTINCT country_code, continent FROM cities WHERE continent IS NOT NULL) c ON a.country_code = c.country_code
+      WHERE c.continent = ? AND a.passenger_count >= 500000
+      ORDER BY a.passenger_count DESC
+      LIMIT 100
+    `);
+    return stmt.all(continent) as unknown as Airport[];
+  }
+
+  // World stratified across continents (35 EU, 35 NA, 35 AS, 20 SA, 15 AF, 10 OC = 150 major hubs)
+  const stmt = db.prepare(`
+    WITH ranked AS (
+      SELECT a.id, a.iata, a.name, a.city_name as cityName, a.country_code as countryCode, a.country_name as countryName,
+             a.scale, a.passenger_count as passengerCount, a.latitude, a.longitude, c.continent,
+             ROW_NUMBER() OVER (PARTITION BY c.continent ORDER BY a.passenger_count DESC) as rn
+      FROM airports a
+      JOIN (SELECT DISTINCT country_code, continent FROM cities WHERE continent IS NOT NULL) c ON a.country_code = c.country_code
+      WHERE a.passenger_count >= 1000000
+    )
+    SELECT id, iata, name, cityName, countryCode, countryName, scale, passengerCount, latitude, longitude
+    FROM ranked
+    WHERE (continent = 'EU' AND rn <= 35)
+       OR (continent = 'NA' AND rn <= 35)
+       OR (continent = 'AS' AND rn <= 35)
+       OR (continent = 'SA' AND rn <= 20)
+       OR (continent = 'AF' AND rn <= 15)
+       OR (continent = 'OC' AND rn <= 10)
+    ORDER BY passengerCount DESC
+  `);
+  return stmt.all() as unknown as Airport[];
 }
 
 /**

@@ -97,7 +97,15 @@ export interface FocusedCity {
 
 export interface GeoMapProps {
   center: [number, number]; // [lon, lat]
-  seedCity?: { name: string; lat: number; lon: number; population?: number };
+  seedCity?: {
+    name: string;
+    lat: number;
+    lon: number;
+    population?: number;
+    passengerCount?: number;
+    iata?: string;
+    cityName?: string;
+  };
   activeRadiusKm?: number;
   completedRadiiKm?: number[];
   markers?: MapMarker[];
@@ -465,8 +473,13 @@ export const GeoMap: React.FC<GeoMapProps> = ({
     const { seedCity: curSeed, markers: curMarkers } = latestPropsRef.current;
     const features: GeoJSON.Feature<GeoJSON.Point>[] = [];
 
-    // Seed City Feature (highest placement priority: sortKey = 1)
+    // Seed City / Airport Feature (highest placement priority: sortKey = 1)
     if (curSeed) {
+      const isAirports = latestPropsRef.current.metric === "airports";
+      const seedLabel = isAirports
+        ? (curSeed.iata ? `${curSeed.name} (${curSeed.iata}) (Hub de départ)` : `${curSeed.name} (Hub de départ)`)
+        : `${curSeed.name} (Centre)`;
+
       features.push({
         type: "Feature",
         geometry: {
@@ -476,8 +489,11 @@ export const GeoMap: React.FC<GeoMapProps> = ({
         properties: {
           id: "seed",
           type: "seed",
-          label: `${curSeed.name} (Centre)`,
+          label: seedLabel,
           population: curSeed.population,
+          passengerCount: curSeed.passengerCount,
+          iata: curSeed.iata,
+          metric: latestPropsRef.current.metric,
           sortKey: 1,
         },
       });

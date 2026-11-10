@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSeedCities, getDefaultRadii, getCityById } from "@/lib/db/sqlite";
-import { GameScale, GameMetric, GeoRingsInitResponse } from "@/lib/games/types";
+import { getSeedCities, getSeedAirports, getDefaultRadii, getCityById, getAirportById } from "@/lib/db/sqlite";
+import { GameScale, GameMetric, GeoRingsInitResponse, Airport, City } from "@/lib/games/types";
 
 function simpleHash(str: string): number {
   let hash = 0;
@@ -23,42 +23,101 @@ export async function GET(request: NextRequest) {
   const cityIdParam = searchParams.get("cityId");
 
   try {
-    let seedCity: ReturnType<typeof getCityById> = null;
+    let seedData: {
+      id: string;
+      name: string;
+      cityName?: string;
+      iata?: string;
+      countryCode: string;
+      population: number;
+      passengerCount?: number;
+      latitude: number;
+      longitude: number;
+    } | null = null;
 
-    if (cityIdParam) {
-      seedCity = getCityById(cityIdParam);
-    } else if (userSeed && mode !== "daily") {
-      // Direct city ID lookup: if userSeed matches a city ID in SQLite, use it directly!
-      const directCity = getCityById(userSeed);
-      if (directCity) {
-        seedCity = directCity;
+    if (metric === "airports") {
+      let seedAirport: Airport | null = null;
+      if (cityIdParam) {
+        seedAirport = getAirportById(cityIdParam);
+      } else if (userSeed && mode !== "daily") {
+        seedAirport = getAirportById(userSeed);
       }
-    }
 
-    if (!seedCity) {
-      const seedCities = getSeedCities(scale, continent);
-      if (!seedCities || seedCities.length === 0) {
-        return NextResponse.json({ error: "No cities found for scale and region" }, { status: 404 });
-      }
-
-      let seedIndex = 0;
-      let seedValue = userSeed || "";
-
-      if (mode === "daily") {
-        const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-        seedValue = `${today}-${scale}-${metric}`;
-        seedIndex = simpleHash(seedValue) % seedCities.length;
-      } else {
-        if (userSeed) {
-          seedIndex = simpleHash(userSeed) % seedCities.length;
-        } else {
-          const randSeed = Math.floor(Math.random() * 1000000).toString();
-          seedValue = randSeed;
-          seedIndex = simpleHash(randSeed) % seedCities.length;
+      if (!seedAirport) {
+        const seedAirports = getSeedAirports(scale, continent);
+        if (!seedAirports || seedAirports.length === 0) {
+          return NextResponse.json({ error: "No airports found for scale and region" }, { status: 404 });
         }
+
+        let seedIndex = 0;
+        let seedValue = userSeed || "";
+        if (mode === "daily") {
+          const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          seedValue = `${today}-${scale}-airports`;
+          seedIndex = simpleHash(seedValue) % seedAirports.length;
+        } else {
+          if (userSeed) {
+            seedIndex = simpleHash(userSeed) % seedAirports.length;
+          } else {
+            const randSeed = Math.floor(Math.random() * 1000000).toString();
+            seedValue = randSeed;
+            seedIndex = simpleHash(randSeed) % seedAirports.length;
+          }
+        }
+        seedAirport = seedAirports[seedIndex];
       }
 
-      seedCity = seedCities[seedIndex];
+      seedData = {
+        id: seedAirport.id,
+        name: seedAirport.name,
+        cityName: seedAirport.cityName,
+        iata: seedAirport.iata,
+        countryCode: seedAirport.countryCode,
+        passengerCount: seedAirport.passengerCount,
+        population: seedAirport.passengerCount ?? 0,
+        latitude: seedAirport.latitude,
+        longitude: seedAirport.longitude,
+      };
+    } else {
+      let seedCity: City | null = null;
+      if (cityIdParam) {
+        seedCity = getCityById(cityIdParam);
+      } else if (userSeed && mode !== "daily") {
+        seedCity = getCityById(userSeed);
+      }
+
+      if (!seedCity) {
+        const seedCities = getSeedCities(scale, continent);
+        if (!seedCities || seedCities.length === 0) {
+          return NextResponse.json({ error: "No cities found for scale and region" }, { status: 404 });
+        }
+
+        let seedIndex = 0;
+        let seedValue = userSeed || "";
+        if (mode === "daily") {
+          const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          seedValue = `${today}-${scale}-population`;
+          seedIndex = simpleHash(seedValue) % seedCities.length;
+        } else {
+          if (userSeed) {
+            seedIndex = simpleHash(userSeed) % seedCities.length;
+          } else {
+            const randSeed = Math.floor(Math.random() * 1000000).toString();
+            seedValue = randSeed;
+            seedIndex = simpleHash(randSeed) % seedCities.length;
+          }
+        }
+        seedCity = seedCities[seedIndex];
+      }
+
+      seedData = {
+        id: seedCity.id,
+        name: seedCity.name,
+        countryCode: seedCity.countryCode,
+        population: seedCity.population,
+        latitude: seedCity.latitude,
+        longitude: seedCity.longitude,
+      };
     }
 
     // Determine radii (custom vs default)
@@ -94,21 +153,14 @@ export async function GET(request: NextRequest) {
     }));
 
     const response: GeoRingsInitResponse & { seed: string } = {
-      sessionId: `georings_${metric}_${mode}_${scale}_${seedCity.id}`,
+      sessionId: `georings_${metric}_${mode}_${scale}_${seedData.id}`,
       scale,
       mode,
       metric,
       continent,
       maxTriesPerRing,
-      seed: mode === "daily" ? (userSeed || `${new Date().toISOString().split("T")[0]}-${scale}-${metric}`) : seedCity.id,
-      seedCity: {
-        id: seedCity.id,
-        name: seedCity.name,
-        countryCode: seedCity.countryCode,
-        population: seedCity.population,
-        latitude: seedCity.latitude,
-        longitude: seedCity.longitude,
-      },
+      seed: mode === "daily" ? (userSeed || `${new Date().toISOString().split("T")[0]}-${scale}-${metric}`) : seedData.id,
+      seedCity: seedData,
       radii,
       rings,
     };

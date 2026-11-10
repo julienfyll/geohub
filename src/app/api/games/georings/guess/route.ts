@@ -44,6 +44,32 @@ export async function POST(request: NextRequest) {
       }
 
       const distance = getDistanceKm(centerLat, centerLon, airport.latitude, airport.longitude);
+      const airportDisplayName = `${airport.cityName} — ${airport.name} (${airport.iata})`;
+
+      if (distance < 1.0) {
+        return NextResponse.json({
+          city: {
+            id: airport.id,
+            name: airportDisplayName,
+            countryCode: airport.countryCode,
+            population: airport.passengerCount,
+            passengerCount: airport.passengerCount,
+            iata: airport.iata,
+            cityName: airport.cityName,
+            latitude: airport.latitude,
+            longitude: airport.longitude,
+          },
+          isInRing: false,
+          distanceFromCenterKm: 0,
+          isTarget: false,
+          triesLeft: currentTriesLeft,
+          ringCompleted: false,
+          ringFailed: false,
+          metric: "airports",
+          message: `${airport.name} (${airport.iata}) est votre aéroport de départ ! Cherchez les hubs dans l'anneau.`,
+        });
+      }
+
       const isInRing = distance > innerRadiusKm && distance <= outerRadiusKm;
 
       const inRingAirports = getAirportsInRing(
@@ -53,8 +79,6 @@ export async function POST(request: NextRequest) {
         outerRadiusKm,
         scale
       );
-
-      const airportDisplayName = `${airport.cityName} — ${airport.name} (${airport.iata})`;
 
       if (!inRingAirports || inRingAirports.length === 0) {
         return NextResponse.json({

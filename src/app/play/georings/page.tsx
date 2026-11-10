@@ -214,7 +214,7 @@ function GeoRingsLobby() {
                 <span>Aéroports & Trafic</span>
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                Dans chaque zone concentrique, trouvez l'<b>aéroport au trafic passagers annuel le plus important</b> (DGAC / Eurostat / ACI).
+                À partir d'un <b>aéroport de départ</b>, trouvez le hub au trafic passagers annuel le plus important dans chaque anneau concentrique (DGAC / Eurostat / ACI).
               </p>
 
               {/* Scale Selection */}
@@ -1172,7 +1172,7 @@ function GeoRingsGame() {
             </div>
             <div className="text-sm text-slate-300 space-y-2.5">
               <p>
-                🎯 <b>Objectif :</b> À partir d'un centre géographique, découvrez{" "}
+                🎯 <b>Objectif :</b> À partir d'un {isAirports ? "aéroport de départ" : "centre géographique"}, découvrez{" "}
                 {isAirports ? (
                   <b>l'aéroport au plus fort trafic annuel de passagers</b>
                 ) : (
@@ -1212,9 +1212,12 @@ function GeoRingsGame() {
             center={[session.seedCity.longitude, session.seedCity.latitude]}
             seedCity={{
               name: session.seedCity.name,
+              cityName: session.seedCity.cityName,
+              iata: session.seedCity.iata,
               lat: session.seedCity.latitude,
               lon: session.seedCity.longitude,
               population: session.seedCity.population,
+              passengerCount: session.seedCity.passengerCount,
             }}
             activeRadiusKm={rings[currentRingIndex]?.outerRadiusKm}
             completedRadiiKm={completedRadii}
@@ -1236,8 +1239,12 @@ function GeoRingsGame() {
         {/* Seed Info Badge (Bottom Left) */}
         {session && (
           <div className="absolute bottom-4 left-4 z-20 px-3 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-400 backdrop-blur-md flex items-center gap-2 shadow-lg">
-            <span>Centre :</span>
-            <b className="text-blue-400 font-semibold">{session.seedCity.name}</b>
+            <span>{isAirports ? "Hub de départ :" : "Centre :"}</span>
+            <b className="text-blue-400 font-semibold">
+              {isAirports
+                ? `${session.seedCity.cityName ? `${session.seedCity.cityName} — ` : ""}${session.seedCity.name}${session.seedCity.iata ? ` (${session.seedCity.iata})` : ""}`
+                : session.seedCity.name}
+            </b>
             <span className="text-slate-600">|</span>
             <span className="text-slate-300 font-medium">
               {isAirports ? "✈️ Aéroports" : "👥 Villes"}
@@ -1300,7 +1307,11 @@ function GeoRingsGame() {
           mode={mode}
           metric={session.metric || metric}
           seed={session.seed}
-          seedCityName={session.seedCity.name}
+          seedCityName={
+            isAirports
+              ? `${session.seedCity.cityName ? `${session.seedCity.cityName} — ` : ""}${session.seedCity.name}${session.seedCity.iata ? ` (${session.seedCity.iata})` : ""}`
+              : session.seedCity.name
+          }
           rings={rings}
           customShareUrl={getCustomShareUrl()}
           onRestart={initGame}
