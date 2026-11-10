@@ -9,13 +9,11 @@ import { BlindPointRoundResult, BlindPointMapTheme } from "@/lib/games/blindpoin
 export const BASEMAP_STYLES: Record<BlindPointMapTheme, string> = {
   dark: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
   voyager: "https://basemaps.cartocdn.com/gl/voyager-nolabels-gl-style/style.json",
-  positron: "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json",
 };
 
 export const THEME_NAMES: Record<BlindPointMapTheme, string> = {
-  dark: "Sombre (Naturel & Espaces Verts)",
-  voyager: "Voyageur (Naturel & Crème)",
-  positron: "Clair (Atlas Épuré)",
+  dark: "Sombre Voyageur (Nuit Naturelle)",
+  voyager: "Clair Voyageur (Jour Naturel)",
 };
 
 // Bounding box for Metropolitan France + Corsica [minLon, minLat, maxLon, maxLat]
@@ -33,6 +31,8 @@ export interface BlindPointMapProps {
   currentTargetName?: string;
   allRounds?: BlindPointRoundResult[];
   showBorders?: boolean;
+  showRoads?: boolean;
+  showNature?: boolean;
   mapTheme?: BlindPointMapTheme;
   onPlaceGuess: (coords: { lat: number; lon: number }) => void;
   className?: string;
@@ -48,6 +48,8 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
   currentTargetName = "Cible réelle",
   allRounds = [],
   showBorders = true,
+  showRoads = true,
+  showNature = true,
   mapTheme = "dark",
   onPlaceGuess,
   className = "w-full h-full",
@@ -415,13 +417,61 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     };
   }, [scale]);
 
-  // Apply visual enhancements (Voyager-style green spaces & blue water onto Dark Matter)
-  const applyBasemapTheme = (map: maplibregl.Map, theme: BlindPointMapTheme) => {
+  // Apply visual enhancements (roads on/off, green spaces & rivers on/off, and custom Dark Voyager palette)
+  const applyBasemapTheme = (
+    map: maplibregl.Map,
+    theme: BlindPointMapTheme,
+    roadsVisible: boolean,
+    natureVisible: boolean
+  ) => {
+    const style = map.getStyle();
+    if (!style || !style.layers) return;
+
+    // 1. Manage Roads / Bridges / Tunnels / Aeroways visibility
+    const roadVisibility = roadsVisible ? "visible" : "none";
+    const roadPrefixes = ["road_", "bridge_", "tunnel_", "aeroway", "rail"];
+
+    style.layers.forEach((layer) => {
+      if (roadPrefixes.some((p) => layer.id.startsWith(p))) {
+        if (map.getLayer(layer.id)) {
+          try {
+            map.setLayoutProperty(layer.id, "visibility", roadVisibility);
+          } catch (e) {}
+        }
+      }
+    });
+
+    // 2. Manage Green Spaces (parks, forests, landcover, residential)
+    const natureVisibility = natureVisible ? "visible" : "none";
+    const greenLayerIds = [
+      "park_national_park",
+      "park_nature_reserve",
+      "landuse",
+      "landcover",
+      "landuse_residential",
+    ];
+
+    greenLayerIds.forEach((id) => {
+      if (map.getLayer(id)) {
+        try {
+          map.setLayoutProperty(id, "visibility", natureVisibility);
+        } catch (e) {}
+      }
+    });
+
+    // 3. Manage Waterways (linear rivers like the Seine, Loire, Rhône, canals)
+    if (map.getLayer("waterway")) {
+      try {
+        map.setLayoutProperty("waterway", "visibility", natureVisible ? "visible" : "none");
+      } catch (e) {}
+    }
+
+    // 4. Color Palette tuning for Dark theme (Sombre Voyageur)
     if (theme === "dark") {
-      // 1. Water & Rivers: Deep rich sapphire blue
+      // Water fill color: sapphire blue if nature is on, else dark seamless background
       if (map.getLayer("water")) {
         try {
-          map.setPaintProperty("water", "fill-color", "#162a45");
+          map.setPaintProperty("water", "fill-color", natureVisible ? "#162a45" : "#0e0e0e");
         } catch (e) {}
       }
       if (map.getLayer("waterway")) {
@@ -430,80 +480,63 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         } catch (e) {}
       }
 
-      // 2. Green Spaces & Parks: Soft vibrant emerald & forest greens (Voyager-like)
-      const greenColor = "rgba(34, 197, 94, 0.28)";
-      const forestColor = "rgba(22, 101, 52, 0.22)";
-      if (map.getLayer("park_national_park")) {
-        try {
-          map.setPaintProperty("park_national_park", "fill-color", greenColor);
-        } catch (e) {}
-      }
-      if (map.getLayer("park_nature_reserve")) {
-        try {
-          map.setPaintProperty("park_nature_reserve", "fill-color", greenColor);
-        } catch (e) {}
-      }
-      if (map.getLayer("landuse")) {
-        try {
-          map.setPaintProperty("landuse", "fill-color", greenColor);
-        } catch (e) {}
-      }
-      if (map.getLayer("landcover")) {
-        try {
-          map.setPaintProperty("landcover", "fill-color", forestColor);
-        } catch (e) {}
+      // Parks & Green Spaces vibrant emerald styling
+      if (natureVisible) {
+        const greenColor = "rgba(34, 197, 94, 0.28)";
+        const forestColor = "rgba(22, 101, 52, 0.22)";
+        if (map.getLayer("park_national_park")) {
+          try { map.setPaintProperty("park_national_park", "fill-color", greenColor); } catch (e) {}
+        }
+        if (map.getLayer("park_nature_reserve")) {
+          try { map.setPaintProperty("park_nature_reserve", "fill-color", greenColor); } catch (e) {}
+        }
+        if (map.getLayer("landuse")) {
+          try { map.setPaintProperty("landuse", "fill-color", greenColor); } catch (e) {}
+        }
+        if (map.getLayer("landcover")) {
+          try { map.setPaintProperty("landcover", "fill-color", forestColor); } catch (e) {}
+        }
       }
 
-      // 3. Streets, Boulevards & Bridges: Luminous subtle slate silver for urban navigation
-      if (map.getLayer("road_minor_fill")) {
-        try {
-          map.setPaintProperty("road_minor_fill", "line-color", "rgba(100, 116, 139, 0.25)");
-        } catch (e) {}
+      // Roads & Bridges luminous slate silver styling
+      if (roadsVisible) {
+        if (map.getLayer("road_minor_fill")) {
+          try { map.setPaintProperty("road_minor_fill", "line-color", "rgba(100, 116, 139, 0.25)"); } catch (e) {}
+        }
+        if (map.getLayer("road_sec_fill_noramp")) {
+          try { map.setPaintProperty("road_sec_fill_noramp", "line-color", "rgba(148, 163, 184, 0.4)"); } catch (e) {}
+        }
+        if (map.getLayer("road_pri_fill_noramp")) {
+          try { map.setPaintProperty("road_pri_fill_noramp", "line-color", "rgba(203, 213, 225, 0.55)"); } catch (e) {}
+        }
+        if (map.getLayer("road_trunk_fill_noramp")) {
+          try { map.setPaintProperty("road_trunk_fill_noramp", "line-color", "rgba(56, 189, 248, 0.5)"); } catch (e) {}
+        }
+        if (map.getLayer("road_mot_fill_noramp")) {
+          try { map.setPaintProperty("road_mot_fill_noramp", "line-color", "rgba(56, 189, 248, 0.6)"); } catch (e) {}
+        }
+        if (map.getLayer("bridge_minor_fill")) {
+          try { map.setPaintProperty("bridge_minor_fill", "line-color", "rgba(148, 163, 184, 0.45)"); } catch (e) {}
+        }
+        if (map.getLayer("bridge_sec_fill")) {
+          try { map.setPaintProperty("bridge_sec_fill", "line-color", "rgba(203, 213, 225, 0.65)"); } catch (e) {}
+        }
+        if (map.getLayer("bridge_pri_fill")) {
+          try { map.setPaintProperty("bridge_pri_fill", "line-color", "rgba(241, 245, 249, 0.8)"); } catch (e) {}
+        }
+        if (map.getLayer("bridge_trunk_fill")) {
+          try { map.setPaintProperty("bridge_trunk_fill", "line-color", "rgba(56, 189, 248, 0.7)"); } catch (e) {}
+        }
+        if (map.getLayer("building-top")) {
+          try { map.setPaintProperty("building-top", "fill-color", "rgba(30, 41, 59, 0.35)"); } catch (e) {}
+        }
       }
-      if (map.getLayer("road_sec_fill_noramp")) {
-        try {
-          map.setPaintProperty("road_sec_fill_noramp", "line-color", "rgba(148, 163, 184, 0.4)");
-        } catch (e) {}
-      }
-      if (map.getLayer("road_pri_fill_noramp")) {
-        try {
-          map.setPaintProperty("road_pri_fill_noramp", "line-color", "rgba(203, 213, 225, 0.55)");
-        } catch (e) {}
-      }
-      if (map.getLayer("road_trunk_fill_noramp")) {
-        try {
-          map.setPaintProperty("road_trunk_fill_noramp", "line-color", "rgba(56, 189, 248, 0.5)");
-        } catch (e) {}
-      }
-      if (map.getLayer("road_mot_fill_noramp")) {
-        try {
-          map.setPaintProperty("road_mot_fill_noramp", "line-color", "rgba(56, 189, 248, 0.6)");
-        } catch (e) {}
-      }
-      if (map.getLayer("bridge_minor_fill")) {
-        try {
-          map.setPaintProperty("bridge_minor_fill", "line-color", "rgba(148, 163, 184, 0.45)");
-        } catch (e) {}
-      }
-      if (map.getLayer("bridge_sec_fill")) {
-        try {
-          map.setPaintProperty("bridge_sec_fill", "line-color", "rgba(203, 213, 225, 0.65)");
-        } catch (e) {}
-      }
-      if (map.getLayer("bridge_pri_fill")) {
-        try {
-          map.setPaintProperty("bridge_pri_fill", "line-color", "rgba(241, 245, 249, 0.8)");
-        } catch (e) {}
-      }
-      if (map.getLayer("bridge_trunk_fill")) {
-        try {
-          map.setPaintProperty("bridge_trunk_fill", "line-color", "rgba(56, 189, 248, 0.7)");
-        } catch (e) {}
-      }
-      if (map.getLayer("building-top")) {
-        try {
-          map.setPaintProperty("building-top", "fill-color", "rgba(30, 41, 59, 0.35)");
-        } catch (e) {}
+    } else {
+      // In Clair Voyageur mode
+      if (!natureVisible && map.getLayer("water")) {
+        try { map.setPaintProperty("water", "fill-color", "#fbf8f3"); } catch (e) {}
+      } else if (natureVisible && map.getLayer("water")) {
+        try { map.setPaintProperty("water", "fill-color", "#b0d0d6"); } catch (e) {}
       }
     }
   };
@@ -543,8 +576,12 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       }
     });
 
-    applyBasemapTheme(map, mapTheme);
+    applyBasemapTheme(map, mapTheme, showRoads, showNature);
   };
+
+  useEffect(() => {
+    updateBasemapBorders();
+  }, [showBorders, showRoads, showNature, mapTheme]);
 
   useEffect(() => {
     updateBasemapBorders();

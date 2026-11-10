@@ -91,10 +91,12 @@ export interface BlindPointGuessResponse {
   isGameOver: boolean;
 }
 
-export type BlindPointMapTheme = "dark" | "voyager" | "positron";
+export type BlindPointMapTheme = "dark" | "voyager";
 
 export interface BlindPointSettings {
   showBorders: boolean;
+  showRoads: boolean; // Afficher la voirie, boulevards et ponts (sans aucun nom)
+  showNature: boolean; // Afficher les espaces verts (parcs, forêts) et l'hydrographie (fleuves, lacs)
   showRegionHints: boolean; // Afficher le département / région / pays
   showTargetPhoto: boolean; // Afficher la photo de l'édifice
   showTargetName: boolean; // Afficher le nom de l'édifice
@@ -104,9 +106,11 @@ export interface BlindPointSettings {
 
 export const DEFAULT_BLINDPOINT_SETTINGS: BlindPointSettings = {
   showBorders: true,
+  showRoads: true,
+  showNature: true,
   showRegionHints: false, // Désactivé par défaut pour ne pas donner trop d'indices
   showTargetPhoto: true,
   showTargetName: true,
   timerDurationSeconds: 0,
-  mapTheme: "dark", // Sombre Naturel par défaut (espaces verts, fleuves & voirie préservés)
+  mapTheme: "dark", // Sombre Voyageur par défaut (espaces verts, fleuves & voirie préservés)
 };

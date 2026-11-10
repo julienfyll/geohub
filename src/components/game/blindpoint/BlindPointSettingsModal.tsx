@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { X, Settings, RotateCcw, Map, Clock, HelpCircle, Image as ImageIcon, Type, Sparkles, Compass, Sun, Moon } from "lucide-react";
+import { X, Settings, RotateCcw, Map, Clock, HelpCircle, Image as ImageIcon, Type, Sparkles, Milestone, Trees } from "lucide-react";
 import { BlindPointSettings } from "@/lib/games/blindpoint/types";
 
 interface BlindPointSettingsModalProps {
@@ -56,16 +56,25 @@ export const BlindPointSettingsModal: React.FC<BlindPointSettingsModalProps> = (
           </button>
         </div>
 
-        {/* Basemap Style Theme Selector (identical to GeoRings) */}
+        {/* Basemap Style Theme Selector (2 vues exclusives: Sombre Voyageur & Clair Voyageur) */}
         <div>
           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">
             Calque visuel de la carte
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2.5">
             {[
-              { id: "dark" as const, label: "Sombre", icon: "🌑", desc: "Espaces verts & fleuves" },
-              { id: "voyager" as const, label: "Voyageur", icon: "🧭", desc: "Relief naturel & crème" },
-              { id: "positron" as const, label: "Clair", icon: "☀️", desc: "Atlas épuré blanc" },
+              {
+                id: "dark" as const,
+                label: "Sombre Voyageur",
+                icon: "🌑",
+                desc: "Fond nuit & reliefs naturels",
+              },
+              {
+                id: "voyager" as const,
+                label: "Clair Voyageur",
+                icon: "☀️",
+                desc: "Fond ivoire & teintes naturelles",
+              },
             ].map((theme) => {
               const isSelected = (settings.mapTheme || "dark") === theme.id;
               return (
@@ -73,15 +82,15 @@ export const BlindPointSettingsModal: React.FC<BlindPointSettingsModalProps> = (
                   key={theme.id}
                   type="button"
                   onClick={() => onUpdateSetting("mapTheme", theme.id)}
-                  className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
+                  className={`p-3 rounded-2xl border flex flex-col items-center justify-center text-center transition-all ${
                     isSelected
                       ? "bg-blue-600/25 border-blue-500 text-white ring-1 ring-blue-500/60 shadow-lg shadow-blue-500/20"
                       : "bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-800"
                   }`}
                 >
-                  <span className="text-lg mb-1">{theme.icon}</span>
+                  <span className="text-xl mb-1">{theme.icon}</span>
                   <span className="font-bold text-xs">{theme.label}</span>
-                  <span className="text-[10px] text-slate-500 mt-0.5 leading-tight">{theme.desc}</span>
+                  <span className="text-[10px] text-slate-400 mt-0.5 leading-tight">{theme.desc}</span>
                 </button>
               );
             })}
@@ -90,8 +99,60 @@ export const BlindPointSettingsModal: React.FC<BlindPointSettingsModalProps> = (
 
         {/* Settings List */}
         <div className="flex flex-col gap-4 text-sm divide-y divide-slate-800/80">
-          {/* Borders Toggle */}
+          {/* Voirie & Réseau routier Toggle */}
           <div className="flex items-center justify-between pt-1">
+            <div className="flex items-start gap-3 pr-2">
+              <Milestone className="w-4 h-4 text-sky-400 mt-1 shrink-0" />
+              <div>
+                <p className="font-semibold text-white">Voirie & Réseau routier</p>
+                <p className="text-xs text-slate-400">
+                  Affiche les rues, boulevards, avenues et ponts (sans aucun nom). Désactivez pour une carte vierge de routes.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => onUpdateSetting("showRoads", !(settings.showRoads ?? true))}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                (settings.showRoads ?? true) ? "bg-blue-600" : "bg-slate-700"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                  (settings.showRoads ?? true) ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Espaces verts & Cours d'eau Toggle */}
+          <div className="flex items-center justify-between pt-3">
+            <div className="flex items-start gap-3 pr-2">
+              <Trees className="w-4 h-4 text-emerald-400 mt-1 shrink-0" />
+              <div>
+                <p className="font-semibold text-white">Espaces verts & Cours d'eau</p>
+                <p className="text-xs text-slate-400">
+                  Affiche les parcs, forêts, fleuves et canaux en teintes naturelles. Désactivez pour une silhouette épurée.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => onUpdateSetting("showNature", !(settings.showNature ?? true))}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                (settings.showNature ?? true) ? "bg-emerald-600" : "bg-slate-700"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                  (settings.showNature ?? true) ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Borders Toggle */}
+          <div className="flex items-center justify-between pt-3">
             <div className="flex items-start gap-3 pr-2">
               <Map className="w-4 h-4 text-emerald-400 mt-1 shrink-0" />
               <div>
