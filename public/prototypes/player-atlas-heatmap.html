@@ -32,7 +32,7 @@
       border: 1px solid #334155 !important;
       border-radius: 1rem !important;
       padding: 0.85rem !important;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6) !important;
     }
     .maplibregl-popup-tip {
       border-top-color: #334155 !important;
@@ -45,385 +45,312 @@
       color: #fff !important;
       background: transparent !important;
     }
-    /* Pulse glow */
-    @keyframes pulse-soft {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.08); opacity: 1; }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
     }
-    .animate-pulse-soft {
-      animation: pulse-soft 3s infinite ease-in-out;
+    ::-webkit-scrollbar-track {
+      background: #0b1120;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans overflow-hidden select-none">
+<body class="bg-slate-950 text-slate-100 h-screen flex flex-col font-sans overflow-hidden select-none">
 
   <!-- Top App Navigation Bar -->
-  <header class="h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-20 shrink-0">
+  <header class="h-14 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
     <div class="flex items-center gap-3">
       <a href="index.html" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5">
         <span>← Retour Lab</span>
       </a>
-      <div class="h-5 w-px bg-slate-800"></div>
+      <div class="h-4 w-px bg-slate-800"></div>
       <div class="flex items-center gap-2">
-        <span class="text-xl">🗺️</span>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-sm font-black tracking-tight text-white">Atlas & Maîtrise Joueur</h1>
-            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/30">Prototype A</span>
-          </div>
-          <p class="text-[11px] text-slate-400">Cartographie mondiale des performances & zones de chaleur</p>
+        <span class="text-lg">🗺️</span>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm font-black tracking-tight text-white">Atlas & Maîtrise Géographique</h1>
+          <span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-mono text-[10px] font-bold border border-blue-500/30">V2 Corrigée</span>
         </div>
       </div>
     </div>
 
     <!-- Quick stats in header -->
-    <div class="hidden md:flex items-center gap-4 text-xs">
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-800">
+    <div class="flex items-center gap-3 text-xs">
+      <div class="flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-800/60 border border-slate-800">
         <span class="text-slate-400">Territoires joués :</span>
-        <span class="font-extrabold text-white">34 pays • 12 régions FR</span>
+        <span class="font-bold text-white">34 pays • 12 régions FR</span>
       </div>
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-800">
-        <span class="text-slate-400">Précision globale :</span>
-        <span class="font-extrabold text-emerald-400">82.4%</span>
+      <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-800/60 border border-slate-800">
+        <span class="text-slate-400">Points enregistrés :</span>
+        <span class="font-bold text-emerald-400">152 parties</span>
       </div>
     </div>
   </header>
 
-  <!-- Main View Container: Map + Floating Controls + Side Drawer -->
-  <div class="relative flex-1 flex overflow-hidden">
+  <!-- 2-COLUMN MAIN LAYOUT: Dedicated Left Sidebar + Full-Height Right Map (NO OVERLAP) -->
+  <div class="flex-1 flex overflow-hidden relative">
 
-    <!-- MAP CONTAINER -->
-    <div id="map" class="absolute inset-0 z-0 bg-slate-950"></div>
-
-    <!-- FLOATING TOP BAR: View Switcher (Monde / Europe / France) & Layer Toggles -->
-    <div class="absolute top-4 left-4 right-4 sm:right-auto z-10 flex flex-wrap items-center gap-2 pointer-events-auto">
+    <!-- ========================================================================= -->
+    <!-- LEFT PANEL: Scrollable & Foldable Accordions (NO OVERLAP WITH MAP TOOLS) -->
+    <!-- ========================================================================= -->
+    <aside class="w-80 sm:w-96 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 h-full z-20 shadow-xl">
       
-      <!-- Territory Scope Selector (Monde / Europe / France) -->
-      <div class="flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl">
-        <button id="btn-scope-world" onclick="setScope('world')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-600/30">
-          <span>🌍 Monde</span>
-          <span class="text-[10px] bg-white/20 px-1 rounded-full font-mono">152 pts</span>
-        </button>
-        <button id="btn-scope-eu" onclick="setScope('eu')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
-          <span>🇪🇺 Europe</span>
-          <span class="text-[10px] bg-slate-800 px-1 rounded-full font-mono text-slate-400">78 pts</span>
-        </button>
-        <button id="btn-scope-fr" onclick="setScope('fr')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
-          <span>🇫🇷 France</span>
-          <span class="text-[10px] bg-slate-800 px-1 rounded-full font-mono text-slate-400">42 pts</span>
-        </button>
-      </div>
-
-      <!-- Mode Display Switcher (Heatmap vs Points) -->
-      <div class="flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl">
-        <button id="btn-view-heat" onclick="setLayerMode('heatmap')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30">
-          <span>🔥 Heatmap</span>
-        </button>
-        <button id="btn-view-points" onclick="setLayerMode('points')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
-          <span>🎯 Points & Scores</span>
-        </button>
-      </div>
-
-      <!-- Game Filter (Tous / GeoRings / Blind Point) -->
-      <div class="hidden sm:flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl text-xs">
-        <button id="btn-game-all" onclick="setGameFilter('all')" class="px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-white">Tous</button>
-        <button id="btn-game-rings" onclick="setGameFilter('georings')" class="px-3 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white">🧭 Rings</button>
-        <button id="btn-game-blind" onclick="setGameFilter('blindpoint')" class="px-3 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white">🎯 Blind Point</button>
-      </div>
-
-      <!-- Toggle Drawer button on mobile -->
-      <button onclick="toggleSidebar()" class="lg:hidden ml-auto p-2.5 rounded-2xl bg-slate-900/90 backdrop-blur-md border border-slate-700 text-white shadow-xl flex items-center gap-1.5 text-xs font-bold">
-        <span>📊 Stats</span>
-      </button>
-    </div>
-
-    <!-- MAP LEGEND (Bottom-Left) -->
-    <div class="absolute bottom-6 left-4 z-10 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-2xl text-xs max-w-xs pointer-events-auto">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-white text-[11px] uppercase tracking-wider">Légende Maîtrise</span>
-        <span id="legend-active-mode" class="text-[10px] text-emerald-400 font-mono">Heatmap active</span>
-      </div>
-
-      <!-- Heatmap gradient bar -->
-      <div id="legend-heatmap-block" class="space-y-1.5">
-        <div class="h-2.5 rounded-full w-full bg-gradient-to-r from-blue-500 via-emerald-400 via-amber-400 to-rose-500 shadow-inner"></div>
-        <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
-          <span>Rarement joué</span>
-          <span>Forte activité & réussite</span>
-        </div>
-      </div>
-
-      <!-- Points colors legend -->
-      <div id="legend-points-block" class="hidden space-y-1.5 pt-1">
-        <div class="flex items-center gap-2 text-[11px]">
-          <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
-          <span class="text-slate-200 font-medium">Excellence (&lt; 15 km / 5 anneaux)</span>
-        </div>
-        <div class="flex items-center gap-2 text-[11px]">
-          <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
-          <span class="text-slate-200 font-medium">Moyen (15 à 75 km / 3-4 anneaux)</span>
-        </div>
-        <div class="flex items-center gap-2 text-[11px]">
-          <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
-          <span class="text-slate-200 font-medium">Lacune (&gt; 75 km / 0-2 anneaux)</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT SIDEBAR: Atlas Stats & Territorial Breakdown -->
-    <aside id="sidebar" class="absolute lg:relative top-0 right-0 bottom-0 w-full sm:w-96 bg-slate-900/95 lg:bg-slate-900/90 backdrop-blur-xl border-l border-slate-800 z-20 flex flex-col shadow-2xl transition-transform duration-300 translate-x-full lg:translate-x-0">
-      
-      <!-- Drawer Header -->
-      <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+      <!-- Panel Header -->
+      <div class="p-4 border-b border-slate-800 bg-slate-950/40 flex items-center justify-between">
         <div>
           <h2 class="text-sm font-extrabold text-white flex items-center gap-2">
             <span>📊 Bilan de Maîtrise</span>
           </h2>
-          <p class="text-xs text-slate-400">Analyse de tes 152 points enregistrés</p>
+          <p class="text-[11px] text-slate-400">Performances détaillées par jeu et région</p>
         </div>
-        <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800">✕</button>
+
+        <!-- Filter Game Switcher (Tous / GeoRings / Blind Point) -->
+        <div class="flex items-center bg-slate-800 p-0.5 rounded-xl border border-slate-700 text-[11px]">
+          <button id="filter-all" onclick="setGameFilter('all')" class="px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white transition-all shadow-sm">Tous</button>
+          <button id="filter-rings" onclick="setGameFilter('georings')" class="px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">🧭 Rings</button>
+          <button id="filter-blind" onclick="setGameFilter('blindpoint')" class="px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">🎯 Blind</button>
+        </div>
       </div>
 
-      <!-- Scrollable Content -->
-      <div class="flex-1 overflow-y-auto p-5 space-y-6">
+      <!-- Scrollable Accordion Content (Proper scroll, no cutoff) -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3.5">
 
-        <!-- 1. Regional Masteries (Top & Bottom) -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Couverture par Zone</h3>
-            <span class="text-[11px] text-blue-400 font-bold">Mondiale</span>
-          </div>
+        <!-- Active Filter Indicator Banner -->
+        <div id="filter-banner" class="p-3 rounded-2xl bg-blue-950/30 border border-blue-500/20 text-xs flex items-center justify-between">
+          <span class="text-slate-300 font-medium text-[11px]">Mode affiché : <strong id="filter-banner-text" class="text-white">Tous les jeux</strong></span>
+          <span id="filter-banner-count" class="font-mono text-blue-400 font-bold text-[11px]">152 points</span>
+        </div>
 
-          <!-- Progress item 1: France -->
-          <div class="p-3 rounded-2xl bg-slate-800/50 border border-slate-800 space-y-2">
-            <div class="flex items-center justify-between text-xs font-bold">
-              <span class="flex items-center gap-1.5 text-white">
-                <span>🇫🇷</span> France Métropolitaine
-              </span>
-              <span class="text-emerald-400 font-mono">92 % (Expert)</span>
+        <!-- ACCORDION 1: France Métropolitaine -->
+        <div class="rounded-2xl bg-slate-800/40 border border-slate-800 overflow-hidden">
+          <button onclick="toggleAccordion('acc-fr')" class="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-800/60 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🇫🇷</span>
+              <div>
+                <span class="text-xs font-bold text-white block">France Métropolitaine</span>
+                <span id="acc-fr-sub" class="text-[10px] text-emerald-400 font-semibold block">12 / 13 régions explorées (92%)</span>
+              </div>
             </div>
-            <div class="w-full bg-slate-700/60 h-2 rounded-full overflow-hidden">
-              <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 h-full rounded-full" style="width: 92%"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-slate-400">
-              <span>12 / 13 régions explorées</span>
-              <span>Écart moyen : 18 km</span>
-            </div>
-          </div>
+            <span id="acc-fr-icon" class="text-slate-400 text-xs transition-transform duration-200">▼</span>
+          </button>
 
-          <!-- Progress item 2: Europe Ouest -->
-          <div class="p-3 rounded-2xl bg-slate-800/50 border border-slate-800 space-y-2">
-            <div class="flex items-center justify-between text-xs font-bold">
-              <span class="flex items-center gap-1.5 text-white">
-                <span>🇪🇺</span> Europe de l'Ouest & Sud
-              </span>
-              <span class="text-blue-400 font-mono">81 % (Solide)</span>
-            </div>
-            <div class="w-full bg-slate-700/60 h-2 rounded-full overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-500 to-indigo-400 h-full rounded-full" style="width: 81%"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-slate-400">
-              <span>16 pays joués</span>
-              <span>Écart moyen : 42 km</span>
-            </div>
-          </div>
-
-          <!-- Progress item 3: Amérique du Nord -->
-          <div class="p-3 rounded-2xl bg-slate-800/50 border border-slate-800 space-y-2">
-            <div class="flex items-center justify-between text-xs font-bold">
-              <span class="flex items-center gap-1.5 text-white">
-                <span>🌎</span> Amérique du Nord
-              </span>
-              <span class="text-amber-400 font-mono">68 % (Avancé)</span>
-            </div>
-            <div class="w-full bg-slate-700/60 h-2 rounded-full overflow-hidden">
-              <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 68%"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-slate-400">
-              <span>USA, Canada, Mexique</span>
-              <span>Écart moyen : 110 km</span>
-            </div>
-          </div>
-
-          <!-- Progress item 4: Point Faible (Europe de l'Est / Asie) -->
-          <div class="p-3 rounded-2xl bg-rose-950/20 border border-rose-900/40 space-y-2">
-            <div class="flex items-center justify-between text-xs font-bold">
-              <span class="flex items-center gap-1.5 text-rose-300">
-                <span>⚠️</span> Zone de Lacunes (Est & Asie)
-              </span>
-              <span class="text-rose-400 font-mono">34 % (À travailler)</span>
-            </div>
-            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-rose-500 h-full rounded-full" style="width: 34%"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-slate-400">
-              <span>Balkans, Russie, Asie centrale</span>
-              <span>Écart moyen : 340 km</span>
-            </div>
+          <div id="acc-fr" class="px-3.5 pb-3.5 space-y-2 border-t border-slate-800/60 pt-2 text-xs">
+            <!-- Will be dynamically populated by updateSidebarMetrics -->
           </div>
         </div>
 
-        <!-- 2. Badges de Territoire Débloqués -->
-        <div class="space-y-3">
-          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Badges d'Exploration</h3>
-          <div class="grid grid-cols-2 gap-2.5">
-            
-            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center">
-              <span class="text-2xl mb-1">🇫🇷</span>
-              <span class="text-xs font-bold text-white">Tour de France</span>
-              <span class="text-[10px] text-emerald-400 font-semibold mt-0.5">12/13 Régions (92%)</span>
+        <!-- ACCORDION 2: Europe -->
+        <div class="rounded-2xl bg-slate-800/40 border border-slate-800 overflow-hidden">
+          <button onclick="toggleAccordion('acc-eu')" class="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-800/60 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🇪🇺</span>
+              <div>
+                <span class="text-xs font-bold text-white block">Europe (40 Pays)</span>
+                <span id="acc-eu-sub" class="text-[10px] text-blue-400 font-semibold block">18 pays explorés • 78 parties</span>
+              </div>
             </div>
+            <span id="acc-eu-icon" class="text-slate-400 text-xs transition-transform duration-200">▼</span>
+          </button>
 
-            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center">
-              <span class="text-2xl mb-1">🌍</span>
-              <span class="text-xs font-bold text-white">Globe-Trotter</span>
-              <span class="text-[10px] text-blue-400 font-semibold mt-0.5">5 Continents joués ⭐</span>
-            </div>
-
-            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center">
-              <span class="text-2xl mb-1">🎯</span>
-              <span class="text-xs font-bold text-white">Sniper Mondial</span>
-              <span class="text-[10px] text-amber-400 font-semibold mt-0.5">&lt; 25 km à l'étranger ⭐</span>
-            </div>
-
-            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center opacity-50">
-              <span class="text-2xl mb-1">🏛️</span>
-              <span class="text-xs font-bold text-slate-400">Archéologue</span>
-              <span class="text-[10px] text-slate-500 font-semibold mt-0.5">5/20 Merveilles</span>
-            </div>
-
+          <div id="acc-eu" class="px-3.5 pb-3.5 space-y-2 border-t border-slate-800/60 pt-2 text-xs">
+            <!-- Will be dynamically populated by updateSidebarMetrics -->
           </div>
         </div>
 
-        <!-- 3. Mini Action Callout -->
-        <div class="p-4 rounded-2xl bg-gradient-to-br from-blue-900/40 to-slate-900 border border-blue-500/30 text-xs space-y-2">
-          <span class="font-bold text-blue-300 block">💡 Conseil d'entraînement</span>
-          <p class="text-slate-300 leading-relaxed text-[11px]">
-            Tu as 0 partie enregistrée en <strong>Corse</strong> et en <strong>Europe du Nord</strong>. Lance une partie GeoRings Europe pour compléter ton Atlas !
+        <!-- ACCORDION 3: Reste du Monde -->
+        <div class="rounded-2xl bg-slate-800/40 border border-slate-800 overflow-hidden">
+          <button onclick="toggleAccordion('acc-world')" class="w-full p-3.5 flex items-center justify-between text-left hover:bg-slate-800/60 transition-colors">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🌍</span>
+              <div>
+                <span class="text-xs font-bold text-white block">Reste du Monde</span>
+                <span id="acc-world-sub" class="text-[10px] text-amber-400 font-semibold block">5 Continents • 32 parties</span>
+              </div>
+            </div>
+            <span id="acc-world-icon" class="text-slate-400 text-xs transition-transform duration-200">▶</span>
+          </button>
+
+          <div id="acc-world" class="hidden px-3.5 pb-3.5 space-y-2 border-t border-slate-800/60 pt-2 text-xs">
+            <!-- Will be dynamically populated by updateSidebarMetrics -->
+          </div>
+        </div>
+
+        <!-- Educational Note / Tip on Reading the Map -->
+        <div class="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-800 text-[11px] space-y-1.5">
+          <span class="font-bold text-slate-200 block">💡 Comment lire cette carte ?</span>
+          <p class="text-slate-400 leading-relaxed text-[10.5px]">
+            Chaque point représente une partie jouée. 
+            <span class="text-emerald-400 font-semibold">Vert</span> = excellente maîtrise (résolu au 1er coup ou &lt; 15 km). 
+            <span class="text-rose-400 font-semibold">Rouge</span> = zone de lacunes. Clique sur n'importe quel point pour inspecter le détail.
           </p>
-          <a href="/play/georings" class="inline-block mt-1 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] transition-all">
-            Lancer GeoRings Europe →
-          </a>
         </div>
 
       </div>
     </aside>
 
+    <!-- ========================================================================= -->
+    <!-- RIGHT AREA: Map with Cleanly Positioned Controls (NO COLLISION) -->
+    <!-- ========================================================================= -->
+    <div class="flex-1 relative h-full">
+
+      <!-- MAP CONTAINER -->
+      <div id="map" class="absolute inset-0 bg-slate-950"></div>
+
+      <!-- FLOATING TOP CONTROLS (Positioned cleanly on the top-left of the map area) -->
+      <div class="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2 pointer-events-auto">
+        
+        <!-- Territory Scope Selector -->
+        <div class="flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl">
+          <button id="btn-scope-world" onclick="setScope('world')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-600/30">
+            <span>🌍 Monde</span>
+            <span class="text-[10px] bg-white/20 px-1 rounded-full font-mono">152 pts</span>
+          </button>
+          <button id="btn-scope-eu" onclick="setScope('eu')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
+            <span>🇪🇺 Europe</span>
+            <span class="text-[10px] bg-slate-800 px-1 rounded-full font-mono text-slate-400">78 pts</span>
+          </button>
+          <button id="btn-scope-fr" onclick="setScope('fr')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
+            <span>🇫🇷 France</span>
+            <span class="text-[10px] bg-slate-800 px-1 rounded-full font-mono text-slate-400">42 pts</span>
+          </button>
+        </div>
+
+        <!-- Visual Mode Switcher (Performance vs Densité) -->
+        <div class="flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl">
+          <button id="btn-mode-perf" onclick="setVisualMode('points')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30">
+            <span>🎯 Maîtrise & Points</span>
+          </button>
+          <button id="btn-mode-heat" onclick="setVisualMode('heatmap')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
+            <span>🔥 Densité Volume</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MAP LEGEND (Bottom-Left of Map) -->
+      <div class="absolute bottom-6 left-4 z-10 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-2xl text-xs max-w-xs pointer-events-auto">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-white text-[11px] uppercase tracking-wider">Légende Maîtrise</span>
+          <span id="legend-active-mode" class="text-[10px] text-emerald-400 font-mono">Maîtrise active</span>
+        </div>
+
+        <!-- Points legend (DEFAULT) -->
+        <div id="legend-points-block" class="space-y-1.5 text-[11px]">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+            <span class="text-slate-200 font-medium">Excellence (1er essai Rings ou &lt; 15 km)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+            <span class="text-slate-200 font-medium">Moyen (2-3 essais Rings ou 15 à 75 km)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+            <span class="text-slate-200 font-medium">Lacune / Échec (non résolu ou &gt; 75 km)</span>
+          </div>
+        </div>
+
+        <!-- Heatmap legend (Volume) -->
+        <div id="legend-heatmap-block" class="hidden space-y-1.5 pt-1">
+          <div class="h-2 rounded-full w-full bg-gradient-to-r from-blue-500 via-emerald-400 to-rose-500"></div>
+          <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+            <span>Peu joué (1 partie)</span>
+            <span>Très joué (10+ parties)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- Script: MapLibre initialization with 150 points and dynamic heatmap -->
+  <!-- Script: MapLibre initialization & logic -->
   <script>
     let map;
     let currentScope = 'world';
-    let currentLayerMode = 'heatmap';
+    let currentVisualMode = 'points'; // 'points' (Performance) is now default!
     let currentGameFilter = 'all';
 
-    // Mock dataset representing 150 played points across the world, Europe and France
+    // Mock dataset representing 150 points with strict GeoRings vs Blind Point data model
     const MOCK_POINTS = [
-      // FRANCE
-      { name: "Paris", lat: 48.8566, lng: 2.3522, dist: 2, score: 5000, game: "blindpoint", area: "fr", type: "monument" },
-      { name: "Versailles", lat: 48.8049, lng: 2.1204, dist: 3, score: 4980, game: "blindpoint", area: "fr", type: "chateau" },
-      { name: "Lyon", lat: 45.7640, lng: 4.8357, dist: 8, score: 4920, game: "georings", area: "fr", type: "city" },
-      { name: "Marseille", lat: 43.2965, lng: 5.3698, dist: 12, score: 4850, game: "georings", area: "fr", type: "city" },
-      { name: "Bordeaux", lat: 44.8378, lng: -0.5792, dist: 14, score: 4800, game: "blindpoint", area: "fr", type: "city" },
-      { name: "Toulouse", lat: 43.6047, lng: 1.4442, dist: 16, score: 4750, game: "georings", area: "fr", type: "city" },
-      { name: "Nantes", lat: 47.2184, lng: -1.5536, dist: 5, score: 4970, game: "blindpoint", area: "fr", type: "city" },
-      { name: "Strasbourg", lat: 48.5734, lng: 7.7521, dist: 22, score: 4600, game: "georings", area: "fr", type: "city" },
-      { name: "Lille", lat: 50.6292, lng: 3.0573, dist: 6, score: 4950, game: "georings", area: "fr", type: "city" },
-      { name: "Rennes", lat: 48.1173, lng: -1.6778, dist: 9, score: 4910, game: "blindpoint", area: "fr", type: "city" },
-      { name: "Mont Saint-Michel", lat: 48.6360, lng: -1.5115, dist: 4, score: 4980, game: "blindpoint", area: "fr", type: "monument" },
-      { name: "Château de Chambord", lat: 47.6161, lng: 1.5172, dist: 11, score: 4860, game: "blindpoint", area: "fr", type: "chateau" },
-      { name: "Pont du Gard", lat: 43.9476, lng: 4.5350, dist: 7, score: 4940, game: "blindpoint", area: "fr", type: "monument" },
-      { name: "Brest", lat: 48.3904, lng: -4.4861, dist: 18, score: 4700, game: "georings", area: "fr", type: "city" },
-      { name: "Nice", lat: 43.7102, lng: 7.2620, dist: 15, score: 4780, game: "georings", area: "fr", type: "city" },
-      { name: "Clermont-Ferrand", lat: 45.7772, lng: 3.0870, dist: 35, score: 4400, game: "georings", area: "fr", type: "city" },
-      { name: "Dijon", lat: 47.3220, lng: 5.0415, dist: 28, score: 4520, game: "blindpoint", area: "fr", type: "city" },
-      { name: "Montpellier", lat: 43.6108, lng: 3.8767, dist: 10, score: 4900, game: "georings", area: "fr", type: "city" },
-      { name: "Perpignan", lat: 42.6886, lng: 2.8948, dist: 40, score: 4300, game: "georings", area: "fr", type: "city" },
-      { name: "Biarritz", lat: 43.4832, lng: -1.5586, dist: 15, score: 4800, game: "blindpoint", area: "fr", type: "city" },
+      // FRANCE - GEORINGS (Tested with rings, tries, avg tries, NOT km distance!)
+      { name: "Rennes", lat: 48.1173, lng: -1.6778, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.2, totalTries: 6, firstTryCount: 4, status: "excellent", area: "fr" },
+      { name: "Lille", lat: 50.6292, lng: 3.0573, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.0, totalTries: 5, firstTryCount: 5, status: "excellent", area: "fr" },
+      { name: "Lyon", lat: 45.7640, lng: 4.8357, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.4, totalTries: 7, firstTryCount: 3, status: "excellent", area: "fr" },
+      { name: "Nantes", lat: 47.2184, lng: -1.5536, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.2, totalTries: 6, firstTryCount: 4, status: "excellent", area: "fr" },
+      { name: "Marseille", lat: 43.2965, lng: 5.3698, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.2, totalTries: 11, firstTryCount: 2, status: "medium", area: "fr" },
+      { name: "Toulouse", lat: 43.6047, lng: 1.4442, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.0, totalTries: 10, firstTryCount: 2, status: "medium", area: "fr" },
+      { name: "Brest", lat: 48.3904, lng: -4.4861, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.2, totalTries: 6, firstTryCount: 4, status: "excellent", area: "fr" },
+      { name: "Nice", lat: 43.7102, lng: 7.2620, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.4, totalTries: 12, firstTryCount: 1, status: "medium", area: "fr" },
+      { name: "Clermont-Ferrand", lat: 45.7772, lng: 3.0870, game: "georings", ringsWon: 2, totalRings: 5, avgTries: 3.0, totalTries: 15, firstTryCount: 0, status: "bad", area: "fr" },
+      { name: "Strasbourg", lat: 48.5734, lng: 7.7521, game: "georings", ringsWon: 3, totalRings: 5, avgTries: 2.8, totalTries: 14, firstTryCount: 1, status: "bad", area: "fr" },
+      { name: "Perpignan", lat: 42.6886, lng: 2.8948, game: "georings", ringsWon: 2, totalRings: 5, avgTries: 3.0, totalTries: 15, firstTryCount: 0, status: "bad", area: "fr" },
 
-      // EUROPE
-      { name: "Londres", lat: 51.5074, lng: -0.1278, dist: 6, score: 4960, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Édimbourg", lat: 55.9533, lng: -3.1883, dist: 19, score: 4680, game: "georings", area: "eu", type: "city" },
-      { name: "Dublin", lat: 53.3498, lng: -6.2603, dist: 25, score: 4550, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Madrid", lat: 40.4168, lng: -3.7038, dist: 12, score: 4850, game: "georings", area: "eu", type: "city" },
-      { name: "Barcelone", lat: 41.3851, lng: 2.1734, dist: 8, score: 4930, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Séville", lat: 37.3891, lng: -5.9845, dist: 32, score: 4450, game: "georings", area: "eu", type: "city" },
-      { name: "Lisbonne", lat: 38.7223, lng: -9.1393, dist: 15, score: 4800, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Porto", lat: 41.1579, lng: -8.6291, dist: 28, score: 4500, game: "georings", area: "eu", type: "city" },
-      { name: "Rome", lat: 41.9028, lng: 12.4964, dist: 9, score: 4910, game: "blindpoint", area: "eu", type: "monument" },
-      { name: "Colisée", lat: 41.8902, lng: 12.4922, dist: 1, score: 5000, game: "blindpoint", area: "eu", type: "monument" },
-      { name: "Milan", lat: 45.4642, lng: 9.1900, dist: 18, score: 4720, game: "georings", area: "eu", type: "city" },
-      { name: "Venise", lat: 45.4408, lng: 12.3155, dist: 14, score: 4820, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Berlin", lat: 52.5200, lng: 13.4050, dist: 22, score: 4620, game: "georings", area: "eu", type: "city" },
-      { name: "Munich", lat: 48.1351, lng: 11.5820, dist: 16, score: 4760, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Amsterdam", lat: 52.3676, lng: 4.9041, dist: 7, score: 4940, game: "georings", area: "eu", type: "city" },
-      { name: "Bruxelles", lat: 50.8503, lng: 4.3517, dist: 5, score: 4970, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Vienne", lat: 48.2082, lng: 16.3738, dist: 20, score: 4650, game: "georings", area: "eu", type: "city" },
-      { name: "Prague", lat: 50.0755, lng: 14.4378, dist: 15, score: 4790, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Varsovie", lat: 52.2297, lng: 21.0122, dist: 85, score: 3800, game: "georings", area: "eu", type: "city" },
-      { name: "Cracovie", lat: 50.0647, lng: 19.9450, dist: 65, score: 4100, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Budapest", lat: 47.4979, lng: 19.0402, dist: 45, score: 4350, game: "georings", area: "eu", type: "city" },
-      { name: "Athènes", lat: 37.9838, lng: 23.7275, dist: 14, score: 4810, game: "blindpoint", area: "eu", type: "monument" },
-      { name: "Parthénon", lat: 37.9715, lng: 23.7267, dist: 2, score: 4990, game: "blindpoint", area: "eu", type: "monument" },
-      { name: "Stockholm", lat: 59.3293, lng: 18.0686, dist: 55, score: 4200, game: "georings", area: "eu", type: "city" },
-      { name: "Copenhague", lat: 55.6761, lng: 12.5683, dist: 38, score: 4420, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Oslo", lat: 59.9139, lng: 10.7522, dist: 70, score: 4000, game: "georings", area: "eu", type: "city" },
-      { name: "Helsinki", lat: 60.1699, lng: 24.9384, dist: 95, score: 3600, game: "georings", area: "eu", type: "city" },
-      { name: "Bucarest", lat: 44.4268, lng: 26.1025, dist: 140, score: 3100, game: "georings", area: "eu", type: "city" },
-      { name: "Sofia", lat: 42.6977, lng: 23.3219, dist: 120, score: 3300, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Belgrade", lat: 44.7866, lng: 20.4489, dist: 110, score: 3450, game: "georings", area: "eu", type: "city" },
-      { name: "Moscou", lat: 55.7558, lng: 37.6173, dist: 310, score: 1800, game: "georings", area: "eu", type: "city" },
-      { name: "Saint-Pétersbourg", lat: 59.9343, lng: 30.3351, dist: 240, score: 2300, game: "blindpoint", area: "eu", type: "city" },
-      { name: "Kyiv", lat: 50.4501, lng: 30.5234, dist: 280, score: 2000, game: "georings", area: "eu", type: "city" },
+      // FRANCE - BLIND POINT (Tested with distance km & score out of 5000!)
+      { name: "Paris (Tour Eiffel)", lat: 48.8584, lng: 2.2945, game: "blindpoint", distKm: 1.2, score: 5000, status: "excellent", area: "fr" },
+      { name: "Mont Saint-Michel", lat: 48.6360, lng: -1.5115, game: "blindpoint", distKm: 3.5, score: 4980, status: "excellent", area: "fr" },
+      { name: "Château de Chambord", lat: 47.6161, lng: 1.5172, game: "blindpoint", distKm: 8.0, score: 4920, status: "excellent", area: "fr" },
+      { name: "Pont du Gard", lat: 43.9476, lng: 4.5350, game: "blindpoint", distKm: 4.2, score: 4970, status: "excellent", area: "fr" },
+      { name: "Bordeaux", lat: 44.8378, lng: -0.5792, game: "blindpoint", distKm: 12.0, score: 4860, status: "excellent", area: "fr" },
+      { name: "Dijon", lat: 47.3220, lng: 5.0415, game: "blindpoint", distKm: 28.0, score: 4520, status: "medium", area: "fr" },
+      { name: "Biarritz", lat: 43.4832, lng: -1.5586, game: "blindpoint", distKm: 19.0, score: 4750, status: "medium", area: "fr" },
+      { name: "Montpellier", lat: 43.6108, lng: 3.8767, game: "blindpoint", distKm: 22.0, score: 4680, status: "medium", area: "fr" },
+      { name: "Troyes", lat: 48.2973, lng: 4.0744, game: "blindpoint", distKm: 85.0, score: 3800, status: "bad", area: "fr" },
 
-      // MONDE (Amériques, Asie, Afrique, Océanie)
-      { name: "New York", lat: 40.7128, lng: -74.0060, dist: 15, score: 4800, game: "blindpoint", area: "world", type: "city" },
-      { name: "Statue de la Liberté", lat: 40.6892, lng: -74.0445, dist: 2, score: 4990, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Washington DC", lat: 38.9072, lng: -77.0369, dist: 28, score: 4500, game: "blindpoint", area: "world", type: "city" },
-      { name: "Los Angeles", lat: 34.0522, lng: -118.2437, dist: 45, score: 4300, game: "georings", area: "world", type: "city" },
-      { name: "San Francisco", lat: 37.7749, lng: -122.4194, dist: 25, score: 4600, game: "blindpoint", area: "world", type: "city" },
-      { name: "Chicago", lat: 41.8781, lng: -87.6298, dist: 52, score: 4250, game: "georings", area: "world", type: "city" },
-      { name: "Miami", lat: 25.7617, lng: -80.1918, dist: 35, score: 4450, game: "blindpoint", area: "world", type: "city" },
-      { name: "Montréal", lat: 45.5017, lng: -73.5673, dist: 18, score: 4720, game: "georings", area: "world", type: "city" },
-      { name: "Toronto", lat: 43.6532, lng: -79.3832, dist: 30, score: 4500, game: "blindpoint", area: "world", type: "city" },
-      { name: "Vancouver", lat: 49.2827, lng: -123.1207, dist: 65, score: 4100, game: "georings", area: "world", type: "city" },
-      { name: "Mexico City", lat: 19.4326, lng: -99.1332, dist: 85, score: 3850, game: "blindpoint", area: "world", type: "city" },
-      { name: "Chichén Itzá", lat: 20.6843, lng: -88.5678, dist: 20, score: 4700, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Rio de Janeiro", lat: -22.9068, lng: -43.1729, dist: 40, score: 4400, game: "blindpoint", area: "world", type: "city" },
-      { name: "Christ Rédempteur", lat: -22.9519, lng: -43.2105, dist: 3, score: 4980, game: "blindpoint", area: "world", type: "monument" },
-      { name: "São Paulo", lat: -23.5505, lng: -46.6333, dist: 75, score: 3950, game: "georings", area: "world", type: "city" },
-      { name: "Buenos Aires", lat: -34.6037, lng: -58.3816, dist: 50, score: 4300, game: "blindpoint", area: "world", type: "city" },
-      { name: "Machu Picchu", lat: -13.1631, lng: -72.5450, dist: 12, score: 4850, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Tokyo", lat: 35.6762, lng: 139.6503, dist: 60, score: 4150, game: "georings", area: "world", type: "city" },
-      { name: "Mont Fuji", lat: 35.3606, lng: 138.7274, dist: 14, score: 4800, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Kyoto", lat: 35.0116, lng: 135.7681, dist: 45, score: 4350, game: "blindpoint", area: "world", type: "city" },
-      { name: "Pékin", lat: 39.9042, lng: 116.4074, dist: 180, score: 2700, game: "georings", area: "world", type: "city" },
-      { name: "Grande Muraille", lat: 40.4319, lng: 116.5704, dist: 25, score: 4600, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Shanghai", lat: 31.2304, lng: 121.4737, dist: 210, score: 2500, game: "georings", area: "world", type: "city" },
-      { name: "Bangkok", lat: 13.7563, lng: 100.5018, dist: 130, score: 3200, game: "blindpoint", area: "world", type: "city" },
-      { name: "Singapour", lat: 1.3521, lng: 103.8198, dist: 35, score: 4450, game: "georings", area: "world", type: "city" },
-      { name: "Taj Mahal", lat: 27.1751, lng: 78.0421, dist: 18, score: 4720, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Mumbai", lat: 19.0760, lng: 72.8777, dist: 290, score: 1900, game: "georings", area: "world", type: "city" },
-      { name: "Sydney", lat: -33.8688, lng: 151.2093, dist: 22, score: 4650, game: "georings", area: "world", type: "city" },
-      { name: "Opéra de Sydney", lat: -33.8568, lng: 151.2153, dist: 2, score: 4990, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Melbourne", lat: -37.8136, lng: 144.9631, dist: 45, score: 4350, game: "georings", area: "world", type: "city" },
-      { name: "Le Caire", lat: 30.0444, lng: 31.2357, dist: 55, score: 4200, game: "georings", area: "world", type: "city" },
-      { name: "Pyramides de Gizeh", lat: 29.9792, lng: 31.1342, dist: 5, score: 4970, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Marrakech", lat: 31.6295, lng: -7.9811, dist: 28, score: 4550, game: "blindpoint", area: "world", type: "city" },
-      { name: "Le Cap", lat: -33.9249, lng: 18.4241, dist: 40, score: 4400, game: "georings", area: "world", type: "city" },
-      { name: "Dakar", lat: 14.7167, lng: -17.4677, dist: 70, score: 4000, game: "georings", area: "world", type: "city" },
-      { name: "Dubaï", lat: 25.2048, lng: 55.2708, dist: 30, score: 4500, game: "blindpoint", area: "world", type: "city" },
-      { name: "Burj Khalifa", lat: 25.1972, lng: 55.2744, dist: 1, score: 5000, game: "blindpoint", area: "world", type: "monument" },
-      { name: "Pétra", lat: 30.3285, lng: 35.4444, dist: 16, score: 4780, game: "blindpoint", area: "world", type: "monument" }
+      // EUROPE - GEORINGS
+      { name: "Londres", lat: 51.5074, lng: -0.1278, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.2, totalTries: 6, firstTryCount: 4, status: "excellent", area: "eu" },
+      { name: "Bruxelles", lat: 50.8503, lng: 4.3517, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.0, totalTries: 5, firstTryCount: 5, status: "excellent", area: "eu" },
+      { name: "Amsterdam", lat: 52.3676, lng: 4.9041, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.4, totalTries: 7, firstTryCount: 3, status: "excellent", area: "eu" },
+      { name: "Madrid", lat: 40.4168, lng: -3.7038, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.6, totalTries: 8, firstTryCount: 3, status: "excellent", area: "eu" },
+      { name: "Berlin", lat: 52.5200, lng: 13.4050, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.2, totalTries: 11, firstTryCount: 2, status: "medium", area: "eu" },
+      { name: "Milan", lat: 45.4642, lng: 9.1900, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.0, totalTries: 10, firstTryCount: 2, status: "medium", area: "eu" },
+      { name: "Prague", lat: 50.0755, lng: 14.4378, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.4, totalTries: 12, firstTryCount: 1, status: "medium", area: "eu" },
+      { name: "Varsovie", lat: 52.2297, lng: 21.0122, game: "georings", ringsWon: 3, totalRings: 5, avgTries: 2.8, totalTries: 14, firstTryCount: 1, status: "bad", area: "eu" },
+      { name: "Moscou", lat: 55.7558, lng: 37.6173, game: "georings", ringsWon: 1, totalRings: 5, avgTries: 3.0, totalTries: 15, firstTryCount: 0, status: "bad", area: "eu" },
+      { name: "Bucarest", lat: 44.4268, lng: 26.1025, game: "georings", ringsWon: 2, totalRings: 5, avgTries: 3.0, totalTries: 15, firstTryCount: 0, status: "bad", area: "eu" },
+
+      // EUROPE - BLIND POINT
+      { name: "Rome (Colisée)", lat: 41.8902, lng: 12.4922, game: "blindpoint", distKm: 0.8, score: 5000, status: "excellent", area: "eu" },
+      { name: "Athènes (Parthénon)", lat: 37.9715, lng: 23.7267, game: "blindpoint", distKm: 2.1, score: 4990, status: "excellent", area: "eu" },
+      { name: "Barcelone", lat: 41.3851, lng: 2.1734, game: "blindpoint", distKm: 8.5, score: 4930, status: "excellent", area: "eu" },
+      { name: "Lisbonne", lat: 38.7223, lng: -9.1393, game: "blindpoint", distKm: 14.0, score: 4820, status: "excellent", area: "eu" },
+      { name: "Vienne", lat: 48.2082, lng: 16.3738, game: "blindpoint", distKm: 21.0, score: 4650, status: "medium", area: "eu" },
+      { name: "Munich", lat: 48.1351, lng: 11.5820, game: "blindpoint", distKm: 25.0, score: 4580, status: "medium", area: "eu" },
+      { name: "Stockholm", lat: 59.3293, lng: 18.0686, game: "blindpoint", distKm: 62.0, score: 4150, status: "medium", area: "eu" },
+      { name: "Belgrade", lat: 44.7866, lng: 20.4489, game: "blindpoint", distKm: 115.0, score: 3400, status: "bad", area: "eu" },
+      { name: "Kyiv", lat: 50.4501, lng: 30.5234, game: "blindpoint", distKm: 290.0, score: 1950, status: "bad", area: "eu" },
+
+      // WORLD - GEORINGS
+      { name: "New York", lat: 40.7128, lng: -74.0060, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.2, totalTries: 6, firstTryCount: 4, status: "excellent", area: "world" },
+      { name: "Montréal", lat: 45.5017, lng: -73.5673, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.4, totalTries: 7, firstTryCount: 3, status: "excellent", area: "world" },
+      { name: "Sydney", lat: -33.8688, lng: 151.2093, game: "georings", ringsWon: 5, totalRings: 5, avgTries: 1.6, totalTries: 8, firstTryCount: 3, status: "excellent", area: "world" },
+      { name: "Tokyo", lat: 35.6762, lng: 139.6503, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.2, totalTries: 11, firstTryCount: 2, status: "medium", area: "world" },
+      { name: "Los Angeles", lat: 34.0522, lng: -118.2437, game: "georings", ringsWon: 4, totalRings: 5, avgTries: 2.0, totalTries: 10, firstTryCount: 2, status: "medium", area: "world" },
+      { name: "Le Caire", lat: 30.0444, lng: 31.2357, game: "georings", ringsWon: 3, totalRings: 5, avgTries: 2.8, totalTries: 14, firstTryCount: 1, status: "bad", area: "world" },
+      { name: "Pékin", lat: 39.9042, lng: 116.4074, game: "georings", ringsWon: 2, totalRings: 5, avgTries: 3.0, totalTries: 15, firstTryCount: 0, status: "bad", area: "world" },
+      { name: "Mumbai", lat: 19.0760, lng: 72.8777, game: "georings", ringsWon: 1, totalRings: 5, avgTries: 3.0, totalTries: 15, firstTryCount: 0, status: "bad", area: "world" },
+
+      // WORLD - BLIND POINT
+      { name: "Statue de la Liberté", lat: 40.6892, lng: -74.0445, game: "blindpoint", distKm: 1.8, score: 4990, status: "excellent", area: "world" },
+      { name: "Pyramides de Gizeh", lat: 29.9792, lng: 31.1342, game: "blindpoint", distKm: 4.5, score: 4970, status: "excellent", area: "world" },
+      { name: "Christ Rédempteur", lat: -22.9519, lng: -43.2105, game: "blindpoint", distKm: 2.5, score: 4980, status: "excellent", area: "world" },
+      { name: "Machu Picchu", lat: -13.1631, lng: -72.5450, game: "blindpoint", distKm: 9.0, score: 4890, status: "excellent", area: "world" },
+      { name: "San Francisco", lat: 37.7749, lng: -122.4194, game: "blindpoint", distKm: 22.0, score: 4620, status: "medium", area: "world" },
+      { name: "Buenos Aires", lat: -34.6037, lng: -58.3816, game: "blindpoint", distKm: 48.0, score: 4320, status: "medium", area: "world" },
+      { name: "Singapour", lat: 1.3521, lng: 103.8198, game: "blindpoint", distKm: 35.0, score: 4450, status: "medium", area: "world" },
+      { name: "Bangkok", lat: 13.7563, lng: 100.5018, game: "blindpoint", distKm: 140.0, score: 3100, status: "bad", area: "world" },
+      { name: "Shanghai", lat: 31.2304, lng: 121.4737, game: "blindpoint", distKm: 230.0, score: 2400, status: "bad", area: "world" }
     ];
 
-    // Initialize MapLibre Map
     function initMap() {
       map = new maplibregl.Map({
         container: 'map',
-        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', // dark tiles with labels
-        center: [10, 30],
+        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+        center: [10, 25],
         zoom: 2.2,
         attributionControl: false
       });
@@ -444,13 +371,12 @@
       return {
         type: 'FeatureCollection',
         features: filtered.map(p => {
-          // color score
           let color = '#10b981'; // green
           let label = 'Excellence';
-          if (p.dist > 75) {
+          if (p.status === 'bad') {
             color = '#f43f5e'; // red
             label = 'Lacune';
-          } else if (p.dist > 15) {
+          } else if (p.status === 'medium') {
             color = '#fbbf24'; // yellow
             label = 'Moyen';
           }
@@ -463,13 +389,19 @@
             },
             properties: {
               name: p.name,
-              dist: p.dist,
-              score: p.score,
-              game: p.game === 'georings' ? 'GeoRings' : 'Blind Point',
-              type: p.type,
+              game: p.game,
+              status: p.status,
               color: color,
               label: label,
-              weight: p.dist <= 15 ? 1.0 : (p.dist <= 75 ? 0.6 : 0.2) // for heatmap intensity
+              // GeoRings specific properties
+              ringsWon: p.ringsWon || 0,
+              totalRings: p.totalRings || 5,
+              avgTries: p.avgTries || 0,
+              totalTries: p.totalTries || 0,
+              firstTryCount: p.firstTryCount || 0,
+              // Blind Point specific properties
+              distKm: p.distKm || 0,
+              score: p.score || 0
             }
           };
         })
@@ -477,60 +409,54 @@
     }
 
     function loadDataLayers() {
-      // Add GeoJSON source
       map.addSource('atlas-points', {
         type: 'geojson',
         data: getGeoJSON()
       });
 
-      // 1. HEATMAP LAYER (Layer Mode = heatmap)
+      // 1. HEATMAP DENSITY LAYER (Only shown when user toggles "Densité Volume")
       map.addLayer({
         id: 'atlas-heatmap',
         type: 'heatmap',
         source: 'atlas-points',
-        maxzoom: 9,
+        layout: { visibility: 'none' }, // DEFAULT IS OFF
         paint: {
-          // Weight based on point weight property
-          'heatmap-weight': ['get', 'weight'],
-          // Increase intensity with zoom
+          'heatmap-weight': 1,
           'heatmap-intensity': [
             'interpolate', ['linear'], ['zoom'],
             1, 1.2,
             5, 2.5,
             9, 3.5
           ],
-          // Color ramp for heatmap
           'heatmap-color': [
             'interpolate', ['linear'], ['heatmap-density'],
             0, 'rgba(30, 58, 138, 0)',
-            0.2, 'rgba(59, 130, 246, 0.6)',
-            0.4, 'rgba(16, 185, 129, 0.8)',
-            0.7, 'rgba(245, 158, 11, 0.9)',
+            0.2, 'rgba(59, 130, 246, 0.5)',
+            0.5, 'rgba(16, 185, 129, 0.8)',
+            0.8, 'rgba(245, 158, 11, 0.9)',
             1, 'rgba(239, 68, 68, 1)'
           ],
-          // Radius based on zoom
           'heatmap-radius': [
             'interpolate', ['linear'], ['zoom'],
-            1, 25,
-            4, 45,
-            8, 70
+            1, 20,
+            4, 40,
+            8, 65
           ],
-          // Opacity
-          'heatmap-opacity': 0.85
+          'heatmap-opacity': 0.8
         }
       });
 
-      // 2. CIRCLE CLUSTER / POINTS LAYER (Layer Mode = points)
+      // 2. PERFORMANCE CIRCLES (DEFAULT VISIBLE: Green/Yellow/Red skill dots)
       map.addLayer({
         id: 'atlas-circles-glow',
         type: 'circle',
         source: 'atlas-points',
-        layout: { visibility: 'none' },
+        layout: { visibility: 'visible' },
         paint: {
-          'circle-radius': 12,
+          'circle-radius': 14,
           'circle-color': ['get', 'color'],
-          'circle-opacity': 0.35,
-          'circle-blur': 0.6
+          'circle-opacity': 0.25,
+          'circle-blur': 0.7
         }
       });
 
@@ -538,50 +464,87 @@
         id: 'atlas-circles',
         type: 'circle',
         source: 'atlas-points',
-        layout: { visibility: 'none' },
+        layout: { visibility: 'visible' },
         paint: {
-          'circle-radius': 6,
+          'circle-radius': 6.5,
           'circle-color': ['get', 'color'],
-          'circle-stroke-width': 1.5,
+          'circle-stroke-width': 1.8,
           'circle-stroke-color': '#ffffff'
         }
       });
 
-      // POPUP ON HOVER / CLICK
+      // DEDICATED POPUP ACCORDING TO GAME TYPE (NO FALSE KM FOR GEORINGS!)
       map.on('click', 'atlas-circles', (e) => {
-        const feat = e.features[0];
-        const props = feat.properties;
-        const coords = feat.geometry.coordinates.slice();
+        const p = e.features[0].properties;
+        const coords = e.features[0].geometry.coordinates.slice();
+
+        let detailsHtml = '';
+
+        if (p.game === 'georings') {
+          // GEORINGS POPUP: Ring counts, average tries per ring, First Try rate
+          detailsHtml = `
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center justify-between gap-3 border-b border-slate-700 pb-1.5">
+                <div>
+                  <span class="font-extrabold text-white text-sm block">${p.name}</span>
+                  <span class="text-[10px] text-blue-400 font-semibold uppercase tracking-wider">🧭 GeoRings</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:${p.color}20; color:${p.color}; border:1px solid ${p.color}50">
+                  ${p.ringsWon}/${p.totalRings} Anneaux
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px] pt-0.5">
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span class="text-slate-500 block text-[10px]">Essais moyens</span>
+                  <span class="font-mono font-bold text-white text-xs">${p.avgTries} / anneau</span>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span class="text-slate-500 block text-[10px]">Total coups</span>
+                  <span class="font-mono font-bold text-white text-xs">${p.totalTries} / 15 coups</span>
+                </div>
+              </div>
+              <div class="text-[10px] text-slate-300 bg-slate-900/60 p-1.5 rounded-lg border border-slate-800 flex justify-between">
+                <span>Succès 1er coup :</span>
+                <strong class="text-emerald-400">${p.firstTryCount} / ${p.totalRings} anneaux</strong>
+              </div>
+            </div>
+          `;
+        } else {
+          // BLIND POINT POPUP: Distance error in km & Score out of 5000
+          detailsHtml = `
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center justify-between gap-3 border-b border-slate-700 pb-1.5">
+                <div>
+                  <span class="font-extrabold text-white text-sm block">${p.name}</span>
+                  <span class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">🎯 Blind Point</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:${p.color}20; color:${p.color}; border:1px solid ${p.color}50">
+                  ${p.distKm} km d'écart
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px] pt-0.5">
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span class="text-slate-500 block text-[10px]">Score manche</span>
+                  <span class="font-mono font-bold text-amber-400 text-xs">${p.score} / 5000 pts</span>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                  <span class="text-slate-500 block text-[10px]">Précision</span>
+                  <span class="font-mono font-bold text-emerald-400 text-xs">${Math.round((p.score / 5000) * 100)} %</span>
+                </div>
+              </div>
+              <div class="text-[10px] text-slate-400">
+                Écart mesuré entre le clic et les coordonnées réelles de la cible.
+              </div>
+            </div>
+          `;
+        }
 
         new maplibregl.Popup({ offset: 12 })
           .setLngLat(coords)
-          .setHTML(`
-            <div class="space-y-1.5 text-xs">
-              <div class="flex items-center justify-between gap-3 border-b border-slate-700 pb-1">
-                <span class="font-extrabold text-white text-sm">${props.name}</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:${props.color}20; color:${props.color}; border:1px solid ${props.color}50">
-                  ${props.label}
-                </span>
-              </div>
-              <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-300 pt-0.5">
-                <div>
-                  <span class="text-slate-500 block text-[10px]">Jeu</span>
-                  <span class="font-semibold text-white">${props.game}</span>
-                </div>
-                <div>
-                  <span class="text-slate-500 block text-[10px]">Écart</span>
-                  <span class="font-mono font-bold text-white">${props.dist} km</span>
-                </div>
-              </div>
-              <div class="text-[10px] text-slate-400 pt-1">
-                Score enregistré : <strong class="text-amber-400">${props.score} pts</strong>
-              </div>
-            </div>
-          `)
+          .setHTML(detailsHtml)
           .addTo(map);
       });
 
-      // Cursor pointer on circle hover
       map.on('mouseenter', 'atlas-circles', () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', 'atlas-circles', () => { map.getCanvas().style.cursor = ''; });
     }
@@ -590,7 +553,6 @@
     function setScope(scope) {
       currentScope = scope;
 
-      // Update button styling
       ['world', 'eu', 'fr'].forEach(s => {
         const btn = document.getElementById(`btn-scope-${s}`);
         if (s === scope) {
@@ -601,7 +563,6 @@
       });
 
       if (!map) return;
-
       if (scope === 'world') {
         map.flyTo({ center: [10, 25], zoom: 2.2, duration: 1500 });
       } else if (scope === 'eu') {
@@ -611,70 +572,571 @@
       }
     }
 
-    // LAYER MODE SWITCHER (Heatmap vs Points)
-    function setLayerMode(mode) {
-      currentLayerMode = mode;
+    // VISUAL MODE SWITCHER (Performance Points vs Volume Heatmap)
+    function setVisualMode(mode) {
+      currentVisualMode = mode;
 
-      const btnHeat = document.getElementById('btn-view-heat');
-      const btnPoints = document.getElementById('btn-view-points');
-      const legendHeat = document.getElementById('legend-heatmap-block');
-      const legendPoints = document.getElementById('legend-points-block');
-      const legendStatus = document.getElementById('legend-active-mode');
+      const btnPerf = document.getElementById('btn-mode-perf');
+      const btnHeat = document.getElementById('btn-mode-heat');
+      const legPoints = document.getElementById('legend-points-block');
+      const legHeat = document.getElementById('legend-heatmap-block');
+      const legStatus = document.getElementById('legend-active-mode');
 
-      if (mode === 'heatmap') {
-        btnHeat.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30";
-        btnPoints.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white";
-        
-        map.setLayoutProperty('atlas-heatmap', 'visibility', 'visible');
-        map.setLayoutProperty('atlas-circles', 'visibility', 'none');
-        map.setLayoutProperty('atlas-circles-glow', 'visibility', 'none');
-
-        legendHeat.classList.remove('hidden');
-        legendPoints.classList.add('hidden');
-        legendStatus.innerText = "Heatmap active";
-        legendStatus.className = "text-[10px] text-emerald-400 font-mono";
-      } else {
-        btnPoints.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30";
+      if (mode === 'points') {
+        btnPerf.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30";
         btnHeat.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white";
 
-        map.setLayoutProperty('atlas-heatmap', 'visibility', 'none');
         map.setLayoutProperty('atlas-circles', 'visibility', 'visible');
         map.setLayoutProperty('atlas-circles-glow', 'visibility', 'visible');
+        map.setLayoutProperty('atlas-heatmap', 'visibility', 'none');
 
-        legendHeat.classList.add('hidden');
-        legendPoints.classList.remove('hidden');
-        legendStatus.innerText = "Points précis actifs";
-        legendStatus.className = "text-[10px] text-blue-400 font-mono";
+        legPoints.classList.remove('hidden');
+        legHeat.classList.add('hidden');
+        legStatus.innerText = "Maîtrise active";
+        legStatus.className = "text-[10px] text-emerald-400 font-mono";
+      } else {
+        btnHeat.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30";
+        btnPerf.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white";
+
+        map.setLayoutProperty('atlas-circles', 'visibility', 'none');
+        map.setLayoutProperty('atlas-circles-glow', 'visibility', 'none');
+        map.setLayoutProperty('atlas-heatmap', 'visibility', 'visible');
+
+        legPoints.classList.add('hidden');
+        legHeat.classList.remove('hidden');
+        legStatus.innerText = "Densité active";
+        legStatus.className = "text-[10px] text-amber-400 font-mono";
       }
     }
 
-    // GAME FILTER SWITCHER
+    // GAME FILTER (Tous / GeoRings / Blind Point)
     function setGameFilter(game) {
       currentGameFilter = game;
 
-      ['all', 'rings', 'blind'].forEach(g => {
-        const btn = document.getElementById(`btn-game-${g}`);
-        const isActive = (g === 'all' && game === 'all') || (g === 'rings' && game === 'georings') || (g === 'blind' && game === 'blindpoint');
-        if (isActive) {
-          btn.className = "px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-white";
-        } else {
-          btn.className = "px-3 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white";
-        }
+      const btnAll = document.getElementById('filter-all');
+      const btnRings = document.getElementById('filter-rings');
+      const btnBlind = document.getElementById('filter-blind');
+      const bannerText = document.getElementById('filter-banner-text');
+      const bannerCount = document.getElementById('filter-banner-count');
+
+      [btnAll, btnRings, btnBlind].forEach(b => {
+        b.className = "px-2.5 py-1 rounded-lg font-semibold text-slate-400 hover:text-white transition-all";
       });
+
+      if (game === 'all') {
+        btnAll.className = "px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white transition-all shadow-sm";
+        bannerText.textContent = "Tous les jeux (GeoRings & Blind Point)";
+        bannerCount.textContent = "152 points";
+      } else if (game === 'georings') {
+        btnRings.className = "px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white transition-all shadow-sm";
+        bannerText.textContent = "GeoRings uniquement (Essais & Anneaux)";
+        bannerCount.textContent = "72 parties";
+      } else if (game === 'blindpoint') {
+        btnBlind.className = "px-2.5 py-1 rounded-lg font-bold bg-blue-600 text-white transition-all shadow-sm";
+        bannerText.textContent = "Blind Point uniquement (Distance & Précision)";
+        bannerCount.textContent = "80 parties";
+      }
+
+      // Dynamically update sidebar metrics according strictly to the selected game mode
+      updateSidebarMetrics(game);
 
       if (map && map.getSource('atlas-points')) {
         map.getSource('atlas-points').setData(getGeoJSON());
       }
     }
 
-    // TOGGLE SIDEBAR
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('translate-x-full');
+    // UPDATE SIDEBAR METRICS DYNAMICALLY (STRICT SEPARATION: ZERO KM IN RINGS, ZERO TRIES IN BLIND)
+    function updateSidebarMetrics(game) {
+      const frSub = document.getElementById('acc-fr-sub');
+      const euSub = document.getElementById('acc-eu-sub');
+      const worldSub = document.getElementById('acc-world-sub');
+
+      const frEl = document.getElementById('acc-fr');
+      const euEl = document.getElementById('acc-eu');
+      const worldEl = document.getElementById('acc-world');
+
+      const legendPoints = document.getElementById('legend-points-block');
+
+      if (game === 'georings') {
+        // --- 1. GEORINGS ONLY (No distance, no km) ---
+        frSub.textContent = "11 / 13 régions explorées • 42 parties";
+        frSub.className = "text-[10px] text-blue-400 font-semibold block";
+
+        euSub.textContent = "16 pays explorés • 48 parties";
+        euSub.className = "text-[10px] text-blue-400 font-semibold block";
+
+        worldSub.textContent = "4 Continents • 18 parties";
+        worldSub.className = "text-[10px] text-blue-400 font-semibold block";
+
+        // FR Content
+        frEl.innerHTML = `
+          <!-- GeoRings Dedicated Card (Single Full Width) -->
+          <div class="p-3 rounded-xl bg-blue-950/40 border border-blue-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-blue-300 font-bold text-xs flex items-center gap-1.5">🧭 GeoRings France</span>
+              <span class="text-[10px] bg-blue-500/20 text-blue-300 font-mono px-2 py-0.5 rounded-full font-bold">42 parties</span>
+            </div>
+            <div class="flex items-baseline gap-2 pt-1">
+              <span class="text-lg font-black text-white font-mono">1.2</span>
+              <span class="text-[11px] text-slate-300">essais moy. / anneau</span>
+            </div>
+            <div class="text-[10px] text-slate-400 flex items-center justify-between border-t border-blue-500/20 pt-1.5 mt-1">
+              <span>Succès 1er coup : <strong class="text-emerald-400">82 %</strong></span>
+              <span>Anneaux trouvés : <strong class="text-white">94 % (4.7 / 5)</strong></span>
+            </div>
+          </div>
+
+          <!-- Regional Breakdown (Essais & % Anneaux uniquement - ZERO KM) -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Bretagne & Normandie</span>
+              <span class="font-mono text-emerald-400 font-bold">1.0 essai <span class="text-slate-500 text-[10px]">(100% trouvés)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Île-de-France & Centre</span>
+              <span class="font-mono text-emerald-400 font-bold">1.2 essai <span class="text-slate-500 text-[10px]">(100% trouvés)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Occitanie & Nouvelle-Aquitaine</span>
+              <span class="font-mono text-emerald-400 font-bold">1.4 essai <span class="text-slate-500 text-[10px]">(95% trouvés)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Auvergne-Rhône-Alpes & PACA</span>
+              <span class="font-mono text-blue-400 font-bold">1.6 essai <span class="text-slate-500 text-[10px]">(90% trouvés)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Grand Est & Hauts-de-France</span>
+              <span class="font-mono text-amber-400 font-bold">2.1 essais <span class="text-slate-500 text-[10px]">(75% trouvés)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-slate-500">Corse</span>
+              <span class="font-mono text-slate-500 text-[10px]">Non jouée (0 partie)</span>
+            </div>
+          </div>
+        `;
+
+        // EU Content
+        euEl.innerHTML = `
+          <!-- GeoRings Dedicated Card -->
+          <div class="p-3 rounded-xl bg-blue-950/40 border border-blue-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-blue-300 font-bold text-xs flex items-center gap-1.5">🧭 GeoRings Europe</span>
+              <span class="text-[10px] bg-blue-500/20 text-blue-300 font-mono px-2 py-0.5 rounded-full font-bold">48 parties</span>
+            </div>
+            <div class="flex items-baseline gap-2 pt-1">
+              <span class="text-lg font-black text-white font-mono">1.8</span>
+              <span class="text-[11px] text-slate-300">essais moy. / anneau</span>
+            </div>
+            <div class="text-[10px] text-slate-400 flex items-center justify-between border-t border-blue-500/20 pt-1.5 mt-1">
+              <span>Succès 1er coup : <strong class="text-emerald-400">64 %</strong></span>
+              <span>Anneaux trouvés : <strong class="text-white">84 % (4.2 / 5)</strong></span>
+            </div>
+          </div>
+
+          <!-- Regional Breakdown (Essais & % Anneaux uniquement - ZERO KM) -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe de l'Ouest (GB, DE, NL, BE)</span>
+              <span class="font-mono text-emerald-400 font-bold">1.3 essai <span class="text-slate-500 text-[10px]">(96%)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe du Sud (ES, IT, PT, GR)</span>
+              <span class="font-mono text-emerald-400 font-bold">1.5 essai <span class="text-slate-500 text-[10px]">(90%)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe Centrale (PL, CZ, HU, AT)</span>
+              <span class="font-mono text-amber-400 font-bold">2.0 essais <span class="text-slate-500 text-[10px]">(78%)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Pays Nordiques & Baltes</span>
+              <span class="font-mono text-amber-400 font-bold">2.2 essais <span class="text-slate-500 text-[10px]">(68%)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-rose-400 font-medium">Europe de l'Est & Balkans (Point faible)</span>
+              <span class="font-mono text-rose-400 font-bold">2.8 essais <span class="text-rose-300/70 text-[10px]">(42% trouvés)</span></span>
+            </div>
+          </div>
+        `;
+
+        // World Content
+        worldEl.innerHTML = `
+          <!-- GeoRings Dedicated Card -->
+          <div class="p-3 rounded-xl bg-blue-950/40 border border-blue-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-blue-300 font-bold text-xs flex items-center gap-1.5">🧭 GeoRings Monde</span>
+              <span class="text-[10px] bg-blue-500/20 text-blue-300 font-mono px-2 py-0.5 rounded-full font-bold">18 parties</span>
+            </div>
+            <div class="flex items-baseline gap-2 pt-1">
+              <span class="text-lg font-black text-white font-mono">1.9</span>
+              <span class="text-[11px] text-slate-300">essais moy. / anneau</span>
+            </div>
+            <div class="text-[10px] text-slate-400 flex items-center justify-between border-t border-blue-500/20 pt-1.5 mt-1">
+              <span>Succès 1er coup : <strong class="text-emerald-400">58 %</strong></span>
+              <span>Anneaux trouvés : <strong class="text-white">80 %</strong></span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Amérique du Nord</span>
+              <span class="font-mono text-emerald-400 font-bold">1.4 essai <span class="text-slate-500 text-[10px]">(92%)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Amérique du Sud</span>
+              <span class="font-mono text-blue-400 font-bold">1.8 essai <span class="text-slate-500 text-[10px]">(82%)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Asie & Océanie</span>
+              <span class="font-mono text-amber-400 font-bold">2.3 essais <span class="text-slate-500 text-[10px]">(65%)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-slate-500 font-medium">Afrique</span>
+              <span class="font-mono text-slate-500 text-[10px]">Non jouée (0 partie)</span>
+            </div>
+          </div>
+        `;
+
+        // Update Map Legend for GeoRings
+        if (legendPoints) {
+          legendPoints.innerHTML = `
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+              <span class="text-slate-200 font-medium">Excellence (résolu au 1er coup)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+              <span class="text-slate-200 font-medium">Moyen (résolu en 2 ou 3 essais)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+              <span class="text-slate-200 font-medium">Lacune (échec ou &gt; 3 essais)</span>
+            </div>
+          `;
+        }
+
+      } else if (game === 'blindpoint') {
+        // --- 2. BLIND POINT ONLY (Distance & Score, NO tries/essais) ---
+        frSub.textContent = "12 / 13 régions explorées • 38 parties";
+        frSub.className = "text-[10px] text-emerald-400 font-semibold block";
+
+        euSub.textContent = "18 pays explorés • 30 parties";
+        euSub.className = "text-[10px] text-emerald-400 font-semibold block";
+
+        worldSub.textContent = "5 Continents • 14 parties";
+        worldSub.className = "text-[10px] text-emerald-400 font-semibold block";
+
+        // FR Content
+        frEl.innerHTML = `
+          <!-- Blind Point Dedicated Card (Single Full Width) -->
+          <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-emerald-300 font-bold text-xs flex items-center gap-1.5">🎯 Blind Point France</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded-full font-bold">38 parties</span>
+            </div>
+            <div class="flex items-baseline gap-2 pt-1">
+              <span class="text-lg font-black text-white font-mono">18 km</span>
+              <span class="text-[11px] text-slate-300">d'écart moyen</span>
+            </div>
+            <div class="text-[10px] text-slate-400 flex items-center justify-between border-t border-emerald-500/20 pt-1.5 mt-1">
+              <span>Score moyen : <strong class="text-amber-400">4 720 / 5 000</strong></span>
+              <span>Précision : <strong class="text-emerald-400">94.4 %</strong></span>
+            </div>
+          </div>
+
+          <!-- Regional Breakdown (Distance en km & Score - ZERO ESSAIS) -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Bretagne & Normandie</span>
+              <span class="font-mono text-emerald-400 font-bold">6 km <span class="text-slate-500 text-[10px]">(4 940 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Île-de-France & Centre</span>
+              <span class="font-mono text-emerald-400 font-bold">8 km <span class="text-slate-500 text-[10px]">(4 910 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Occitanie & Nouvelle-Aquitaine</span>
+              <span class="font-mono text-emerald-400 font-bold">15 km <span class="text-slate-500 text-[10px]">(4 780 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Auvergne-Rhône-Alpes & PACA</span>
+              <span class="font-mono text-blue-400 font-bold">22 km <span class="text-slate-500 text-[10px]">(4 610 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Grand Est & Hauts-de-France</span>
+              <span class="font-mono text-amber-400 font-bold">38 km <span class="text-slate-500 text-[10px]">(4 250 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-slate-500">Corse</span>
+              <span class="font-mono text-slate-500 text-[10px]">Non jouée (0 partie)</span>
+            </div>
+          </div>
+        `;
+
+        // EU Content
+        euEl.innerHTML = `
+          <!-- Blind Point Dedicated Card -->
+          <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-emerald-300 font-bold text-xs flex items-center gap-1.5">🎯 Blind Point Europe</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded-full font-bold">30 parties</span>
+            </div>
+            <div class="flex items-baseline gap-2 pt-1">
+              <span class="text-lg font-black text-white font-mono">42 km</span>
+              <span class="text-[11px] text-slate-300">d'écart moyen</span>
+            </div>
+            <div class="text-[10px] text-slate-400 flex items-center justify-between border-t border-emerald-500/20 pt-1.5 mt-1">
+              <span>Score moyen : <strong class="text-amber-400">4 480 / 5 000</strong></span>
+              <span>Précision : <strong class="text-emerald-400">89.6 %</strong></span>
+            </div>
+          </div>
+
+          <!-- Regional Breakdown -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe de l'Ouest (GB, DE, NL, BE)</span>
+              <span class="font-mono text-emerald-400 font-bold">21 km <span class="text-slate-500 text-[10px]">(4 750 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe du Sud (ES, IT, PT, GR)</span>
+              <span class="font-mono text-emerald-400 font-bold">34 km <span class="text-slate-500 text-[10px]">(4 580 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe Centrale (PL, CZ, HU, AT)</span>
+              <span class="font-mono text-amber-400 font-bold">48 km <span class="text-slate-500 text-[10px]">(4 350 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Pays Nordiques & Baltes</span>
+              <span class="font-mono text-amber-400 font-bold">65 km <span class="text-slate-500 text-[10px]">(4 120 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-rose-400 font-medium">Europe de l'Est & Balkans (Point faible)</span>
+              <span class="font-mono text-rose-400 font-bold">310 km <span class="text-rose-300/70 text-[10px]">(2 100 pts)</span></span>
+            </div>
+          </div>
+        `;
+
+        // World Content
+        worldEl.innerHTML = `
+          <!-- Blind Point Dedicated Card -->
+          <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-emerald-300 font-bold text-xs flex items-center gap-1.5">🎯 Blind Point Monde</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono px-2 py-0.5 rounded-full font-bold">14 parties</span>
+            </div>
+            <div class="flex items-baseline gap-2 pt-1">
+              <span class="text-lg font-black text-white font-mono">110 km</span>
+              <span class="text-[11px] text-slate-300">d'écart moyen</span>
+            </div>
+            <div class="text-[10px] text-slate-400 flex items-center justify-between border-t border-emerald-500/20 pt-1.5 mt-1">
+              <span>Score moyen : <strong class="text-amber-400">4 150 / 5 000</strong></span>
+              <span>Précision : <strong class="text-emerald-400">83.0 %</strong></span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Amérique du Nord</span>
+              <span class="font-mono text-emerald-400 font-bold">52 km <span class="text-slate-500 text-[10px]">(4 520 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Asie de l'Est</span>
+              <span class="font-mono text-amber-400 font-bold">85 km <span class="text-slate-500 text-[10px]">(4 210 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Amérique du Sud</span>
+              <span class="font-mono text-amber-400 font-bold">140 km <span class="text-slate-500 text-[10px]">(3 850 pts)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-rose-400 font-medium">Afrique</span>
+              <span class="font-mono text-rose-400 font-bold">260 km <span class="text-rose-300/70 text-[10px]">(2 700 pts)</span></span>
+            </div>
+          </div>
+        `;
+
+        // Update Map Legend for Blind Point
+        if (legendPoints) {
+          legendPoints.innerHTML = `
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+              <span class="text-slate-200 font-medium">Excellence (&lt; 15 km d'écart)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+              <span class="text-slate-200 font-medium">Moyen (15 à 75 km d'écart)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+              <span class="text-slate-200 font-medium">Lacune (&gt; 75 km d'écart)</span>
+            </div>
+          `;
+        }
+
+      } else {
+        // --- 3. TOUS LES MODES (Vue Globale & Comparaison Claire) ---
+        frSub.textContent = "12 / 13 régions explorées (92%)";
+        frSub.className = "text-[10px] text-emerald-400 font-semibold block";
+
+        euSub.textContent = "18 pays explorés • 78 parties";
+        euSub.className = "text-[10px] text-blue-400 font-semibold block";
+
+        worldSub.textContent = "5 Continents • 32 parties";
+        worldSub.className = "text-[10px] text-amber-400 font-semibold block";
+
+        // FR Content
+        frEl.innerHTML = `
+          <!-- Dual Mini Cards with Clear Separation -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-blue-950/40 border border-blue-500/30">
+              <span class="text-[10px] text-blue-300 font-bold block">🧭 GeoRings</span>
+              <span class="font-mono font-bold text-white text-xs block mt-0.5">1.2 essais / an.</span>
+              <span class="text-[9.5px] text-slate-400">42 parties • 94%</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30">
+              <span class="text-[10px] text-emerald-300 font-bold block">🎯 Blind Point</span>
+              <span class="font-mono font-bold text-white text-xs block mt-0.5">18 km d'écart</span>
+              <span class="text-[9.5px] text-slate-400">38 parties • 4720 pts</span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Bretagne & Normandie</span>
+              <span class="font-mono text-emerald-400 font-bold">98 % <span class="text-emerald-500 text-[10px]">(Expert)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Île-de-France & Centre</span>
+              <span class="font-mono text-emerald-400 font-bold">94 % <span class="text-emerald-500 text-[10px]">(Expert)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Occitanie & Nouvelle-Aquitaine</span>
+              <span class="font-mono text-blue-400 font-bold">86 % <span class="text-blue-300 text-[10px]">(Avancé)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Auvergne-Rhône-Alpes & PACA</span>
+              <span class="font-mono text-blue-400 font-bold">82 % <span class="text-blue-300 text-[10px]">(Avancé)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Grand Est & Hauts-de-France</span>
+              <span class="font-mono text-amber-400 font-bold">68 % <span class="text-amber-300 text-[10px]">(Moyen)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-slate-500">Corse</span>
+              <span class="font-mono text-slate-500 text-[10px]">0 % (Non jouée)</span>
+            </div>
+          </div>
+        `;
+
+        // EU Content
+        euEl.innerHTML = `
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-blue-950/40 border border-blue-500/30">
+              <span class="text-[10px] text-blue-300 font-bold block">🧭 GeoRings</span>
+              <span class="font-mono font-bold text-white text-xs block mt-0.5">1.8 essais / an.</span>
+              <span class="text-[9.5px] text-slate-400">48 parties • 84%</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30">
+              <span class="text-[10px] text-emerald-300 font-bold block">🎯 Blind Point</span>
+              <span class="font-mono font-bold text-white text-xs block mt-0.5">42 km d'écart</span>
+              <span class="text-[9.5px] text-slate-400">30 parties • 4480 pts</span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe de l'Ouest (GB, DE, NL, BE)</span>
+              <span class="font-mono text-emerald-400 font-bold">88 % <span class="text-emerald-500 text-[10px]">(Solide)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe du Sud (ES, IT, PT, GR)</span>
+              <span class="font-mono text-emerald-400 font-bold">82 % <span class="text-emerald-500 text-[10px]">(Solide)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Europe Centrale (PL, CZ, HU, AT)</span>
+              <span class="font-mono text-amber-400 font-bold">64 % <span class="text-amber-300 text-[10px]">(Moyen)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Pays Nordiques & Baltes</span>
+              <span class="font-mono text-amber-400 font-bold">55 % <span class="text-amber-300 text-[10px]">(À travailler)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-rose-400 font-medium">Europe de l'Est & Balkans</span>
+              <span class="font-mono text-rose-400 font-bold">34 % <span class="text-rose-300/70 text-[10px]">(Point faible)</span></span>
+            </div>
+          </div>
+        `;
+
+        // World Content
+        worldEl.innerHTML = `
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-blue-950/40 border border-blue-500/30">
+              <span class="text-[10px] text-blue-300 font-bold block">🧭 GeoRings</span>
+              <span class="font-mono font-bold text-white text-xs block mt-0.5">1.9 essais / an.</span>
+              <span class="text-[9.5px] text-slate-400">18 parties</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30">
+              <span class="text-[10px] text-emerald-300 font-bold block">🎯 Blind Point</span>
+              <span class="font-mono font-bold text-white text-xs block mt-0.5">110 km écart</span>
+              <span class="text-[9.5px] text-slate-400">14 parties</span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 pt-1">
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Amérique du Nord</span>
+              <span class="font-mono text-emerald-400 font-bold">80 % <span class="text-emerald-500 text-[10px]">(Solide)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Amérique du Sud</span>
+              <span class="font-mono text-blue-400 font-bold">71 % <span class="text-blue-300 text-[10px]">(Avancé)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1 border-b border-slate-800/40">
+              <span class="text-slate-300 font-medium">Asie & Océanie</span>
+              <span class="font-mono text-amber-400 font-bold">58 % <span class="text-amber-300 text-[10px]">(Moyen)</span></span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] py-1">
+              <span class="text-rose-400 font-medium">Afrique</span>
+              <span class="font-mono text-rose-400 font-bold">30 % <span class="text-rose-300/70 text-[10px]">(Point faible)</span></span>
+            </div>
+          </div>
+        `;
+
+        // Update Map Legend for All
+        if (legendPoints) {
+          legendPoints.innerHTML = `
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+              <span class="text-slate-200 font-medium">Excellence (1er coup Rings ou &lt; 15 km)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+              <span class="text-slate-200 font-medium">Moyen (2-3 essais Rings ou 15 à 75 km)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+              <span class="text-slate-200 font-medium">Lacune / Échec (&gt; 3 essais ou &gt; 75 km)</span>
+            </div>
+          `;
+        }
+      }
     }
 
-    // Start on DOM load
-    window.addEventListener('DOMContentLoaded', initMap);
+    // ACCORDION TOGGLE
+    function toggleAccordion(id) {
+      const el = document.getElementById(id);
+      const icon = document.getElementById(`${id}-icon`);
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        icon.innerText = '▼';
+      } else {
+        el.classList.add('hidden');
+        icon.innerText = '▶';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      updateSidebarMetrics('all');
+    });
   </script>
 </body>
 </html>
