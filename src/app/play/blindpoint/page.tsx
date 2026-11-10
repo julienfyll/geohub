@@ -30,6 +30,7 @@ import { BlindPointHUD } from "@/components/game/blindpoint/BlindPointHUD";
 import { BlindPointResultModal } from "@/components/game/blindpoint/BlindPointResultModal";
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
+import { UserNav } from "@/components/navigation/UserNav";
 import {
   BlindPointCategory,
   BlindPointPack,
@@ -473,14 +474,17 @@ function BlindPointGame() {
               <span className="font-bold text-sm tracking-tight text-white">Blind Point</span>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowSettingsModal(true)}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
-              title="Paramètres de jeu"
-            >
-              <Settings className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowSettingsModal(true)}
+                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+                title="Paramètres de jeu"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
+              <UserNav />
+            </div>
           </div>
         </nav>
 

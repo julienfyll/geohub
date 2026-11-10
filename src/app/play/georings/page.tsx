@@ -36,6 +36,7 @@ import { RingReviewCard, GuessRecord } from "@/components/game/RingReviewCard";
 import { GameOverModal } from "@/components/game/GameOverModal";
 import { SettingsModal } from "@/components/game/SettingsModal";
 import { CustomGameModal } from "@/components/game/CustomGameModal";
+import { UserNav } from "@/components/navigation/UserNav";
 import { useSettings } from "@/lib/settings/useSettings";
 import { CityGuessResult, GameMetric, GameScale, GeoRingsInitResponse, TopCityItem } from "@/lib/games/types";
 
@@ -76,7 +77,7 @@ function GeoRingsLobby() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => {
                 setCustomModalMetric("population");
@@ -87,6 +88,7 @@ function GeoRingsLobby() {
               <Sliders className="w-3.5 h-3.5 text-blue-400" />
               <span>Partie Custom</span>
             </button>
+            <UserNav />
           </div>
         </div>
       </header>

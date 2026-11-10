@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import confetti from "canvas-confetti";
-import { Trophy, Share2, RotateCcw, Check, Sparkles, X, Plane } from "lucide-react";
+import { Trophy, Share2, RotateCcw, Check, Sparkles, X, Plane, Flame, UserCheck } from "lucide-react";
 import { RingStatus } from "./RingProgressHUD";
 import { GameMetric, GameScale } from "@/lib/games/types";
+import { useAuth } from "@/lib/auth/AuthContext";
+import { recordGameSession } from "@/lib/stats/statsService";
 
 interface GameOverModalProps {
   isOpen: boolean;
@@ -31,8 +33,11 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   onRestart,
   onClose,
 }) => {
+  const { user, profile, signInWithGoogle } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [sessionSaved, setSessionSaved] = useState(false);
   const isAirports = metric === "airports";
+  const hasSavedRef = useRef(false);
 
   const solvedCount = rings.filter((r) => r.isCompleted).length;
   const isPerfect = solvedCount === rings.length;
@@ -47,6 +52,36 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
       });
     }
   }, [isOpen, solvedCount, isPerfect, rings.length]);
+
+  // Auto record session once when modal opens
+  useEffect(() => {
+    if (isOpen && !hasSavedRef.current && rings.length > 0) {
+      hasSavedRef.current = true;
+      recordGameSession(
+        {
+          game_mode: "georings",
+          variant: isAirports ? "airports" : "cities",
+          difficulty: scale,
+          score: solvedCount,
+          max_score: rings.length,
+          rings_completed: solvedCount,
+          total_rings: rings.length,
+          accuracy_percent: Math.round((solvedCount / rings.length) * 100),
+          summary_data: {
+            seed,
+            seedCityName,
+            mode,
+            metric,
+          },
+        },
+        user?.id
+      ).then((res) => {
+        if (res.success) {
+          setSessionSaved(true);
+        }
+      });
+    }
+  }, [isOpen, rings, solvedCount, isAirports, scale, seed, seedCityName, mode, metric, user?.id]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -176,8 +211,36 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           ))}
         </div>
 
+        {/* Account / Guest Banner */}
+        {user ? (
+          <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-medium text-emerald-300">
+            <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="truncate">
+              Partie enregistrée sur le compte de <strong>{profile?.username || user.email}</strong>
+            </span>
+          </div>
+        ) : (
+          <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-950/80 to-indigo-950/80 border border-blue-500/30 flex items-center justify-between text-left gap-3">
+            <div className="flex-1">
+              <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                Garde ce score et ta série !
+              </p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Connecte-toi en 1 clic pour synchroniser ton historique.
+              </p>
+            </div>
+            <button
+              onClick={() => signInWithGoogle()}
+              className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shrink-0 shadow-md transition-colors"
+            >
+              Connexion
+            </button>
+          </div>
+        )}
+
         {/* Actions */}
-        <div className="flex flex-col gap-2.5 pt-2">
+        <div className="flex flex-col gap-2.5 pt-1">
           <button
             type="button"
             onClick={handleCopy}

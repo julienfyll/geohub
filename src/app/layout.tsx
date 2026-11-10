@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
   title: "GeoHub — L'Arcade de Jeux de Géographie",
@@ -15,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className="dark">
       <body className="bg-slate-950 text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
