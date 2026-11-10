@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoHub — Prototype Atlas & Maîtrise Géographique</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#0f172a',
+              900: '#0b1120',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- MapLibre GL CSS & JS -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <style>
+    /* Custom MapLibre styling */
+    .maplibregl-popup-content {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+      border-radius: 1rem !important;
+      padding: 0.85rem !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+    }
+    .maplibregl-popup-tip {
+      border-top-color: #334155 !important;
+    }
+    .maplibregl-popup-close-button {
+      color: #94a3b8 !important;
+      padding: 4px 8px !important;
+    }
+    .maplibregl-popup-close-button:hover {
+      color: #fff !important;
+      background: transparent !important;
+    }
+    /* Pulse glow */
+    @keyframes pulse-soft {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans overflow-hidden select-none">
+
+  <!-- Top App Navigation Bar -->
+  <header class="h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-20 shrink-0">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5">
+        <span>← Retour Lab</span>
+      </a>
+      <div class="h-5 w-px bg-slate-800"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🗺️</span>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm font-black tracking-tight text-white">Atlas & Maîtrise Joueur</h1>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/30">Prototype A</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Cartographie mondiale des performances & zones de chaleur</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick stats in header -->
+    <div class="hidden md:flex items-center gap-4 text-xs">
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-800">
+        <span class="text-slate-400">Territoires joués :</span>
+        <span class="font-extrabold text-white">34 pays • 12 régions FR</span>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-800">
+        <span class="text-slate-400">Précision globale :</span>
+        <span class="font-extrabold text-emerald-400">82.4%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container: Map + Floating Controls + Side Drawer -->
+  <div class="relative flex-1 flex overflow-hidden">
+
+    <!-- MAP CONTAINER -->
+    <div id="map" class="absolute inset-0 z-0 bg-slate-950"></div>
+
+    <!-- FLOATING TOP BAR: View Switcher (Monde / Europe / France) & Layer Toggles -->
+    <div class="absolute top-4 left-4 right-4 sm:right-auto z-10 flex flex-wrap items-center gap-2 pointer-events-auto">
+      
+      <!-- Territory Scope Selector (Monde / Europe / France) -->
+      <div class="flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl">
+        <button id="btn-scope-world" onclick="setScope('world')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-600/30">
+          <span>🌍 Monde</span>
+          <span class="text-[10px] bg-white/20 px-1 rounded-full font-mono">152 pts</span>
+        </button>
+        <button id="btn-scope-eu" onclick="setScope('eu')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
+          <span>🇪🇺 Europe</span>
+          <span class="text-[10px] bg-slate-800 px-1 rounded-full font-mono text-slate-400">78 pts</span>
+        </button>
+        <button id="btn-scope-fr" onclick="setScope('fr')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
+          <span>🇫🇷 France</span>
+          <span class="text-[10px] bg-slate-800 px-1 rounded-full font-mono text-slate-400">42 pts</span>
+        </button>
+      </div>
+
+      <!-- Mode Display Switcher (Heatmap vs Points) -->
+      <div class="flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl">
+        <button id="btn-view-heat" onclick="setLayerMode('heatmap')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30">
+          <span>🔥 Heatmap</span>
+        </button>
+        <button id="btn-view-points" onclick="setLayerMode('points')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white">
+          <span>🎯 Points & Scores</span>
+        </button>
+      </div>
+
+      <!-- Game Filter (Tous / GeoRings / Blind Point) -->
+      <div class="hidden sm:flex items-center bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-700/80 shadow-2xl text-xs">
+        <button id="btn-game-all" onclick="setGameFilter('all')" class="px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-white">Tous</button>
+        <button id="btn-game-rings" onclick="setGameFilter('georings')" class="px-3 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white">🧭 Rings</button>
+        <button id="btn-game-blind" onclick="setGameFilter('blindpoint')" class="px-3 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white">🎯 Blind Point</button>
+      </div>
+
+      <!-- Toggle Drawer button on mobile -->
+      <button onclick="toggleSidebar()" class="lg:hidden ml-auto p-2.5 rounded-2xl bg-slate-900/90 backdrop-blur-md border border-slate-700 text-white shadow-xl flex items-center gap-1.5 text-xs font-bold">
+        <span>📊 Stats</span>
+      </button>
+    </div>
+
+    <!-- MAP LEGEND (Bottom-Left) -->
+    <div class="absolute bottom-6 left-4 z-10 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-2xl text-xs max-w-xs pointer-events-auto">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-bold text-white text-[11px] uppercase tracking-wider">Légende Maîtrise</span>
+        <span id="legend-active-mode" class="text-[10px] text-emerald-400 font-mono">Heatmap active</span>
+      </div>
+
+      <!-- Heatmap gradient bar -->
+      <div id="legend-heatmap-block" class="space-y-1.5">
+        <div class="h-2.5 rounded-full w-full bg-gradient-to-r from-blue-500 via-emerald-400 via-amber-400 to-rose-500 shadow-inner"></div>
+        <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+          <span>Rarement joué</span>
+          <span>Forte activité & réussite</span>
+        </div>
+      </div>
+
+      <!-- Points colors legend -->
+      <div id="legend-points-block" class="hidden space-y-1.5 pt-1">
+        <div class="flex items-center gap-2 text-[11px]">
+          <span class="w-3 h-3 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+          <span class="text-slate-200 font-medium">Excellence (&lt; 15 km / 5 anneaux)</span>
+        </div>
+        <div class="flex items-center gap-2 text-[11px]">
+          <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+          <span class="text-slate-200 font-medium">Moyen (15 à 75 km / 3-4 anneaux)</span>
+        </div>
+        <div class="flex items-center gap-2 text-[11px]">
+          <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+          <span class="text-slate-200 font-medium">Lacune (&gt; 75 km / 0-2 anneaux)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR: Atlas Stats & Territorial Breakdown -->
+    <aside id="sidebar" class="absolute lg:relative top-0 right-0 bottom-0 w-full sm:w-96 bg-slate-900/95 lg:bg-slate-900/90 backdrop-blur-xl border-l border-slate-800 z-20 flex flex-col shadow-2xl transition-transform duration-300 translate-x-full lg:translate-x-0">
+      
+      <!-- Drawer Header -->
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-extrabold text-white flex items-center gap-2">
+            <span>📊 Bilan de Maîtrise</span>
+          </h2>
+          <p class="text-xs text-slate-400">Analyse de tes 152 points enregistrés</p>
+        </div>
+        <button onclick="toggleSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800">✕</button>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-6">
+
+        <!-- 1. Regional Masteries (Top & Bottom) -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Couverture par Zone</h3>
+            <span class="text-[11px] text-blue-400 font-bold">Mondiale</span>
+          </div>
+
+          <!-- Progress item 1: France -->
+          <div class="p-3 rounded-2xl bg-slate-800/50 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="flex items-center gap-1.5 text-white">
+                <span>🇫🇷</span> France Métropolitaine
+              </span>
+              <span class="text-emerald-400 font-mono">92 % (Expert)</span>
+            </div>
+            <div class="w-full bg-slate-700/60 h-2 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 h-full rounded-full" style="width: 92%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>12 / 13 régions explorées</span>
+              <span>Écart moyen : 18 km</span>
+            </div>
+          </div>
+
+          <!-- Progress item 2: Europe Ouest -->
+          <div class="p-3 rounded-2xl bg-slate-800/50 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="flex items-center gap-1.5 text-white">
+                <span>🇪🇺</span> Europe de l'Ouest & Sud
+              </span>
+              <span class="text-blue-400 font-mono">81 % (Solide)</span>
+            </div>
+            <div class="w-full bg-slate-700/60 h-2 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-500 to-indigo-400 h-full rounded-full" style="width: 81%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>16 pays joués</span>
+              <span>Écart moyen : 42 km</span>
+            </div>
+          </div>
+
+          <!-- Progress item 3: Amérique du Nord -->
+          <div class="p-3 rounded-2xl bg-slate-800/50 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="flex items-center gap-1.5 text-white">
+                <span>🌎</span> Amérique du Nord
+              </span>
+              <span class="text-amber-400 font-mono">68 % (Avancé)</span>
+            </div>
+            <div class="w-full bg-slate-700/60 h-2 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 68%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>USA, Canada, Mexique</span>
+              <span>Écart moyen : 110 km</span>
+            </div>
+          </div>
+
+          <!-- Progress item 4: Point Faible (Europe de l'Est / Asie) -->
+          <div class="p-3 rounded-2xl bg-rose-950/20 border border-rose-900/40 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold">
+              <span class="flex items-center gap-1.5 text-rose-300">
+                <span>⚠️</span> Zone de Lacunes (Est & Asie)
+              </span>
+              <span class="text-rose-400 font-mono">34 % (À travailler)</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-rose-500 h-full rounded-full" style="width: 34%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400">
+              <span>Balkans, Russie, Asie centrale</span>
+              <span>Écart moyen : 340 km</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Badges de Territoire Débloqués -->
+        <div class="space-y-3">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Badges d'Exploration</h3>
+          <div class="grid grid-cols-2 gap-2.5">
+            
+            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center">
+              <span class="text-2xl mb-1">🇫🇷</span>
+              <span class="text-xs font-bold text-white">Tour de France</span>
+              <span class="text-[10px] text-emerald-400 font-semibold mt-0.5">12/13 Régions (92%)</span>
+            </div>
+
+            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center">
+              <span class="text-2xl mb-1">🌍</span>
+              <span class="text-xs font-bold text-white">Globe-Trotter</span>
+              <span class="text-[10px] text-blue-400 font-semibold mt-0.5">5 Continents joués ⭐</span>
+            </div>
+
+            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center">
+              <span class="text-2xl mb-1">🎯</span>
+              <span class="text-xs font-bold text-white">Sniper Mondial</span>
+              <span class="text-[10px] text-amber-400 font-semibold mt-0.5">&lt; 25 km à l'étranger ⭐</span>
+            </div>
+
+            <div class="p-3 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col items-center text-center opacity-50">
+              <span class="text-2xl mb-1">🏛️</span>
+              <span class="text-xs font-bold text-slate-400">Archéologue</span>
+              <span class="text-[10px] text-slate-500 font-semibold mt-0.5">5/20 Merveilles</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3. Mini Action Callout -->
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-blue-900/40 to-slate-900 border border-blue-500/30 text-xs space-y-2">
+          <span class="font-bold text-blue-300 block">💡 Conseil d'entraînement</span>
+          <p class="text-slate-300 leading-relaxed text-[11px]">
+            Tu as 0 partie enregistrée en <strong>Corse</strong> et en <strong>Europe du Nord</strong>. Lance une partie GeoRings Europe pour compléter ton Atlas !
+          </p>
+          <a href="/play/georings" class="inline-block mt-1 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] transition-all">
+            Lancer GeoRings Europe →
+          </a>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Script: MapLibre initialization with 150 points and dynamic heatmap -->
+  <script>
+    let map;
+    let currentScope = 'world';
+    let currentLayerMode = 'heatmap';
+    let currentGameFilter = 'all';
+
+    // Mock dataset representing 150 played points across the world, Europe and France
+    const MOCK_POINTS = [
+      // FRANCE
+      { name: "Paris", lat: 48.8566, lng: 2.3522, dist: 2, score: 5000, game: "blindpoint", area: "fr", type: "monument" },
+      { name: "Versailles", lat: 48.8049, lng: 2.1204, dist: 3, score: 4980, game: "blindpoint", area: "fr", type: "chateau" },
+      { name: "Lyon", lat: 45.7640, lng: 4.8357, dist: 8, score: 4920, game: "georings", area: "fr", type: "city" },
+      { name: "Marseille", lat: 43.2965, lng: 5.3698, dist: 12, score: 4850, game: "georings", area: "fr", type: "city" },
+      { name: "Bordeaux", lat: 44.8378, lng: -0.5792, dist: 14, score: 4800, game: "blindpoint", area: "fr", type: "city" },
+      { name: "Toulouse", lat: 43.6047, lng: 1.4442, dist: 16, score: 4750, game: "georings", area: "fr", type: "city" },
+      { name: "Nantes", lat: 47.2184, lng: -1.5536, dist: 5, score: 4970, game: "blindpoint", area: "fr", type: "city" },
+      { name: "Strasbourg", lat: 48.5734, lng: 7.7521, dist: 22, score: 4600, game: "georings", area: "fr", type: "city" },
+      { name: "Lille", lat: 50.6292, lng: 3.0573, dist: 6, score: 4950, game: "georings", area: "fr", type: "city" },
+      { name: "Rennes", lat: 48.1173, lng: -1.6778, dist: 9, score: 4910, game: "blindpoint", area: "fr", type: "city" },
+      { name: "Mont Saint-Michel", lat: 48.6360, lng: -1.5115, dist: 4, score: 4980, game: "blindpoint", area: "fr", type: "monument" },
+      { name: "Château de Chambord", lat: 47.6161, lng: 1.5172, dist: 11, score: 4860, game: "blindpoint", area: "fr", type: "chateau" },
+      { name: "Pont du Gard", lat: 43.9476, lng: 4.5350, dist: 7, score: 4940, game: "blindpoint", area: "fr", type: "monument" },
+      { name: "Brest", lat: 48.3904, lng: -4.4861, dist: 18, score: 4700, game: "georings", area: "fr", type: "city" },
+      { name: "Nice", lat: 43.7102, lng: 7.2620, dist: 15, score: 4780, game: "georings", area: "fr", type: "city" },
+      { name: "Clermont-Ferrand", lat: 45.7772, lng: 3.0870, dist: 35, score: 4400, game: "georings", area: "fr", type: "city" },
+      { name: "Dijon", lat: 47.3220, lng: 5.0415, dist: 28, score: 4520, game: "blindpoint", area: "fr", type: "city" },
+      { name: "Montpellier", lat: 43.6108, lng: 3.8767, dist: 10, score: 4900, game: "georings", area: "fr", type: "city" },
+      { name: "Perpignan", lat: 42.6886, lng: 2.8948, dist: 40, score: 4300, game: "georings", area: "fr", type: "city" },
+      { name: "Biarritz", lat: 43.4832, lng: -1.5586, dist: 15, score: 4800, game: "blindpoint", area: "fr", type: "city" },
+
+      // EUROPE
+      { name: "Londres", lat: 51.5074, lng: -0.1278, dist: 6, score: 4960, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Édimbourg", lat: 55.9533, lng: -3.1883, dist: 19, score: 4680, game: "georings", area: "eu", type: "city" },
+      { name: "Dublin", lat: 53.3498, lng: -6.2603, dist: 25, score: 4550, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Madrid", lat: 40.4168, lng: -3.7038, dist: 12, score: 4850, game: "georings", area: "eu", type: "city" },
+      { name: "Barcelone", lat: 41.3851, lng: 2.1734, dist: 8, score: 4930, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Séville", lat: 37.3891, lng: -5.9845, dist: 32, score: 4450, game: "georings", area: "eu", type: "city" },
+      { name: "Lisbonne", lat: 38.7223, lng: -9.1393, dist: 15, score: 4800, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Porto", lat: 41.1579, lng: -8.6291, dist: 28, score: 4500, game: "georings", area: "eu", type: "city" },
+      { name: "Rome", lat: 41.9028, lng: 12.4964, dist: 9, score: 4910, game: "blindpoint", area: "eu", type: "monument" },
+      { name: "Colisée", lat: 41.8902, lng: 12.4922, dist: 1, score: 5000, game: "blindpoint", area: "eu", type: "monument" },
+      { name: "Milan", lat: 45.4642, lng: 9.1900, dist: 18, score: 4720, game: "georings", area: "eu", type: "city" },
+      { name: "Venise", lat: 45.4408, lng: 12.3155, dist: 14, score: 4820, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Berlin", lat: 52.5200, lng: 13.4050, dist: 22, score: 4620, game: "georings", area: "eu", type: "city" },
+      { name: "Munich", lat: 48.1351, lng: 11.5820, dist: 16, score: 4760, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Amsterdam", lat: 52.3676, lng: 4.9041, dist: 7, score: 4940, game: "georings", area: "eu", type: "city" },
+      { name: "Bruxelles", lat: 50.8503, lng: 4.3517, dist: 5, score: 4970, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Vienne", lat: 48.2082, lng: 16.3738, dist: 20, score: 4650, game: "georings", area: "eu", type: "city" },
+      { name: "Prague", lat: 50.0755, lng: 14.4378, dist: 15, score: 4790, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Varsovie", lat: 52.2297, lng: 21.0122, dist: 85, score: 3800, game: "georings", area: "eu", type: "city" },
+      { name: "Cracovie", lat: 50.0647, lng: 19.9450, dist: 65, score: 4100, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Budapest", lat: 47.4979, lng: 19.0402, dist: 45, score: 4350, game: "georings", area: "eu", type: "city" },
+      { name: "Athènes", lat: 37.9838, lng: 23.7275, dist: 14, score: 4810, game: "blindpoint", area: "eu", type: "monument" },
+      { name: "Parthénon", lat: 37.9715, lng: 23.7267, dist: 2, score: 4990, game: "blindpoint", area: "eu", type: "monument" },
+      { name: "Stockholm", lat: 59.3293, lng: 18.0686, dist: 55, score: 4200, game: "georings", area: "eu", type: "city" },
+      { name: "Copenhague", lat: 55.6761, lng: 12.5683, dist: 38, score: 4420, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Oslo", lat: 59.9139, lng: 10.7522, dist: 70, score: 4000, game: "georings", area: "eu", type: "city" },
+      { name: "Helsinki", lat: 60.1699, lng: 24.9384, dist: 95, score: 3600, game: "georings", area: "eu", type: "city" },
+      { name: "Bucarest", lat: 44.4268, lng: 26.1025, dist: 140, score: 3100, game: "georings", area: "eu", type: "city" },
+      { name: "Sofia", lat: 42.6977, lng: 23.3219, dist: 120, score: 3300, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Belgrade", lat: 44.7866, lng: 20.4489, dist: 110, score: 3450, game: "georings", area: "eu", type: "city" },
+      { name: "Moscou", lat: 55.7558, lng: 37.6173, dist: 310, score: 1800, game: "georings", area: "eu", type: "city" },
+      { name: "Saint-Pétersbourg", lat: 59.9343, lng: 30.3351, dist: 240, score: 2300, game: "blindpoint", area: "eu", type: "city" },
+      { name: "Kyiv", lat: 50.4501, lng: 30.5234, dist: 280, score: 2000, game: "georings", area: "eu", type: "city" },
+
+      // MONDE (Amériques, Asie, Afrique, Océanie)
+      { name: "New York", lat: 40.7128, lng: -74.0060, dist: 15, score: 4800, game: "blindpoint", area: "world", type: "city" },
+      { name: "Statue de la Liberté", lat: 40.6892, lng: -74.0445, dist: 2, score: 4990, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Washington DC", lat: 38.9072, lng: -77.0369, dist: 28, score: 4500, game: "blindpoint", area: "world", type: "city" },
+      { name: "Los Angeles", lat: 34.0522, lng: -118.2437, dist: 45, score: 4300, game: "georings", area: "world", type: "city" },
+      { name: "San Francisco", lat: 37.7749, lng: -122.4194, dist: 25, score: 4600, game: "blindpoint", area: "world", type: "city" },
+      { name: "Chicago", lat: 41.8781, lng: -87.6298, dist: 52, score: 4250, game: "georings", area: "world", type: "city" },
+      { name: "Miami", lat: 25.7617, lng: -80.1918, dist: 35, score: 4450, game: "blindpoint", area: "world", type: "city" },
+      { name: "Montréal", lat: 45.5017, lng: -73.5673, dist: 18, score: 4720, game: "georings", area: "world", type: "city" },
+      { name: "Toronto", lat: 43.6532, lng: -79.3832, dist: 30, score: 4500, game: "blindpoint", area: "world", type: "city" },
+      { name: "Vancouver", lat: 49.2827, lng: -123.1207, dist: 65, score: 4100, game: "georings", area: "world", type: "city" },
+      { name: "Mexico City", lat: 19.4326, lng: -99.1332, dist: 85, score: 3850, game: "blindpoint", area: "world", type: "city" },
+      { name: "Chichén Itzá", lat: 20.6843, lng: -88.5678, dist: 20, score: 4700, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Rio de Janeiro", lat: -22.9068, lng: -43.1729, dist: 40, score: 4400, game: "blindpoint", area: "world", type: "city" },
+      { name: "Christ Rédempteur", lat: -22.9519, lng: -43.2105, dist: 3, score: 4980, game: "blindpoint", area: "world", type: "monument" },
+      { name: "São Paulo", lat: -23.5505, lng: -46.6333, dist: 75, score: 3950, game: "georings", area: "world", type: "city" },
+      { name: "Buenos Aires", lat: -34.6037, lng: -58.3816, dist: 50, score: 4300, game: "blindpoint", area: "world", type: "city" },
+      { name: "Machu Picchu", lat: -13.1631, lng: -72.5450, dist: 12, score: 4850, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Tokyo", lat: 35.6762, lng: 139.6503, dist: 60, score: 4150, game: "georings", area: "world", type: "city" },
+      { name: "Mont Fuji", lat: 35.3606, lng: 138.7274, dist: 14, score: 4800, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Kyoto", lat: 35.0116, lng: 135.7681, dist: 45, score: 4350, game: "blindpoint", area: "world", type: "city" },
+      { name: "Pékin", lat: 39.9042, lng: 116.4074, dist: 180, score: 2700, game: "georings", area: "world", type: "city" },
+      { name: "Grande Muraille", lat: 40.4319, lng: 116.5704, dist: 25, score: 4600, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Shanghai", lat: 31.2304, lng: 121.4737, dist: 210, score: 2500, game: "georings", area: "world", type: "city" },
+      { name: "Bangkok", lat: 13.7563, lng: 100.5018, dist: 130, score: 3200, game: "blindpoint", area: "world", type: "city" },
+      { name: "Singapour", lat: 1.3521, lng: 103.8198, dist: 35, score: 4450, game: "georings", area: "world", type: "city" },
+      { name: "Taj Mahal", lat: 27.1751, lng: 78.0421, dist: 18, score: 4720, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Mumbai", lat: 19.0760, lng: 72.8777, dist: 290, score: 1900, game: "georings", area: "world", type: "city" },
+      { name: "Sydney", lat: -33.8688, lng: 151.2093, dist: 22, score: 4650, game: "georings", area: "world", type: "city" },
+      { name: "Opéra de Sydney", lat: -33.8568, lng: 151.2153, dist: 2, score: 4990, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Melbourne", lat: -37.8136, lng: 144.9631, dist: 45, score: 4350, game: "georings", area: "world", type: "city" },
+      { name: "Le Caire", lat: 30.0444, lng: 31.2357, dist: 55, score: 4200, game: "georings", area: "world", type: "city" },
+      { name: "Pyramides de Gizeh", lat: 29.9792, lng: 31.1342, dist: 5, score: 4970, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Marrakech", lat: 31.6295, lng: -7.9811, dist: 28, score: 4550, game: "blindpoint", area: "world", type: "city" },
+      { name: "Le Cap", lat: -33.9249, lng: 18.4241, dist: 40, score: 4400, game: "georings", area: "world", type: "city" },
+      { name: "Dakar", lat: 14.7167, lng: -17.4677, dist: 70, score: 4000, game: "georings", area: "world", type: "city" },
+      { name: "Dubaï", lat: 25.2048, lng: 55.2708, dist: 30, score: 4500, game: "blindpoint", area: "world", type: "city" },
+      { name: "Burj Khalifa", lat: 25.1972, lng: 55.2744, dist: 1, score: 5000, game: "blindpoint", area: "world", type: "monument" },
+      { name: "Pétra", lat: 30.3285, lng: 35.4444, dist: 16, score: 4780, game: "blindpoint", area: "world", type: "monument" }
+    ];
+
+    // Initialize MapLibre Map
+    function initMap() {
+      map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', // dark tiles with labels
+        center: [10, 30],
+        zoom: 2.2,
+        attributionControl: false
+      });
+
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+
+      map.on('load', () => {
+        loadDataLayers();
+      });
+    }
+
+    function getGeoJSON() {
+      const filtered = MOCK_POINTS.filter(p => {
+        if (currentGameFilter !== 'all' && p.game !== currentGameFilter) return false;
+        return true;
+      });
+
+      return {
+        type: 'FeatureCollection',
+        features: filtered.map(p => {
+          // color score
+          let color = '#10b981'; // green
+          let label = 'Excellence';
+          if (p.dist > 75) {
+            color = '#f43f5e'; // red
+            label = 'Lacune';
+          } else if (p.dist > 15) {
+            color = '#fbbf24'; // yellow
+            label = 'Moyen';
+          }
+
+          return {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [p.lng, p.lat]
+            },
+            properties: {
+              name: p.name,
+              dist: p.dist,
+              score: p.score,
+              game: p.game === 'georings' ? 'GeoRings' : 'Blind Point',
+              type: p.type,
+              color: color,
+              label: label,
+              weight: p.dist <= 15 ? 1.0 : (p.dist <= 75 ? 0.6 : 0.2) // for heatmap intensity
+            }
+          };
+        })
+      };
+    }
+
+    function loadDataLayers() {
+      // Add GeoJSON source
+      map.addSource('atlas-points', {
+        type: 'geojson',
+        data: getGeoJSON()
+      });
+
+      // 1. HEATMAP LAYER (Layer Mode = heatmap)
+      map.addLayer({
+        id: 'atlas-heatmap',
+        type: 'heatmap',
+        source: 'atlas-points',
+        maxzoom: 9,
+        paint: {
+          // Weight based on point weight property
+          'heatmap-weight': ['get', 'weight'],
+          // Increase intensity with zoom
+          'heatmap-intensity': [
+            'interpolate', ['linear'], ['zoom'],
+            1, 1.2,
+            5, 2.5,
+            9, 3.5
+          ],
+          // Color ramp for heatmap
+          'heatmap-color': [
+            'interpolate', ['linear'], ['heatmap-density'],
+            0, 'rgba(30, 58, 138, 0)',
+            0.2, 'rgba(59, 130, 246, 0.6)',
+            0.4, 'rgba(16, 185, 129, 0.8)',
+            0.7, 'rgba(245, 158, 11, 0.9)',
+            1, 'rgba(239, 68, 68, 1)'
+          ],
+          // Radius based on zoom
+          'heatmap-radius': [
+            'interpolate', ['linear'], ['zoom'],
+            1, 25,
+            4, 45,
+            8, 70
+          ],
+          // Opacity
+          'heatmap-opacity': 0.85
+        }
+      });
+
+      // 2. CIRCLE CLUSTER / POINTS LAYER (Layer Mode = points)
+      map.addLayer({
+        id: 'atlas-circles-glow',
+        type: 'circle',
+        source: 'atlas-points',
+        layout: { visibility: 'none' },
+        paint: {
+          'circle-radius': 12,
+          'circle-color': ['get', 'color'],
+          'circle-opacity': 0.35,
+          'circle-blur': 0.6
+        }
+      });
+
+      map.addLayer({
+        id: 'atlas-circles',
+        type: 'circle',
+        source: 'atlas-points',
+        layout: { visibility: 'none' },
+        paint: {
+          'circle-radius': 6,
+          'circle-color': ['get', 'color'],
+          'circle-stroke-width': 1.5,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+
+      // POPUP ON HOVER / CLICK
+      map.on('click', 'atlas-circles', (e) => {
+        const feat = e.features[0];
+        const props = feat.properties;
+        const coords = feat.geometry.coordinates.slice();
+
+        new maplibregl.Popup({ offset: 12 })
+          .setLngLat(coords)
+          .setHTML(`
+            <div class="space-y-1.5 text-xs">
+              <div class="flex items-center justify-between gap-3 border-b border-slate-700 pb-1">
+                <span class="font-extrabold text-white text-sm">${props.name}</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:${props.color}20; color:${props.color}; border:1px solid ${props.color}50">
+                  ${props.label}
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-300 pt-0.5">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">Jeu</span>
+                  <span class="font-semibold text-white">${props.game}</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">Écart</span>
+                  <span class="font-mono font-bold text-white">${props.dist} km</span>
+                </div>
+              </div>
+              <div class="text-[10px] text-slate-400 pt-1">
+                Score enregistré : <strong class="text-amber-400">${props.score} pts</strong>
+              </div>
+            </div>
+          `)
+          .addTo(map);
+      });
+
+      // Cursor pointer on circle hover
+      map.on('mouseenter', 'atlas-circles', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'atlas-circles', () => { map.getCanvas().style.cursor = ''; });
+    }
+
+    // SCOPE SWITCHER
+    function setScope(scope) {
+      currentScope = scope;
+
+      // Update button styling
+      ['world', 'eu', 'fr'].forEach(s => {
+        const btn = document.getElementById(`btn-scope-${s}`);
+        if (s === scope) {
+          btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-blue-600 text-white shadow-md shadow-blue-600/30";
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white";
+        }
+      });
+
+      if (!map) return;
+
+      if (scope === 'world') {
+        map.flyTo({ center: [10, 25], zoom: 2.2, duration: 1500 });
+      } else if (scope === 'eu') {
+        map.flyTo({ center: [12, 50], zoom: 4.2, duration: 1500 });
+      } else if (scope === 'fr') {
+        map.flyTo({ center: [2.5, 46.8], zoom: 5.8, duration: 1500 });
+      }
+    }
+
+    // LAYER MODE SWITCHER (Heatmap vs Points)
+    function setLayerMode(mode) {
+      currentLayerMode = mode;
+
+      const btnHeat = document.getElementById('btn-view-heat');
+      const btnPoints = document.getElementById('btn-view-points');
+      const legendHeat = document.getElementById('legend-heatmap-block');
+      const legendPoints = document.getElementById('legend-points-block');
+      const legendStatus = document.getElementById('legend-active-mode');
+
+      if (mode === 'heatmap') {
+        btnHeat.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30";
+        btnPoints.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white";
+        
+        map.setLayoutProperty('atlas-heatmap', 'visibility', 'visible');
+        map.setLayoutProperty('atlas-circles', 'visibility', 'none');
+        map.setLayoutProperty('atlas-circles-glow', 'visibility', 'none');
+
+        legendHeat.classList.remove('hidden');
+        legendPoints.classList.add('hidden');
+        legendStatus.innerText = "Heatmap active";
+        legendStatus.className = "text-[10px] text-emerald-400 font-mono";
+      } else {
+        btnPoints.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-emerald-600 text-white shadow-md shadow-emerald-600/30";
+        btnHeat.className = "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 text-slate-300 hover:text-white";
+
+        map.setLayoutProperty('atlas-heatmap', 'visibility', 'none');
+        map.setLayoutProperty('atlas-circles', 'visibility', 'visible');
+        map.setLayoutProperty('atlas-circles-glow', 'visibility', 'visible');
+
+        legendHeat.classList.add('hidden');
+        legendPoints.classList.remove('hidden');
+        legendStatus.innerText = "Points précis actifs";
+        legendStatus.className = "text-[10px] text-blue-400 font-mono";
+      }
+    }
+
+    // GAME FILTER SWITCHER
+    function setGameFilter(game) {
+      currentGameFilter = game;
+
+      ['all', 'rings', 'blind'].forEach(g => {
+        const btn = document.getElementById(`btn-game-${g}`);
+        const isActive = (g === 'all' && game === 'all') || (g === 'rings' && game === 'georings') || (g === 'blind' && game === 'blindpoint');
+        if (isActive) {
+          btn.className = "px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-white";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-white";
+        }
+      });
+
+      if (map && map.getSource('atlas-points')) {
+        map.getSource('atlas-points').setData(getGeoJSON());
+      }
+    }
+
+    // TOGGLE SIDEBAR
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('translate-x-full');
+    }
+
+    // Start on DOM load
+    window.addEventListener('DOMContentLoaded', initMap);
+  </script>
+</body>
+</html>
