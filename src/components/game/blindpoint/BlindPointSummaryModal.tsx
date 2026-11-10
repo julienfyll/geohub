@@ -8,7 +8,6 @@ import {
   Share2,
   Check,
   RotateCcw,
-  Eye,
   Sparkles,
   MapPin,
   X,
@@ -163,14 +162,14 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
 
   return (
     <div
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onCloseToMap();
-        }
-      }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-300"
+      onClick={onCloseToMap}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer"
+      title="Cliquer à côté pour afficher la carte"
     >
-      <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700/80 rounded-3xl p-6 shadow-2xl text-center flex flex-col gap-4 max-h-[92vh] overflow-y-auto">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg bg-slate-900 border border-slate-700/80 rounded-3xl p-6 shadow-2xl text-center flex flex-col gap-4 max-h-[92vh] overflow-y-auto cursor-default"
+      >
         {/* Close Button to inspect map */}
         <button
           type="button"
@@ -348,7 +347,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Tester un autre pack
             </span>
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-3 gap-2">
               {[
                 { id: "villes_france", label: "🇫🇷 Villes" },
                 { id: "lieux_france", label: "🏰 France" },
@@ -365,31 +364,16 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
                     {p.label}
                   </Link>
                 ))}
-              <Link
-                href="/"
-                className="py-2 px-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-700 transition-all text-center truncate hover:border-slate-500"
-              >
-                🏠 Arcade
-              </Link>
             </div>
           </div>
 
           {/* Secondary buttons */}
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={onCloseToMap}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
-            >
-              <Eye className="w-4 h-4 text-slate-400" />
-              <span>Observer la carte</span>
-            </button>
-
+          <div className="flex gap-2.5">
             {onBackToLobby ? (
               <button
                 type="button"
                 onClick={onBackToLobby}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors cursor-pointer"
               >
                 <span>Changer de mode</span>
               </button>
@@ -398,7 +382,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
             <button
               type="button"
               onClick={onRestartGame}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors shadow-lg shadow-blue-600/30"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-lg shadow-blue-600/30 cursor-pointer"
             >
               <RotateCcw className="w-4 h-4 text-white" />
               <span>Rejouer</span>
