@@ -1,4 +1,4 @@
-import { BlindPointPack, BlindPointDifficulty, BlindPointTarget, BlindPointClientTarget } from "./types";
+import { BlindPointPack, BlindPointDifficulty, BlindPointTarget, BlindPointClientTarget, BlindPointMode } from "./types";
 import monumentsData from "./data/monuments.json";
 import castlesData from "./data/castles.json";
 import citiesFranceData from "./data/cities_france.json";
@@ -89,32 +89,58 @@ export function shuffleWithSeed<T>(array: T[], seedStr: string): T[] {
 }
 
 /**
- * Selects 5 distinct targets for a session based on pack, mode, difficulty and seed.
- * For world cities, guarantees continental stratification across the 5 rounds.
+ * Selects distinct targets for a session based on pack(s), mode, difficulty, seed, and rounds count.
+ * For world cities (standard mode), guarantees continental stratification across the 5 rounds.
+ * For custom mode, supports combining multiple packs, custom round count (3, 5, 10, 15) and continent filtering.
  */
 export function getSessionTargets(
-  pack: BlindPointPack,
-  mode: "daily" | "free",
-  difficulty: BlindPointDifficulty = "moyen",
-  customSeed?: string
-): { seed: string; targets: BlindPointTarget[] } {
+  pack: BlindPointPack | BlindPointPack[],
+  mode: BlindPointMode = "daily",
+  difficulty: BlindPointDifficulty | "all" = "moyen",
+  customSeed?: string,
+  totalRounds: number = 5,
+  continentFilter?: string
+): { seed: string; targets: BlindPointTarget[]; scale: "fr" | "world" | "paris" } {
+  const packsArray: BlindPointPack[] = Array.isArray(pack) ? pack : [pack];
+
+  // Determine overall map scale
+  let scale: "fr" | "world" | "paris" = "fr";
+  const hasWorldPack = packsArray.some(
+    (p) => p === "villes_monde" || p === "lieux_monde" || p === "monuments_monde"
+  );
+  const onlyParis = packsArray.length === 1 && packsArray[0] === "lieux_paris";
+
+  if (hasWorldPack) {
+    scale = "world";
+  } else if (onlyParis) {
+    scale = "paris";
+  } else {
+    scale = "fr";
+  }
+
   let seed = customSeed;
   if (!seed) {
     if (mode === "daily") {
       const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-      seed = `blindpoint-${today}-${pack}-${difficulty}`;
+      seed = `blindpoint-${today}-${packsArray.join("_")}-${difficulty}`;
+    } else if (mode === "custom") {
+      seed = `custom-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
     } else {
       seed = `free-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
     }
   }
 
-  const pool = getTargetsByPack(pack, difficulty);
-
-  // Continental stratification for World Cities
-  if (pack === "villes_monde") {
+  // Continental stratification for single pack World Cities in daily/free 5-round mode
+  if (
+    packsArray.length === 1 &&
+    packsArray[0] === "villes_monde" &&
+    mode !== "custom" &&
+    totalRounds === 5 &&
+    !continentFilter
+  ) {
+    const pool = getTargetsByPack("villes_monde", difficulty === "all" ? undefined : difficulty);
     const rng = createRng(hashString(seed));
     const continents = ["EU", "NA", "SA", "AS", "AF"];
-    // Optional inclusion of OC by swapping one continent probabilistically
     if (rng() > 0.5) {
       continents[Math.floor(rng() * continents.length)] = "OC";
     }
@@ -131,7 +157,6 @@ export function getSessionTargets(
       }
     }
 
-    // Fallback if some continent didn't yield a match
     if (selected.length < 5) {
       const remaining = pool.filter((c) => !usedIds.has(c.id));
       const shuffledRem = shuffleWithSeed(remaining, `${seed}-rem`);
@@ -142,16 +167,45 @@ export function getSessionTargets(
       }
     }
 
-    // Shuffle the final 5 rounds order so continents don't appear in fixed sequence
     const finalShuffled = shuffleWithSeed(selected.slice(0, 5), `${seed}-order`);
-    return { seed, targets: finalShuffled };
+    return { seed, targets: finalShuffled, scale };
   }
 
-  // Standard France or others shuffle
-  const shuffled = shuffleWithSeed(pool, seed);
-  const selected = shuffled.slice(0, 5);
+  // Multi-pack or custom mode pool building
+  let pool: BlindPointTarget[] = [];
+  const seenIds = new Set<string>();
 
-  return { seed, targets: selected };
+  for (const p of packsArray) {
+    const packTargets = getTargetsByPack(p);
+    for (const t of packTargets) {
+      if (!seenIds.has(t.id)) {
+        seenIds.add(t.id);
+        pool.push(t);
+      }
+    }
+  }
+
+  // Filter by continent if continent filter is specified (e.g. EU, AS, NA, etc.)
+  if (continentFilter && continentFilter !== "") {
+    const continentMatching = pool.filter((t) => t.continent === continentFilter);
+    if (continentMatching.length >= totalRounds) {
+      pool = continentMatching;
+    }
+  }
+
+  // Filter by difficulty if difficulty is not "all"
+  if (difficulty && difficulty !== "all") {
+    const diffMatching = pool.filter((t) => t.difficulty === difficulty);
+    if (diffMatching.length >= totalRounds) {
+      pool = diffMatching;
+    }
+  }
+
+  // Deterministic shuffle using seed
+  const shuffled = shuffleWithSeed(pool, seed);
+  const selected = shuffled.slice(0, Math.min(totalRounds, shuffled.length));
+
+  return { seed, targets: selected, scale };
 }
 
 export function getProxyImageUrl(url?: string): string | undefined {
@@ -186,9 +240,18 @@ export function toClientTarget(
 
 export function getTargetById(
   id: string,
-  pack: BlindPointPack,
+  pack?: BlindPointPack | BlindPointPack[],
   difficulty?: BlindPointDifficulty
 ): BlindPointTarget | null {
-  const pool = getTargetsByPack(pack, difficulty);
-  return pool.find((t) => t.id === id) || null;
+  if (!pack) {
+    const all = [...citiesFrance, ...citiesWorld, ...lieuxFrance, ...lieuxMonde, ...lieuxParis];
+    return all.find((t) => t.id === id) || null;
+  }
+  const packs = Array.isArray(pack) ? pack : [pack];
+  for (const p of packs) {
+    const pool = getTargetsByPack(p, difficulty);
+    const found = pool.find((t) => t.id === id);
+    if (found) return found;
+  }
+  return null;
 }

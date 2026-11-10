@@ -12,7 +12,21 @@ import { calculateBlindPointScore, getScoreRating } from "@/lib/games/blindpoint
 export async function POST(request: NextRequest) {
   try {
     const body: BlindPointGuessRequest = await request.json();
-    const { pack, mode, difficulty, seed, roundIndex, targetId, guessLat, guessLon } = body;
+    const {
+      pack,
+      packs,
+      mode,
+      difficulty,
+      seed,
+      roundIndex,
+      totalRounds: rawTotalRounds,
+      continent,
+      targetId,
+      guessLat,
+      guessLon,
+    } = body;
+
+    const totalRounds = typeof rawTotalRounds === "number" && rawTotalRounds >= 3 ? rawTotalRounds : 5;
 
     if (
       typeof guessLat !== "number" ||
@@ -27,12 +41,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Coordinates out of bounds" }, { status: 400 });
     }
 
-    if (typeof roundIndex !== "number" || roundIndex < 0 || roundIndex > 4) {
+    if (typeof roundIndex !== "number" || roundIndex < 0 || roundIndex >= totalRounds) {
       return NextResponse.json({ error: "Invalid round index" }, { status: 400 });
     }
 
-    const { targets } = getSessionTargets(pack, mode, difficulty, seed);
-    if (!targets || targets.length < 5) {
+    const packsToUse = packs && packs.length > 0 ? packs : pack;
+    const { targets } = getSessionTargets(packsToUse, mode, difficulty, seed, totalRounds, continent);
+    if (!targets || targets.length < totalRounds) {
       return NextResponse.json({ error: "Failed to load targets for session" }, { status: 500 });
     }
 
@@ -48,8 +63,10 @@ export async function POST(request: NextRequest) {
     const score = calculateBlindPointScore(distanceKm, target.scale);
     const rating = getScoreRating(distanceKm, score, target.scale);
 
-    const isGameOver = roundIndex >= 4;
-    const nextTarget = isGameOver ? null : toClientTarget(targets[roundIndex + 1], roundIndex + 1, 5);
+    const isGameOver = roundIndex >= totalRounds - 1;
+    const nextTarget = isGameOver
+      ? null
+      : toClientTarget(targets[roundIndex + 1], roundIndex + 1, totalRounds);
 
     const response: BlindPointGuessResponse = {
       roundIndex,

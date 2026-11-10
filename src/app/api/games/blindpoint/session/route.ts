@@ -10,8 +10,12 @@ import { getSessionTargets, toClientTarget, hashString } from "@/lib/games/blind
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const rawPack = searchParams.get("pack") || "villes_france";
+  const rawPacks = searchParams.get("packs");
   const rawMode = searchParams.get("mode") || "daily";
-  const rawDiff = searchParams.get("difficulty") || "moyen";
+  const rawDiff = searchParams.get("difficulty") || searchParams.get("diff") || "moyen";
+  const rawRounds = searchParams.get("rounds");
+  const rawTimer = searchParams.get("timer");
+  const continent = searchParams.get("continent") || undefined;
   const userSeed = searchParams.get("seed") || undefined;
 
   const validPacks: BlindPointPack[] = [
@@ -23,38 +27,60 @@ export async function GET(request: NextRequest) {
     "monuments_monde",
     "chateaux_france",
   ];
-  const pack: BlindPointPack = validPacks.includes(rawPack as BlindPointPack)
-    ? (rawPack as BlindPointPack)
-    : "villes_france";
 
-  const mode: BlindPointMode = rawMode === "free" ? "free" : "daily";
+  // Resolve pack or list of packs
+  let packsToUse: BlindPointPack[] = [];
+  if (rawPacks) {
+    const split = rawPacks.split(",").map((s) => s.trim()) as BlindPointPack[];
+    packsToUse = split.filter((p) => validPacks.includes(p));
+  }
+  if (packsToUse.length === 0) {
+    const singlePack: BlindPointPack = validPacks.includes(rawPack as BlindPointPack)
+      ? (rawPack as BlindPointPack)
+      : "villes_france";
+    packsToUse = [singlePack];
+  }
 
-  const validDifficulties: BlindPointDifficulty[] = ["facile", "moyen", "difficile"];
-  const difficulty: BlindPointDifficulty = validDifficulties.includes(rawDiff as BlindPointDifficulty)
-    ? (rawDiff as BlindPointDifficulty)
-    : "moyen";
+  const primaryPack = packsToUse[0];
+  const mode: BlindPointMode = rawMode === "custom" ? "custom" : rawMode === "free" ? "free" : "daily";
 
-  const { seed, targets } = getSessionTargets(pack, mode, difficulty, userSeed);
-  if (!targets || targets.length < 5) {
+  const difficulty: BlindPointDifficulty | "all" =
+    rawDiff === "all" ? "all" : ["facile", "moyen", "difficile"].includes(rawDiff)
+      ? (rawDiff as BlindPointDifficulty)
+      : "moyen";
+
+  // Total rounds: 3, 5, 10, 15 (default 5)
+  const parsedRounds = rawRounds ? parseInt(rawRounds, 10) : 5;
+  const totalRounds = isNaN(parsedRounds) ? 5 : Math.max(3, Math.min(20, parsedRounds));
+
+  // Timer duration (0 = infinite / off)
+  const timerSeconds = rawTimer ? parseInt(rawTimer, 10) : undefined;
+
+  const { seed, targets, scale } = getSessionTargets(
+    packsToUse.length === 1 ? packsToUse[0] : packsToUse,
+    mode,
+    difficulty,
+    userSeed,
+    totalRounds,
+    continent
+  );
+
+  if (!targets || targets.length < totalRounds) {
     return NextResponse.json({ error: "Failed to initialize game targets" }, { status: 500 });
   }
 
-  const scale =
-    pack === "lieux_paris"
-      ? "paris"
-      : pack === "villes_monde" || pack === "lieux_monde" || pack === "monuments_monde"
-      ? "world"
-      : "fr";
-  const currentTarget = toClientTarget(targets[0], 0, 5);
+  const currentTarget = toClientTarget(targets[0], 0, totalRounds);
 
   const response: BlindPointSessionInitResponse = {
-    sessionId: `bp_${mode}_${pack}_${difficulty}_${hashString(seed)}`,
-    pack,
+    sessionId: `bp_${mode}_${packsToUse.join("_")}_${difficulty}_${hashString(seed)}`,
+    pack: primaryPack,
+    packs: packsToUse,
     mode,
     difficulty,
     scale,
     seed,
-    totalRounds: 5,
+    totalRounds,
+    timerSeconds: timerSeconds !== undefined && !isNaN(timerSeconds) ? timerSeconds : undefined,
     currentTarget,
   };
 

@@ -42,9 +42,9 @@ interface BlindPointHUDProps {
   isGameOver?: boolean;
   timerSecondsLeft: number | null;
   pack: BlindPointPack;
-  mode: "daily" | "free";
+  mode: BlindPointMode;
   seed?: string;
-  difficulty?: BlindPointDifficulty;
+  difficulty?: BlindPointDifficulty | "all";
   showRegionHints?: boolean;
   showTargetPhoto?: boolean;
   showTargetName?: boolean;
@@ -52,7 +52,8 @@ interface BlindPointHUDProps {
   onOpenSettings: () => void;
   onOpenSummary?: () => void;
   onBackToLobby?: () => void;
-  onChangeMode?: (pack: BlindPointPack, difficulty: BlindPointDifficulty, mode: BlindPointMode) => void;
+  onOpenCustomModal?: () => void;
+  onChangeMode?: (pack: BlindPointPack, difficulty: BlindPointDifficulty | "all", mode: BlindPointMode) => void;
 }
 
 export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
@@ -76,6 +77,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   onOpenSettings,
   onOpenSummary,
   onBackToLobby,
+  onOpenCustomModal,
   onChangeMode,
 }) => {
   const router = useRouter();
@@ -146,10 +148,11 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
     chateaux_france: { name: "Châteaux de France", icon: "🏰" },
   };
 
-  const diffLabels: Record<BlindPointDifficulty, { label: string; badge: string }> = {
+  const diffLabels: Record<string, { label: string; badge: string }> = {
     facile: { label: "Facile", badge: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
     moyen: { label: "Moyen", badge: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
     difficile: { label: "Difficile", badge: "text-rose-400 bg-rose-500/10 border-rose-500/30" },
+    all: { label: "Mixte", badge: "text-purple-400 bg-purple-500/10 border-purple-500/30" },
   };
 
   const isLieuxPack = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
@@ -224,6 +227,24 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             >
               <Zap className="w-3 h-3" />
               <span>Libre</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenCustomModal) {
+                  onOpenCustomModal();
+                }
+              }}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                mode === "custom"
+                  ? "bg-purple-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Créer ou configurer un défi personnalisé (manches, thèmes, chrono)"
+            >
+              <Sliders className="w-3 h-3 text-purple-400" />
+              <span>Custom</span>
             </button>
           </div>
 

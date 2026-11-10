@@ -24,6 +24,7 @@ import {
   Award,
   Landmark,
   Building2,
+  Sliders,
 } from "lucide-react";
 import { BlindPointMap } from "@/components/map/BlindPointMap";
 import { BlindPointHUD } from "@/components/game/blindpoint/BlindPointHUD";
@@ -31,6 +32,7 @@ import { BlindPointResultModal } from "@/components/game/blindpoint/BlindPointRe
 import { BlindPointLearningCard } from "@/components/game/blindpoint/BlindPointLearningCard";
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
+import { BlindPointCustomModal } from "@/components/game/blindpoint/BlindPointCustomModal";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
@@ -52,8 +54,15 @@ function BlindPointGame() {
   const router = useRouter();
 
   const rawPack = searchParams.get("pack") || "villes_france";
+  const rawPacks = searchParams.get("packs") || "";
   const rawMode = searchParams.get("mode") || "daily";
-  const rawDiff = searchParams.get("difficulty") || "moyen";
+  const rawDiff = searchParams.get("difficulty") || searchParams.get("diff") || "moyen";
+  const rawRounds = searchParams.get("rounds");
+  const rawTimer = searchParams.get("timer");
+  const rawTheme = searchParams.get("theme");
+  const rawBorders = searchParams.get("borders");
+  const rawRoads = searchParams.get("roads");
+  const rawContinent = searchParams.get("continent");
   const rawPlay = searchParams.get("play") === "1";
   const userSeed = searchParams.get("seed") || "";
 
@@ -69,12 +78,12 @@ function BlindPointGame() {
   const pack: BlindPointPack = validPacks.includes(rawPack as BlindPointPack)
     ? (rawPack as BlindPointPack)
     : "villes_france";
-  const mode: BlindPointMode = rawMode === "free" ? "free" : "daily";
+  const mode: BlindPointMode = rawMode === "custom" ? "custom" : rawMode === "free" ? "free" : "daily";
 
-  const validDifficulties: BlindPointDifficulty[] = ["facile", "moyen", "difficile"];
-  const difficulty: BlindPointDifficulty = validDifficulties.includes(rawDiff as BlindPointDifficulty)
-    ? (rawDiff as BlindPointDifficulty)
-    : "moyen";
+  const difficulty: BlindPointDifficulty | "all" =
+    rawDiff === "all" ? "all" : ["facile", "moyen", "difficile"].includes(rawDiff)
+      ? (rawDiff as BlindPointDifficulty)
+      : "moyen";
 
   const isLieuxInitial = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
   const initialTerritory: "france" | "paris" | "monde" =
@@ -93,14 +102,19 @@ function BlindPointGame() {
     initialTerritory
   );
   const [selectedPack, setSelectedPack] = useState<BlindPointPack>(pack);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<BlindPointDifficulty>(difficulty);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<BlindPointDifficulty>(
+    difficulty === "all" ? "moyen" : difficulty
+  );
   const [selectedMode, setSelectedMode] = useState<BlindPointMode>(mode);
+
+  // Custom Challenge Modal State
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   // Sync lobby state if URL changes while in lobby
   useEffect(() => {
     if (!rawPlay) {
       setSelectedPack(pack);
-      setSelectedDifficulty(difficulty);
+      setSelectedDifficulty(difficulty === "all" ? "moyen" : difficulty);
       setSelectedMode(mode);
       const isL = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
       setSelectedCategory(isL ? "lieux_emblematiques" : "villes");
@@ -151,6 +165,21 @@ function BlindPointGame() {
       // ignore
     }
   }, []);
+
+  // Soft override map layout settings if joining via a Custom Challenge link
+  useEffect(() => {
+    if (rawMode === "custom") {
+      setSettings((prev) => ({
+        ...prev,
+        mapTheme:
+          rawTheme === "satellite" || rawTheme === "voyager" || rawTheme === "dark"
+            ? rawTheme
+            : prev.mapTheme,
+        showBorders: rawBorders === "0" ? false : rawBorders === "1" ? true : prev.showBorders,
+        showRoads: rawRoads === "0" ? false : rawRoads === "1" ? true : prev.showRoads,
+      }));
+    }
+  }, [rawMode, rawTheme, rawBorders, rawRoads]);
 
   const handleUpdateSetting = <K extends keyof BlindPointSettings>(
     key: K,
@@ -209,9 +238,13 @@ function BlindPointGame() {
   const loadGameSession = useCallback(
     async (
       targetPack: BlindPointPack,
-      targetDiff: BlindPointDifficulty,
+      targetDiff: BlindPointDifficulty | "all",
       targetMode: BlindPointMode,
-      targetSeed?: string
+      targetSeed?: string,
+      targetPacks?: string,
+      targetRounds?: string,
+      targetTimer?: string,
+      targetContinent?: string
     ) => {
       setLoading(true);
       setErrorMessage(null);
@@ -231,10 +264,13 @@ function BlindPointGame() {
       setGameSessionId((prev) => prev + 1);
 
       try {
-        let url = `/api/games/blindpoint/session?pack=${targetPack}&difficulty=${targetDiff}&mode=${targetMode}`;
-        if (targetSeed) {
-          url += `&seed=${targetSeed}`;
-        }
+        let url = `/api/games/blindpoint/session?pack=${targetPack}&mode=${targetMode}`;
+        if (targetPacks) url += `&packs=${encodeURIComponent(targetPacks)}`;
+        if (targetDiff) url += `&difficulty=${targetDiff}`;
+        if (targetRounds) url += `&rounds=${targetRounds}`;
+        if (targetTimer) url += `&timer=${targetTimer}`;
+        if (targetContinent) url += `&continent=${targetContinent}`;
+        if (targetSeed) url += `&seed=${targetSeed}`;
 
         const res = await fetch(url);
         if (!res.ok) throw new Error("Erreur de chargement de session");
@@ -244,7 +280,9 @@ function BlindPointGame() {
         setCurrentTarget(data.currentTarget);
         setRoundIndex(data.currentTarget.roundIndex);
 
-        if (settings.timerDurationSeconds > 0) {
+        if (data.timerSeconds !== undefined && data.timerSeconds > 0) {
+          setTimerSecondsLeft(data.timerSeconds);
+        } else if (settings.timerDurationSeconds > 0) {
           setTimerSecondsLeft(settings.timerDurationSeconds);
         } else {
           setTimerSecondsLeft(null);
@@ -262,9 +300,29 @@ function BlindPointGame() {
   // Load game session whenever in active play mode (play=1) and parameters are defined
   useEffect(() => {
     if (isPlaying) {
-      loadGameSession(pack, difficulty, mode, userSeed || undefined);
+      loadGameSession(
+        pack,
+        difficulty,
+        mode,
+        userSeed || undefined,
+        rawPacks || undefined,
+        rawRounds || undefined,
+        rawTimer || undefined,
+        rawContinent || undefined
+      );
     }
-  }, [isPlaying, pack, difficulty, mode, userSeed, loadGameSession]);
+  }, [
+    isPlaying,
+    pack,
+    difficulty,
+    mode,
+    userSeed,
+    rawPacks,
+    rawRounds,
+    rawTimer,
+    rawContinent,
+    loadGameSession,
+  ]);
 
   // Handle Placing Pin on Map
   const handlePlaceGuess = (coords: { lat: number; lon: number }) => {
@@ -283,9 +341,13 @@ function BlindPointGame() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           pack: session.pack,
+          packs: session.packs,
           mode: session.mode,
+          difficulty: session.difficulty,
           seed: session.seed,
           roundIndex,
+          totalRounds: session.totalRounds || (rawRounds ? parseInt(rawRounds, 10) : 5),
+          continent: rawContinent || undefined,
           targetId: currentTarget.id,
           guessLat: currentGuess.lat,
           guessLon: currentGuess.lon,
@@ -391,6 +453,8 @@ function BlindPointGame() {
     }
   };
 
+  const totalRounds = session?.totalRounds || (rawRounds ? parseInt(rawRounds, 10) : 5);
+
   const currentTotalScore = useMemo(
     () => roundsHistory.reduce((sum, r) => sum + r.score, 0),
     [roundsHistory]
@@ -401,11 +465,12 @@ function BlindPointGame() {
     : selectedPack;
 
   const scale =
-    activePack === "lieux_paris"
+    session?.scale ||
+    (activePack === "lieux_paris"
       ? "paris"
       : activePack === "villes_monde" || activePack === "lieux_monde" || activePack === "monuments_monde"
       ? "world"
-      : "fr";
+      : "fr");
 
   const handleStartGame = (p: BlindPointPack, d: BlindPointDifficulty, m: BlindPointMode) => {
     const freeSeed = m === "free" ? `&seed=${Date.now()}` : "";
@@ -414,12 +479,12 @@ function BlindPointGame() {
 
   const handleChangeGameConfig = (
     p: BlindPointPack,
-    d: BlindPointDifficulty,
+    d: BlindPointDifficulty | "all",
     m: BlindPointMode
   ) => {
     if (m === mode && p === pack && d === difficulty) {
-      if (m === "free") {
-        router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=free&seed=${Date.now()}&play=1`);
+      if (m === "free" || m === "custom") {
+        router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}&seed=${Date.now()}&play=1`);
       } else {
         loadGameSession(p, d, m, undefined);
       }
@@ -435,11 +500,40 @@ function BlindPointGame() {
     const d = session?.difficulty || difficulty;
     const m = session?.mode || mode;
 
-    if (m === "free") {
-      router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=free&seed=${Date.now()}&play=1`);
+    if (m === "free" || m === "custom") {
+      const freeSeed = `&seed=${Date.now()}`;
+      let url = `/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}`;
+      if (rawPacks) url += `&packs=${encodeURIComponent(rawPacks)}`;
+      if (rawRounds) url += `&rounds=${rawRounds}`;
+      if (rawTimer) url += `&timer=${rawTimer}`;
+      if (rawTheme) url += `&theme=${rawTheme}`;
+      if (rawBorders) url += `&borders=${rawBorders}`;
+      if (rawRoads) url += `&roads=${rawRoads}`;
+      if (rawContinent) url += `&continent=${rawContinent}`;
+      url += `&play=1`;
+      router.push(url);
     } else {
       loadGameSession(p, d, m, undefined);
     }
+  };
+
+  const getCustomShareUrl = () => {
+    if (typeof window === "undefined") return "";
+    let url = `${window.location.origin}/play/blindpoint?mode=${session?.mode || mode}`;
+    if (session?.packs && session.packs.length > 0) {
+      url += `&packs=${session.packs.join(",")}`;
+    } else {
+      url += `&pack=${session?.pack || pack}`;
+    }
+    url += `&rounds=${totalRounds}`;
+    if (session?.difficulty && session.difficulty !== "all") url += `&diff=${session.difficulty}`;
+    if (session?.timerSeconds) url += `&timer=${session.timerSeconds}`;
+    if (rawContinent) url += `&continent=${rawContinent}`;
+    if (settings.mapTheme !== "dark") url += `&theme=${settings.mapTheme}`;
+    if (!settings.showBorders) url += `&borders=0`;
+    if (!settings.showRoads) url += `&roads=0`;
+    url += `&seed=${session?.seed || userSeed}&play=1`;
+    return url;
   };
 
   const handleBackToLobby = () => {
@@ -481,6 +575,15 @@ function BlindPointGame() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setShowCustomModal(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-all shadow-sm"
+                title="Créer un défi personnalisé"
+              >
+                <Sliders className="w-3.5 h-3.5 text-purple-400" />
+                <span className="hidden sm:inline">Partie Custom</span>
+              </button>
               <LeaderboardTriggerButton
                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all shadow-sm cursor-pointer"
                 label="Classement"
@@ -873,7 +976,7 @@ function BlindPointGame() {
                 4. Mode de Jeu
               </span>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {/* Défi du Jour */}
                 <button
                   type="button"
@@ -917,6 +1020,26 @@ function BlindPointGame() {
                   </div>
                   {selectedMode === "free" && <Check className="w-5 h-5 text-amber-400 stroke-[3]" />}
                 </button>
+
+                {/* Partie Personnalisée */}
+                <button
+                  type="button"
+                  onClick={() => setShowCustomModal(true)}
+                  className="p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between bg-slate-900/60 border-slate-800 text-slate-300 hover:border-purple-500/60 hover:bg-slate-900 group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
+                      <Sliders className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white group-hover:text-purple-300 transition-colors">
+                        Partie Custom
+                      </h4>
+                      <p className="text-xs text-slate-400">Mix de packs, timer, manches & défi amis</p>
+                    </div>
+                  </div>
+                  <Sliders className="w-4 h-4 text-purple-400 opacity-60 group-hover:opacity-100 transition-opacity" />
+                </button>
               </div>
             </div>
 
@@ -941,6 +1064,14 @@ function BlindPointGame() {
           settings={settings}
           onUpdateSetting={handleUpdateSetting}
           onResetDefaults={handleResetSettings}
+        />
+
+        {/* Custom Challenge Creator Modal (accessible in lobby) */}
+        <BlindPointCustomModal
+          isOpen={showCustomModal}
+          onClose={() => setShowCustomModal(false)}
+          initialPack={selectedPack}
+          initialDifficulty={selectedDifficulty}
         />
       </div>
     );
@@ -998,7 +1129,7 @@ function BlindPointGame() {
         <BlindPointHUD
           currentTarget={currentTarget}
           roundIndex={roundIndex}
-          totalRounds={5}
+          totalRounds={totalRounds}
           currentTotalScore={currentTotalScore}
           hasPlacedGuess={currentGuess !== null}
           isSubmitting={isSubmitting}
@@ -1016,6 +1147,7 @@ function BlindPointGame() {
           onOpenSettings={() => setShowSettingsModal(true)}
           onOpenSummary={() => setShowSummaryModal(true)}
           onBackToLobby={handleBackToLobby}
+          onOpenCustomModal={() => setShowCustomModal(true)}
           onChangeMode={handleChangeGameConfig}
         />
       )}
@@ -1025,7 +1157,7 @@ function BlindPointGame() {
         isOpen={showResultModal}
         roundResult={currentRoundResult}
         roundIndex={roundIndex}
-        totalRounds={5}
+        totalRounds={totalRounds}
         onNextRound={handleNextRound}
       />
 
@@ -1056,10 +1188,20 @@ function BlindPointGame() {
         difficulty={session?.difficulty || difficulty}
         mode={session?.mode || mode}
         seed={session?.seed || userSeed}
+        totalRounds={totalRounds}
+        customShareUrl={getCustomShareUrl()}
         rounds={roundsHistory}
         onRestartGame={handleRestartCurrentGame}
         onCloseToMap={() => setShowSummaryModal(false)}
         onBackToLobby={handleBackToLobby}
+      />
+
+      {/* Custom Challenge Creator Modal */}
+      <BlindPointCustomModal
+        isOpen={showCustomModal}
+        onClose={() => setShowCustomModal(false)}
+        initialPack={pack}
+        initialDifficulty={difficulty}
       />
 
       {/* Settings Modal */}

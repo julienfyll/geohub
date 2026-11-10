@@ -11,7 +11,7 @@ export type BlindPointPack =
 
 export type BlindPointDifficulty = "facile" | "moyen" | "difficile";
 
-export type BlindPointMode = "daily" | "free";
+export type BlindPointMode = "daily" | "free" | "custom";
 
 export interface BlindPointTarget {
   id: string;
@@ -52,10 +52,13 @@ export interface BlindPointClientTarget {
 
 export interface BlindPointGuessRequest {
   pack: BlindPointPack;
+  packs?: BlindPointPack[];
   mode: BlindPointMode;
-  difficulty?: BlindPointDifficulty;
+  difficulty?: BlindPointDifficulty | "all";
   seed: string;
   roundIndex: number;
+  totalRounds?: number;
+  continent?: string;
   targetId: string;
   guessLat: number;
   guessLon: number;
@@ -77,11 +80,13 @@ export interface BlindPointRoundResult {
 export interface BlindPointSessionInitResponse {
   sessionId: string;
   pack: BlindPointPack;
+  packs?: BlindPointPack[];
   mode: BlindPointMode;
-  difficulty?: BlindPointDifficulty;
+  difficulty?: BlindPointDifficulty | "all";
   scale: "fr" | "world" | "paris";
   seed: string;
   totalRounds: number;
+  timerSeconds?: number;
   currentTarget: BlindPointClientTarget;
 }
 
@@ -109,7 +114,7 @@ export interface BlindPointSettings {
   showRegionHints: boolean; // Afficher le département / région / pays
   showTargetPhoto: boolean; // Afficher la photo de l'édifice
   showTargetName: boolean; // Afficher le nom de l'édifice
-  timerDurationSeconds: 0 | 30 | 60; // 0 = off
+  timerDurationSeconds: number; // 0 = off, 10, 15, 30, 45, 60, etc.
   mapTheme: BlindPointMapTheme;
 }
 

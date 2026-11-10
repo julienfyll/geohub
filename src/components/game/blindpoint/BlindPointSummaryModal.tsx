@@ -15,7 +15,12 @@ import {
   Flame,
   ArrowRight,
 } from "lucide-react";
-import { BlindPointRoundResult, BlindPointPack, BlindPointDifficulty } from "@/lib/games/blindpoint/types";
+import {
+  BlindPointRoundResult,
+  BlindPointPack,
+  BlindPointDifficulty,
+  BlindPointMode,
+} from "@/lib/games/blindpoint/types";
 import { formatDistance } from "@/lib/games/blindpoint/scoring";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { recordGameSession } from "@/lib/stats/statsService";
@@ -24,9 +29,11 @@ import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 interface BlindPointSummaryModalProps {
   isOpen: boolean;
   pack: BlindPointPack;
-  mode: "daily" | "free";
-  difficulty?: BlindPointDifficulty;
+  mode: BlindPointMode;
+  difficulty?: BlindPointDifficulty | "all";
   seed: string;
+  totalRounds?: number;
+  customShareUrl?: string;
   rounds: BlindPointRoundResult[];
   onRestartGame: () => void;
   onCloseToMap: () => void;
@@ -39,6 +46,8 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   mode,
   difficulty = "moyen",
   seed,
+  totalRounds,
+  customShareUrl,
   rounds,
   onRestartGame,
   onCloseToMap,
@@ -49,10 +58,13 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const hasSavedRef = useRef(false);
 
+  const roundsCount = totalRounds || rounds.length || 5;
+  const maxScore = roundsCount * 5000;
   const totalScore = rounds.reduce((sum, r) => sum + r.score, 0);
+  const avgScore = Math.round(totalScore / (rounds.length || 1));
   const totalDistance = rounds.reduce((sum, r) => sum + r.distanceKm, 0);
-  const isHighPerformance = totalScore >= 20000;
-  const isPerfect = totalScore === 25000;
+  const isHighPerformance = totalScore >= maxScore * 0.8;
+  const isPerfect = totalScore === maxScore;
 
   // Trigger confetti when completed with high score
   useEffect(() => {
@@ -102,10 +114,11 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
     chateaux_france: "Châteaux & Patrimoine",
   };
 
-  const diffLabels: Record<BlindPointDifficulty, string> = {
+  const diffLabels: Record<string, string> = {
     facile: "Facile",
     moyen: "Moyen",
     difficile: "Difficile",
+    all: "Mixte",
   };
 
   const isLieuxPack = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
@@ -114,8 +127,10 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
 
   const generateShareText = () => {
     const today = new Date().toISOString().split("T")[0];
-    const modeLabel = mode === "daily" ? `#${today}` : "(Libre)";
-    const shareUrl = `${window.location.origin}/play/blindpoint?pack=${pack}${isLieuxPack ? "" : `&difficulty=${difficulty}`}&mode=daily`;
+    const modeLabel = mode === "daily" ? `#${today}` : mode === "custom" ? "(Défi Custom)" : "(Libre)";
+    const shareUrl =
+      customShareUrl ||
+      `${window.location.origin}/play/blindpoint?pack=${pack}${isLieuxPack ? "" : `&difficulty=${difficulty}`}&mode=${mode}`;
 
     const roundLines = rounds
       .map((r, i) => {
@@ -126,12 +141,12 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
 
     return [
       `📍 Blind Point ${modeLabel} • ${packName}${isLieuxPack ? "" : ` (${diffName})`}`,
-      `Score : ${totalScore.toLocaleString("fr-FR")} / 25 000 pts`,
+      `Score : ${totalScore.toLocaleString("fr-FR")} / ${maxScore.toLocaleString("fr-FR")} pts (Moy: ${avgScore.toLocaleString("fr-FR")} pts/manche)`,
       `Erreur totale : ${formatDistance(totalDistance)}`,
       "",
       roundLines,
       "",
-      `Joue sur le même tirage :`,
+      `Rejoins le défi sur le même tirage :`,
       shareUrl,
     ].join("\n");
   };
@@ -192,22 +207,32 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
             {packName} • {isLieuxPack ? "Lieux Culturels" : `Niveau ${diffName}`}
           </p>
 
-          <div className="mt-4 flex items-center justify-center gap-6 p-3 rounded-2xl bg-slate-950/60 border border-slate-800">
+          <div className="mt-4 flex items-center justify-center gap-3 sm:gap-6 p-3 rounded-2xl bg-slate-950/60 border border-slate-800">
             <div>
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
                 Score Total
               </span>
-              <span className="text-2xl font-black text-blue-400 font-mono">
+              <span className="text-xl sm:text-2xl font-black text-blue-400 font-mono">
                 {totalScore.toLocaleString("fr-FR")}
               </span>
-              <span className="text-xs text-slate-500 ml-1 font-semibold">/ 25 000</span>
+              <span className="text-xs text-slate-500 ml-1 font-semibold">/ {maxScore.toLocaleString("fr-FR")}</span>
+            </div>
+            <div className="h-8 w-px bg-slate-800" />
+            <div>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
+                Moyenne / Manche
+              </span>
+              <span className="text-xl sm:text-2xl font-black text-purple-400 font-mono">
+                {avgScore.toLocaleString("fr-FR")}
+              </span>
+              <span className="text-[10px] text-slate-500 ml-1 font-semibold">pts</span>
             </div>
             <div className="h-8 w-px bg-slate-800" />
             <div>
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
                 Écart Total
               </span>
-              <span className="text-2xl font-black text-emerald-400 font-mono">
+              <span className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
                 {formatDistance(totalDistance)}
               </span>
             </div>
@@ -217,7 +242,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
         {/* Rounds Breakdown */}
         <div className="text-left">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 block">
-            Détail des 5 manches
+            Détail des {rounds.length} manches
           </span>
           <div className="space-y-1.5">
             {rounds.map((r, i) => (
@@ -296,18 +321,24 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
             className={`w-full flex items-center justify-center gap-2.5 py-3 px-5 rounded-2xl font-bold text-sm shadow-xl transition-all ${
               copied
                 ? "bg-emerald-600 text-white shadow-emerald-600/30"
+                : mode === "custom"
+                ? "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-600/30"
                 : "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white shadow-blue-600/30"
             }`}
           >
             {copied ? (
               <>
                 <Check className="w-4 h-4" />
-                <span>Résultats copiés dans le presse-papier !</span>
+                <span>Lien et résultats copiés dans le presse-papier !</span>
               </>
             ) : (
               <>
                 <Share2 className="w-4 h-4" />
-                <span>Partager mes résultats (Wordle)</span>
+                <span>
+                  {mode === "custom"
+                    ? "Défier un ami sur ce même tirage"
+                    : "Partager mes résultats (Wordle)"}
+                </span>
               </>
             )}
           </button>
