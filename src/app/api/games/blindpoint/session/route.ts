@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
   const validPacks: BlindPointPack[] = [
     "villes_france",
     "villes_monde",
+    "villes_europe",
     "lieux_france",
     "lieux_monde",
     "lieux_paris",
@@ -73,7 +74,7 @@ export async function GET(request: NextRequest) {
   const currentTarget = toClientTarget(targets[0], 0, actualTotalRounds);
 
   const response: BlindPointSessionInitResponse = {
-    sessionId: `bp_${mode}_${packsToUse.join("_")}_${difficulty}_${hashString(seed)}`,
+    sessionId: `bp_${mode}_${packsToUse.join("_")}_${mode === "daily" ? "standard" : difficulty}_${hashString(seed)}`,
     pack: primaryPack,
     packs: packsToUse,
     mode,

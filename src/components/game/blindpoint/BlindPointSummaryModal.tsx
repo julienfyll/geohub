@@ -108,6 +108,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   const packLabels: Record<BlindPointPack, string> = {
     villes_france: "Villes de France",
     villes_monde: "Villes du Monde",
+    villes_europe: "Villes d'Europe",
     lieux_france: "Patrimoine de France",
     lieux_paris: "Monuments de Paris",
     lieux_monde: "Merveilles du Monde",
@@ -118,6 +119,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   const packShortLabels: Record<BlindPointPack, string> = {
     villes_france: "France",
     villes_monde: "Monde",
+    villes_europe: "Europe",
     lieux_france: "Patrimoine",
     lieux_paris: "Paris",
     lieux_monde: "Merveilles",

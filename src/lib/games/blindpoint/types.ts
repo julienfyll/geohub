@@ -3,6 +3,7 @@ export type BlindPointCategory = "villes" | "lieux_emblematiques";
 export type BlindPointPack =
   | "villes_france"
   | "villes_monde"
+  | "villes_europe"
   | "lieux_france"
   | "lieux_monde"
   | "lieux_paris"

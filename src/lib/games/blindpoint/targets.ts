@@ -27,6 +27,9 @@ export function getTargetsByPack(
     case "villes_monde":
       pool = citiesWorld;
       break;
+    case "villes_europe":
+      pool = citiesWorld.filter((c) => c.continent === "EU");
+      break;
     case "lieux_france":
     case "chateaux_france":
       pool = lieuxFrance;
@@ -106,7 +109,7 @@ export function getSessionTargets(
   // Determine overall map scale
   let scale: "fr" | "world" | "paris" = "fr";
   const hasWorldPack = packsArray.some(
-    (p) => p === "villes_monde" || p === "lieux_monde" || p === "monuments_monde"
+    (p) => p === "villes_monde" || p === "lieux_monde" || p === "monuments_monde" || p === "villes_europe"
   );
   const onlyParis = packsArray.length === 1 && packsArray[0] === "lieux_paris";
 
@@ -122,11 +125,50 @@ export function getSessionTargets(
   if (!seed) {
     if (mode === "daily") {
       const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-      seed = `blindpoint-${today}-${packsArray.join("_")}-${difficulty}`;
+      seed = `blindpoint-${today}-${packsArray.join("_")}`;
     } else if (mode === "custom") {
       seed = `custom-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
     } else {
       seed = `free-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+    }
+  }
+
+  // Daily Mode: Balanced Gradual Progression (M1/M2 Facile, M3/M4 Moyen, M5 Difficile)
+  if (mode === "daily" && packsArray.length === 1 && totalRounds === 5 && !continentFilter) {
+    const p = packsArray[0];
+    if (p === "villes_france" || p === "villes_europe" || p === "lieux_paris") {
+      const allPool = getTargetsByPack(p);
+      const faciles = allPool.filter((c) => c.difficulty === "facile");
+      const moyens = allPool.filter((c) => c.difficulty === "moyen");
+      const difficiles = allPool.filter((c) => c.difficulty === "difficile");
+
+      const shF = shuffleWithSeed(faciles, `${seed}-facile`);
+      const shM = shuffleWithSeed(moyens, `${seed}-moyen`);
+      const shD = shuffleWithSeed(difficiles, `${seed}-difficile`);
+
+      const targets: BlindPointTarget[] = [shF[0], shF[1], shM[0], shM[1], shD[0]];
+      return { seed, targets, scale };
+    }
+    if (p === "villes_monde") {
+      const pool = getTargetsByPack("villes_monde");
+      const continents = ["EU", "NA", "AS", "SA", "AF"];
+      const selected: BlindPointTarget[] = [];
+      const usedIds = new Set<string>();
+
+      for (const cont of continents) {
+        const matching = pool.filter((c) => c.continent === cont && !usedIds.has(c.id));
+        if (matching.length > 0) {
+          const shuffled = shuffleWithSeed(matching, `${seed}-${cont}`);
+          selected.push(shuffled[0]);
+          usedIds.add(shuffled[0].id);
+        }
+      }
+      return { seed, targets: selected, scale };
+    }
+    if (p === "lieux_monde" || p === "lieux_france" || p === "chateaux_france" || p === "monuments_monde") {
+      const pool = getTargetsByPack(p);
+      const shuffled = shuffleWithSeed(pool, `${seed}-daily`);
+      return { seed, targets: shuffled.slice(0, 5), scale };
     }
   }
 

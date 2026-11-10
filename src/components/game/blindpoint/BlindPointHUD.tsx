@@ -92,7 +92,14 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   const getShareUrl = () => {
     if (typeof window === "undefined") return "";
     const isLieux = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
-    let url = `${window.location.origin}/play/blindpoint?pack=${pack}${isLieux ? "" : `&difficulty=${difficulty}`}&mode=${mode}`;
+    let url = `${window.location.origin}/play/blindpoint?mode=${mode}`;
+    if (packs && packs.length > 0) {
+      url += `&packs=${packs.join(",")}`;
+    } else {
+      url += `&pack=${pack}`;
+    }
+    if (!isLieux && difficulty) url += `&difficulty=${difficulty}`;
+    if (totalRounds && totalRounds !== 5) url += `&rounds=${totalRounds}`;
     if (seed) url += `&seed=${seed}`;
     url += `&play=1`;
     return url;
@@ -143,6 +150,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   const packLabels: Record<BlindPointPack, { name: string; shortName: string; icon: string }> = {
     villes_france: { name: "Villes de France", shortName: "Villes France", icon: "🇫🇷" },
     villes_monde: { name: "Villes du Monde", shortName: "Villes Monde", icon: "🌍" },
+    villes_europe: { name: "Villes d'Europe", shortName: "Villes Europe", icon: "🇪🇺" },
     lieux_france: { name: "Patrimoine de France", shortName: "Patrimoine", icon: "🏰" },
     lieux_paris: { name: "Monuments de Paris", shortName: "Paris", icon: "🗼" },
     lieux_monde: { name: "Merveilles du Monde", shortName: "Merveilles", icon: "🏛️" },
