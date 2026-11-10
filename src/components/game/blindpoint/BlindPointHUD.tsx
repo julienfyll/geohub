@@ -20,6 +20,7 @@ import {
   Check,
   Trophy,
   Sliders,
+  Zap,
 } from "lucide-react";
 import {
   BlindPointClientTarget,
@@ -156,8 +157,8 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   return (
     <>
       {/* Top Fixed Navigation Header */}
-      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-2.5 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        {/* Left: Hub back button, Logo & Pack Dropdown */}
+      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
+        {/* Left: Hub back button & Logo */}
         <div className="flex items-center gap-2.5">
           <Link
             href="/"
@@ -168,7 +169,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             <span>Hub</span>
           </Link>
 
-          <div className="flex items-center gap-2 pr-2 border-r border-slate-800/80">
+          <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
               <MapPin className="w-3.5 h-3.5" />
             </div>
@@ -176,207 +177,235 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
               Blind Point
             </h1>
           </div>
+        </div>
 
-          {/* Interactive Pack Selector */}
-          <div className="relative" ref={packMenuRef}>
+        {/* Center: Mode Indicator & Pack Switcher (Visual Segmented Pills) */}
+        <div className="flex items-center gap-2">
+          {/* Mode Switcher : Daily vs Libre */}
+          <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
             <button
               type="button"
-              onClick={() => setIsPackMenuOpen((prev) => !prev)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-slate-200 transition-all shadow-sm"
-              title="Changer de pack, difficulté ou mode"
+              onClick={() => {
+                if (onChangeMode) {
+                  onChangeMode(pack, difficulty, "daily");
+                } else {
+                  router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=daily&play=1`);
+                }
+              }}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                mode === "daily"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Défi officiel du jour (tirage identique pour tous)"
             >
-              <span>{currentPackMeta.icon}</span>
-              <span className="font-semibold text-white hidden md:inline">
-                {currentPackMeta.name}
-              </span>
-              {!isLieuxPack ? (
-                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${currentDiffMeta.badge}`}>
-                  {currentDiffMeta.label}
-                </span>
-              ) : (
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-purple-300 bg-purple-500/15 border border-purple-500/30">
-                  Lieux
-                </span>
-              )}
-              <span className="px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 text-[10px] font-bold uppercase tracking-wider hidden lg:inline">
-                {mode === "daily" ? "Du jour" : "Libre"}
-              </span>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
+              <span>📅 Du Jour</span>
             </button>
 
-            {/* Dropdown Menu */}
-            {isPackMenuOpen && (
-              <div className="absolute top-full left-0 mt-2 w-80 bg-slate-900/95 border border-slate-700/90 rounded-2xl p-2.5 shadow-2xl backdrop-blur-xl z-50 flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-150">
-                {/* Category 1 : Villes */}
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1 block mb-1">
-                    🏙️ Villes & Agglomérations
-                  </span>
-                  <div className="space-y-1">
-                    {[
-                      { id: "villes_france", name: "Villes de France", icon: "🇫🇷", desc: "139 métropoles & préfectures" },
-                      { id: "villes_monde", name: "Villes du Monde", icon: "🌍", desc: "167 métropoles des 6 continents" },
-                    ].map((p) => (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => {
-                          setIsPackMenuOpen(false);
-                          if (onChangeMode) {
-                            onChangeMode(p.id as BlindPointPack, difficulty, mode);
-                          } else {
-                            router.push(`/play/blindpoint?pack=${p.id}&difficulty=${difficulty}&mode=${mode}&play=1`);
-                          }
-                        }}
-                        className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
-                          pack === p.id
-                            ? "bg-blue-600/20 border border-blue-500/40 text-blue-300"
-                            : "hover:bg-slate-800 text-slate-300"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <span className="text-base">{p.icon}</span>
-                          <div>
-                            <p className="text-xs font-bold text-white leading-tight">{p.name}</p>
-                            <p className="text-[10px] text-slate-400 leading-tight">{p.desc}</p>
-                          </div>
-                        </div>
-                        {pack === p.id && <span className="text-xs text-blue-400 font-bold">✓</span>}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (onChangeMode) {
+                  onChangeMode(pack, difficulty, "free");
+                } else {
+                  router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=free&seed=${Date.now()}&play=1`);
+                }
+              }}
+              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                mode === "free"
+                  ? "bg-blue-600 text-white font-semibold shadow-sm"
+                  : "text-slate-400 hover:text-white"
+              }`}
+              title="Partie libre illimitée avec tirage aléatoire"
+            >
+              <Zap className="w-3 h-3" />
+              <span>Libre</span>
+            </button>
+          </div>
 
-                {/* Category 2 : Lieux emblématiques */}
-                <div className="border-t border-slate-800 pt-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 px-1 block mb-1">
-                    🏛️ Lieux emblématiques
-                  </span>
-                  <div className="space-y-1">
-                    {[
-                      { id: "lieux_france", name: "Lieux emblématiques (France)", icon: "🏰", desc: "58 châteaux de la Loire, citadelles & monuments" },
-                      { id: "lieux_paris", name: "Monuments de Paris", icon: "🗼", desc: "60 trésors emblématiques intra-muros" },
-                      { id: "lieux_monde", name: "Lieux emblématiques (Monde)", icon: "🏛️", desc: "50 merveilles de l'humanité & sites UNESCO" },
-                    ].map((p) => (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => {
-                          setIsPackMenuOpen(false);
-                          if (onChangeMode) {
-                            onChangeMode(p.id as BlindPointPack, difficulty, mode);
-                          } else {
-                            router.push(`/play/blindpoint?pack=${p.id}&difficulty=${difficulty}&mode=${mode}&play=1`);
-                          }
-                        }}
-                        className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
-                          pack === p.id
-                            ? "bg-purple-600/20 border border-purple-500/40 text-purple-300"
-                            : "hover:bg-slate-800 text-slate-300"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <span className="text-base">{p.icon}</span>
-                          <div>
-                            <p className="text-xs font-bold text-white leading-tight">{p.name}</p>
-                            <p className="text-[10px] text-slate-400 leading-tight">{p.desc}</p>
-                          </div>
-                        </div>
-                        {pack === p.id && <span className="text-xs text-purple-400 font-bold">✓</span>}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+          {/* Pack / Territoire Switcher */}
+          <div className="hidden md:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+            {[
+              { id: "villes_france" as const, label: "🇫🇷 Villes", desc: "139 villes & métropoles de France" },
+              { id: "lieux_paris" as const, label: "🗼 Paris", desc: "60 monuments de Paris intra-muros" },
+              { id: "lieux_france" as const, label: "🏰 Patrimoine", desc: "58 châteaux & édifices de France" },
+              { id: "villes_monde" as const, label: "🌍 Monde", desc: "167 métropoles des 6 continents" },
+            ].map((p) => {
+              const isSelected = pack === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => {
+                    if (onChangeMode) {
+                      onChangeMode(p.id, difficulty, mode);
+                    } else {
+                      router.push(`/play/blindpoint?pack=${p.id}&difficulty=${difficulty}&mode=${mode}&play=1`);
+                    }
+                  }}
+                  className={`px-2.5 py-1 rounded-lg transition-all ${
+                    isSelected
+                      ? "bg-blue-600 text-white font-semibold shadow-sm"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                  title={p.desc}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
 
-                {/* Difficulty Section (only for cities) */}
-                {!isLieuxPack && (
-                  <div className="border-t border-slate-800 pt-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1 block mb-1.5">
-                      Difficulté
+            {/* Plus / All packs dropdown trigger */}
+            <div className="relative" ref={packMenuRef}>
+              <button
+                type="button"
+                onClick={() => setIsPackMenuOpen((prev) => !prev)}
+                className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                  pack === "lieux_monde" || pack === "monuments_monde" || pack === "chateaux_france" || isPackMenuOpen
+                    ? "bg-blue-600 text-white font-semibold shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+                title="Autres packs, difficulté et configuration"
+              >
+                <Sliders className="w-3 h-3" />
+                <span className="hidden lg:inline">Plus</span>
+              </button>
+
+              {/* Dropdown Menu for extra packs & full config */}
+              {isPackMenuOpen && (
+                <div className="absolute top-full right-0 mt-2 w-80 bg-slate-900/95 border border-slate-700/90 rounded-2xl p-2.5 shadow-2xl backdrop-blur-xl z-50 flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-150 text-left">
+                  {/* Category 1 : Villes */}
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1 block mb-1">
+                      🏙️ Villes & Agglomérations
                     </span>
-                    <div className="grid grid-cols-3 gap-1">
-                      {(["facile", "moyen", "difficile"] as BlindPointDifficulty[]).map((d) => (
+                    <div className="space-y-1">
+                      {[
+                        { id: "villes_france", name: "Villes de France", icon: "🇫🇷", desc: "139 métropoles & préfectures" },
+                        { id: "villes_monde", name: "Villes du Monde", icon: "🌍", desc: "167 métropoles des 6 continents" },
+                      ].map((p) => (
                         <button
-                          key={d}
+                          key={p.id}
                           type="button"
                           onClick={() => {
                             setIsPackMenuOpen(false);
                             if (onChangeMode) {
-                              onChangeMode(pack, d, mode);
+                              onChangeMode(p.id as BlindPointPack, difficulty, mode);
                             } else {
-                              router.push(`/play/blindpoint?pack=${pack}&difficulty=${d}&mode=${mode}&play=1`);
+                              router.push(`/play/blindpoint?pack=${p.id}&difficulty=${difficulty}&mode=${mode}&play=1`);
                             }
                           }}
-                          className={`py-1.5 px-2 rounded-lg text-center font-bold text-[11px] capitalize border transition-all ${
-                            difficulty === d
-                              ? "bg-blue-600 border-blue-500 text-white shadow-md shadow-blue-600/30"
-                              : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700"
+                          className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
+                            pack === p.id
+                              ? "bg-blue-600/20 border border-blue-500/40 text-blue-300"
+                              : "hover:bg-slate-800 text-slate-300"
                           }`}
                         >
-                          {d}
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-base">{p.icon}</span>
+                            <div>
+                              <p className="text-xs font-bold text-white leading-tight">{p.name}</p>
+                              <p className="text-[10px] text-slate-400 leading-tight">{p.desc}</p>
+                            </div>
+                          </div>
+                          {pack === p.id && <span className="text-xs text-blue-400 font-bold">✓</span>}
                         </button>
                       ))}
                     </div>
                   </div>
-                )}
 
-                {/* Mode Section */}
-                <div className="border-t border-slate-800 pt-2 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400 font-medium">Mode :</span>
-                  <div className="flex gap-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsPackMenuOpen(false);
-                        if (onChangeMode) {
-                          onChangeMode(pack, difficulty, "daily");
-                        } else {
-                          router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=daily&play=1`);
-                        }
-                      }}
-                      className={`px-2.5 py-1 rounded-lg font-bold text-[10px] ${
-                        mode === "daily" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      Défi du jour
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsPackMenuOpen(false);
-                        if (onChangeMode) {
-                          onChangeMode(pack, difficulty, "free");
-                        } else {
-                          router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=free&seed=${Date.now()}&play=1`);
-                        }
-                      }}
-                      className={`px-2.5 py-1 rounded-lg font-bold text-[10px] ${
-                        mode === "free" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      Libre
-                    </button>
-                  </div>
-                </div>
-
-                {/* Link to Full Config / Lobby */}
-                {onBackToLobby && (
+                  {/* Category 2 : Lieux emblématiques */}
                   <div className="border-t border-slate-800 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsPackMenuOpen(false);
-                        onBackToLobby();
-                      }}
-                      className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-[11px] font-semibold text-slate-300 hover:text-white border border-slate-700/60 transition-all"
-                    >
-                      <Sliders className="w-3.5 h-3.5 text-blue-400" />
-                      <span>Écran de configuration complet</span>
-                    </button>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 px-1 block mb-1">
+                      🏛️ Lieux emblématiques & Merveilles
+                    </span>
+                    <div className="space-y-1">
+                      {[
+                        { id: "lieux_france", name: "Patrimoine de France", icon: "🏰", desc: "58 châteaux de la Loire, citadelles & monuments" },
+                        { id: "lieux_paris", name: "Monuments de Paris", icon: "🗼", desc: "60 trésors emblématiques intra-muros" },
+                        { id: "lieux_monde", name: "Merveilles du Monde", icon: "🏛️", desc: "50 merveilles de l'humanité & sites UNESCO" },
+                      ].map((p) => (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => {
+                            setIsPackMenuOpen(false);
+                            if (onChangeMode) {
+                              onChangeMode(p.id as BlindPointPack, difficulty, mode);
+                            } else {
+                              router.push(`/play/blindpoint?pack=${p.id}&difficulty=${difficulty}&mode=${mode}&play=1`);
+                            }
+                          }}
+                          className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-all ${
+                            pack === p.id
+                              ? "bg-purple-600/20 border border-purple-500/40 text-purple-300"
+                              : "hover:bg-slate-800 text-slate-300"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-base">{p.icon}</span>
+                            <div>
+                              <p className="text-xs font-bold text-white leading-tight">{p.name}</p>
+                              <p className="text-[10px] text-slate-400 leading-tight">{p.desc}</p>
+                            </div>
+                          </div>
+                          {pack === p.id && <span className="text-xs text-purple-400 font-bold">✓</span>}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                )}
-              </div>
-            )}
+
+                  {/* Difficulty Section (for cities) */}
+                  {!isLieuxPack && (
+                    <div className="border-t border-slate-800 pt-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1 block mb-1.5">
+                        Difficulté
+                      </span>
+                      <div className="grid grid-cols-3 gap-1">
+                        {(["facile", "moyen", "difficile"] as BlindPointDifficulty[]).map((d) => (
+                          <button
+                            key={d}
+                            type="button"
+                            onClick={() => {
+                              setIsPackMenuOpen(false);
+                              if (onChangeMode) {
+                                onChangeMode(pack, d, mode);
+                              } else {
+                                router.push(`/play/blindpoint?pack=${pack}&difficulty=${d}&mode=${mode}&play=1`);
+                              }
+                            }}
+                            className={`py-1.5 px-2 rounded-lg text-center font-bold text-[11px] capitalize border transition-all ${
+                              difficulty === d
+                                ? "bg-blue-600 border-blue-500 text-white shadow-md shadow-blue-600/30"
+                                : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700"
+                            }`}
+                          >
+                            {d}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Link to Full Config / Lobby */}
+                  {onBackToLobby && (
+                    <div className="border-t border-slate-800 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsPackMenuOpen(false);
+                          onBackToLobby();
+                        }}
+                        className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-[11px] font-semibold text-slate-300 hover:text-white border border-slate-700/60 transition-all"
+                      >
+                        <Sliders className="w-3.5 h-3.5 text-blue-400" />
+                        <span>Écran de configuration complet</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
