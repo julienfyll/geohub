@@ -76,7 +76,7 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
 
       {/* Backdrop & Drawer Panel */}
       {isOpen && mounted && createPortal(
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-[100] flex">
           {/* Backdrop blur */}
           <div
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-fade-in"

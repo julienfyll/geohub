@@ -41,6 +41,11 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   const [dateOffset, setDateOffset] = useState<0 | 1>(0); // 0 = today, 1 = yesterday
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<LeaderboardResponse | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Sync initial props when opened
   useEffect(() => {
@@ -90,14 +95,14 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       .finally(() => setLoading(false));
   }, [isOpen, activeTab, activeVariant, dateOffset]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const entries = data?.entries || [];
   const top3 = entries.slice(0, 3);
   const restEntries = entries.slice(3);
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
       <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="p-5 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/60">
@@ -418,6 +423,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
