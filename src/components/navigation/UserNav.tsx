@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Flame, User, LogOut, ChevronDown, UserCircle, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { Flame, User, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { ProfileModal } from "@/components/profile/ProfileModal";
 
@@ -10,21 +10,8 @@ interface UserNavProps {
 }
 
 export const UserNav: React.FC<UserNavProps> = ({ compact = false }) => {
-  const { user, profile, streak, loading, signInWithGoogle, signOut } = useAuth();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { user, profile, streak, loading, signInWithGoogle } = useAuth();
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown on click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const displayName = profile?.username || user?.user_metadata?.name || "Joueur";
   const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
@@ -50,61 +37,27 @@ export const UserNav: React.FC<UserNavProps> = ({ compact = false }) => {
             <Loader2 className="w-4 h-4 text-slate-500 animate-spin" />
           </div>
         ) : user ? (
-          /* Logged In User Dropdown */
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setShowDropdown((prev) => !prev)}
-              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800/80 hover:border-slate-700 transition-all text-xs font-medium text-slate-200"
-              title="Mon profil & statistiques"
-            >
-              <div className="w-6 h-6 rounded-full overflow-hidden bg-blue-600 flex items-center justify-center text-[10px] font-bold text-white border border-blue-400/40">
-                {avatarUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
-                ) : (
-                  displayName.charAt(0).toUpperCase()
-                )}
-              </div>
-              <span className={`max-w-[100px] truncate font-semibold text-white ${compact ? "hidden sm:inline" : ""}`}>
-                {displayName}
-              </span>
-              <ChevronDown className="w-3 h-3 text-slate-400" />
-            </button>
-
-            {/* Dropdown Menu */}
-            {showDropdown && (
-              <div className="absolute right-0 mt-2 w-52 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-1.5 z-50 animate-fade-in text-xs font-medium">
-                <div className="px-3 py-2 border-b border-slate-800 mb-1">
-                  <p className="font-bold text-white truncate">{displayName}</p>
-                  <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
-                </div>
-
-                <button
-                  onClick={() => {
-                    setShowDropdown(false);
-                    setShowProfileModal(true);
-                  }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors text-left"
-                >
-                  <UserCircle className="w-4 h-4 text-blue-400" />
-                  Mon profil & stats
-                </button>
-
-                <div className="my-1 border-t border-slate-800" />
-
-                <button
-                  onClick={() => {
-                    setShowDropdown(false);
-                    signOut();
-                  }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors text-left"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Se déconnecter
-                </button>
+          /* Profile Icon Only Button (Opens Details on Click) */
+          <button
+            onClick={() => setShowProfileModal(true)}
+            className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden bg-slate-900 border border-slate-700/80 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all shadow-sm flex items-center justify-center group cursor-pointer"
+            title="Mon profil & statistiques détaillées"
+            aria-label="Mon profil et statistiques"
+          >
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt={displayName}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="w-full h-full bg-blue-600/30 flex items-center justify-center text-blue-300 font-bold text-xs group-hover:bg-blue-600/40 transition-colors">
+                <User className="w-4 h-4 text-slate-200 group-hover:text-white" />
               </div>
             )}
-          </div>
+          </button>
         ) : (
           /* Guest: Sign in with Google Button */
           <button

@@ -14,7 +14,6 @@ import {
   X,
   Flame,
   ArrowRight,
-  UserCheck,
 } from "lucide-react";
 import { BlindPointRoundResult, BlindPointPack, BlindPointDifficulty } from "@/lib/games/blindpoint/types";
 import { formatDistance } from "@/lib/games/blindpoint/scoring";
@@ -257,15 +256,8 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
           </div>
         </div>
 
-        {/* Account / Guest Banner */}
-        {user ? (
-          <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-medium text-emerald-300">
-            <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="truncate">
-              Partie enregistrée sur le compte de <strong>{profile?.username || user.email}</strong>
-            </span>
-          </div>
-        ) : (
+        {/* Guest Banner */}
+        {!user && (
           <div className="p-3 rounded-2xl bg-gradient-to-r from-blue-950/80 to-indigo-950/80 border border-blue-500/30 flex items-center justify-between text-left gap-3">
             <div className="flex-1">
               <p className="text-xs font-bold text-white flex items-center gap-1.5">

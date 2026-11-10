@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import confetti from "canvas-confetti";
-import { Trophy, Share2, RotateCcw, Check, Sparkles, X, Plane, Flame, UserCheck } from "lucide-react";
+import { Trophy, Share2, RotateCcw, Check, Sparkles, X, Plane, Flame } from "lucide-react";
 import { RingStatus } from "./RingProgressHUD";
 import { GameMetric, GameScale } from "@/lib/games/types";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -216,15 +216,8 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           ))}
         </div>
 
-        {/* Account / Guest Banner */}
-        {user ? (
-          <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-medium text-emerald-300">
-            <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="truncate">
-              Partie enregistrée sur le compte de <strong>{profile?.username || user.email}</strong>
-            </span>
-          </div>
-        ) : (
+        {/* Guest Banner */}
+        {!user && (
           <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-950/80 to-indigo-950/80 border border-blue-500/30 flex items-center justify-between text-left gap-3">
             <div className="flex-1">
               <p className="text-xs font-bold text-white flex items-center gap-1.5">

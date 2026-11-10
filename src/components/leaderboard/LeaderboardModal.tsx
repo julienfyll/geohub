@@ -47,6 +47,17 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     setMounted(true);
   }, []);
 
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   // Sync initial props when opened
   useEffect(() => {
     if (isOpen) {
@@ -102,8 +113,15 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   const restEntries = entries.slice(3);
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-[100] overflow-y-auto p-3 sm:p-6 bg-slate-950/85 backdrop-blur-md flex items-center justify-center min-h-screen animate-fade-in">
+      {/* Backdrop click to dismiss */}
+      <div
+        className="fixed inset-0 -z-10"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="p-5 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/60">
           <div className="flex items-center gap-3">

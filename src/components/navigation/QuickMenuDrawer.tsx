@@ -12,18 +12,9 @@ import {
   Home,
   Plane,
   Users,
-  Landmark,
-  Flame,
-  UserCircle,
-  Sliders,
   ChevronRight,
-  ExternalLink,
-  Sparkles,
-  Zap,
   Trophy,
 } from "lucide-react";
-import { useAuth } from "@/lib/auth/AuthContext";
-import { ProfileModal } from "@/components/profile/ProfileModal";
 import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 
 interface QuickMenuDrawerProps {
@@ -32,10 +23,8 @@ interface QuickMenuDrawerProps {
 
 export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { user, profile, streak } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -57,8 +46,6 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
     setIsOpen(false);
     router.push(href);
   };
-
-  const displayName = profile?.username || user?.user_metadata?.name || "Joueur";
 
   return (
     <>
@@ -108,33 +95,6 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                 title="Fermer le menu"
               >
                 <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Quick Profile Summary Badge */}
-            <div className="p-4 mx-4 mt-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2.5 overflow-hidden">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shrink-0 border border-blue-400/30">
-                  {displayName.charAt(0).toUpperCase()}
-                </div>
-                <div className="truncate">
-                  <p className="text-xs font-bold text-white truncate">{displayName}</p>
-                  <p className="text-[10px] text-amber-400 font-semibold flex items-center gap-1">
-                    <Flame className="w-3 h-3 fill-amber-500 text-amber-500" />
-                    Série : {streak.current_streak || 0} j
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setIsOpen(false);
-                  setShowProfileModal(true);
-                }}
-                className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-blue-400 hover:text-blue-300 border border-slate-700/60 transition-colors shrink-0"
-              >
-                Profil
               </button>
             </div>
 
@@ -297,12 +257,6 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
         </div>,
         document.body
       )}
-
-      {/* Profile Modal */}
-      <ProfileModal
-        isOpen={showProfileModal}
-        onClose={() => setShowProfileModal(false)}
-      />
 
       {/* Leaderboard Modal */}
       <LeaderboardModal
