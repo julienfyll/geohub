@@ -56,70 +56,42 @@ export const BlindPointSettingsModal: React.FC<BlindPointSettingsModalProps> = (
           </button>
         </div>
 
+        {/* Basemap Style Theme Selector (identical to GeoRings) */}
+        <div>
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">
+            Calque visuel de la carte
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { id: "dark" as const, label: "Sombre", icon: "🌑", desc: "Espaces verts & fleuves" },
+              { id: "voyager" as const, label: "Voyageur", icon: "🧭", desc: "Relief naturel & crème" },
+              { id: "positron" as const, label: "Clair", icon: "☀️", desc: "Atlas épuré blanc" },
+            ].map((theme) => {
+              const isSelected = (settings.mapTheme || "dark") === theme.id;
+              return (
+                <button
+                  key={theme.id}
+                  type="button"
+                  onClick={() => onUpdateSetting("mapTheme", theme.id)}
+                  className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
+                    isSelected
+                      ? "bg-blue-600/25 border-blue-500 text-white ring-1 ring-blue-500/60 shadow-lg shadow-blue-500/20"
+                      : "bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-800"
+                  }`}
+                >
+                  <span className="text-lg mb-1">{theme.icon}</span>
+                  <span className="font-bold text-xs">{theme.label}</span>
+                  <span className="text-[10px] text-slate-500 mt-0.5 leading-tight">{theme.desc}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Settings List */}
         <div className="flex flex-col gap-4 text-sm divide-y divide-slate-800/80">
-          {/* Map Theme Selection */}
-          <div className="flex flex-col gap-2 pt-1">
-            <div className="flex items-start gap-3">
-              <Compass className="w-4 h-4 text-emerald-400 mt-1 shrink-0" />
-              <div>
-                <p className="font-semibold text-white">Thème & Lisibilité de la carte</p>
-                <p className="text-xs text-slate-400">
-                  Choisissez le contraste adapté à votre écran et votre confort visuel.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 mt-1">
-              {[
-                {
-                  id: "voyager" as const,
-                  label: "Voyageur",
-                  sub: "Naturel & Détaillé",
-                  icon: Compass,
-                  color: "text-emerald-400",
-                },
-                {
-                  id: "positron" as const,
-                  label: "Clair",
-                  sub: "Minimaliste",
-                  icon: Sun,
-                  color: "text-amber-400",
-                },
-                {
-                  id: "dark" as const,
-                  label: "Sombre",
-                  sub: "Midnight",
-                  icon: Moon,
-                  color: "text-indigo-400",
-                },
-              ].map((opt) => {
-                const Icon = opt.icon;
-                const isSelected = (settings.mapTheme || "voyager") === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => onUpdateSetting("mapTheme", opt.id)}
-                    className={`py-2 px-2.5 rounded-xl text-left border transition-all flex flex-col gap-1 ${
-                      isSelected
-                        ? "bg-blue-600/20 border-blue-400 shadow-md shadow-blue-500/10 text-white"
-                        : "bg-slate-800/60 border-slate-700/80 text-slate-400 hover:text-slate-200 hover:bg-slate-800"
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <Icon className={`w-3.5 h-3.5 ${opt.color}`} />
-                      <span className="text-xs font-bold">{opt.label}</span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 leading-tight">{opt.sub}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Borders Toggle */}
-          <div className="flex items-center justify-between pt-3">
+          <div className="flex items-center justify-between pt-1">
             <div className="flex items-start gap-3 pr-2">
               <Map className="w-4 h-4 text-emerald-400 mt-1 shrink-0" />
               <div>

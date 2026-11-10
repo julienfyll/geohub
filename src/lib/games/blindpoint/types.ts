@@ -91,7 +91,7 @@ export interface BlindPointGuessResponse {
   isGameOver: boolean;
 }
 
-export type BlindPointMapTheme = "voyager" | "positron" | "dark";
+export type BlindPointMapTheme = "dark" | "voyager" | "positron";
 
 export interface BlindPointSettings {
   showBorders: boolean;
@@ -108,5 +108,5 @@ export const DEFAULT_BLINDPOINT_SETTINGS: BlindPointSettings = {
   showTargetPhoto: true,
   showTargetName: true,
   timerDurationSeconds: 0,
-  mapTheme: "voyager",
+  mapTheme: "dark", // Sombre Naturel par défaut (espaces verts, fleuves & voirie préservés)
 };

@@ -2,20 +2,20 @@
 
 import React, { useEffect, useRef, useCallback } from "react";
 import maplibregl from "maplibre-gl";
-import { Maximize2, ZoomIn, ZoomOut, Compass, Sun, Moon } from "lucide-react";
+import { Maximize2, ZoomIn, ZoomOut } from "lucide-react";
 import { createGreatCircleArc, formatDistance } from "@/lib/games/blindpoint/scoring";
 import { BlindPointRoundResult, BlindPointMapTheme } from "@/lib/games/blindpoint/types";
 
 export const BASEMAP_STYLES: Record<BlindPointMapTheme, string> = {
+  dark: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
   voyager: "https://basemaps.cartocdn.com/gl/voyager-nolabels-gl-style/style.json",
   positron: "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json",
-  dark: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
 };
 
 export const THEME_NAMES: Record<BlindPointMapTheme, string> = {
-  voyager: "Voyageur (Naturel & Détaillé)",
-  positron: "Clair (Minimaliste)",
-  dark: "Sombre (Midnight)",
+  dark: "Sombre (Naturel & Espaces Verts)",
+  voyager: "Voyageur (Naturel & Crème)",
+  positron: "Clair (Atlas Épuré)",
 };
 
 // Bounding box for Metropolitan France + Corsica [minLon, minLat, maxLon, maxLat]
@@ -34,7 +34,6 @@ export interface BlindPointMapProps {
   allRounds?: BlindPointRoundResult[];
   showBorders?: boolean;
   mapTheme?: BlindPointMapTheme;
-  onChangeMapTheme?: (theme: BlindPointMapTheme) => void;
   onPlaceGuess: (coords: { lat: number; lon: number }) => void;
   className?: string;
 }
@@ -49,8 +48,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
   currentTargetName = "Cible réelle",
   allRounds = [],
   showBorders = true,
-  mapTheme = "voyager",
-  onChangeMapTheme,
+  mapTheme = "dark",
   onPlaceGuess,
   className = "w-full h-full",
 }) => {
@@ -417,6 +415,99 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     };
   }, [scale]);
 
+  // Apply visual enhancements (Voyager-style green spaces & blue water onto Dark Matter)
+  const applyBasemapTheme = (map: maplibregl.Map, theme: BlindPointMapTheme) => {
+    if (theme === "dark") {
+      // 1. Water & Rivers: Deep rich sapphire blue
+      if (map.getLayer("water")) {
+        try {
+          map.setPaintProperty("water", "fill-color", "#162a45");
+        } catch (e) {}
+      }
+      if (map.getLayer("waterway")) {
+        try {
+          map.setPaintProperty("waterway", "line-color", "#2563eb");
+        } catch (e) {}
+      }
+
+      // 2. Green Spaces & Parks: Soft vibrant emerald & forest greens (Voyager-like)
+      const greenColor = "rgba(34, 197, 94, 0.28)";
+      const forestColor = "rgba(22, 101, 52, 0.22)";
+      if (map.getLayer("park_national_park")) {
+        try {
+          map.setPaintProperty("park_national_park", "fill-color", greenColor);
+        } catch (e) {}
+      }
+      if (map.getLayer("park_nature_reserve")) {
+        try {
+          map.setPaintProperty("park_nature_reserve", "fill-color", greenColor);
+        } catch (e) {}
+      }
+      if (map.getLayer("landuse")) {
+        try {
+          map.setPaintProperty("landuse", "fill-color", greenColor);
+        } catch (e) {}
+      }
+      if (map.getLayer("landcover")) {
+        try {
+          map.setPaintProperty("landcover", "fill-color", forestColor);
+        } catch (e) {}
+      }
+
+      // 3. Streets, Boulevards & Bridges: Luminous subtle slate silver for urban navigation
+      if (map.getLayer("road_minor_fill")) {
+        try {
+          map.setPaintProperty("road_minor_fill", "line-color", "rgba(100, 116, 139, 0.25)");
+        } catch (e) {}
+      }
+      if (map.getLayer("road_sec_fill_noramp")) {
+        try {
+          map.setPaintProperty("road_sec_fill_noramp", "line-color", "rgba(148, 163, 184, 0.4)");
+        } catch (e) {}
+      }
+      if (map.getLayer("road_pri_fill_noramp")) {
+        try {
+          map.setPaintProperty("road_pri_fill_noramp", "line-color", "rgba(203, 213, 225, 0.55)");
+        } catch (e) {}
+      }
+      if (map.getLayer("road_trunk_fill_noramp")) {
+        try {
+          map.setPaintProperty("road_trunk_fill_noramp", "line-color", "rgba(56, 189, 248, 0.5)");
+        } catch (e) {}
+      }
+      if (map.getLayer("road_mot_fill_noramp")) {
+        try {
+          map.setPaintProperty("road_mot_fill_noramp", "line-color", "rgba(56, 189, 248, 0.6)");
+        } catch (e) {}
+      }
+      if (map.getLayer("bridge_minor_fill")) {
+        try {
+          map.setPaintProperty("bridge_minor_fill", "line-color", "rgba(148, 163, 184, 0.45)");
+        } catch (e) {}
+      }
+      if (map.getLayer("bridge_sec_fill")) {
+        try {
+          map.setPaintProperty("bridge_sec_fill", "line-color", "rgba(203, 213, 225, 0.65)");
+        } catch (e) {}
+      }
+      if (map.getLayer("bridge_pri_fill")) {
+        try {
+          map.setPaintProperty("bridge_pri_fill", "line-color", "rgba(241, 245, 249, 0.8)");
+        } catch (e) {}
+      }
+      if (map.getLayer("bridge_trunk_fill")) {
+        try {
+          map.setPaintProperty("bridge_trunk_fill", "line-color", "rgba(56, 189, 248, 0.7)");
+        } catch (e) {}
+      }
+      if (map.getLayer("building-top")) {
+        try {
+          map.setPaintProperty("building-top", "fill-color", "rgba(30, 41, 59, 0.35)");
+        } catch (e) {}
+      }
+    }
+  };
+
   // Switch basemap style dynamically when mapTheme prop changes
   useEffect(() => {
     const map = mapRef.current;
@@ -424,7 +515,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     if (currentThemeRef.current === mapTheme) return;
 
     currentThemeRef.current = mapTheme;
-    const styleUrl = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.voyager;
+    const styleUrl = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
     map.setStyle(styleUrl);
 
     map.once("style.load", () => {
@@ -452,14 +543,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       }
     });
 
-    // In dark theme, boost water contrast so rivers and seas stand out crisply
-    if (mapTheme === "dark" && map.getLayer("water")) {
-      try {
-        map.setPaintProperty("water", "fill-color", "#1e293b");
-      } catch (e) {
-        // ignore
-      }
-    }
+    applyBasemapTheme(map, mapTheme);
   };
 
   useEffect(() => {
@@ -699,28 +783,6 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
 
       {/* Floating Map Controls */}
       <div className="absolute right-4 bottom-24 z-20 flex flex-col gap-2">
-        {onChangeMapTheme && (
-          <button
-            type="button"
-            onClick={() => {
-              const themeCycle: BlindPointMapTheme[] = ["voyager", "positron", "dark"];
-              const nextTheme = themeCycle[(themeCycle.indexOf(mapTheme) + 1) % themeCycle.length];
-              onChangeMapTheme(nextTheme);
-            }}
-            className="p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 shadow-xl backdrop-blur-md transition-all active:scale-95 flex items-center justify-center group"
-            title={`Style de carte : ${THEME_NAMES[mapTheme]} (Cliquer pour alterner)`}
-            aria-label="Changer le style de carte"
-          >
-            {mapTheme === "voyager" ? (
-              <Compass className="w-5 h-5 text-emerald-400 group-hover:rotate-45 transition-transform" />
-            ) : mapTheme === "positron" ? (
-              <Sun className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" />
-            ) : (
-              <Moon className="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" />
-            )}
-          </button>
-        )}
-
         <button
           type="button"
           onClick={() => {

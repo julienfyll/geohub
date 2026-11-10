@@ -953,8 +953,7 @@ function BlindPointGame() {
         currentTargetName={currentTarget?.name}
         allRounds={roundsHistory}
         showBorders={settings.showBorders}
-        mapTheme={settings.mapTheme || "voyager"}
-        onChangeMapTheme={(theme) => handleUpdateSetting("mapTheme", theme)}
+        mapTheme={settings.mapTheme || "dark"}
         onPlaceGuess={handlePlaceGuess}
       />
 
