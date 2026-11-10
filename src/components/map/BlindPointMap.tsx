@@ -1,19 +1,82 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback } from "react";
-import maplibregl from "maplibre-gl";
+import maplibregl, { StyleSpecification } from "maplibre-gl";
 import { Maximize2, ZoomIn, ZoomOut } from "lucide-react";
 import { createGreatCircleArc, formatDistance } from "@/lib/games/blindpoint/scoring";
 import { BlindPointRoundResult, BlindPointMapTheme } from "@/lib/games/blindpoint/types";
 
-export const BASEMAP_STYLES: Record<BlindPointMapTheme, string> = {
+const SATELLITE_STYLE: StyleSpecification = {
+  version: 8,
+  glyphs: "https://tiles.basemaps.cartocdn.com/v/20261026-01/fonts/{fontstack}/{range}.pbf",
+  sources: {
+    "esri-satellite": {
+      type: "raster",
+      tiles: [
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      ],
+      tileSize: 256,
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+      maxzoom: 19,
+    },
+    protomaps: {
+      type: "vector",
+      tiles: [
+        "https://tiles.basemaps.cartocdn.com/v/20261026-01/vectortiles/carto.streets/v2/{z}/{x}/{y}.mvt",
+      ],
+      minzoom: 0,
+      maxzoom: 15,
+    },
+  },
+  layers: [
+    {
+      id: "satellite-tiles",
+      type: "raster",
+      source: "esri-satellite",
+      minzoom: 0,
+      maxzoom: 19,
+    },
+    {
+      id: "boundary_country_outline",
+      type: "line",
+      source: "protomaps",
+      "source-layer": "boundaries",
+      minzoom: 3,
+      paint: {
+        "line-color": "#000000",
+        "line-width": 3,
+        "line-opacity": 0.6,
+      },
+      filter: ["==", ["get", "kind_detail"], 2],
+    },
+    {
+      id: "boundary_country_inner",
+      type: "line",
+      source: "protomaps",
+      "source-layer": "boundaries",
+      minzoom: 0,
+      paint: {
+        "line-color": "#ffffff",
+        "line-width": 1.5,
+        "line-opacity": 0.85,
+        "line-dasharray": [2, 1],
+      },
+      filter: ["==", ["get", "kind_detail"], 2],
+    },
+  ],
+};
+
+export const BASEMAP_STYLES: Record<BlindPointMapTheme, string | StyleSpecification> = {
   dark: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
   voyager: "https://basemaps.cartocdn.com/gl/voyager-nolabels-gl-style/style.json",
+  satellite: SATELLITE_STYLE,
 };
 
 export const THEME_NAMES: Record<BlindPointMapTheme, string> = {
   dark: "Sombre Voyageur (Nuit Naturelle)",
   voyager: "Clair Voyageur (Jour Naturel)",
+  satellite: "Satellite HD (Imagerie Réelle)",
 };
 
 // Bounding box for Metropolitan France + Corsica [minLon, minLat, maxLon, maxLat]
@@ -142,7 +205,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
    * Completely eliminates DOM marker drift on zoom/pan.
    */
   const setupLayers = (map: maplibregl.Map, currentTheme: BlindPointMapTheme = mapTheme) => {
-    const isDark = currentTheme === "dark";
+    const isDark = currentTheme === "dark" || currentTheme === "satellite";
 
     // 1. Geodesic Arcs Source & Layers
     if (!map.getSource("arc-source")) {
@@ -330,9 +393,13 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         : [10, 20];
     const initialZoom = scale === "paris" ? 12.8 : scale === "fr" ? 5.2 : 1.8;
 
+    const rawStyle = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
+    const initialStyle =
+      typeof rawStyle === "object" ? JSON.parse(JSON.stringify(rawStyle)) : rawStyle;
+
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.voyager,
+      style: initialStyle,
       center: initialCenter,
       zoom: initialZoom,
       bearing: 0,
@@ -424,6 +491,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     roadsVisible: boolean,
     natureVisible: boolean
   ) => {
+    // In Satellite mode, roads and nature are inherent to the photographic raster imagery
+    if (theme === "satellite") return;
+
     const style = map.getStyle();
     if (!style || !style.layers) return;
 
@@ -548,15 +618,22 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     if (currentThemeRef.current === mapTheme) return;
 
     currentThemeRef.current = mapTheme;
-    const styleUrl = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
-    map.setStyle(styleUrl);
+    const rawStyle = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
+    const nextStyle =
+      typeof rawStyle === "object" ? JSON.parse(JSON.stringify(rawStyle)) : rawStyle;
 
-    map.once("style.load", () => {
+    let restored = false;
+    const restoreAllLayers = () => {
+      if (restored) return;
+      restored = true;
       setupLayers(map, mapTheme);
       updateMapData();
       updateBasemapBorders();
       updateCanvasCursor();
-    });
+    };
+
+    map.once("style.load", restoreAllLayers);
+    map.setStyle(nextStyle, { diff: false });
   }, [mapTheme]);
 
   // Update borders visibility and enhance contrast based on theme
