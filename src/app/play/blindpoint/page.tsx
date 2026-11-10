@@ -1190,6 +1190,7 @@ function BlindPointGame() {
       <BlindPointSummaryModal
         isOpen={showSummaryModal}
         pack={session?.pack || pack}
+        packs={session?.packs}
         difficulty={session?.difficulty || difficulty}
         mode={session?.mode || mode}
         seed={session?.seed || userSeed}

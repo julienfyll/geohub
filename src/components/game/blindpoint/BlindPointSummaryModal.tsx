@@ -29,6 +29,7 @@ import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 interface BlindPointSummaryModalProps {
   isOpen: boolean;
   pack: BlindPointPack;
+  packs?: BlindPointPack[];
   mode: BlindPointMode;
   difficulty?: BlindPointDifficulty | "all";
   seed: string;
@@ -43,6 +44,7 @@ interface BlindPointSummaryModalProps {
 export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   isOpen,
   pack,
+  packs,
   mode,
   difficulty = "moyen",
   seed,
@@ -107,11 +109,21 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   const packLabels: Record<BlindPointPack, string> = {
     villes_france: "Villes de France",
     villes_monde: "Villes du Monde",
-    lieux_france: "Lieux emblématiques (France)",
+    lieux_france: "Patrimoine de France",
     lieux_paris: "Monuments de Paris",
-    lieux_monde: "Lieux emblématiques (Monde)",
+    lieux_monde: "Merveilles du Monde",
     monuments_monde: "Monuments du Monde",
     chateaux_france: "Châteaux & Patrimoine",
+  };
+
+  const packShortLabels: Record<BlindPointPack, string> = {
+    villes_france: "France",
+    villes_monde: "Monde",
+    lieux_france: "Patrimoine",
+    lieux_paris: "Paris",
+    lieux_monde: "Merveilles",
+    monuments_monde: "Monuments",
+    chateaux_france: "Châteaux",
   };
 
   const diffLabels: Record<string, string> = {
@@ -121,8 +133,19 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
     all: "Mixte",
   };
 
-  const isLieuxPack = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
-  const packName = packLabels[pack] || "Villes de France";
+  const isMultiPack = mode === "custom" && packs && packs.length > 1;
+  const isLieuxPack = !isMultiPack && (pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde");
+  
+  const multiPackNames = isMultiPack
+    ? packs.map((p) => packShortLabels[p] || packLabels[p] || p).join(" + ")
+    : null;
+
+  const packName = isMultiPack
+    ? `Défi Custom (${multiPackNames})`
+    : mode === "custom"
+    ? `Défi Custom • ${packLabels[pack] || "Pack Spécial"}`
+    : packLabels[pack] || "Villes de France";
+
   const diffName = isLieuxPack ? "Patrimoine" : diffLabels[difficulty] || "Moyen";
 
   const generateShareText = () => {
@@ -258,6 +281,12 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
                     </span>
                     <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
                       <span>{formatDistance(r.distanceKm)} d'écart</span>
+                      {isMultiPack && r.target.subtitle && (
+                        <>
+                          <span>•</span>
+                          <span className="text-slate-400 truncate max-w-[120px]">{r.target.subtitle.split(",")[0]}</span>
+                        </>
+                      )}
                       {r.target.arrondissement && (
                         <>
                           <span>•</span>
