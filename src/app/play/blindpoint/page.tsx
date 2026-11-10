@@ -969,15 +969,18 @@ function BlindPointGame() {
           hasPlacedGuess={currentGuess !== null}
           isSubmitting={isSubmitting}
           isRevealing={isRevealing}
+          isGameOver={isGameOver}
           timerSecondsLeft={timerSecondsLeft}
           pack={activePack}
           difficulty={isPlaying ? (session?.difficulty || selectedDifficulty || difficulty) : selectedDifficulty}
           mode={isPlaying ? (session?.mode || selectedMode || mode) : selectedMode}
+          seed={session?.seed || ""}
           showRegionHints={settings.showRegionHints}
           showTargetPhoto={settings.showTargetPhoto}
           showTargetName={settings.showTargetName}
           onValidateGuess={handleValidateGuess}
           onOpenSettings={() => setShowSettingsModal(true)}
+          onOpenSummary={() => setShowSummaryModal(true)}
           onBackToLobby={handleBackToLobby}
           onChangeMode={(p, d, m) => restartGame(p, d, m)}
         />
