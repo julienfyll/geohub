@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -33,8 +34,13 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { user, profile, streak } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close on Escape
   useEffect(() => {
@@ -69,7 +75,7 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
       </button>
 
       {/* Backdrop & Drawer Panel */}
-      {isOpen && (
+      {isOpen && mounted && createPortal(
         <div className="fixed inset-0 z-50 flex">
           {/* Backdrop blur */}
           <div
@@ -78,7 +84,7 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
           />
 
           {/* Sliding Sidebar Panel */}
-          <div className="relative w-full max-w-xs sm:max-w-sm bg-slate-900 border-r border-slate-800 h-full shadow-2xl flex flex-col z-10 animate-slide-right overflow-y-auto">
+          <div className="relative w-full max-w-xs sm:max-w-sm bg-slate-900 border-r border-slate-800 h-screen shadow-2xl flex flex-col z-10 animate-slide-right overflow-y-auto">
             {/* Header */}
             <div className="p-5 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/50">
               <div className="flex items-center gap-3">
@@ -288,7 +294,8 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
               </span>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Profile Modal */}

@@ -28,6 +28,7 @@ import {
 import { BlindPointMap } from "@/components/map/BlindPointMap";
 import { BlindPointHUD } from "@/components/game/blindpoint/BlindPointHUD";
 import { BlindPointResultModal } from "@/components/game/blindpoint/BlindPointResultModal";
+import { BlindPointLearningCard } from "@/components/game/blindpoint/BlindPointLearningCard";
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
 import { UserNav } from "@/components/navigation/UserNav";
@@ -1019,13 +1020,19 @@ function BlindPointGame() {
         />
       )}
 
-      {/* Intermediate Round Result Modal */}
+      {/* Intermediate Round Result Modal (Bottom Gameplay Bar) */}
       <BlindPointResultModal
         isOpen={showResultModal}
         roundResult={currentRoundResult}
         roundIndex={roundIndex}
         totalRounds={5}
         onNextRound={handleNextRound}
+      />
+
+      {/* Dedicated Right-Side Learning Panel (Apprentissage & Culture) */}
+      <BlindPointLearningCard
+        isOpen={showResultModal && !showSummaryModal}
+        target={currentRoundResult?.target || null}
       />
 
       {/* Floating Bottom Re-open Summary Button (when inspecting review map) */}

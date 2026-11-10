@@ -41,56 +41,21 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
 
   return (
     <div className="fixed bottom-6 inset-x-0 z-30 pointer-events-none flex justify-center px-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="pointer-events-auto max-w-2xl w-full bg-slate-950/95 border border-slate-700/90 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="pointer-events-auto max-w-2xl w-full bg-slate-950/95 border border-slate-700/90 rounded-2xl p-3.5 sm:p-4 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Left: Rating Emoji, Target & Distance */}
-        <div className="flex items-center gap-3.5 w-full sm:w-auto">
-          {roundResult.target.imageUrl ? (
-            <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-slate-700/80 shrink-0 shadow-xl group">
-              <img
-                src={roundResult.target.imageUrl}
-                alt={roundResult.target.name}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <span className="absolute bottom-0 right-0 bg-slate-950/85 px-1 rounded-tl-lg text-xs leading-none py-0.5">
-                {roundResult.ratingEmoji}
-              </span>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 text-2xl shrink-0">
-              {roundResult.ratingEmoji}
-            </div>
-          )}
+        <div className="flex items-center gap-3.5 w-full sm:w-auto min-w-0">
+          <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 text-2xl shrink-0 shadow-md">
+            {roundResult.ratingEmoji}
+          </div>
 
           <div className="text-left min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
               <h2 className="text-base sm:text-lg font-black text-white truncate">
                 {roundResult.target.name}
               </h2>
               {isBullseye && (
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black uppercase tracking-wider">
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black uppercase tracking-wider shrink-0">
                   Bullseye !
-                </span>
-              )}
-              {roundResult.target.arrondissement && (
-                <span className="px-1.5 py-0.5 rounded-md bg-blue-500/15 border border-blue-500/30 text-[10px] font-bold text-blue-300">
-                  {roundResult.target.arrondissement}ᵉ arr.
-                </span>
-              )}
-              {roundResult.target.bank && (
-                <span className="px-1.5 py-0.5 rounded-md bg-purple-500/15 border border-purple-500/30 text-[10px] font-semibold text-purple-300">
-                  {roundResult.target.bank === "rive_droite"
-                    ? "Rive Droite"
-                    : roundResult.target.bank === "rive_gauche"
-                    ? "Rive Gauche"
-                    : roundResult.target.bank === "ile"
-                    ? "Île"
-                    : "Pont"}
-                </span>
-              )}
-              {roundResult.target.yearBuilt && (
-                <span className="px-1.5 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-mono text-slate-300">
-                  {roundResult.target.yearBuilt}
                 </span>
               )}
             </div>
@@ -103,20 +68,13 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
               <span className="text-slate-500">•</span>
               <span className="text-slate-400">{roundResult.ratingLabel}</span>
             </p>
-
-            {roundResult.target.funFact && (
-              <p className="text-[11px] text-slate-300/90 mt-1.5 line-clamp-2 leading-relaxed bg-slate-900/60 p-1.5 rounded-lg border border-slate-800/60">
-                <span className="text-amber-400 font-bold mr-1">💡</span>
-                {roundResult.target.funFact}
-              </p>
-            )}
           </div>
         </div>
 
         {/* Right: Score Pill & Next Button */}
         <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
           {/* Score Badge */}
-          <div className="px-3.5 py-2 rounded-xl bg-blue-950/40 border border-blue-500/40 text-center">
+          <div className="px-3.5 py-1.5 rounded-xl bg-blue-950/40 border border-blue-500/40 text-center">
             <span className="text-[10px] text-blue-300 font-bold uppercase tracking-wider block leading-none mb-1">
               Score
             </span>
@@ -129,7 +87,7 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
           <button
             type="button"
             onClick={onNextRound}
-            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-600/30 border border-blue-400 transition-all active:scale-95 whitespace-nowrap"
+            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-600/30 border border-blue-400 transition-all active:scale-95 whitespace-nowrap cursor-pointer"
           >
             {isFinalRound ? (
               <>

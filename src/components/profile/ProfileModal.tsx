@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   X,
   User,
@@ -30,6 +31,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
   const { user, profile, streak, signOut, updateUsername } = useAuth();
   const [stats, setStats] = useState<UserSummaryStats | null>(null);
   const [loadingStats, setLoadingStats] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Edit username state
   const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -50,7 +56,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
     }
   }, [isOpen, user?.id, profile?.username]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const handleSaveUsername = async () => {
     if (!newUsername.trim()) return;
@@ -70,7 +76,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
   const displayName = profile?.username || user?.user_metadata?.name || "Joueur";
   const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
       <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         
@@ -338,6 +344,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

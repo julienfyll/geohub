@@ -506,14 +506,14 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
       {/* Target Question Card (Top Center) */}
       {currentTarget && !isRevealing && (
         <div className="absolute top-20 inset-x-0 z-20 pointer-events-none flex justify-center px-4">
-          <div className="pointer-events-auto max-w-lg w-full bg-slate-950/90 border border-slate-700/80 rounded-2xl p-3 sm:p-4 shadow-2xl backdrop-blur-xl flex items-center justify-between gap-3.5 animate-in fade-in slide-in-from-top-3 duration-300">
+          <div className="pointer-events-auto max-w-xl w-full bg-slate-950/90 border border-slate-700/80 rounded-2xl p-3 sm:p-4 shadow-2xl backdrop-blur-xl flex items-center justify-between gap-3.5 animate-in fade-in slide-in-from-top-3 duration-300">
             {/* Optional Thumbnail Photo (if available and enabled) */}
             {currentTarget.imageUrl && showTargetPhoto && (
               <div className="relative shrink-0 group">
                 <button
                   type="button"
                   onClick={() => setEnlargedImage(currentTarget.imageUrl || null)}
-                  className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 border-blue-500/40 shadow-lg group-hover:border-blue-400 group-hover:scale-105 transition-all block"
+                  className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 border-blue-500/40 shadow-lg group-hover:border-blue-400 group-hover:scale-105 transition-all block bg-slate-900"
                   title="Cliquer pour observer les détails de la photo"
                 >
                   <img
@@ -521,7 +521,9 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
                     alt={currentTarget.name}
                     className="w-full h-full object-cover"
                     loading="eager"
-                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
                     <Maximize2 className="w-4 h-4" />
@@ -534,17 +536,17 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             <div className="flex-1 text-center min-w-0">
               <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-blue-400 uppercase tracking-widest mb-0.5">
                 <Target className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">
+                <span>
                   {showTargetName
                     ? "Localisez sur la carte"
                     : "Reconnaissance visuelle • Localisez"}
                 </span>
               </div>
-              <h1 className="text-lg sm:text-2xl font-black text-white tracking-tight leading-tight truncate">
+              <h1 className="text-base sm:text-xl md:text-2xl font-black text-white tracking-tight leading-snug break-words">
                 {showTargetName ? currentTarget.name : "Édifice Mystère ❓"}
               </h1>
               {showRegionHints && currentTarget.subtitle && (
-                <p className="text-xs sm:text-sm text-slate-400 font-medium mt-0.5 truncate">
+                <p className="text-xs sm:text-sm text-slate-400 font-medium mt-0.5">
                   {currentTarget.subtitle}
                 </p>
               )}
