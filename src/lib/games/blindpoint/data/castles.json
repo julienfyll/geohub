@@ -6,7 +6,11 @@
     "latitude": 47.6161,
     "longitude": 1.5172,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chambord.webp",
+    "category": "chateau",
+    "yearBuilt": 1519,
+    "funFact": "Chef-d'œuvre de la Renaissance voulu par François Ier, célèbre pour son escalier monumental à double hélice pensé par Léonard de Vinci où deux personnes montent sans jamais se croiser."
   },
   {
     "id": "castle_chenonceau",
@@ -15,7 +19,11 @@
     "latitude": 47.3249,
     "longitude": 1.0703,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chenonceau.webp",
+    "category": "chateau",
+    "yearBuilt": 1513,
+    "funFact": "Surnommé le 'Château des Dames' (Katherine Briçonnet, Diane de Poitiers, Catherine de Médicis), sa célèbre galerie à arcades enjambe gracieusement les eaux du Cher."
   },
   {
     "id": "castle_carcassonne",
@@ -24,7 +32,11 @@
     "latitude": 43.2064,
     "longitude": 2.3639,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_carcassonne.webp",
+    "category": "forteresse",
+    "yearBuilt": 1260,
+    "funFact": "La plus vaste cité médiévale fortifiée d'Europe encore habitée, protégée par une double enceinte de 3 kilomètres et 52 tours sauvées de la démolition par Viollet-le-Duc."
   },
   {
     "id": "castle_mont_saint_michel",
@@ -33,7 +45,11 @@
     "latitude": 48.636,
     "longitude": -1.5115,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_mont_saint_michel.webp",
+    "category": "abbaye",
+    "yearBuilt": 708,
+    "funFact": "Merveille de l'Occident érigée sur un îlot rocheux ceinturé par les plus fortes marées d'Europe continentale, pèlerinage millénaire dédié à l'archange saint Michel."
   },
   {
     "id": "castle_versailles",
@@ -42,7 +58,11 @@
     "latitude": 48.8049,
     "longitude": 2.1204,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_versailles.webp",
+    "category": "chateau",
+    "yearBuilt": 1661,
+    "funFact": "Symbole absolu du rayonnement du Roi-Soleil, sa légendaire Galerie des Glaces compte 357 miroirs et fut le théâtre de la proclamation de l'Empire allemand en 1871 et du traité de paix en 1919."
   },
   {
     "id": "castle_haut_koenigsbourg",
@@ -51,7 +71,11 @@
     "latitude": 48.2495,
     "longitude": 7.3444,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_haut_koenigsbourg.webp",
+    "category": "forteresse",
+    "yearBuilt": 1147,
+    "funFact": "Perché sur un éperon rocheux à 757 m d'altitude dominant la plaine d'Alsace, ce nid d'aigle médiéval fut restauré au début du XXe siècle par l'empereur Guillaume II."
   },
   {
     "id": "castle_fontainebleau",
@@ -60,7 +84,11 @@
     "latitude": 48.4022,
     "longitude": 2.7003,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_fontainebleau.webp",
+    "category": "chateau",
+    "yearBuilt": 1137,
+    "funFact": "Demeure des souverains français pendant plus de huit siècles, c'est dans la cour du Cheval Blanc que Napoléon Ier fit ses poignants adieux à sa garde impériale en 1814."
   },
   {
     "id": "castle_chantilly",
@@ -69,7 +97,11 @@
     "latitude": 49.1939,
     "longitude": 2.4853,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chantilly.webp",
+    "category": "chateau",
+    "yearBuilt": 1560,
+    "funFact": "Écrin des ducs d'Aumale abritant la deuxième collection de peintures anciennes de France après le Louvre, ainsi que de monumentales Grandes Écuries princières."
   },
   {
     "id": "castle_vaux_le_vicomte",
@@ -78,7 +110,11 @@
     "latitude": 48.5658,
     "longitude": 2.7142,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_vaux_le_vicomte.webp",
+    "category": "chateau",
+    "yearBuilt": 1658,
+    "funFact": "Chef-d'œuvre classique né de l'alliance de Le Vau, Le Brun et Le Nôtre pour Nicolas Fouquet, dont la fête d'inauguration trop somptueuse précipita l'arrestation par Louis XIV."
   },
   {
     "id": "castle_pierrefonds",
@@ -87,7 +123,11 @@
     "latitude": 49.3469,
     "longitude": 2.9803,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_pierrefonds.webp",
+    "category": "forteresse",
+    "yearBuilt": 1396,
+    "funFact": "Château fort médiéval démantelé au XVIIe siècle, entièrement réinventé sous Napoléon III par Viollet-le-Duc en une forteresse idéale et décor de cinéma féerique."
   },
   {
     "id": "castle_amboise",
@@ -96,7 +136,11 @@
     "latitude": 47.4132,
     "longitude": 0.9858,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_amboise.webp",
+    "category": "chateau",
+    "yearBuilt": 1492,
+    "funFact": "Résidence des rois Charles VIII et François Ier dominant la Loire ; sa chapelle Saint-Hubert abrite la sépulture présumée de Léonard de Vinci, décédé au Clos Lucé voisin."
   },
   {
     "id": "castle_blois",
@@ -105,7 +149,11 @@
     "latitude": 47.5861,
     "longitude": 1.3308,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_blois.webp",
+    "category": "chateau",
+    "yearBuilt": 1230,
+    "funFact": "Résidence favorite de 7 rois et 10 reines de France, réunissant quatre façades aux styles architecturaux distincts (Gothique, Renaissance italienne, Classique) autour d'une même cour."
   },
   {
     "id": "castle_cheverny",
@@ -114,7 +162,11 @@
     "latitude": 47.5002,
     "longitude": 1.4608,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_cheverny.webp",
+    "category": "chateau",
+    "yearBuilt": 1624,
+    "funFact": "Célèbre pour avoir inspiré à Hergé le château de Moulinsart du capitaine Haddock (en lui retirant ses deux ailes latérales), il est resté dans la même famille depuis plus de six siècles."
   },
   {
     "id": "castle_villandry",
@@ -123,7 +175,11 @@
     "latitude": 47.3406,
     "longitude": 0.5147,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_villandry.webp",
+    "category": "chateau",
+    "yearBuilt": 1536,
+    "funFact": "Dernier des grands châteaux de la Renaissance bâtis sur la Loire, mondialement réputé pour ses 6 hectares de jardins géométriques étagés et son potager décoratif Renaissance."
   },
   {
     "id": "castle_azay_le_rideau",
@@ -132,7 +188,11 @@
     "latitude": 47.2592,
     "longitude": 0.4664,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_azay_le_rideau.webp",
+    "category": "chateau",
+    "yearBuilt": 1518,
+    "funFact": "Décrit par Honoré de Balzac comme 'un diamant taillé à facettes serti par l'Indre', ce joyau de la Renaissance semble flotter directement sur les eaux calmes de la rivière."
   },
   {
     "id": "castle_chateau_gaillard",
@@ -141,7 +201,11 @@
     "latitude": 49.2372,
     "longitude": 1.4025,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chateau_gaillard.webp",
+    "category": "forteresse",
+    "yearBuilt": 1196,
+    "funFact": "Forteresse imprenable édifiée en seulement deux ans par Richard Cœur de Lion au-dessus des falaises de la Seine pour barrer la route de Rouen au roi Philippe Auguste."
   },
   {
     "id": "castle_angers",
@@ -150,7 +214,11 @@
     "latitude": 47.47,
     "longitude": -0.56,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_angers.webp",
+    "category": "forteresse",
+    "yearBuilt": 1230,
+    "funFact": "Impressionnante forteresse de schiste et calcaire aux 17 tours bicolores, gardienne de la monumentale Tenture de l'Apocalypse, la plus grande tapisserie médiévale au monde (104 mètres)."
   },
   {
     "id": "castle_saumur",
@@ -159,7 +227,11 @@
     "latitude": 47.2567,
     "longitude": -0.0725,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_saumur.webp",
+    "category": "chateau",
+    "yearBuilt": 1200,
+    "funFact": "Surnommé le 'Château d'Amour' par le roi René et immortalisé dans les Très Riches Heures du duc de Berry, il domine majestueusement le confluent de la Loire et du Thouet."
   },
   {
     "id": "castle_peyrepertuse",
@@ -168,7 +240,11 @@
     "latitude": 42.8711,
     "longitude": 2.6611,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_peyrepertuse.webp",
+    "category": "forteresse",
+    "yearBuilt": 1020,
+    "funFact": "L'un des plus spectaculaires 'châteaux cathares', gigantesque vaisseau de pierre perché sur une crête calcaire à 800 m d'altitude surnommé la 'Carcassonne céleste'."
   },
   {
     "id": "castle_queribus",
@@ -177,7 +253,11 @@
     "latitude": 42.8372,
     "longitude": 2.6217,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_queribus.webp",
+    "category": "forteresse",
+    "yearBuilt": 1000,
+    "funFact": "Dernier bastion de la résistance cathare à capituler face aux armées royales en 1255, juché sur un piton rocheux vertigineux dominant la plaine du Roussillon."
   },
   {
     "id": "castle_montsegur",
@@ -186,7 +266,11 @@
     "latitude": 42.8753,
     "longitude": 1.8328,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_montsegur.webp",
+    "category": "forteresse",
+    "yearBuilt": 1204,
+    "funFact": "Bâti au sommet d'un pog vertigineux à 1 207 m d'altitude, ce haut lieu du catharisme fut le théâtre d'un siège héroïque achevé en 1244 par le bûcher de plus de 200 croyants."
   },
   {
     "id": "castle_foix",
@@ -195,7 +279,11 @@
     "latitude": 42.9656,
     "longitude": 1.6053,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_foix.webp",
+    "category": "forteresse",
+    "yearBuilt": 987,
+    "funFact": "Fier château comtal coiffé de trois hautes tours dominant la vallée de l'Ariège, berceau de Gaston Fébus et demeure historique des comtes de Foix-Béarn."
   },
   {
     "id": "castle_castelnaud",
@@ -204,7 +292,11 @@
     "latitude": 44.8058,
     "longitude": 1.1492,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_castelnaud.webp",
+    "category": "forteresse",
+    "yearBuilt": 1100,
+    "funFact": "Forteresse médiévale suspendue au-dessus de la Dordogne, fief anglais durant la guerre de Cent Ans faisant face à son rival français Beynac, aujourd'hui musée de la guerre au Moyen Âge."
   },
   {
     "id": "castle_beynac",
@@ -213,7 +305,11 @@
     "latitude": 44.8706,
     "longitude": 1.1444,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_beynac.webp",
+    "category": "forteresse",
+    "yearBuilt": 1115,
+    "funFact": "Campé au sommet d'une falaise vertigineuse de 150 mètres surplombant la Dordogne, ce donjon austère fut l'une des quatre baronnies historiques du Périgord."
   },
   {
     "id": "castle_bonaguil",
@@ -222,7 +318,11 @@
     "latitude": 44.5322,
     "longitude": 1.0142,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_bonaguil.webp",
+    "category": "forteresse",
+    "yearBuilt": 1271,
+    "funFact": "Véritable traité d'architecture militaire médiévale avec ses 13 tours, pont-levis et barbacane, achevé au début du XVIe siècle à l'époque où l'artillerie à poudre rendait ces châteaux obsolètes."
   },
   {
     "id": "castle_murol",
@@ -231,7 +331,11 @@
     "latitude": 45.5772,
     "longitude": 2.9467,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_murol.webp",
+    "category": "forteresse",
+    "yearBuilt": 1150,
+    "funFact": "Forteresse auvergnate dressée sur un cône de basalte volcanique face au massif du Sancy, réputée pour ses reconstitutions immersives de la vie chevaleresque."
   },
   {
     "id": "castle_baux_de_provence",
@@ -240,7 +344,11 @@
     "latitude": 43.7439,
     "longitude": 4.7956,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_baux_de_provence.webp",
+    "category": "forteresse",
+    "yearBuilt": 950,
+    "funFact": "Nid d'aigle taillé dans la roche calcaire des Alpilles, fief des fiers seigneurs des Baux qui prétendaient descendre du roi mage Balthazar et en portaient l'étoile à 16 branches."
   },
   {
     "id": "castle_tarascon",
@@ -249,7 +357,11 @@
     "latitude": 43.8058,
     "longitude": 4.6533,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_tarascon.webp",
+    "category": "chateau",
+    "yearBuilt": 1400,
+    "funFact": "Élégante résidence princière du roi René d'Anjou dressée au bord du Rhône, mêlant un aspect militaire défensif austère à un intérieur gothique raffiné orné de graffitis de prisonniers."
   },
   {
     "id": "castle_chateau_d_if",
@@ -258,7 +370,11 @@
     "latitude": 43.2798,
     "longitude": 5.3253,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chateau_d_if.webp",
+    "category": "forteresse",
+    "yearBuilt": 1524,
+    "funFact": "Forteresse insulaire bâtie par François Ier sur un îlot de l'archipel du Frioul à Marseille, immortalisée par Alexandre Dumas comme la redoutable prison d'Edmond Dantès (Le Comte de Monte-Cristo)."
   },
   {
     "id": "castle_palais_des_papes",
@@ -267,7 +383,11 @@
     "latitude": 43.9508,
     "longitude": 4.8075,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_palais_des_papes.webp",
+    "category": "religieux",
+    "yearBuilt": 1335,
+    "funFact": "Plus grand palais gothique d'Occident (15 000 m²), siège de la papauté au XIVe siècle où résidèrent neuf souverains pontifes avant le retour à Rome."
   },
   {
     "id": "castle_citadelle_besancon",
@@ -276,7 +396,11 @@
     "latitude": 47.2319,
     "longitude": 6.0319,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_citadelle_besancon.webp",
+    "category": "forteresse",
+    "yearBuilt": 1668,
+    "funFact": "Chef-d'œuvre d'ingénierie militaire de Sébastien Le Prestre de Vauban classé à l'UNESCO, ceinturant un méandre parfait du Doubs sur plus de 11 hectares."
   },
   {
     "id": "castle_citadelle_belfort",
@@ -285,7 +409,11 @@
     "latitude": 47.6367,
     "longitude": 6.8653,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_citadelle_belfort.webp",
+    "category": "forteresse",
+    "yearBuilt": 1687,
+    "funFact": "Place forte imprenable fortifiée par Vauban, au pied de laquelle trône le colossal Lion de grès rose sculpté par Auguste Bartholdi célébrant la résistance héroïque face aux Prussiens en 1870."
   },
   {
     "id": "castle_citadelle_blaye",
@@ -294,7 +422,11 @@
     "latitude": 45.1281,
     "longitude": -0.6664,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_citadelle_blaye.webp",
+    "category": "forteresse",
+    "yearBuilt": 1685,
+    "funFact": "Véritable ville fortifiée fermant l'estuaire de la Gironde, élément clé du 'Verrou Vauban' conçu pour protéger Bordeaux des incursions des flottes ennemies."
   },
   {
     "id": "castle_fort_boyard",
@@ -303,7 +435,11 @@
     "latitude": 45.9997,
     "longitude": -1.2139,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_fort_boyard.webp",
+    "category": "forteresse",
+    "yearBuilt": 1801,
+    "funFact": "Vaisseau de pierre posé en pleine mer entre l'île d'Aix et l'île d'Oléron, ordonné par Napoléon pour verrouiller la rade de Rochefort, devenu arène de jeu télévisée mondialement connue."
   },
   {
     "id": "castle_chateau_vincennes",
@@ -312,7 +448,11 @@
     "latitude": 48.8428,
     "longitude": 2.4358,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chateau_vincennes.webp",
+    "category": "forteresse",
+    "yearBuilt": 1361,
+    "funFact": "Plus haut donjon de plaine médiéval d'Europe (52 mètres), résidence royale fortifiée où naquirent ou moururent plusieurs rois de France, et prison d'État illustre (Diderot, Mirabeau)."
   },
   {
     "id": "castle_compiegne",
@@ -321,7 +461,11 @@
     "latitude": 49.4183,
     "longitude": 2.8317,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_compiegne.webp",
+    "category": "chateau",
+    "yearBuilt": 1751,
+    "funFact": "Avec Versailles et Fontainebleau, l'une des trois plus grandes résidences royales françaises, lieu de villégiature et des 'Séries de Compiègne' sous Napoléon III et l'impératrice Eugénie."
   },
   {
     "id": "castle_rambouillet",
@@ -330,7 +474,11 @@
     "latitude": 48.6444,
     "longitude": 1.8175,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_rambouillet.webp",
+    "category": "chateau",
+    "yearBuilt": 1368,
+    "funFact": "Résidence royale puis présidentielle au cœur d'une forêt de 20 000 hectares, où François Ier rendit son dernier souffle en 1547 et où Marie-Antoinette possédait une Laiterie d'apparat."
   },
   {
     "id": "castle_chateaubriant",
@@ -339,7 +487,11 @@
     "latitude": 47.7192,
     "longitude": -1.3739,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chateaubriant.webp",
+    "category": "chateau",
+    "yearBuilt": 1050,
+    "funFact": "Forteresse stratégique des Marches de Bretagne réunissant un château fort médiéval austère et un élégant logis Renaissance bâti pour Jean de Laval et Françoise de Foix."
   },
   {
     "id": "castle_fougeres",
@@ -348,7 +500,11 @@
     "latitude": 48.3542,
     "longitude": -1.2094,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_fougeres.webp",
+    "category": "forteresse",
+    "yearBuilt": 1020,
+    "funFact": "Plus grande forteresse médiévale d'Europe dans son état de conservation, gardienne des Marches de Bretagne entourée par les eaux du Nançon et flanquée de 13 tours défensives."
   },
   {
     "id": "castle_josselin",
@@ -357,7 +513,11 @@
     "latitude": 47.9519,
     "longitude": -2.5483,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_josselin.webp",
+    "category": "chateau",
+    "yearBuilt": 1008,
+    "funFact": "Résidence des ducs de Rohan depuis plus de neuf siècles, présentant côté rivière un rempart féodal imprenable à tours rondes et côté cour une somptueuse façade Renaissance en granit sculpté."
   },
   {
     "id": "castle_suscinio",
@@ -366,7 +526,11 @@
     "latitude": 47.5147,
     "longitude": -2.7292,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_suscinio.webp",
+    "category": "chateau",
+    "yearBuilt": 1218,
+    "funFact": "Résidence de chasse et d'été des ducs de Bretagne ceinturée de douves au bord de l'océan Atlantique, célèbre pour son extraordinaire pavement médiéval de plus de 30 000 carreaux vernissés."
   },
   {
     "id": "castle_chinon",
@@ -375,7 +539,11 @@
     "latitude": 47.1683,
     "longitude": 0.2372,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chinon.webp",
+    "category": "forteresse",
+    "yearBuilt": 954,
+    "funFact": "Forteresse médiévale longue de 500 mètres dominant la Vienne où mourut le roi d'Angleterre Henri II Plantagenêt et où Jeanne d'Arc rencontra pour la première fois le futur Charles VII en 1429."
   },
   {
     "id": "castle_valencay",
@@ -384,7 +552,11 @@
     "latitude": 47.1581,
     "longitude": 1.5622,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_valencay.webp",
+    "category": "chateau",
+    "yearBuilt": 1540,
+    "funFact": "Propriété de Charles-Maurice de Talleyrand, le 'diable boiteux' de la diplomatie européenne, qui y reçut les princes du monde entier avec les festins raffinés du chef Antonin Carême."
   },
   {
     "id": "castle_usse",
@@ -393,7 +565,11 @@
     "latitude": 47.2514,
     "longitude": 0.2917,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_usse.webp",
+    "category": "chateau",
+    "yearBuilt": 1462,
+    "funFact": "Avec ses multiples tourelles blanches, toits d'ardoise et lucarnes sculptées bordant la forêt de Chinon, il inspira directement à Charles Perrault le conte de 'La Belle au bois dormant'."
   },
   {
     "id": "castle_langeais",
@@ -402,7 +578,11 @@
     "latitude": 47.325,
     "longitude": 0.4058,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_langeais.webp",
+    "category": "chateau",
+    "yearBuilt": 1465,
+    "funFact": "Théâtre en 1491 du mariage secret entre Charles VIII et Anne de Bretagne qui scella le rattachement définitif du duché de Bretagne au royaume de France."
   },
   {
     "id": "castle_fort_la_latte",
@@ -411,7 +591,11 @@
     "latitude": 48.6681,
     "longitude": -2.285,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_fort_la_latte.webp",
+    "category": "forteresse",
+    "yearBuilt": 1340,
+    "funFact": "Forteresse maritime bretonne posée sur un cap rocheux battu par les vents de la Manche face au cap Fréhel, accessible uniquement par deux ponts-levis consécutifs."
   },
   {
     "id": "castle_vitre",
@@ -420,7 +604,11 @@
     "latitude": 48.125,
     "longitude": -1.215,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_vitre.webp",
+    "category": "forteresse",
+    "yearBuilt": 1060,
+    "funFact": "Verrou défensif des Marches de Bretagne dressé sur un éperon de schiste, remarquable par son plan triangulaire et ses imposantes toitures coniques en poivrière."
   },
   {
     "id": "castle_sedan",
@@ -429,7 +617,11 @@
     "latitude": 49.7019,
     "longitude": 4.9492,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_sedan.webp",
+    "category": "forteresse",
+    "yearBuilt": 1424,
+    "funFact": "Plus vaste château fort d'Europe avec ses 35 000 m² répartis sur 7 niveaux et ses murailles atteignant jusqu'à 27 mètres d'épaisseur, berceau du maréchal de Turenne."
   },
   {
     "id": "castle_chateaudun",
@@ -438,7 +630,11 @@
     "latitude": 48.0706,
     "longitude": 1.3267,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_chateaudun.webp",
+    "category": "chateau",
+    "yearBuilt": 1170,
+    "funFact": "Propriété de Jean de Dunois, fidèle compagnon d'armes de Jeanne d'Arc, il possède un donjon circulaire du XIIe siècle de 31 mètres et une splendide Sainte-Chapelle gothique."
   },
   {
     "id": "castle_sullysurlatour",
@@ -447,6 +643,10 @@
     "latitude": 47.7667,
     "longitude": 2.375,
     "scale": "fr",
-    "pack": "chateaux_france"
+    "pack": "chateaux_france",
+    "imageUrl": "/images/france/castle_sullysurlatour.webp",
+    "category": "chateau",
+    "yearBuilt": 1395,
+    "funFact": "Porte d'entrée orientale des châteaux de la Loire, demeure historique du grand ministre de Henri IV, Maximilien de Béthune duc de Sully, entourée de douves profondes alimentées par la Loire."
   }
 ]

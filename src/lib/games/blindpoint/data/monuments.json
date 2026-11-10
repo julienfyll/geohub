@@ -6,7 +6,11 @@
     "latitude": 27.1751,
     "longitude": 78.0421,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_taj_mahal.webp",
+    "category": "monument",
+    "yearBuilt": 1648,
+    "funFact": "Mausolée de marbre blanc immaculé bâti par l'empereur moghol Shah Jahan pour immortaliser son épouse bien-aimée Mumtaz Mahal ; sa teinte change selon la lumière du jour."
   },
   {
     "id": "monument_machu_picchu",
@@ -15,7 +19,11 @@
     "latitude": -13.1631,
     "longitude": -72.545,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_machu_picchu.webp",
+    "category": "antiquite",
+    "yearBuilt": 1450,
+    "funFact": "Cité sacrée inca perchée à 2 430 m d'altitude sur une crête andine enveloppée de brume, jamais découverte par les conquistadors espagnols et révélée au monde en 1911."
   },
   {
     "id": "monument_colisee",
@@ -24,7 +32,11 @@
     "latitude": 41.8902,
     "longitude": 12.4922,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_colisee.webp",
+    "category": "antiquite",
+    "yearBuilt": 80,
+    "funFact": "Plus grand amphithéâtre jamais construit dans l'Empire romain, capable d'accueillir jusqu'à 65 000 spectateurs et pouvant être inondé pour des naumachies (batailles navales reconstituées)."
   },
   {
     "id": "monument_pyramides_gizeh",
@@ -33,7 +45,11 @@
     "latitude": 29.9792,
     "longitude": 31.1342,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_pyramides_gizeh.webp",
+    "category": "antiquite",
+    "yearBuilt": -2560,
+    "funFact": "Seule des Sept Merveilles du monde antique encore debout aujourd'hui ; la grande pyramide de Khéops est composée de 2,3 millions de blocs de calcaire pesant chacun plus de 2 tonnes."
   },
   {
     "id": "monument_statue_liberte",
@@ -42,7 +58,11 @@
     "latitude": 40.6892,
     "longitude": -74.0445,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_statue_liberte.webp",
+    "category": "monument",
+    "yearBuilt": 1886,
+    "funFact": "Offerte par la France pour le centenaire de la Déclaration d'indépendance américaine, sa structure interne métallique en fer fut conçue par Gustave Eiffel avant sa tour parisienne."
   },
   {
     "id": "monument_opera_sydney",
@@ -51,7 +71,11 @@
     "latitude": -33.8568,
     "longitude": 151.2153,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_opera_sydney.webp",
+    "category": "monument",
+    "yearBuilt": 1973,
+    "funFact": "Chef-d'œuvre architectural expressionniste de Jørn Utzon dans le port de Sydney, dont les coques de béton en forme de voiles sont recouvertes de plus d'un million de tuiles de céramique suédoises."
   },
   {
     "id": "monument_sagrada_familia",
@@ -60,7 +84,11 @@
     "latitude": 41.4036,
     "longitude": 2.1744,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_sagrada_familia.webp",
+    "category": "religieux",
+    "yearBuilt": 1882,
+    "funFact": "Basilique visionnaire d'Antoni Gaudí à Barcelone dont la construction se poursuit depuis plus de 140 ans, financée uniquement par des dons privés et les billets des visiteurs."
   },
   {
     "id": "monument_petra",
@@ -69,7 +97,11 @@
     "latitude": 30.3285,
     "longitude": 35.4444,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_petra.webp",
+    "category": "antiquite",
+    "yearBuilt": -300,
+    "funFact": "Capitale troglodytique des Nabatéens dissimulée au fond d'un étroit défilé rocheux (le Sîq), dont les façades monumentales comme la Khazneh sont taillées directement dans le grès rose du désert."
   },
   {
     "id": "monument_grande_muraille",
@@ -78,7 +110,11 @@
     "latitude": 40.4319,
     "longitude": 116.5704,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_grande_muraille.webp",
+    "category": "antiquite",
+    "yearBuilt": -221,
+    "funFact": "Plus vaste structure militaire jamais édifiée par l'homme, serpentant sur plus de 21 000 kilomètres à travers montagnes et déserts pour protéger les empires chinois successifs des nomades."
   },
   {
     "id": "monument_angkor_wat",
@@ -87,7 +123,11 @@
     "latitude": 13.4125,
     "longitude": 103.867,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_angkor_wat.webp",
+    "category": "religieux",
+    "yearBuilt": 1150,
+    "funFact": "Plus grand monument religieux au monde (162 hectares), chef-d'œuvre de l'architecture khmère figurant le mont Meru, séjour des dieux dans la cosmologie hindoue."
   },
   {
     "id": "monument_christ_redempteur",
@@ -96,7 +136,11 @@
     "latitude": -22.9519,
     "longitude": -43.2105,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_christ_redempteur.webp",
+    "category": "monument",
+    "yearBuilt": 1931,
+    "funFact": "Statue colossale Art déco de 38 mètres de haut dominant la baie de Rio de Janeiro depuis le sommet du Corcovado à 710 mètres d'altitude, sculptée par Paul Landowski."
   },
   {
     "id": "monument_acropole_athenes",
@@ -105,7 +149,11 @@
     "latitude": 37.9715,
     "longitude": 23.7257,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_acropole_athenes.webp",
+    "category": "antiquite",
+    "yearBuilt": -447,
+    "funFact": "Berceau de la démocratie et de la philosophie occidentale surplombant Athènes, couronnée par le Parthénon dédié à la déesse Athéna Parthénos et bâti sous la direction de Périclès et Phidias."
   },
   {
     "id": "monument_tour_eiffel",
@@ -114,7 +162,11 @@
     "latitude": 48.8584,
     "longitude": 2.2945,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_tour_eiffel.webp",
+    "category": "monument",
+    "yearBuilt": 1889,
+    "funFact": "Symbole universel de la France érigé pour le centenaire de la Révolution, ses 18 000 pièces de fer forgé sont assemblées par 2,5 millions de rivets."
   },
   {
     "id": "monument_big_ben",
@@ -123,7 +175,11 @@
     "latitude": 51.5007,
     "longitude": -0.1246,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_big_ben.webp",
+    "category": "monument",
+    "yearBuilt": 1859,
+    "funFact": "Le nom 'Big Ben' désigne originellement la cloche de 13,7 tonnes suspendue dans la tour Elizabeth du palais de Westminster, dont les cadrans sont réglés à l'aide d'anciennes pièces d'un penny."
   },
   {
     "id": "monument_sainte_sophie",
@@ -132,7 +188,11 @@
     "latitude": 41.0086,
     "longitude": 28.9802,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_sainte_sophie.webp",
+    "category": "religieux",
+    "yearBuilt": 537,
+    "funFact": "Joyau byzantin érigé par l'empereur Justinien, qui resta la plus grande cathédrale du monde chrétien pendant près d'un millénaire avant de devenir mosquée puis musée à Istanbul."
   },
   {
     "id": "monument_chichen_itza",
@@ -141,7 +201,11 @@
     "latitude": 20.6843,
     "longitude": -88.5678,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_chichen_itza.webp",
+    "category": "antiquite",
+    "yearBuilt": 600,
+    "funFact": "Cité sacrée maya au Mexique ; lors des équinoxes de printemps et d'automne, le jeu d'ombre et de lumière sur les marches de la pyramide d'El Castillo donne l'illusion qu'un serpent à plumes descend l'édifice."
   },
   {
     "id": "monument_stonehenge",
@@ -150,7 +214,11 @@
     "latitude": 51.1789,
     "longitude": -1.8262,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_stonehenge.webp",
+    "category": "antiquite",
+    "yearBuilt": -3000,
+    "funFact": "Énigmatique cercle de mégalithes dressés dans la plaine de Salisbury en Angleterre, aligné avec une précision millimétrique sur le coucher du soleil au solstice d'hiver et le lever au solstice d'été."
   },
   {
     "id": "monument_alhambra",
@@ -159,7 +227,11 @@
     "latitude": 37.1773,
     "longitude": -3.5898,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_alhambra.webp",
+    "category": "chateau",
+    "yearBuilt": 1238,
+    "funFact": "Chef-d'œuvre absolu de l'art nasride dominant Grenade, ensemble palatial aux cours féeriques (Cour des Lions, Cour des Myrtes) et dentelles de stuc célébrant la poésie andalouse."
   },
   {
     "id": "monument_neuschwanstein",
@@ -168,7 +240,11 @@
     "latitude": 47.5576,
     "longitude": 10.7498,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_neuschwanstein.webp",
+    "category": "chateau",
+    "yearBuilt": 1869,
+    "funFact": "Château romantique de conte de fées érigé dans les Alpes bavaroises pour le roi Louis II de Bavière en hommage aux opéras de Richard Wagner, qui inspira le logo et le château de Walt Disney."
   },
   {
     "id": "monument_ile_de_paques",
@@ -177,7 +253,11 @@
     "latitude": -27.1258,
     "longitude": -109.2769,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_ile_de_paques.webp",
+    "category": "antiquite",
+    "yearBuilt": 1250,
+    "funFact": "Sur l'île de Pâques (Rapa Nui), près de 900 statues monumentales (Moaï) taillées dans le tuf volcanique tournent le dos à l'océan pour veiller sur les villages et ancêtres polynésiens."
   },
   {
     "id": "monument_mont_fuji",
@@ -186,7 +266,11 @@
     "latitude": 35.3606,
     "longitude": 138.7274,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_mont_fuji.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Volcan sacré du Japon culminant à 3 776 mètres au cône enneigé d'une symétrie parfaite, immortalisé par les estampes d'Hokusai et considéré comme un kami (divinité) dans le shintoïsme."
   },
   {
     "id": "monument_burj_khalifa",
@@ -195,7 +279,11 @@
     "latitude": 25.1972,
     "longitude": 55.2744,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_burj_khalifa.webp",
+    "category": "civil",
+    "yearBuilt": 2010,
+    "funFact": "Plus haute structure jamais construite par l'homme, gratte-ciel de 828 mètres de haut dominant Dubaï, dont la forme s'inspire d'une fleur du désert locale (Hymenocallis)."
   },
   {
     "id": "monument_kremlin_moscou",
@@ -204,7 +292,11 @@
     "latitude": 55.7525,
     "longitude": 37.6231,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_kremlin_moscou.webp",
+    "category": "forteresse",
+    "yearBuilt": 1495,
+    "funFact": "Cœur politique et historique de la Russie ceinturé de murailles de brique rouge et 20 tours fortifiées, faisant face à la place Rouge et aux dômes multicolores de la cathédrale Saint-Basile."
   },
   {
     "id": "monument_pont_golden_gate",
@@ -213,7 +305,11 @@
     "latitude": 37.8199,
     "longitude": -122.4783,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_pont_golden_gate.webp",
+    "category": "civil",
+    "yearBuilt": 1937,
+    "funFact": "Pont suspendu emblématique de San Francisco franchissant le détroit du Golden Gate sur 2,7 km, peint de sa couleur signature 'Orange International' pour percer les épais brouillards du Pacifique."
   },
   {
     "id": "monument_chutes_victoria",
@@ -222,7 +318,11 @@
     "latitude": -17.9243,
     "longitude": 25.8572,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_chutes_victoria.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Surnommées 'La fumée qui gronde' (Mosi-oa-Tunya) à la frontière de la Zambie et du Zimbabwe, plus grand rideau d'eau au monde avec 1,7 km de largeur plongeant de 108 m dans une faille rocheuse."
   },
   {
     "id": "monument_chutes_iguazu",
@@ -231,7 +331,11 @@
     "latitude": -25.6953,
     "longitude": -54.4367,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_chutes_iguazu.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Formées de 275 cascades s'étirant sur 2,7 kilomètres au cœur de la forêt tropicale entre l'Argentine et le Brésil, dominées par la vertigineuse 'Gorge du Diable' de 82 mètres de haut."
   },
   {
     "id": "monument_chutes_niagara",
@@ -240,7 +344,11 @@
     "latitude": 43.0799,
     "longitude": -79.0747,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_chutes_niagara.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Ensemble de trois chutes d'eau sur la rivière Niagara entre les États-Unis et le Canada, affichant le débit le plus puissant d'Amérique du Nord avec plus de 2 800 m³ d'eau par seconde."
   },
   {
     "id": "monument_mont_saint_michel",
@@ -249,7 +357,11 @@
     "latitude": 48.636,
     "longitude": -1.5115,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_mont_saint_michel.webp",
+    "category": "abbaye",
+    "yearBuilt": 708,
+    "funFact": "Joyau médiéval de Normandie érigé sur un monticule rocheux dans une baie immense, classé au patrimoine mondial pour son abbaye gothique surnommée 'La Merveille'."
   },
   {
     "id": "monument_cite_interdite",
@@ -258,7 +370,11 @@
     "latitude": 39.9163,
     "longitude": 116.3972,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_cite_interdite.webp",
+    "category": "chateau",
+    "yearBuilt": 1420,
+    "funFact": "Plus grand complexe palatial au monde avec ses 980 bâtiments et 72 hectares au cœur de Pékin, résidence souveraine de 24 empereurs des dynasties Ming et Qing fermée au public pendant 500 ans."
   },
   {
     "id": "monument_kinkaku_ji",
@@ -267,7 +383,11 @@
     "latitude": 35.0394,
     "longitude": 135.7292,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_kinkaku_ji.webp",
+    "category": "religieux",
+    "yearBuilt": 1397,
+    "funFact": "Célèbre 'Pavillon d'Or' zen à Kyoto dont les deux étages supérieurs sont intégralement recouverts de feuilles d'or pur, se reflétant dans les eaux calmes de l'étang miroir (Kyōko-chi)."
   },
   {
     "id": "monument_lalibela",
@@ -276,7 +396,11 @@
     "latitude": 12.0319,
     "longitude": 39.0411,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_lalibela.webp",
+    "category": "religieux",
+    "yearBuilt": 1200,
+    "funFact": "Onze églises médiévales monolithes en Éthiopie taillées d'un seul bloc directement dans la roche volcanique rouge au XIIe siècle, reliées entre elles par des tranchées et catacombes."
   },
   {
     "id": "monument_djenn_mosquee",
@@ -285,7 +409,11 @@
     "latitude": 13.9051,
     "longitude": -4.5552,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_djenn_mosquee.webp",
+    "category": "religieux",
+    "yearBuilt": 1907,
+    "funFact": "Plus grand édifice en terre crue (banco) au monde, chef-d'œuvre de l'architecture soudano-sahélienne au Mali dont les murs sont réenduits chaque année par toute la communauté lors d'une fête rituelle."
   },
   {
     "id": "monument_table_mountain",
@@ -294,7 +422,11 @@
     "latitude": -33.9628,
     "longitude": 18.4098,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_table_mountain.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Montagne au sommet plat caractéristique culminant à 1 086 mètres au-dessus du Cap en Afrique du Sud, souvent recouverte d'une nappe de nuages blancs appelée la 'Nappe de table'."
   },
   {
     "id": "monument_tombouctou",
@@ -303,7 +435,11 @@
     "latitude": 16.7758,
     "longitude": -3.0028,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_tombouctou.webp",
+    "category": "religieux",
+    "yearBuilt": 1327,
+    "funFact": "Mosquée et prestigieuse université islamique médiévale de Tombouctou, carrefour intellectuel des caravanes transsahariennes qui abritait des dizaines de milliers de manuscrits précieux."
   },
   {
     "id": "monument_teotihuacan",
@@ -312,7 +448,11 @@
     "latitude": 19.6925,
     "longitude": -98.8437,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_teotihuacan.webp",
+    "category": "antiquite",
+    "yearBuilt": 100,
+    "funFact": "Gigantesque pyramide mésoaméricaine haute de 65 mètres dominant l'Allée des Morts au Mexique, bâtie par une civilisation préaztèque mystérieuse sans écriture connue."
   },
   {
     "id": "monument_tikal",
@@ -321,7 +461,11 @@
     "latitude": 17.2221,
     "longitude": -89.6237,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_tikal.webp",
+    "category": "antiquite",
+    "yearBuilt": 734,
+    "funFact": "L'une des plus puissantes cités-États mayas cachée au cœur de la jungle du Guatemala, dont les temples pyramidaux calcaires s'élèvent au-dessus de la canopée tropicale."
   },
   {
     "id": "monument_lignes_nazca",
@@ -330,7 +474,11 @@
     "latitude": -14.739,
     "longitude": -75.13,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_lignes_nazca.webp",
+    "category": "antiquite",
+    "yearBuilt": -200,
+    "funFact": "Centaines de géoglyphes géants (colibri, singe, araignée) tracés dans le désert aride du sud du Pérou en retirant les cailloux rougeâtres pour faire apparaître la terre claire, visibles uniquement du ciel."
   },
   {
     "id": "monument_salar_uyuni",
@@ -339,7 +487,11 @@
     "latitude": -20.1338,
     "longitude": -67.4891,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_salar_uyuni.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Plus grand désert de sel au monde (plus de 10 000 km²) perché à 3 650 m sur l'Altiplano bolivien, formant lors de la saison des pluies le plus vaste miroir naturel de la Terre."
   },
   {
     "id": "monument_tours_petronas",
@@ -348,7 +500,11 @@
     "latitude": 3.1579,
     "longitude": 101.7116,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_tours_petronas.webp",
+    "category": "civil",
+    "yearBuilt": 1998,
+    "funFact": "Tours jumelles de 452 mètres à Kuala Lumpur inspirées de motifs géométriques islamiques, reliées au 41e étage par une passerelle à double étage suspendue à 170 mètres du sol."
   },
   {
     "id": "monument_borobudur",
@@ -357,7 +513,11 @@
     "latitude": -7.6079,
     "longitude": 110.2038,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_borobudur.webp",
+    "category": "religieux",
+    "yearBuilt": 825,
+    "funFact": "Plus grand monument bouddhiste au monde sur l'île de Java en Indonésie, pyramide à terrasses étagées ornée de 504 statues du Bouddha et de 72 stupas ajourés en pierre de lave."
   },
   {
     "id": "monument_baalbek",
@@ -366,7 +526,11 @@
     "latitude": 34.0069,
     "longitude": 36.2044,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_baalbek.webp",
+    "category": "antiquite",
+    "yearBuilt": 150,
+    "funFact": "Cité antique romaine au Liban célèbre pour son temple de Bacchus aux proportions titanesques et ses mégalithes pesant près de 1 000 tonnes, parmi les plus lourds déplacés par l'homme."
   },
   {
     "id": "monument_persepolis",
@@ -375,7 +539,11 @@
     "latitude": 29.9357,
     "longitude": 52.8914,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_persepolis.webp",
+    "category": "antiquite",
+    "yearBuilt": -515,
+    "funFact": "Capitale cérémonielle de l'Empire perse achéménide fondée par Darius Ier, chef-d'œuvre de bas-reliefs célébrant les peuples de l'empire avant d'être incendiée par Alexandre le Grand en 330 av. J.-C."
   },
   {
     "id": "monument_saint_pierre_rome",
@@ -384,7 +552,11 @@
     "latitude": 41.9022,
     "longitude": 12.4539,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_saint_pierre_rome.webp",
+    "category": "religieux",
+    "yearBuilt": 1626,
+    "funFact": "Plus grande église du monde et cœur du Vatican, érigée au-dessus de la tombe supposée de l'apôtre Pierre avec une majestueuse coupole conçue par Michel-Ange."
   },
   {
     "id": "monument_chateau_versailles",
@@ -393,7 +565,11 @@
     "latitude": 48.8049,
     "longitude": 2.1204,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_chateau_versailles.webp",
+    "category": "chateau",
+    "yearBuilt": 1661,
+    "funFact": "Sommet de l'art classique français conçu pour magnifier le règne de Louis XIV, avec ses 800 hectares de jardins féeriques ponctués de bassins animés par les Grandes Eaux."
   },
   {
     "id": "monument_tour_de_pise",
@@ -402,7 +578,11 @@
     "latitude": 43.723,
     "longitude": 10.3966,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_tour_de_pise.webp",
+    "category": "monument",
+    "yearBuilt": 1173,
+    "funFact": "Campanile en marbre blanc de la cathédrale de Pise célèbre pour son inclinaison involontaire de près de 4 degrés, causée dès le début des travaux par un sol meuble d'argile et de sable."
   },
   {
     "id": "monument_porte_brandebourg",
@@ -411,7 +591,11 @@
     "latitude": 52.5163,
     "longitude": 13.3777,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_porte_brandebourg.webp",
+    "category": "monument",
+    "yearBuilt": 1791,
+    "funFact": "Monument néoclassique berlinois inspiré des Propylées d'Athènes, couronné par son quadrige de bronze ; symbole des divisions de la guerre froide puis de la réunification allemande."
   },
   {
     "id": "monument_uluru",
@@ -420,7 +604,11 @@
     "latitude": -25.3444,
     "longitude": 131.0369,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_uluru.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Inselberg de grès sacré pour les peuples aborigènes Anangu au cœur de l'Outback australien, haut de 348 mètres, réputé pour ses spectaculaires changements de teinte rouge au coucher du soleil."
   },
   {
     "id": "monument_mont_rushmore",
@@ -429,7 +617,11 @@
     "latitude": 43.8791,
     "longitude": -103.4591,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_mont_rushmore.webp",
+    "category": "monument",
+    "yearBuilt": 1941,
+    "funFact": "Sculpture monumentale taillée dans le granit des Black Hills du Dakota du Sud, représentant les visages de 18 mètres de haut de quatre présidents américains (Washington, Jefferson, T. Roosevelt, Lincoln)."
   },
   {
     "id": "monument_grand_canyon",
@@ -438,7 +630,11 @@
     "latitude": 36.0544,
     "longitude": -112.1401,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_grand_canyon.webp",
+    "category": "nature",
+    "yearBuilt": 0,
+    "funFact": "Gorge spectaculaire creusée par le fleuve Colorado en Arizona sur 450 km de long et jusqu'à 1 800 mètres de profondeur, exposant deux milliards d'années d'histoire géologique de la Terre."
   },
   {
     "id": "monument_mile_met_york",
@@ -447,6 +643,10 @@
     "latitude": 40.7484,
     "longitude": -73.9857,
     "scale": "world",
-    "pack": "monuments_monde"
+    "pack": "monuments_monde",
+    "imageUrl": "/images/monde/monument_mile_met_york.webp",
+    "category": "civil",
+    "yearBuilt": 1931,
+    "funFact": "Gratte-ciel Art déco de 381 mètres (443 m avec flèche) au cœur de Manhattan, construit en un temps record de seulement 13 mois et demi en pleine Grande Dépression."
   }
 ]
