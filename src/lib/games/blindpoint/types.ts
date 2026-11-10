@@ -91,7 +91,7 @@ export interface BlindPointGuessResponse {
   isGameOver: boolean;
 }
 
-export type BlindPointMapTheme = "dark" | "voyager";
+export type BlindPointMapTheme = "dark" | "voyager" | "satellite";
 
 export interface BlindPointSettings {
   showBorders: boolean;

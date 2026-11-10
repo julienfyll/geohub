@@ -56,24 +56,30 @@ export const BlindPointSettingsModal: React.FC<BlindPointSettingsModalProps> = (
           </button>
         </div>
 
-        {/* Basemap Style Theme Selector (2 vues exclusives: Sombre Voyageur & Clair Voyageur) */}
+        {/* Basemap Style Theme Selector (3 vues : Sombre, Clair, Satellite) */}
         <div>
           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">
             Calque visuel de la carte
           </label>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-3 gap-2">
             {[
               {
                 id: "dark" as const,
-                label: "Sombre Voyageur",
+                label: "Sombre",
                 icon: "🌑",
-                desc: "Fond nuit & reliefs naturels",
+                desc: "Fond nuit & reliefs",
               },
               {
                 id: "voyager" as const,
-                label: "Clair Voyageur",
+                label: "Clair",
                 icon: "☀️",
-                desc: "Fond ivoire & teintes naturelles",
+                desc: "Fond ivoire naturel",
+              },
+              {
+                id: "satellite" as const,
+                label: "Satellite",
+                icon: "🛰️",
+                desc: "Photo réelle HD",
               },
             ].map((theme) => {
               const isSelected = (settings.mapTheme || "dark") === theme.id;
@@ -82,13 +88,13 @@ export const BlindPointSettingsModal: React.FC<BlindPointSettingsModalProps> = (
                   key={theme.id}
                   type="button"
                   onClick={() => onUpdateSetting("mapTheme", theme.id)}
-                  className={`p-3 rounded-2xl border flex flex-col items-center justify-center text-center transition-all ${
+                  className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all ${
                     isSelected
                       ? "bg-blue-600/25 border-blue-500 text-white ring-1 ring-blue-500/60 shadow-lg shadow-blue-500/20"
                       : "bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-800"
                   }`}
                 >
-                  <span className="text-xl mb-1">{theme.icon}</span>
+                  <span className="text-lg mb-1">{theme.icon}</span>
                   <span className="font-bold text-xs">{theme.label}</span>
                   <span className="text-[10px] text-slate-400 mt-0.5 leading-tight">{theme.desc}</span>
                 </button>
@@ -99,57 +105,72 @@ export const BlindPointSettingsModal: React.FC<BlindPointSettingsModalProps> = (
 
         {/* Settings List */}
         <div className="flex flex-col gap-4 text-sm divide-y divide-slate-800/80">
-          {/* Voirie & Réseau routier Toggle */}
-          <div className="flex items-center justify-between pt-1">
-            <div className="flex items-start gap-3 pr-2">
-              <Milestone className="w-4 h-4 text-sky-400 mt-1 shrink-0" />
+          {/* Contextual Vector Toggles or Satellite Notice */}
+          {settings.mapTheme === "satellite" ? (
+            <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-800/40 border border-slate-700/60 text-xs text-slate-300">
+              <Sparkles className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
               <div>
-                <p className="font-semibold text-white">Voirie & Réseau routier</p>
-                <p className="text-xs text-slate-400">
-                  Affiche les rues, boulevards, avenues et ponts (sans aucun nom). Désactivez pour une carte vierge de routes.
+                <p className="font-semibold text-white mb-0.5">Mode Imagerie Réelle</p>
+                <p className="text-slate-400 leading-relaxed">
+                  La voirie, les ponts, cours d'eau et espaces verts sont directement intégrés dans la photographie satellite.
                 </p>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => onUpdateSetting("showRoads", !(settings.showRoads ?? true))}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                (settings.showRoads ?? true) ? "bg-blue-600" : "bg-slate-700"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                  (settings.showRoads ?? true) ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
-          </div>
+          ) : (
+            <>
+              {/* Voirie & Réseau routier Toggle */}
+              <div className="flex items-center justify-between pt-1">
+                <div className="flex items-start gap-3 pr-2">
+                  <Milestone className="w-4 h-4 text-sky-400 mt-1 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-white">Voirie & Réseau routier</p>
+                    <p className="text-xs text-slate-400">
+                      Affiche les rues, boulevards, avenues et ponts (sans aucun nom). Désactivez pour une carte vierge de routes.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onUpdateSetting("showRoads", !(settings.showRoads ?? true))}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    (settings.showRoads ?? true) ? "bg-blue-600" : "bg-slate-700"
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                      (settings.showRoads ?? true) ? "translate-x-5" : "translate-x-0"
+                    }`}
+                  />
+                </button>
+              </div>
 
-          {/* Espaces verts & Cours d'eau Toggle */}
-          <div className="flex items-center justify-between pt-3">
-            <div className="flex items-start gap-3 pr-2">
-              <Trees className="w-4 h-4 text-emerald-400 mt-1 shrink-0" />
-              <div>
-                <p className="font-semibold text-white">Espaces verts & Cours d'eau</p>
-                <p className="text-xs text-slate-400">
-                  Affiche les parcs, forêts, fleuves et canaux en teintes naturelles. Désactivez pour une silhouette épurée.
-                </p>
+              {/* Espaces verts & Cours d'eau Toggle */}
+              <div className="flex items-center justify-between pt-3">
+                <div className="flex items-start gap-3 pr-2">
+                  <Trees className="w-4 h-4 text-emerald-400 mt-1 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-white">Espaces verts & Cours d'eau</p>
+                    <p className="text-xs text-slate-400">
+                      Affiche les parcs, forêts, fleuves et canaux en teintes naturelles. Désactivez pour une silhouette épurée.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onUpdateSetting("showNature", !(settings.showNature ?? true))}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    (settings.showNature ?? true) ? "bg-emerald-600" : "bg-slate-700"
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                      (settings.showNature ?? true) ? "translate-x-5" : "translate-x-0"
+                    }`}
+                  />
+                </button>
               </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => onUpdateSetting("showNature", !(settings.showNature ?? true))}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                (settings.showNature ?? true) ? "bg-emerald-600" : "bg-slate-700"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                  (settings.showNature ?? true) ? "translate-x-5" : "translate-x-0"
-                }`}
-              />
-            </button>
-          </div>
+            </>
+          )}
 
           {/* Borders Toggle */}
           <div className="flex items-center justify-between pt-3">
