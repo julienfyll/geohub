@@ -32,6 +32,7 @@ import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointS
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
+import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
 import {
   BlindPointCategory,
   BlindPointPack,
@@ -478,7 +479,12 @@ function BlindPointGame() {
               <span className="font-bold text-sm tracking-tight text-white hidden sm:inline">Blind Point</span>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <LeaderboardTriggerButton
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all shadow-sm cursor-pointer"
+                label="Classement"
+                initialGame="blindpoint"
+              />
               <button
                 type="button"
                 onClick={() => setShowSettingsModal(true)}

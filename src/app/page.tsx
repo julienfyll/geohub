@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
+import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
 
 export default function Home() {
   const todayDate = new Intl.DateTimeFormat("fr-FR", {
@@ -43,7 +44,13 @@ export default function Home() {
             </div>
           </div>
 
-          <UserNav />
+          <div className="flex items-center gap-3">
+            <LeaderboardTriggerButton
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-semibold transition-all cursor-pointer shadow-sm"
+              label="Classement"
+            />
+            <UserNav />
+          </div>
         </div>
       </nav>
 
@@ -53,9 +60,12 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
 
         <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold mb-6">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Défi du jour disponible — {todayDate}</span>
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Défi du jour disponible — {todayDate}</span>
+            </div>
+            <LeaderboardTriggerButton />
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-5 leading-tight">

@@ -20,6 +20,7 @@ import { BlindPointRoundResult, BlindPointPack, BlindPointDifficulty } from "@/l
 import { formatDistance } from "@/lib/games/blindpoint/scoring";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { recordGameSession } from "@/lib/stats/statsService";
+import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 
 interface BlindPointSummaryModalProps {
   isOpen: boolean;
@@ -46,6 +47,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
 }) => {
   const { user, profile, signInWithGoogle } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const hasSavedRef = useRef(false);
 
   const totalScore = rounds.reduce((sum, r) => sum + r.score, 0);
@@ -285,6 +287,16 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
 
         {/* Actions Grid */}
         <div className="flex flex-col gap-2 pt-1">
+          {/* Leaderboard button */}
+          <button
+            type="button"
+            onClick={() => setShowLeaderboard(true)}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-amber-500/20 via-emerald-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 text-amber-300 font-bold rounded-2xl border border-amber-500/40 transition-all text-xs shadow-md"
+          >
+            <Trophy className="w-4 h-4 text-amber-400" />
+            <span>Voir le classement officiel du jour</span>
+          </button>
+
           {/* Share Button (Wordle Style) */}
           <button
             type="button"
@@ -371,6 +383,14 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Leaderboard Modal */}
+      <LeaderboardModal
+        isOpen={showLeaderboard}
+        onClose={() => setShowLeaderboard(false)}
+        initialGame="blindpoint"
+        initialVariant={pack}
+      />
     </div>
   );
 };

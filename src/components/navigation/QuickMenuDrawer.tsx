@@ -19,9 +19,11 @@ import {
   ExternalLink,
   Sparkles,
   Zap,
+  Trophy,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { ProfileModal } from "@/components/profile/ProfileModal";
+import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 
 interface QuickMenuDrawerProps {
   currentPath?: string;
@@ -30,6 +32,7 @@ interface QuickMenuDrawerProps {
 export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const { user, profile, streak } = useAuth();
   const router = useRouter();
 
@@ -131,8 +134,8 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
 
             {/* Navigation Sections */}
             <div className="p-4 space-y-6 flex-1">
-              {/* Home */}
-              <div>
+              {/* Home & Leaderboard Quick Actions */}
+              <div className="space-y-2">
                 <button
                   type="button"
                   onClick={() => handleNav("/")}
@@ -140,7 +143,22 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                 >
                   <div className="flex items-center gap-2.5">
                     <Home className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
-                    <span>Hub Principal (Tous les jeux)</span>
+                    <span>Hub Principal</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setShowLeaderboard(true);
+                  }}
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/10 to-blue-500/10 hover:from-amber-500/20 hover:to-blue-500/20 text-amber-200 font-bold text-xs border border-amber-500/30 transition-all group"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Trophy className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+                    <span>Classements & Records</span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white transition-colors" />
                 </button>
@@ -277,6 +295,12 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
       <ProfileModal
         isOpen={showProfileModal}
         onClose={() => setShowProfileModal(false)}
+      />
+
+      {/* Leaderboard Modal */}
+      <LeaderboardModal
+        isOpen={showLeaderboard}
+        onClose={() => setShowLeaderboard(false)}
       />
     </>
   );

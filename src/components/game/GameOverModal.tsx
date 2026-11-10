@@ -7,6 +7,7 @@ import { RingStatus } from "./RingProgressHUD";
 import { GameMetric, GameScale } from "@/lib/games/types";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { recordGameSession } from "@/lib/stats/statsService";
+import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 
 interface GameOverModalProps {
   isOpen: boolean;
@@ -36,6 +37,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   const { user, profile, signInWithGoogle } = useAuth();
   const [copied, setCopied] = useState(false);
   const [sessionSaved, setSessionSaved] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const isAirports = metric === "airports";
   const hasSavedRef = useRef(false);
 
@@ -57,6 +59,8 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   useEffect(() => {
     if (isOpen && !hasSavedRef.current && rings.length > 0) {
       hasSavedRef.current = true;
+      const totalTriesUsed = rings.reduce((acc, r) => acc + (r.triesUsed > 0 ? r.triesUsed : 3), 0);
+
       recordGameSession(
         {
           game_mode: "georings",
@@ -72,6 +76,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
             seedCityName,
             mode,
             metric,
+            totalTriesUsed,
           },
         },
         user?.id
@@ -241,6 +246,16 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
 
         {/* Actions */}
         <div className="flex flex-col gap-2.5 pt-1">
+          {/* Leaderboard button */}
+          <button
+            type="button"
+            onClick={() => setShowLeaderboard(true)}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-amber-500/20 via-blue-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-blue-500/30 text-amber-300 font-bold rounded-xl border border-amber-500/40 transition-all text-xs shadow-md"
+          >
+            <Trophy className="w-4 h-4 text-amber-400" />
+            <span>Voir le classement officiel du jour</span>
+          </button>
+
           <button
             type="button"
             onClick={handleCopy}
@@ -269,6 +284,14 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Leaderboard Modal */}
+      <LeaderboardModal
+        isOpen={showLeaderboard}
+        onClose={() => setShowLeaderboard(false)}
+        initialGame="georings"
+        initialVariant={isAirports ? "airports" : "cities"}
+      />
     </div>
   );
 };
