@@ -520,24 +520,27 @@ function GeoRingsGame() {
   return (
     <div className="relative w-screen h-screen overflow-hidden flex flex-col bg-slate-950 text-slate-100">
       {/* Top Navigation Bar */}
-      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        <div className="flex items-center gap-3">
+      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
+        <div className="flex items-center gap-2.5">
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
+            title="Retour au Hub d'accueil"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Hub</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-blue-500" />
+            <div className="flex items-center justify-center w-6 h-6 rounded-md bg-blue-500/15 border border-blue-500/30 text-blue-400">
+              <Compass className="w-3.5 h-3.5" />
+            </div>
             <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block">
               GeoRings
             </h1>
           </div>
         </div>
 
-        {/* Center: Mode Indicator & Scale Switcher */}
+        {/* Center: Mode Indicator & Scale Switcher (Visual Segmented Pills) */}
         <div className="flex items-center gap-2">
           {/* Mode Switcher : Daily | Rapide | Custom */}
           <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
@@ -598,6 +601,7 @@ function GeoRingsGame() {
           {/* Scale Switcher */}
           <div className="hidden md:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
             <button
+              type="button"
               onClick={() => router.push(`/play/georings?scale=fr&mode=${mode}`)}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 scale === "fr"
@@ -608,6 +612,7 @@ function GeoRingsGame() {
               🇫🇷 France
             </button>
             <button
+              type="button"
               onClick={() => router.push(`/play/georings?scale=eu&mode=${mode}`)}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 scale === "eu"
@@ -618,6 +623,7 @@ function GeoRingsGame() {
               🇪🇺 Europe
             </button>
             <button
+              type="button"
               onClick={() => router.push(`/play/georings?scale=world&mode=${mode}`)}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 scale === "world"
@@ -635,6 +641,7 @@ function GeoRingsGame() {
           {/* Final Summary button when game is over */}
           {isGameOver && (
             <button
+              type="button"
               onClick={() => setShowGameOverModal(true)}
               title="Voir le bilan final de la partie"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-xs font-semibold text-amber-300 transition-all shadow-sm"
@@ -646,8 +653,10 @@ function GeoRingsGame() {
 
           {/* Settings button */}
           <button
+            type="button"
             onClick={() => setShowSettings(true)}
-            title="Réglages de jeu (Frontières, boussole, etc.)"
+            title="Paramètres de jeu"
+            aria-label="Paramètres de jeu"
             className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all text-xs"
           >
             <Settings className="w-4 h-4" />
@@ -655,8 +664,10 @@ function GeoRingsGame() {
 
           {/* Help button */}
           <button
+            type="button"
             onClick={() => setShowHelp((prev) => !prev)}
             title="Règles du jeu"
+            aria-label="Règles du jeu"
             className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all text-xs"
           >
             <HelpCircle className="w-4 h-4" />
@@ -664,6 +675,7 @@ function GeoRingsGame() {
 
           {/* Share button */}
           <button
+            type="button"
             onClick={handleCopyLink}
             title="Copier le lien pour défier un ami sur cette partie"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-all shadow-sm"
@@ -818,40 +830,64 @@ function GeoRingsGame() {
 
       {/* Rules Modal */}
       {showHelp && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6 shadow-2xl text-left flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Compass className="w-5 h-5 text-blue-500" />
-                <span>Règles de GeoRings</span>
-              </h3>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200 pointer-events-auto"
+          onClick={() => setShowHelp(false)}
+        >
+          <div
+            className="relative w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-2xl p-6 shadow-2xl text-left flex flex-col gap-4 text-slate-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <h3 className="text-base font-bold text-white tracking-tight">
+                  Règles de GeoRings
+                </h3>
+              </div>
               <button
+                type="button"
                 onClick={() => setShowHelp(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                title="Fermer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="text-sm text-slate-300 space-y-2.5">
-              <p>
-                🎯 <b>Objectif :</b> À partir d'une ville centrale, découvrez la <b>ville la plus peuplée</b> au sein de chaque anneau concentrique successif.
-              </p>
-              <p>
-                ⭕ <b>Anneaux :</b> Le premier anneau est un cercle proche du centre. Les anneaux suivants s'étendent de plus en plus loin.
-              </p>
-              <p>
-                ❤️ <b>Vies :</b> Chaque ville essayée apparaît sur la carte avec un point rouge (échec) ou vert (succès). Si vous échouez, la bonne réponse est révélée et le jeu passe à l'anneau suivant.
-              </p>
-              <p>
-                🧭 <b>Boussole :</b> En cas d'erreur dans l'anneau, un indice vous indique la direction de la cible depuis la ville essayée.
-              </p>
+
+            <div className="space-y-3 text-xs leading-relaxed text-slate-300">
+              <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+                <span className="font-bold text-white block mb-1">🎯 1. Objectif</span>
+                À partir d'une ville centrale, découvrez la <strong>ville la plus peuplée</strong> située à l'intérieur de chaque anneau concentrique successif.
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+                <span className="font-bold text-white block mb-1">⭕ 2. Anneaux Concentriques</span>
+                Le premier anneau est un cercle proche du centre. Les anneaux suivants s'étendent de plus en plus loin pour couvrir l'ensemble du territoire.
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+                <span className="font-bold text-white block mb-1">❤️ 3. Vies & Tentatives</span>
+                Chaque ville essayée apparaît sur la carte en vert (succès) ou rouge (erreur). Si vos vies s'épuisent, la bonne réponse est révélée et le jeu avance.
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+                <span className="font-bold text-white block mb-1">🧭 4. Boussole Directionnelle</span>
+                En cas d'erreur dans l'anneau, une flèche indicatrice vous guide vers la cible depuis votre proposition.
+              </div>
             </div>
-            <button
-              onClick={() => setShowHelp(false)}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm transition-all"
-            >
-              Compris, c'est parti !
-            </button>
+
+            <div className="pt-2 border-t border-slate-800 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowHelp(false)}
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md transition-colors"
+              >
+                J'ai compris
+              </button>
+            </div>
           </div>
         </div>
       )}
