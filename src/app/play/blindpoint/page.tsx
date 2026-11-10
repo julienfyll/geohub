@@ -259,6 +259,7 @@ function BlindPointGame() {
       setShowSummaryModal(false);
       setRoundIndex(0);
       setCurrentTarget(null);
+      setNextTargetBuffer(null);
 
       // Increment gameSessionId to guarantee that BlindPointMap unmounts and remounts clean
       setGameSessionId((prev) => prev + 1);
@@ -496,6 +497,7 @@ function BlindPointGame() {
   };
 
   const handleRestartCurrentGame = () => {
+    setNextTargetBuffer(null);
     const p = session?.pack || pack;
     const d = session?.difficulty || difficulty;
     const m = session?.mode || mode;
@@ -1115,7 +1117,9 @@ function BlindPointGame() {
         isGameOverReview={isGameOver && !showSummaryModal && !showResultModal}
         currentGuess={currentGuess}
         currentTargetCoords={currentTargetCoords}
-        currentTargetName={currentTarget?.name}
+        currentTargetName={
+          isRevealing && currentRoundResult ? currentRoundResult.target.name : currentTarget?.name
+        }
         allRounds={roundsHistory}
         showBorders={settings.showBorders}
         showRoads={settings.showRoads ?? true}

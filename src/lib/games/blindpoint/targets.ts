@@ -210,6 +210,8 @@ export function getSessionTargets(
 
 export function getProxyImageUrl(url?: string): string | undefined {
   if (!url) return undefined;
+  // Local static assets (e.g. /images/paris/...) should be served directly without proxy
+  if (url.startsWith("/")) return url;
   if (url.startsWith("/api/image-proxy")) return url;
   return `/api/image-proxy?url=${encodeURIComponent(url)}`;
 }

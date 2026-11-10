@@ -5,7 +5,12 @@ import {
   BlindPointGuessRequest,
   BlindPointGuessResponse,
 } from "@/lib/games/blindpoint/types";
-import { getSessionTargets, toClientTarget, getProxyImageUrl } from "@/lib/games/blindpoint/targets";
+import {
+  getSessionTargets,
+  toClientTarget,
+  getProxyImageUrl,
+  getTargetsByPack,
+} from "@/lib/games/blindpoint/targets";
 import { getDistanceKm } from "@/lib/geo/haversine";
 import { calculateBlindPointScore, getScoreRating } from "@/lib/games/blindpoint/scoring";
 
@@ -52,7 +57,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid round index" }, { status: 400 });
     }
 
-    const target = targets[roundIndex];
+    // 1. Resolve the target: prioritizes targetId if provided by the client,
+    // ensuring the server evaluates the EXACT city the player was asked to find.
+    let target = null;
+    let targetIdxInSession = -1;
+
+    if (targetId) {
+      targetIdxInSession = targets.findIndex((t) => t.id === targetId);
+      if (targetIdxInSession !== -1) {
+        target = targets[targetIdxInSession];
+      } else {
+        // Fallback: look into the pack pool directly if session parameters drifted
+        const packList: BlindPointPack[] = Array.isArray(packsToUse) ? packsToUse : [packsToUse];
+        for (const p of packList) {
+          const pool = getTargetsByPack(p);
+          const found = pool.find((t) => t.id === targetId);
+          if (found) {
+            target = found;
+            break;
+          }
+        }
+      }
+    }
+
+    // Default fallback to roundIndex in session targets
+    if (!target) {
+      target = targets[roundIndex];
+    }
+
     if (!target) {
       return NextResponse.json({ error: "Target not found for current round" }, { status: 404 });
     }
@@ -64,10 +96,11 @@ export async function POST(request: NextRequest) {
     const score = calculateBlindPointScore(distanceKm, target.scale);
     const rating = getScoreRating(distanceKm, score, target.scale);
 
-    const isGameOver = roundIndex >= totalRounds - 1;
+    const effectiveIndex = targetIdxInSession !== -1 ? targetIdxInSession : roundIndex;
+    const isGameOver = effectiveIndex >= totalRounds - 1;
     const nextTarget = isGameOver
       ? null
-      : toClientTarget(targets[roundIndex + 1], roundIndex + 1, totalRounds);
+      : toClientTarget(targets[effectiveIndex + 1], effectiveIndex + 1, totalRounds);
 
     const response: BlindPointGuessResponse = {
       roundIndex,

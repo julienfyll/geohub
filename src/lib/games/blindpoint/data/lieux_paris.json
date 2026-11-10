@@ -7,7 +7,7 @@
     "longitude": 2.2945,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/960px-Tour_Eiffel_Wikimedia_Commons.jpg",
+    "imageUrl": "/images/paris/paris_tour_eiffel.webp",
     "arrondissement": 7,
     "bank": "rive_gauche",
     "category": "monument",
@@ -23,7 +23,7 @@
     "longitude": 2.3499,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Notre-Dame_de_Paris_2013-07-24.jpg/960px-Notre-Dame_de_Paris_2013-07-24.jpg",
+    "imageUrl": "/images/paris/paris_notre_dame.webp",
     "arrondissement": 4,
     "bank": "ile",
     "category": "religieux",
@@ -39,7 +39,7 @@
     "longitude": 2.3376,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Louvre_museum_01.jpg/960px-Louvre_museum_01.jpg",
+    "imageUrl": "/images/paris/paris_louvre_pyramide.webp",
     "arrondissement": 1,
     "bank": "rive_droite",
     "category": "musee",
@@ -55,7 +55,7 @@
     "longitude": 2.295,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Arc_de_Triomphe_-_Ao%C3%BBt_2026.jpg/960px-Arc_de_Triomphe_-_Ao%C3%BBt_2026.jpg",
+    "imageUrl": "/images/paris/paris_arc_de_triomphe.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "monument",
@@ -71,7 +71,7 @@
     "longitude": 2.3431,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Sacr%C3%A9_Coeur_Fa%C3%A7ade_1.jpg/960px-Sacr%C3%A9_Coeur_Fa%C3%A7ade_1.jpg",
+    "imageUrl": "/images/paris/paris_sacre_coeur.webp",
     "arrondissement": 18,
     "bank": "rive_droite",
     "category": "religieux",
@@ -87,7 +87,7 @@
     "longitude": 2.3464,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Pantheon_of_Paris_007.JPG/960px-Pantheon_of_Paris_007.JPG",
+    "imageUrl": "/images/paris/paris_pantheon.webp",
     "arrondissement": 5,
     "bank": "rive_gauche",
     "category": "monument",
@@ -103,7 +103,7 @@
     "longitude": 2.3126,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Invalides_aerial_view.jpg",
+    "imageUrl": "/images/paris/paris_invalides.webp",
     "arrondissement": 7,
     "bank": "rive_gauche",
     "category": "monument",
@@ -119,7 +119,7 @@
     "longitude": 2.3316,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Paris_Opera_full_frontal_architecture%2C_May_2009.jpg/960px-Paris_Opera_full_frontal_architecture%2C_May_2009.jpg",
+    "imageUrl": "/images/paris/paris_opera_garnier.webp",
     "arrondissement": 9,
     "bank": "rive_droite",
     "category": "spectacle",
@@ -135,7 +135,7 @@
     "longitude": 2.345,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Sainte-Chapelle_de_Paris_vue_du_Palais_de_justice.JPG/960px-Sainte-Chapelle_de_Paris_vue_du_Palais_de_justice.JPG",
+    "imageUrl": "/images/paris/paris_sainte_chapelle.webp",
     "arrondissement": 1,
     "bank": "ile",
     "category": "religieux",
@@ -151,7 +151,7 @@
     "longitude": 2.3522,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Le_logo_du_Centre_Pompidou_redessin%C3%A9_en_2019_%285_bandes%29_avec_son_typogramme.svg/960px-Le_logo_du_Centre_Pompidou_redessin%C3%A9_en_2019_%285_bandes%29_avec_son_typogramme.svg.png",
+    "imageUrl": "/images/paris/paris_centre_pompidou.webp",
     "arrondissement": 4,
     "bank": "rive_droite",
     "category": "musee",
@@ -167,7 +167,7 @@
     "longitude": 2.3372,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Facade_of_Palais_du_Luxembourg%2C_Paris_5th_006.jpg/960px-Facade_of_Palais_du_Luxembourg%2C_Paris_5th_006.jpg",
+    "imageUrl": "/images/paris/paris_palais_luxembourg.webp",
     "arrondissement": 6,
     "bank": "rive_gauche",
     "category": "institution",
@@ -183,7 +183,7 @@
     "longitude": 2.3186,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Fa%C3%A7ade_Palais_Bourbon_3.jpg/960px-Fa%C3%A7ade_Palais_Bourbon_3.jpg",
+    "imageUrl": "/images/paris/paris_palais_bourbon.webp",
     "arrondissement": 7,
     "bank": "rive_gauche",
     "category": "institution",
@@ -199,7 +199,7 @@
     "longitude": 2.3522,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/H%C3%B4tel_ville_fa%C3%A7ade_principale_Paris_11.jpg/960px-H%C3%B4tel_ville_fa%C3%A7ade_principale_Paris_11.jpg",
+    "imageUrl": "/images/paris/paris_hotel_de_ville.webp",
     "arrondissement": 4,
     "bank": "rive_droite",
     "category": "institution",
@@ -215,7 +215,7 @@
     "longitude": 2.3125,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/PanoramiqueGrandPalais_Cropped.jpg/960px-PanoramiqueGrandPalais_Cropped.jpg",
+    "imageUrl": "/images/paris/paris_grand_palais.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "musee",
@@ -231,7 +231,7 @@
     "longitude": 2.3146,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Petit-Palais-Paris-02-2018.jpg/960px-Petit-Palais-Paris-02-2018.jpg",
+    "imageUrl": "/images/paris/paris_petit_palais.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "musee",
@@ -247,7 +247,7 @@
     "longitude": 2.3456,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Conciergerie%2C_Par%C3%ADs%2C_Francia%2C_2022-10-29%2C_DD_134.jpg/960px-Conciergerie%2C_Par%C3%ADs%2C_Francia%2C_2022-10-29%2C_DD_134.jpg",
+    "imageUrl": "/images/paris/paris_conciergerie.webp",
     "arrondissement": 1,
     "bank": "ile",
     "category": "monument",
@@ -263,7 +263,7 @@
     "longitude": 2.3656,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Place_des_Vosges_vue_a%C3%A9rienne.png/960px-Place_des_Vosges_vue_a%C3%A9rienne.png",
+    "imageUrl": "/images/paris/paris_place_des_vosges.webp",
     "arrondissement": 4,
     "bank": "rive_droite",
     "category": "insolite",
@@ -279,7 +279,7 @@
     "longitude": 2.3294,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Place_Vend%C3%B4me_vue_a%C3%A9rienne.png/960px-Place_Vend%C3%B4me_vue_a%C3%A9rienne.png",
+    "imageUrl": "/images/paris/paris_place_vendome.webp",
     "arrondissement": 1,
     "bank": "rive_droite",
     "category": "monument",
@@ -295,7 +295,7 @@
     "longitude": 2.3211,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Place_de_la_Concorde_from_the_Eiffel_Tower%2C_Paris_April_2011.jpg/960px-Place_de_la_Concorde_from_the_Eiffel_Tower%2C_Paris_April_2011.jpg",
+    "imageUrl": "/images/paris/paris_place_concorde.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "monument",
@@ -311,7 +311,7 @@
     "longitude": 2.3136,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Pont_Alexandre_III_from_pont_de_la_Concorde%2C_Paris_17_May_2012.jpg/960px-Pont_Alexandre_III_from_pont_de_la_Concorde%2C_Paris_17_May_2012.jpg",
+    "imageUrl": "/images/paris/paris_pont_alexandre_iii.webp",
     "arrondissement": 8,
     "bank": "pont",
     "category": "pont",
@@ -327,7 +327,7 @@
     "longitude": 2.3369,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Palais_Royal%2C_Paris_8_September_2019.jpg/960px-Palais_Royal%2C_Paris_8_September_2019.jpg",
+    "imageUrl": "/images/paris/paris_palais_royal.webp",
     "arrondissement": 1,
     "bank": "rive_droite",
     "category": "monument",
@@ -343,7 +343,7 @@
     "longitude": 2.3266,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/7/73/Logo_mus%C3%A9e_d%27Orsay.png/960px-Logo_mus%C3%A9e_d%27Orsay.png",
+    "imageUrl": "/images/paris/paris_musee_orsay.webp",
     "arrondissement": 7,
     "bank": "rive_gauche",
     "category": "musee",
@@ -359,7 +359,7 @@
     "longitude": 2.3431,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Bourse_Commerce_-_Paris_I_%28FR75%29_-_2021-06-05_-_1.jpg/960px-Bourse_Commerce_-_Paris_I_%28FR75%29_-_2021-06-05_-_1.jpg",
+    "imageUrl": "/images/paris/paris_bourse_commerce.webp",
     "arrondissement": 1,
     "bank": "rive_droite",
     "category": "musee",
@@ -375,7 +375,7 @@
     "longitude": 2.3369,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/bf/Logo_Institut_de_France.svg/960px-Logo_Institut_de_France.svg.png",
+    "imageUrl": "/images/paris/paris_institut_de_france.webp",
     "arrondissement": 6,
     "bank": "rive_gauche",
     "category": "institution",
@@ -391,7 +391,7 @@
     "longitude": 2.325,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Eglise_de_la_Madeleine_2024.jpg/960px-Eglise_de_la_Madeleine_2024.jpg",
+    "imageUrl": "/images/paris/paris_madeleine.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "religieux",
@@ -406,7 +406,7 @@
     "latitude": 48.8508,
     "longitude": 2.3347,
     "scale": "paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/%C3%89glise_Saint-Sulpice_-_Fa%C3%A7ade_-_F%C3%A9vrier_2025.jpg/960px-%C3%89glise_Saint-Sulpice_-_Fa%C3%A7ade_-_F%C3%A9vrier_2025.jpg",
+    "imageUrl": "/images/paris/paris_saint_sulpice.webp",
     "arrondissement": 6,
     "bank": "rive_gauche",
     "category": "religieux",
@@ -422,7 +422,7 @@
     "longitude": 2.3528,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/P1090451_Paris_V_arenes_de_Lut%C3%A8ce_rwk.JPG/960px-P1090451_Paris_V_arenes_de_Lut%C3%A8ce_rwk.JPG",
+    "imageUrl": "/images/paris/paris_arenes_lutece.webp",
     "arrondissement": 5,
     "bank": "rive_gauche",
     "category": "monument",
@@ -438,7 +438,7 @@
     "longitude": 2.3325,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Catacumbas%2C_Par%C3%ADs%2C_Francia%2C_2022-11-01%2C_DD_111-113_HDR.jpg/960px-Catacumbas%2C_Par%C3%ADs%2C_Francia%2C_2022-11-01%2C_DD_111-113_HDR.jpg",
+    "imageUrl": "/images/paris/paris_catacombes.webp",
     "arrondissement": 14,
     "bank": "rive_gauche",
     "category": "insolite",
@@ -454,7 +454,7 @@
     "longitude": 2.3219,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Tour_Montparnasse_20250513.jpg/960px-Tour_Montparnasse_20250513.jpg",
+    "imageUrl": "/images/paris/paris_tour_montparnasse.webp",
     "arrondissement": 15,
     "bank": "rive_gauche",
     "category": "monument",
@@ -470,7 +470,7 @@
     "longitude": 2.3489,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Tour_Saint-Jacques_2008.jpg/960px-Tour_Saint-Jacques_2008.jpg",
+    "imageUrl": "/images/paris/paris_tour_saint_jacques.webp",
     "arrondissement": 4,
     "bank": "rive_droite",
     "category": "monument",
@@ -486,7 +486,7 @@
     "longitude": 2.2633,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/1/14/2014-10-26_Fondation_d%27entreprise_Louis_Vuitton_week-end_inaugural_%28vue_du_jardin_d%27acclimatation%29.JPG/960px-2014-10-26_Fondation_d%27entreprise_Louis_Vuitton_week-end_inaugural_%28vue_du_jardin_d%27acclimatation%29.JPG",
+    "imageUrl": "/images/paris/paris_fondation_louis_vuitton.webp",
     "arrondissement": 16,
     "bank": "rive_droite",
     "category": "musee",
@@ -502,7 +502,7 @@
     "longitude": 2.2883,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Trocadero_2016_%284%29.jpg/960px-Trocadero_2016_%284%29.jpg",
+    "imageUrl": "/images/paris/paris_palais_chaillot.webp",
     "arrondissement": 16,
     "bank": "rive_droite",
     "category": "monument",
@@ -518,7 +518,7 @@
     "longitude": 2.2967,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Palais_de_Tokyo_20030101w.JPG/960px-Palais_de_Tokyo_20030101w.JPG",
+    "imageUrl": "/images/paris/paris_palais_tokyo.webp",
     "arrondissement": 16,
     "bank": "rive_droite",
     "category": "musee",
@@ -534,7 +534,7 @@
     "longitude": 2.3508,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/College_des_Bernardins.jpg/960px-College_des_Bernardins.jpg",
+    "imageUrl": "/images/paris/paris_college_bernardins.webp",
     "arrondissement": 5,
     "bank": "rive_gauche",
     "category": "monument",
@@ -550,7 +550,7 @@
     "longitude": 2.3333,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Abbaye_de_Saint-Germain-des-Pr%C3%A9s_140131_1.jpg/960px-Abbaye_de_Saint-Germain-des-Pr%C3%A9s_140131_1.jpg",
+    "imageUrl": "/images/paris/paris_st_germain_pres.webp",
     "arrondissement": 6,
     "bank": "rive_gauche",
     "category": "religieux",
@@ -566,7 +566,7 @@
     "longitude": 2.345,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Paris_-_Eglise_Saint-Eustache_-_Vue_g%C3%A9n%C3%A9rale.jpg/960px-Paris_-_Eglise_Saint-Eustache_-_Vue_g%C3%A9n%C3%A9rale.jpg",
+    "imageUrl": "/images/paris/paris_st_eustache.webp",
     "arrondissement": 1,
     "bank": "rive_droite",
     "category": "religieux",
@@ -582,7 +582,7 @@
     "longitude": 2.3692,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Colonne_Juillet_-_Paris_IV_%28FR75%29_-_2021-05-23_-_1.jpg/960px-Colonne_Juillet_-_Paris_IV_%28FR75%29_-_2021-05-23_-_1.jpg",
+    "imageUrl": "/images/paris/paris_colonne_juillet_bastille.webp",
     "arrondissement": 11,
     "bank": "rive_droite",
     "category": "monument",
@@ -598,7 +598,7 @@
     "longitude": 2.3686,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Cirque_d%27hiver%2C_Paris_11e%2C_Southwest_view_20140316_1.jpg/960px-Cirque_d%27hiver%2C_Paris_11e%2C_Southwest_view_20140316_1.jpg",
+    "imageUrl": "/images/paris/paris_cirque_hiver.webp",
     "arrondissement": 11,
     "bank": "rive_droite",
     "category": "spectacle",
@@ -614,7 +614,7 @@
     "longitude": 2.3567,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/thumb/c/cb/Institut_du_monde_arabe_1987_logo.svg/960px-Institut_du_monde_arabe_1987_logo.svg.png",
+    "imageUrl": "/images/paris/paris_institut_monde_arabe.webp",
     "arrondissement": 5,
     "bank": "rive_gauche",
     "category": "institution",
@@ -630,7 +630,7 @@
     "longitude": 2.3758,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/President_Mitterand_bij_slotzitting_Europa_Congres_Mitterand%2C_kop%2C_Bestanddeelnr_934-2444_%28portrait_crop%29.jpg/960px-President_Mitterand_bij_slotzitting_Europa_Congres_Mitterand%2C_kop%2C_Bestanddeelnr_934-2444_%28portrait_crop%29.jpg",
+    "imageUrl": "/images/paris/paris_bnf_mitterrand.webp",
     "arrondissement": 13,
     "bank": "rive_gauche",
     "category": "institution",
@@ -646,7 +646,7 @@
     "longitude": 2.3381,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Cardinal_de_Richelieu.jpg/960px-Cardinal_de_Richelieu.jpg",
+    "imageUrl": "/images/paris/paris_bnf_richelieu.webp",
     "arrondissement": 2,
     "bank": "rive_droite",
     "category": "institution",
@@ -662,7 +662,7 @@
     "longitude": 2.3939,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/fr/3/38/Philharmonie_de_Paris_2010_logo.png",
+    "imageUrl": "/images/paris/paris_philharmonie.webp",
     "arrondissement": 19,
     "bank": "rive_droite",
     "category": "spectacle",
@@ -678,7 +678,7 @@
     "longitude": 2.3878,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Logo_Cit%C3%A9_des_sciences.svg/960px-Logo_Cit%C3%A9_des_sciences.svg.png",
+    "imageUrl": "/images/paris/paris_cite_sciences.webp",
     "arrondissement": 19,
     "bank": "rive_droite",
     "category": "musee",
@@ -694,7 +694,7 @@
     "longitude": 2.3322,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Moulin_rouge.jpg/960px-Moulin_rouge.jpg",
+    "imageUrl": "/images/paris/paris_moulin_rouge.webp",
     "arrondissement": 18,
     "bank": "rive_droite",
     "category": "spectacle",
@@ -710,7 +710,7 @@
     "longitude": 2.2978,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Mus%C3%A9e_du_quai_Branly_-_20150801_16h07_%2810629%29.jpg/960px-Mus%C3%A9e_du_quai_Branly_-_20150801_16h07_%2810629%29.jpg",
+    "imageUrl": "/images/paris/paris_quai_branly.webp",
     "arrondissement": 7,
     "bank": "rive_gauche",
     "category": "musee",
@@ -726,7 +726,7 @@
     "longitude": 2.3569,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Grande_galerie_de_l%27%C3%89volution_Fa%C3%A7ade.jpg/960px-Grande_galerie_de_l%27%C3%89volution_Fa%C3%A7ade.jpg",
+    "imageUrl": "/images/paris/paris_jardin_plantes.webp",
     "arrondissement": 5,
     "bank": "rive_gauche",
     "category": "musee",
@@ -742,7 +742,7 @@
     "longitude": 2.3411,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/The_western_sides_of_the_%C3%8Ele_de_la_Cit%C3%A9_and_the_Pont_Neuf%2C_14_July_2008.jpg/960px-The_western_sides_of_the_%C3%8Ele_de_la_Cit%C3%A9_and_the_Pont_Neuf%2C_14_July_2008.jpg",
+    "imageUrl": "/images/paris/paris_pont_neuf.webp",
     "arrondissement": 1,
     "bank": "pont",
     "category": "pont",
@@ -758,7 +758,7 @@
     "longitude": 2.3375,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Pont_des_Arts%2C_6e_Arrondissement%2C_Paris_%28HDR%29_20140320_1.jpg/960px-Pont_des_Arts%2C_6e_Arrondissement%2C_Paris_%28HDR%29_20140320_1.jpg",
+    "imageUrl": "/images/paris/paris_pont_des_arts.webp",
     "arrondissement": 6,
     "bank": "pont",
     "category": "pont",
@@ -774,7 +774,7 @@
     "longitude": 2.3167,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Secretary_Pompeo_Arrives_to_Meet_with_French_Foreign_Minister_Le_Drian_in_Paris_%2850610423656%29_%28cropped%29.jpg/960px-Secretary_Pompeo_Arrives_to_Meet_with_French_Foreign_Minister_Le_Drian_in_Paris_%2850610423656%29_%28cropped%29.jpg",
+    "imageUrl": "/images/paris/paris_elysee.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "institution",
@@ -790,7 +790,7 @@
     "longitude": 2.3208,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Matignon_gala.jpg/960px-Matignon_gala.jpg",
+    "imageUrl": "/images/paris/paris_hotel_matignon.webp",
     "arrondissement": 7,
     "bank": "rive_gauche",
     "category": "institution",
@@ -806,7 +806,7 @@
     "longitude": 2.3158,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Le_mus%C3%A9e_Rodin.jpg/960px-Le_mus%C3%A9e_Rodin.jpg",
+    "imageUrl": "/images/paris/paris_musee_rodin.webp",
     "arrondissement": 7,
     "bank": "rive_gauche",
     "category": "musee",
@@ -822,7 +822,7 @@
     "longitude": 2.3628,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Cour_Louis_XIV_au_Mus%C3%A9e_Carnavalet_%C3%A0_Paris_le_30_septembre_2016_-_17.jpg/960px-Cour_Louis_XIV_au_Mus%C3%A9e_Carnavalet_%C3%A0_Paris_le_30_septembre_2016_-_17.jpg",
+    "imageUrl": "/images/paris/paris_musee_carnavalet.webp",
     "arrondissement": 3,
     "bank": "rive_droite",
     "category": "musee",
@@ -838,7 +838,7 @@
     "longitude": 2.3831,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3c/ParcDesButtesChaumont.JPG",
+    "imageUrl": "/images/paris/paris_buttes_chaumont_sibylle.webp",
     "arrondissement": 19,
     "bank": "rive_droite",
     "category": "monument",
@@ -854,7 +854,7 @@
     "longitude": 2.3089,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Barri%C3%A8re_Chartres_-_Paris_VIII_%28FR75%29_-_2024-04-13_-_1.jpg/960px-Barri%C3%A8re_Chartres_-_Paris_VIII_%28FR75%29_-_2024-04-13_-_1.jpg",
+    "imageUrl": "/images/paris/paris_parc_monceau_rotonde.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "monument",
@@ -870,7 +870,7 @@
     "longitude": 2.3469,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Th%C3%A9%C3%A2tre_du_Ch%C3%A2telet_Fa%C3%A7ade_%28cropped%29.jpg/960px-Th%C3%A9%C3%A2tre_du_Ch%C3%A2telet_Fa%C3%A7ade_%28cropped%29.jpg",
+    "imageUrl": "/images/paris/paris_theatre_chatelet.webp",
     "arrondissement": 1,
     "bank": "rive_droite",
     "category": "spectacle",
@@ -886,7 +886,7 @@
     "longitude": 2.3697,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Place_de_la_Bastille_in_July_2022_4.jpg/960px-Place_de_la_Bastille_in_July_2022_4.jpg",
+    "imageUrl": "/images/paris/paris_opera_bastille.webp",
     "arrondissement": 12,
     "bank": "rive_droite",
     "category": "spectacle",
@@ -902,7 +902,7 @@
     "longitude": 2.3236,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Chapelle_expiatoire_-_Ao%C3%BBt_2024.jpg/960px-Chapelle_expiatoire_-_Ao%C3%BBt_2024.jpg",
+    "imageUrl": "/images/paris/paris_chapelle_expiatoire.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "religieux",
@@ -918,7 +918,7 @@
     "longitude": 2.3364,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Observatoire_de_Paris.JPG/960px-Observatoire_de_Paris.JPG",
+    "imageUrl": "/images/paris/paris_observatoire.webp",
     "arrondissement": 14,
     "bank": "rive_gauche",
     "category": "institution",
@@ -934,7 +934,7 @@
     "longitude": 2.3183,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Paris%2C_Saint-Augustin%2C_Au%C3%9Fenansicht_%281%29.jpg/960px-Paris%2C_Saint-Augustin%2C_Au%C3%9Fenansicht_%281%29.jpg",
+    "imageUrl": "/images/paris/paris_st_augustin.webp",
     "arrondissement": 8,
     "bank": "rive_droite",
     "category": "religieux",
@@ -950,7 +950,7 @@
     "longitude": 2.3661,
     "scale": "paris",
     "pack": "lieux_paris",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Maison_de_Victor_Hugo%2C_place_des_Vosges_%C3%A0_Paris.jpg/960px-Maison_de_Victor_Hugo%2C_place_des_Vosges_%C3%A0_Paris.jpg",
+    "imageUrl": "/images/paris/paris_maison_victor_hugo.webp",
     "arrondissement": 4,
     "bank": "rive_droite",
     "category": "musee",
@@ -972,7 +972,7 @@
     "difficulty": "facile",
     "yearBuilt": 1864,
     "funFact": "Avec plus de 220 millions de voyageurs par an, c'est la première gare d'Europe en termes de trafic ferroviaire.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Paris_Gare_du_Nord_facade.jpg/960px-Paris_Gare_du_Nord_facade.jpg"
+    "imageUrl": "/images/paris/paris_gare_du_nord.webp"
   },
   {
     "id": "paris_gare_de_l_est",
@@ -988,7 +988,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1849,
     "funFact": "Point de départ historique de l'Orient-Express vers Istanbul et des lignes vers Strasbourg et l'Europe centrale.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Gare_de_Paris-Est_-_Fa%C3%A7ade_-_20150919.jpg/960px-Gare_de_Paris-Est_-_Fa%C3%A7ade_-_20150919.jpg"
+    "imageUrl": "/images/paris/paris_gare_de_l_est.webp"
   },
   {
     "id": "paris_canal_saint_martin",
@@ -1004,7 +1004,7 @@
     "difficulty": "facile",
     "yearBuilt": 1825,
     "funFact": "Inauguré par Charles X pour acheminer l'eau potable, célèbre pour ses écluses et ses apparitions dans Le Fabuleux Destin d'Amélie Poulain.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Canal_Saint-Martin_Paris_P1010375.jpg/960px-Canal_Saint-Martin_Paris_P1010375.jpg"
+    "imageUrl": "/images/paris/paris_canal_saint_martin.webp"
   },
   {
     "id": "paris_porte_saint_denis",
@@ -1020,7 +1020,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1672,
     "funFact": "Arc de triomphe érigé sous Louis XIV pour célébrer ses victoires sur le Rhin, remplaçant une ancienne porte de l'enceinte de Charles V.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Porte_Saint-Denis_2011.jpg/960px-Porte_Saint-Denis_2011.jpg"
+    "imageUrl": "/images/paris/paris_porte_saint_denis.webp"
   },
   {
     "id": "paris_pere_lachaise",
@@ -1036,7 +1036,7 @@
     "difficulty": "facile",
     "yearBuilt": 1804,
     "funFact": "Le plus grand cimetière de Paris intra-muros (44 hectares) et le plus visité au monde, abritant Oscar Wilde, Édith Piaf et Jim Morrison.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Pere_Lachaise_01.jpg/960px-Pere_Lachaise_01.jpg"
+    "imageUrl": "/images/paris/paris_pere_lachaise.webp"
   },
   {
     "id": "paris_parc_belleville",
@@ -1052,7 +1052,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1988,
     "funFact": "Perché à 108 mètres d'altitude, ce belvédère offre l'une des vues panoramiques les plus spectaculaires sur Paris.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Vue_de_Paris_depuis_le_parc_de_Belleville.jpg/960px-Vue_de_Paris_depuis_le_parc_de_Belleville.jpg"
+    "imageUrl": "/images/paris/paris_parc_belleville.webp"
   },
   {
     "id": "paris_eglise_charonne",
@@ -1068,7 +1068,7 @@
     "difficulty": "difficile",
     "yearBuilt": 1470,
     "funFact": "L'une des deux seules églises parisiennes à avoir conservé son cimetière paroissial d'origine autour de la nef, décor culte des Tontons Flingueurs.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Eglise_Saint-Germain_de_Charonne_2011.jpg/960px-Eglise_Saint-Germain_de_Charonne_2011.jpg"
+    "imageUrl": "/images/paris/paris_eglise_charonne.webp"
   },
   {
     "id": "paris_carre_baudouin",
@@ -1084,7 +1084,7 @@
     "difficulty": "difficile",
     "yearBuilt": 1770,
     "funFact": "Folie néo-classique du XVIIIe siècle au cœur de Ménilmontant, aujourd'hui centre d'art contemporain et lieu culturel public.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Pavillon_Carr%C3%A9_de_Baudouin%2C_Paris_20e.jpg/960px-Pavillon_Carr%C3%A9_de_Baudouin%2C_Paris_20e.jpg"
+    "imageUrl": "/images/paris/paris_carre_baudouin.webp"
   },
   {
     "id": "paris_parc_martin_luther_king",
@@ -1100,7 +1100,7 @@
     "difficulty": "moyen",
     "yearBuilt": 2007,
     "funFact": "Poumon vert de 10 hectares aménagé sur les anciennes voies de la gare de marchandises des Batignolles, au pied du Tribunal de Paris.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Parc_Clichy-Batignolles_-_Martin-Luther-King_2014.jpg/960px-Parc_Clichy-Batignolles_-_Martin-Luther-King_2014.jpg"
+    "imageUrl": "/images/paris/paris_parc_martin_luther_king.webp"
   },
   {
     "id": "paris_place_de_clichy",
@@ -1116,7 +1116,7 @@
     "difficulty": "facile",
     "yearBuilt": 1869,
     "funFact": "Carrefour reliant quatre arrondissements, célèbre pour sa statue commémorant la défense héroïque de la barrière de Clichy en 1814.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Place_de_Clichy%2C_Paris_2011.jpg/960px-Place_de_Clichy%2C_Paris_2011.jpg"
+    "imageUrl": "/images/paris/paris_place_de_clichy.webp"
   },
   {
     "id": "paris_cite_des_fleurs",
@@ -1132,7 +1132,7 @@
     "difficulty": "difficile",
     "yearBuilt": 1847,
     "funFact": "Voie piétonne privée bordée de villas et jardins fleuris du XIXe siècle, protégée de l'agitation urbaine du quartier des Épinettes.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Cite_des_Fleurs_Paris.jpg/960px-Cite_des_Fleurs_Paris.jpg"
+    "imageUrl": "/images/paris/paris_cite_des_fleurs.webp"
   },
   {
     "id": "paris_butte_aux_cailles",
@@ -1148,7 +1148,7 @@
     "difficulty": "facile",
     "yearBuilt": 1870,
     "funFact": "Ancien village champêtre préservé des percées haussmanniennes, doté d'un puits artésien d'eau chaude naturelle foré au XIXe siècle.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Piscine_de_la_Butte-aux-Cailles_2014.jpg/960px-Piscine_de_la_Butte-aux-Cailles_2014.jpg"
+    "imageUrl": "/images/paris/paris_butte_aux_cailles.webp"
   },
   {
     "id": "paris_station_f",
@@ -1164,7 +1164,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1929,
     "funFact": "Ancienne halle ferroviaire en béton précontraint conçue par Eugène Freyssinet, transformée en plus grand campus de startups au monde.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Station_F_Halle_Freyssinet_Paris.jpg/960px-Station_F_Halle_Freyssinet_Paris.jpg"
+    "imageUrl": "/images/paris/paris_station_f.webp"
   },
   {
     "id": "paris_manufacture_gobelins",
@@ -1180,7 +1180,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1601,
     "funFact": "Manufacture royale créée sous Henri IV puis Colbert, qui tisse encore aujourd'hui des tapisseries d'art sur des métiers de haute lisse.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Manufacture_des_Gobelins_2011.jpg/960px-Manufacture_des_Gobelins_2011.jpg"
+    "imageUrl": "/images/paris/paris_manufacture_gobelins.webp"
   },
   {
     "id": "paris_olympiades_chinatown",
@@ -1196,7 +1196,7 @@
     "difficulty": "difficile",
     "yearBuilt": 1974,
     "funFact": "Plus grand quartier asiatique d'Europe, bâti sur une dalle urbaine moderniste dans les années 1970 au cœur du 13e arrondissement.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Olympiades_Paris_13e.jpg/960px-Olympiades_Paris_13e.jpg"
+    "imageUrl": "/images/paris/paris_olympiades_chinatown.webp"
   },
   {
     "id": "paris_gare_de_lyon",
@@ -1212,7 +1212,7 @@
     "difficulty": "facile",
     "yearBuilt": 1900,
     "funFact": "Célèbre pour sa tour campanile de 67 mètres et son restaurant Belle Époque classé 'Le Train Bleu', édifiée pour 1900.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Gare_de_Lyon_Paris_2011.jpg/960px-Gare_de_Lyon_Paris_2011.jpg"
+    "imageUrl": "/images/paris/paris_gare_de_lyon.webp"
   },
   {
     "id": "paris_coulee_verte",
@@ -1228,7 +1228,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1993,
     "funFact": "Première promenade plantée linéaire au monde aménagée sur un viaduc ferroviaire réhabilité, devançant la High Line new-yorkaise.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Promenade_plant%C3%A9e_Paris.jpg/960px-Promenade_plant%C3%A9e_Paris.jpg"
+    "imageUrl": "/images/paris/paris_coulee_verte.webp"
   },
   {
     "id": "paris_palais_porte_doree",
@@ -1244,7 +1244,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1931,
     "funFact": "Chef-d'œuvre Art Déco doté d'une gigantesque fresque en bas-relief d'Alfred Janniot, construit pour l'Exposition coloniale de 1931.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Palais_de_la_Porte_Doree_Paris.jpg/960px-Palais_de_la_Porte_Doree_Paris.jpg"
+    "imageUrl": "/images/paris/paris_palais_porte_doree.webp"
   },
   {
     "id": "paris_bercy_arena",
@@ -1260,7 +1260,7 @@
     "difficulty": "facile",
     "yearBuilt": 1984,
     "funFact": "Aménagé sur l'emplacement des anciens entrepôts vinicoles de Bercy, le parc conserve des rails et des pavillons de chais.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Palais_Omnisports_de_Paris-Bercy_2011.jpg/960px-Palais_Omnisports_de_Paris-Bercy_2011.jpg"
+    "imageUrl": "/images/paris/paris_bercy_arena.webp"
   },
   {
     "id": "paris_bassin_arsenal",
@@ -1276,7 +1276,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1805,
     "funFact": "Ancien fossé d'enceinte de la Bastille transformé en port de plaisance urbain reliant la Seine au canal Saint-Martin.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Port_de_l%27Arsenal_Paris_2011.jpg/960px-Port_de_l%27Arsenal_Paris_2011.jpg"
+    "imageUrl": "/images/paris/paris_bassin_arsenal.webp"
   },
   {
     "id": "paris_parc_andre_citroen",
@@ -1292,7 +1292,7 @@
     "difficulty": "facile",
     "yearBuilt": 1992,
     "funFact": "Établi sur les anciens terrains de l'usine Citroën, son ballon captif sert d'observatoire de la qualité de l'air de Paris.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Parc_Andre_Citroen_Ballon.jpg/960px-Parc_Andre_Citroen_Ballon.jpg"
+    "imageUrl": "/images/paris/paris_parc_andre_citroen.webp"
   },
   {
     "id": "paris_statue_liberte_cygnes",
@@ -1308,7 +1308,7 @@
     "difficulty": "facile",
     "yearBuilt": 1889,
     "funFact": "Réplique au quart de la statue new-yorkaise offerte par les Américains de Paris en 1889, orientée plein ouest vers l'Atlantique.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Statue_de_la_Liberte_Paris_Ile_aux_Cygnes.jpg/960px-Statue_de_la_Liberte_Paris_Ile_aux_Cygnes.jpg"
+    "imageUrl": "/images/paris/paris_statue_liberte_cygnes.webp"
   },
   {
     "id": "paris_pont_bir_hakeim",
@@ -1324,7 +1324,7 @@
     "difficulty": "facile",
     "yearBuilt": 1905,
     "funFact": "Pont à deux étages dont le viaduc métallique accueille la ligne 6 du métro avec vue sur la Tour Eiffel, décor du film Inception.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Pont_de_Bir-Hakeim_Paris.jpg/960px-Pont_de_Bir-Hakeim_Paris.jpg"
+    "imageUrl": "/images/paris/paris_pont_bir_hakeim.webp"
   },
   {
     "id": "paris_parc_georges_brassens",
@@ -1340,7 +1340,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1985,
     "funFact": "Aménagé sur le site des anciens abattoirs de Vaugirard, rendant hommage au chanteur qui vécut tout près.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Parc_Georges-Brassens_Paris.jpg/960px-Parc_Georges-Brassens_Paris.jpg"
+    "imageUrl": "/images/paris/paris_parc_georges_brassens.webp"
   },
   {
     "id": "paris_parc_montsouris",
@@ -1356,7 +1356,7 @@
     "difficulty": "facile",
     "yearBuilt": 1869,
     "funFact": "Conçu par Alphand sous Napoléon III au sud de la capitale, il abrite un grand lac artificiel et la mire du méridien de Paris.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Parc_Montsouris_Paris.jpg/960px-Parc_Montsouris_Paris.jpg"
+    "imageUrl": "/images/paris/paris_parc_montsouris.webp"
   },
   {
     "id": "paris_cite_universitaire",
@@ -1372,7 +1372,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1925,
     "funFact": "Campus mondial fondé après 1918 pour favoriser la paix entre les peuples, avec des pavillons signés Le Corbusier ou Willem Dudok.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Cite_internationale_universitaire_de_Paris_Maison_internationale.jpg/960px-Cite_internationale_universitaire_de_Paris_Maison_internationale.jpg"
+    "imageUrl": "/images/paris/paris_cite_universitaire.webp"
   },
   {
     "id": "paris_roland_garros",
@@ -1388,7 +1388,7 @@
     "difficulty": "facile",
     "yearBuilt": 1928,
     "funFact": "Temple mondial du tennis sur terre battue, bâti en 1928 pour les Mousquetaires victorieux de la Coupe Davis.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Court_Philippe-Chatrier_Roland_Garros.jpg/960px-Court_Philippe-Chatrier_Roland_Garros.jpg"
+    "imageUrl": "/images/paris/paris_roland_garros.webp"
   },
   {
     "id": "paris_parc_des_princes",
@@ -1404,7 +1404,7 @@
     "difficulty": "facile",
     "yearBuilt": 1972,
     "funFact": "Stade historique du Paris Saint-Germain, remarquable pour ses 50 portiques en béton conçus par Roger Taillibert.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Parc_des_Princes_Paris.jpg/960px-Parc_des_Princes_Paris.jpg"
+    "imageUrl": "/images/paris/paris_parc_des_princes.webp"
   },
   {
     "id": "paris_maison_balzac",
@@ -1420,7 +1420,7 @@
     "difficulty": "difficile",
     "yearBuilt": 1840,
     "funFact": "Dernière demeure parisienne d'Honoré de Balzac où il écrivit La Comédie humaine et échappait à ses créanciers par une sortie dérobée.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Maison_de_Balzac_Paris.jpg/960px-Maison_de_Balzac_Paris.jpg"
+    "imageUrl": "/images/paris/paris_maison_balzac.webp"
   },
   {
     "id": "paris_place_du_tertre",
@@ -1436,7 +1436,7 @@
     "difficulty": "facile",
     "yearBuilt": 1635,
     "funFact": "Cœur historique du village de Montmartre, célèbre pour ses chevalets en plein air et ses portraitistes perpétuant l'esprit bohème.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Place_du_Tertre_Paris.jpg/960px-Place_du_Tertre_Paris.jpg"
+    "imageUrl": "/images/paris/paris_place_du_tertre.webp"
   },
   {
     "id": "paris_vignes_montmartre",
@@ -1452,7 +1452,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1933,
     "funFact": "Les 1 762 ceps de vigne du versant nord produisent chaque automne une cuvée célébrée lors des Fêtes des Vendanges de Montmartre.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Vignes_Montmartre_Lapin_Agile.jpg/960px-Vignes_Montmartre_Lapin_Agile.jpg"
+    "imageUrl": "/images/paris/paris_vignes_montmartre.webp"
   },
   {
     "id": "paris_bassin_villette_rotonde",
@@ -1468,7 +1468,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1788,
     "funFact": "Plus grand plan d'eau artificiel de Paris dominé par l'ancienne barrière d'octroi néo-classique conçue par Claude-Nicolas Ledoux.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Rotonde_de_la_Villette_Paris.jpg/960px-Rotonde_de_la_Villette_Paris.jpg"
+    "imageUrl": "/images/paris/paris_bassin_villette_rotonde.webp"
   },
   {
     "id": "paris_centquatre",
@@ -1484,7 +1484,7 @@
     "difficulty": "difficile",
     "yearBuilt": 1874,
     "funFact": "Ancien siège monumental des Pompes funèbres de la Ville sous la IIIe République, métamorphosé en tiers-lieu artistique international.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Centquatre_Paris_2011.jpg/960px-Centquatre_Paris_2011.jpg"
+    "imageUrl": "/images/paris/paris_centquatre.webp"
   },
   {
     "id": "paris_palais_brongniart",
@@ -1500,7 +1500,7 @@
     "difficulty": "facile",
     "yearBuilt": 1826,
     "funFact": "Temple corinthien commandé par Napoléon Ier pour accueillir le cœur financier de la France jusqu'en 1998.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Palais_Brongniart_Paris.jpg/960px-Palais_Brongniart_Paris.jpg"
+    "imageUrl": "/images/paris/paris_palais_brongniart.webp"
   },
   {
     "id": "paris_passage_panoramas",
@@ -1516,7 +1516,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1799,
     "funFact": "Plus ancien passage couvert de Paris avec sa verrière d'origine et premier lieu public parisien éclairé au gaz dès 1817.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Passage_des_Panoramas_Paris.jpg/960px-Passage_des_Panoramas_Paris.jpg"
+    "imageUrl": "/images/paris/paris_passage_panoramas.webp"
   },
   {
     "id": "paris_tour_jean_sans_peur",
@@ -1532,7 +1532,7 @@
     "difficulty": "difficile",
     "yearBuilt": 1409,
     "funFact": "Plus haut vestige médiéval fortifié civil conservé à Paris, édifié par le duc de Bourgogne pendant la guerre de Cent Ans.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Tour_Jean_sans_Peur_Paris.jpg/960px-Tour_Jean_sans_Peur_Paris.jpg"
+    "imageUrl": "/images/paris/paris_tour_jean_sans_peur.webp"
   },
   {
     "id": "paris_musee_picasso",
@@ -1548,7 +1548,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1659,
     "funFact": "Installé dans l'Hôtel Salé, ainsi nommé car son commanditaire s'était enrichi en percevant l'impôt sur le sel (la gabelle).",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Hotel_Sale_Musee_Picasso_Paris.jpg/960px-Hotel_Sale_Musee_Picasso_Paris.jpg"
+    "imageUrl": "/images/paris/paris_musee_picasso.webp"
   },
   {
     "id": "paris_arts_et_metiers",
@@ -1564,7 +1564,7 @@
     "difficulty": "facile",
     "yearBuilt": 1794,
     "funFact": "Fondé par l'abbé Grégoire à la Révolution, il abrite le pendule de Foucault original et le premier avion de Clément Ader.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Musee_Arts_et_Metiers_Paris.jpg/960px-Musee_Arts_et_Metiers_Paris.jpg"
+    "imageUrl": "/images/paris/paris_arts_et_metiers.webp"
   },
   {
     "id": "paris_musee_grevin",
@@ -1580,7 +1580,7 @@
     "difficulty": "facile",
     "yearBuilt": 1882,
     "funFact": "Musée de cire historique inauguré en 1882 pour donner un visage aux célébrités avant l'essor de la photographie de presse.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Musee_Grevin_Paris.jpg/960px-Musee_Grevin_Paris.jpg"
+    "imageUrl": "/images/paris/paris_musee_grevin.webp"
   },
   {
     "id": "paris_folies_bergere",
@@ -1596,7 +1596,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1869,
     "funFact": "Temple mythique du music-hall de la Belle Époque immortalisé par Manet, où se produisirent Joséphine Baker et Chaplin.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Folies_Bergere_Paris.jpg/960px-Folies_Bergere_Paris.jpg"
+    "imageUrl": "/images/paris/paris_folies_bergere.webp"
   },
   {
     "id": "paris_bataclan",
@@ -1612,7 +1612,7 @@
     "difficulty": "facile",
     "yearBuilt": 1865,
     "funFact": "Salle de spectacle historique reconnaissable à son toit pagode chinoise, devenue symbole mondial de résistance culturelle.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Bataclan_Paris_2015.jpg/960px-Bataclan_Paris_2015.jpg"
+    "imageUrl": "/images/paris/paris_bataclan.webp"
   },
   {
     "id": "paris_atelier_lumieres",
@@ -1628,7 +1628,7 @@
     "difficulty": "moyen",
     "yearBuilt": 1835,
     "funFact": "Ancienne fonderie de fer au XIXe siècle réhabilitée en premier centre d'art numérique immersif à Paris.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Atelier_des_Lumieres_Paris.jpg/960px-Atelier_des_Lumieres_Paris.jpg"
+    "imageUrl": "/images/paris/paris_atelier_lumieres.webp"
   },
   {
     "id": "paris_pont_mirabeau",
@@ -1644,7 +1644,7 @@
     "difficulty": "facile",
     "yearBuilt": 1896,
     "funFact": "Pont métallique célébré par Apollinaire dans son poème : 'Sous le pont Mirabeau coule la Seine et nos amours'.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Pont_Mirabeau_Paris.jpg/960px-Pont_Mirabeau_Paris.jpg"
+    "imageUrl": "/images/paris/paris_pont_mirabeau.webp"
   },
   {
     "id": "paris_passerelle_simone_beauvoir",
@@ -1660,7 +1660,7 @@
     "difficulty": "moyen",
     "yearBuilt": 2006,
     "funFact": "Ouvrage d'art piétonnier audacieux sans pile dans l'eau reliant directement la BNF au parc de Bercy par des arches entrelacées.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Passerelle_Simone-de-Beauvoir_Paris.jpg/960px-Passerelle_Simone-de-Beauvoir_Paris.jpg"
+    "imageUrl": "/images/paris/paris_passerelle_simone_beauvoir.webp"
   },
   {
     "id": "paris_cour_carree_louvre",
@@ -1676,6 +1676,6 @@
     "difficulty": "moyen",
     "yearBuilt": 1546,
     "funFact": "Dessinée par Pierre Lescot sous François Ier sur l'emplacement exact de la forteresse médiévale de Philippe Auguste.",
-    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cour_Carree_Louvre_Paris.jpg/960px-Cour_Carree_Louvre_Paris.jpg"
+    "imageUrl": "/images/paris/paris_cour_carree_louvre.webp"
   }
 ]
