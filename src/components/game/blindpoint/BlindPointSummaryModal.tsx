@@ -230,9 +230,15 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
                     <span className="font-bold text-white block truncate max-w-[170px] sm:max-w-[220px]">
                       {r.target.name}
                     </span>
-                    <span className="text-[10px] text-slate-400">
-                      {formatDistance(r.distanceKm)} d'écart
-                    </span>
+                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
+                      <span>{formatDistance(r.distanceKm)} d'écart</span>
+                      {r.target.arrondissement && (
+                        <>
+                          <span>•</span>
+                          <span className="text-blue-300 font-semibold">{r.target.arrondissement}ᵉ arr.</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
 

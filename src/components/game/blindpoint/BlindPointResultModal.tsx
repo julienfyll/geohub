@@ -63,13 +63,34 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
           )}
 
           <div className="text-left min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-base sm:text-lg font-black text-white truncate">
                 {roundResult.target.name}
               </h2>
               {isBullseye && (
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black uppercase tracking-wider">
                   Bullseye !
+                </span>
+              )}
+              {roundResult.target.arrondissement && (
+                <span className="px-1.5 py-0.5 rounded-md bg-blue-500/15 border border-blue-500/30 text-[10px] font-bold text-blue-300">
+                  {roundResult.target.arrondissement}ᵉ arr.
+                </span>
+              )}
+              {roundResult.target.bank && (
+                <span className="px-1.5 py-0.5 rounded-md bg-purple-500/15 border border-purple-500/30 text-[10px] font-semibold text-purple-300">
+                  {roundResult.target.bank === "rive_droite"
+                    ? "Rive Droite"
+                    : roundResult.target.bank === "rive_gauche"
+                    ? "Rive Gauche"
+                    : roundResult.target.bank === "ile"
+                    ? "Île"
+                    : "Pont"}
+                </span>
+              )}
+              {roundResult.target.yearBuilt && (
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-mono text-slate-300">
+                  {roundResult.target.yearBuilt}
                 </span>
               )}
             </div>
@@ -82,6 +103,13 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
               <span className="text-slate-500">•</span>
               <span className="text-slate-400">{roundResult.ratingLabel}</span>
             </p>
+
+            {roundResult.target.funFact && (
+              <p className="text-[11px] text-slate-300/90 mt-1.5 line-clamp-2 leading-relaxed bg-slate-900/60 p-1.5 rounded-lg border border-slate-800/60">
+                <span className="text-amber-400 font-bold mr-1">💡</span>
+                {roundResult.target.funFact}
+              </p>
+            )}
           </div>
         </div>
 
