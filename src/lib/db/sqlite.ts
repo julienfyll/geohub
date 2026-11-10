@@ -521,10 +521,55 @@ export function getSeedCities(scale: GameScale, continent?: string): City[] {
   }
 
   if (scale === "eu") {
+    // Stratified European macro-regions sampling (224 iconic hubs across 40 countries):
+    // 5 balanced zones (West, South, North, Central & Balkans, East)
+    // Custom population thresholds per zone & country caps to prevent West/Russia monopoly
+    // Excludes inner suburbs and secondary districts (Sant Martí, Ciudad Lineal, Islington, Mokotów, etc.)
     const stmt = db.prepare(`
-      SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone
-      FROM cities
-      WHERE scale = 'eu' AND population >= 200000
+      WITH macro AS (
+        SELECT id, name, country_code, scale, population, latitude, longitude, timezone,
+          CASE 
+            WHEN country_code IN ('FR', 'DE', 'GB', 'NL', 'BE', 'IE', 'CH', 'AT', 'LU', 'MC') THEN 'WEST'
+            WHEN country_code IN ('ES', 'IT', 'PT', 'GR', 'CY', 'MT', 'AD') THEN 'SOUTH'
+            WHEN country_code IN ('SE', 'NO', 'DK', 'FI', 'IS', 'EE', 'LV', 'LT') THEN 'NORTH'
+            WHEN country_code IN ('PL', 'CZ', 'SK', 'HU', 'RO', 'BG', 'HR', 'SI', 'RS', 'BA', 'ME', 'MK', 'AL', 'XK') THEN 'CENTRAL_BALKANS'
+            WHEN country_code IN ('RU', 'UA', 'BY', 'MD') THEN 'EAST'
+            ELSE 'OTHER'
+          END as region
+        FROM cities
+        WHERE scale = 'eu'
+          AND name NOT IN (
+            'Sant Martí', 'Ciudad Lineal', 'L''Hospitalet de Llobregat', 'Badalona', 'Móstoles',
+            'Islington', 'Mokotów', 'Novi Beograd', 'Zemun', 'Petržalka',
+            'Peristéri', 'Kallithéa', 'Acharnés', 'Kalamariá', 'Amadora', 'Queluz', 'Cacém',
+            'Frederiksberg', 'Sollentuna', 'Huddinge', 'Haninge', 'Lillestrøm', 'Anderlecht', 'Marne La Vallée'
+          )
+      ),
+      country_capped AS (
+        SELECT id, name, country_code as countryCode, scale, population, latitude, longitude, timezone, region,
+          ROW_NUMBER() OVER (PARTITION BY country_code ORDER BY population DESC) as rn_country
+        FROM macro
+        WHERE (region = 'NORTH' AND population >= 70000)
+           OR (region = 'SOUTH' AND population >= 80000)
+           OR (region = 'CENTRAL_BALKANS' AND population >= 80000)
+           OR (region = 'WEST' AND (population >= 150000 OR country_code = 'LU'))
+           OR (region = 'EAST' AND population >= 300000)
+      ),
+      filtered AS (
+        SELECT id, name, countryCode, scale, population, latitude, longitude, timezone
+        FROM country_capped
+        WHERE (region = 'WEST' AND rn_country <= 10)
+           OR (region = 'SOUTH' AND rn_country <= 10)
+           OR (region = 'NORTH' AND rn_country <= 8)
+           OR (region = 'CENTRAL_BALKANS' AND rn_country <= 5)
+           OR (region = 'EAST' AND (
+                (countryCode = 'RU' AND rn_country <= 15) OR
+                (countryCode = 'UA' AND rn_country <= 10) OR
+                (countryCode IN ('BY', 'MD') AND rn_country <= 5)
+              ))
+      )
+      SELECT id, name, countryCode, scale, population, latitude, longitude, timezone
+      FROM filtered
       ORDER BY population DESC
     `);
     return stmt.all() as unknown as City[];
