@@ -33,16 +33,16 @@ export const BlindPointLearningCard: React.FC<BlindPointLearningCardProps> = ({
 
   return (
     <>
-      {/* Right Side Floating Learning Panel */}
+      {/* Right Side Floating Learning Panel - Vertically Centered & Dynamic Height */}
       <aside
         aria-label="Fiche d'apprentissage du lieu"
-        className="fixed right-4 top-20 bottom-24 z-30 w-[320px] sm:w-[380px] pointer-events-auto flex flex-col animate-in fade-in slide-in-from-right-4 duration-300"
+        className="fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-30 w-[320px] sm:w-[390px] max-h-[85vh] pointer-events-auto flex flex-col animate-in fade-in slide-in-from-right-4 duration-300"
       >
-        <div className="flex-1 bg-slate-950/95 border border-slate-700/80 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col overflow-hidden">
+        <div className="bg-slate-950/95 border border-slate-700/80 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col h-auto max-h-[85vh] overflow-y-auto">
           {/* Header Tag & Optional Close Button */}
           <div className="flex items-center justify-between gap-2 mb-3 shrink-0">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-400 text-[10px] font-bold uppercase tracking-wider">
-              <BookOpen className="w-3 h-3 text-blue-400" />
+              <BookOpen className="w-3.5 h-3.5 text-blue-400" />
               <span>Fiche Découverte</span>
             </div>
 
@@ -50,7 +50,7 @@ export const BlindPointLearningCard: React.FC<BlindPointLearningCardProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors cursor-pointer"
                 title="Masquer le volet pour observer la carte"
                 aria-label="Fermer le volet"
               >
@@ -72,7 +72,7 @@ export const BlindPointLearningCard: React.FC<BlindPointLearningCardProps> = ({
               <button
                 type="button"
                 onClick={() => setEnlarged(true)}
-                className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white"
+                className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white cursor-pointer"
                 title="Agrandir la photo"
               >
                 <div className="px-3 py-1.5 rounded-xl bg-slate-950/80 backdrop-blur-md text-xs font-semibold flex items-center gap-1.5 border border-white/20">
@@ -85,38 +85,38 @@ export const BlindPointLearningCard: React.FC<BlindPointLearningCardProps> = ({
 
           {/* Place Title & Badges */}
           <div className="mb-3.5 shrink-0">
-            <h3 className="text-base sm:text-lg font-black text-white leading-tight mb-2">
+            <h3 className="text-lg sm:text-xl font-black text-white leading-tight mb-2">
               {target.name}
             </h3>
 
             {/* Geographical & Historical Badges */}
             <div className="flex flex-wrap items-center gap-1.5">
               {target.arrondissement && (
-                <span className="px-2 py-0.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-[10px] font-bold text-blue-300">
+                <span className="px-2 py-0.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-xs font-bold text-blue-300">
                   {target.arrondissement}ᵉ arr.
                 </span>
               )}
               {bankLabel && (
-                <span className="px-2 py-0.5 rounded-lg bg-purple-500/15 border border-purple-500/30 text-[10px] font-semibold text-purple-300">
+                <span className="px-2 py-0.5 rounded-lg bg-purple-500/15 border border-purple-500/30 text-xs font-semibold text-purple-300">
                   {bankLabel}
                 </span>
               )}
               {target.yearBuilt && (
-                <span className="px-2 py-0.5 rounded-lg bg-slate-800/80 border border-slate-700/80 text-[10px] font-mono text-slate-300">
+                <span className="px-2 py-0.5 rounded-lg bg-slate-800/80 border border-slate-700/80 text-xs font-mono text-slate-300">
                   Édifié en {target.yearBuilt}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Dedicated Learning & Fun Fact Block (Center) */}
+          {/* Dedicated Learning & Fun Fact Block (Dynamic & Increased font size) */}
           {target.funFact && (
-            <div className="flex-1 overflow-y-auto bg-slate-900/70 border border-slate-800 rounded-2xl p-3.5 flex flex-col justify-start">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-1 mb-1.5 shrink-0">
-                <Sparkles className="w-3 h-3 text-amber-400" />
+            <div className="bg-slate-900/85 border border-slate-800 rounded-2xl p-4 flex flex-col justify-start shadow-inner">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 mb-2 shrink-0">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>Le saviez-vous ?</span>
               </span>
-              <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed font-normal">
+              <p className="text-sm sm:text-[15px] text-slate-100 leading-relaxed font-normal">
                 {target.funFact}
               </p>
             </div>

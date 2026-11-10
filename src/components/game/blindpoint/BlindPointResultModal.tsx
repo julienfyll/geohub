@@ -49,8 +49,8 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
           </div>
 
           <div className="text-left min-w-0">
-            <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-black text-white truncate">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-base sm:text-lg font-black text-white break-words">
                 {roundResult.target.name}
               </h2>
               {isBullseye && (
