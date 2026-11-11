@@ -187,7 +187,7 @@ export default function Home() {
                 <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
                   <span className="text-xs font-bold text-slate-200">🏛️ Trésors & Monuments</span>
                   <span className="text-[11px] text-slate-400 leading-tight">
-                    105 Paris • 58 Châteaux • 50 UNESCO
+                    105 Paris • 58 Châteaux • 50 Merveilles
                   </span>
                 </div>
               </div>

@@ -119,15 +119,12 @@ export const DailyChallengesSection: React.FC = () => {
 
             {/* 5 Déclinaisons de GeoRings */}
             <div className="space-y-2.5">
-              {/* 1. France Villes */}
+              {/* 1. France Population */}
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border-2 border-blue-500/50 hover:border-blue-400 transition-all flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">👥</span>
-                  <div className="truncate">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">France — Villes (Population)</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 1 904 villes</span>
-                    </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-white whitespace-nowrap">France — Population</h4>
                     <p className="text-[11px] text-slate-400 truncate">Centre du jour fixe • 5 anneaux concentriques</p>
                   </div>
                 </div>
@@ -139,15 +136,12 @@ export const DailyChallengesSection: React.FC = () => {
                 )}
               </div>
 
-              {/* 2. Europe Villes */}
+              {/* 2. Europe Population */}
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-blue-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🇪🇺</span>
-                  <div className="truncate">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Europe — Villes (Population)</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 12 669 métropoles</span>
-                    </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-white whitespace-nowrap">Europe — Population</h4>
                     <p className="text-[11px] text-slate-400 truncate">5 anneaux à travers les capitales européennes</p>
                   </div>
                 </div>
@@ -159,15 +153,12 @@ export const DailyChallengesSection: React.FC = () => {
                 )}
               </div>
 
-              {/* 3. Monde Villes */}
+              {/* 3. Monde Population */}
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-blue-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🌍</span>
-                  <div className="truncate">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Monde — Mégapoles (Population)</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 21 324 mégapoles</span>
-                    </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-white whitespace-nowrap">Monde — Population</h4>
                     <p className="text-[11px] text-slate-400 truncate">Échelle planétaire (Tokyo, NYC, São Paulo...)</p>
                   </div>
                 </div>
@@ -183,11 +174,8 @@ export const DailyChallengesSection: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-sky-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">✈️</span>
-                  <div className="truncate">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">France — Aéroports & Trafic</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 55 aéroports</span>
-                    </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-white whitespace-nowrap">France — Aéroports</h4>
                     <p className="text-[11px] text-slate-400 truncate">Critère : Trafic passagers annuel (DGAC)</p>
                   </div>
                 </div>
@@ -203,11 +191,8 @@ export const DailyChallengesSection: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-sky-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🛫</span>
-                  <div className="truncate">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Monde — Aéroports & Trafic</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 3 282 hubs</span>
-                    </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-white whitespace-nowrap">Monde — Aéroports</h4>
                     <p className="text-[11px] text-slate-400 truncate">Grands hubs mondiaux (Atlanta, Dubaï, Heathrow...)</p>
                   </div>
                 </div>
@@ -256,10 +241,10 @@ export const DailyChallengesSection: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border-2 border-emerald-500/50 hover:border-emerald-400 transition-all flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🇫🇷</span>
-                  <div className="truncate">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Villes de France</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 139 villes</span>
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Villes de France</h4>
+                      <span className="text-[10px] text-slate-400 font-mono shrink-0">• 139 villes</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Calibré : 2 faciles • 2 moyennes • 1 terroir</p>
                   </div>
@@ -276,10 +261,10 @@ export const DailyChallengesSection: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🇪🇺</span>
-                  <div className="truncate">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Villes d'Europe</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 42 métropoles</span>
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Villes d'Europe</h4>
+                      <span className="text-[10px] text-slate-400 font-mono shrink-0">• 42 métropoles</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Calibré : 2 faciles • 2 moyennes • 1 perle</p>
                   </div>
@@ -296,10 +281,10 @@ export const DailyChallengesSection: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🌍</span>
-                  <div className="truncate">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Villes du Monde</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 167 mégapoles</span>
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Villes du Monde</h4>
+                      <span className="text-[10px] text-slate-400 font-mono shrink-0">• 167 mégapoles</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Équilibrage continental progressif (5 continents)</p>
                   </div>
@@ -316,10 +301,10 @@ export const DailyChallengesSection: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🗼</span>
-                  <div className="truncate">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Monuments de Paris</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 105 trésors</span>
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Monuments de Paris</h4>
+                      <span className="text-[10px] text-slate-400 font-mono shrink-0">• 105 trésors</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Micro-carte Paris Intra • Tolérance 1,5 km</p>
                   </div>
@@ -336,10 +321,10 @@ export const DailyChallengesSection: React.FC = () => {
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 transition-all flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🏛️</span>
-                  <div className="truncate">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white truncate">Merveilles du Monde (UNESCO)</h4>
-                      <span className="text-[10px] text-slate-400 font-mono">• 50 sites</span>
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Merveilles du Monde</h4>
+                      <span className="text-[10px] text-slate-400 font-mono shrink-0">• 50 sites</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Pétra, Taj Mahal, Colisée, Machu Picchu...</p>
                   </div>

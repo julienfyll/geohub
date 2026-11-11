@@ -765,7 +765,7 @@ function BlindPointGame() {
               >
                 <div>
                   <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🏛️ Merveilles</span>
-                  <span className="text-[10px] text-slate-400 font-mono">50 sites UNESCO</span>
+                  <span className="text-[10px] text-slate-400 font-mono">50 sites</span>
                 </div>
                 {dailyStatusMap["blindpoint_lieux_monde"]?.completed ? (
                   <div className="mt-2.5 flex items-center justify-between">
