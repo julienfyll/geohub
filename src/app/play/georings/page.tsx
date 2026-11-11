@@ -28,7 +28,9 @@ import {
   ArrowRight,
   Layers,
   ChevronDown,
+  CheckCircle2,
 } from "lucide-react";
+import { useDailyChallenges } from "@/lib/stats/useDailyChallenges";
 import { GeoMap, MapMarker } from "@/components/map/GeoMap";
 import { SearchBar, SearchCityItem } from "@/components/ui/SearchBar";
 import { RingProgressHUD, RingStatus } from "@/components/game/RingProgressHUD";
@@ -48,42 +50,37 @@ import { CityGuessResult, GameMetric, GameScale, GeoRingsInitResponse, TopCityIt
 // =========================================================================
 function GeoRingsLobby() {
   const router = useRouter();
-  const [selectedScalePop, setSelectedScalePop] = useState<GameScale>("fr");
-  const [selectedScaleAir, setSelectedScaleAir] = useState<GameScale>("fr");
+  const { statusMap } = useDailyChallenges();
+  const [selectedMetric, setSelectedMetric] = useState<GameMetric>("population");
+  const [selectedScale, setSelectedScale] = useState<GameScale>("fr");
   const [showCustomModal, setShowCustomModal] = useState(false);
-  const [customModalMetric, setCustomModalMetric] = useState<GameMetric>("population");
-
-  const todayDate = new Intl.DateTimeFormat("fr-FR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }).format(new Date());
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
       {/* Lobby Navigation */}
       <header className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
+        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
             <QuickMenuDrawer />
             <Link
               href="/"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors text-xs font-semibold"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Hub Principal</span>
+              <ArrowLeft className="w-4 h-4" />
+              <span>Hub</span>
             </Link>
-            <div className="flex items-center gap-2">
-              <Compass className="w-5 h-5 text-blue-500" />
-              <h1 className="text-base font-bold tracking-tight text-white hidden sm:block">
-                GeoRings — Choix du Critère
-              </h1>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/40 text-blue-400">
+              <Compass className="w-4 h-4" />
             </div>
+            <span className="font-bold text-sm tracking-tight text-white hidden sm:inline">GeoRings</span>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
             <LeaderboardTriggerButton
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/70 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all shadow-sm cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all shadow-sm cursor-pointer"
               label="Classement"
               initialGame="georings"
             />
@@ -92,201 +89,374 @@ function GeoRingsLobby() {
         </div>
       </header>
 
-      {/* Lobby Hero */}
-      <section className="relative overflow-hidden py-12 px-6 border-b border-slate-800/40 text-center">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[250px] bg-blue-600/10 blur-[100px] rounded-full pointer-events-none" />
-        <div className="max-w-3xl mx-auto relative z-10 flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Défis quotidiens disponibles — {todayDate}</span>
+      {/* Main Cockpit / Selection Screen */}
+      <main className="max-w-4xl mx-auto px-6 py-8 flex-1 w-full space-y-10">
+
+        {/* 1. RAPPEL DES DÉFIS DU JOUR GEORINGS (FLASHY) */}
+        <section className="p-6 rounded-3xl bg-slate-900/90 border-2 border-blue-500/40 space-y-4 shadow-xl relative overflow-hidden">
+          <div className="absolute -right-20 -top-20 w-44 h-44 bg-blue-500/10 blur-3xl pointer-events-none rounded-full" />
+
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Rendez-vous Officiels du Jour (GeoRings)</span>
+            </span>
+            <span className="text-[11px] text-slate-400 font-mono">Centres uniques du jour</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
-            Choisissez votre Critère de Jeu
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base max-w-xl">
-            Explorez le territoire par anneaux concentriques. Sélectionnez la déclinaison souhaitée pour démarrer votre partie :
-          </p>
-        </div>
-      </section>
-
-      {/* Variants Selection Grid */}
-      <main className="max-w-6xl mx-auto px-6 py-10 flex-1 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Card 1 : Villes & Population (Classique) */}
-          <div className="relative group bg-slate-900/90 border-2 border-blue-500/60 hover:border-blue-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
-            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-5 group-hover:opacity-15 transition-opacity">
-              <Users className="w-40 h-40 text-blue-400" />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5" />
-                  <span>Critère : Population</span>
-                </span>
-                <span className="text-xs text-slate-400 font-mono">5 Anneaux • 3 Vies</span>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-1">
+            {/* France Pop */}
+            <button
+              type="button"
+              onClick={() => router.push("/play/georings?metric=population&scale=fr&mode=daily")}
+              className={"p-3 rounded-2xl bg-slate-950/80 border-2 text-left transition-all group flex flex-col justify-between " + (
+                statusMap["georings_population_fr"]?.completed
+                  ? "border-blue-500/60 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
+                  : "border-blue-500/50 hover:border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+              )}
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-blue-300">👥 France</span>
+                <span className="text-[10px] text-slate-400 font-medium">Population</span>
               </div>
-
-              <h3 className="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
-                <span>Villes & Population</span>
-              </h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                À partir d'une ville centrale, identifiez la <b>commune ou métropole la plus peuplée</b> dans chaque anneau successif.
-              </p>
-
-              {/* Scale Selection */}
-              <div className="flex flex-col gap-2 mb-6">
-                <span className="text-xs text-slate-400 font-medium">Échelle de jeu :</span>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedScalePop("fr")}
-                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedScalePop === "fr"
-                        ? "bg-blue-600 border-blue-500 text-white shadow-md"
-                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-                    }`}
-                  >
-                    🇫🇷 France
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedScalePop("eu")}
-                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedScalePop === "eu"
-                        ? "bg-blue-600 border-blue-500 text-white shadow-md"
-                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-                    }`}
-                  >
-                    🇪🇺 Europe
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedScalePop("world")}
-                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedScalePop === "world"
-                        ? "bg-blue-600 border-blue-500 text-white shadow-md"
-                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-                    }`}
-                  >
-                    🌍 Monde
-                  </button>
+              {statusMap["georings_population_fr"]?.completed ? (
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                    <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                    <span>Fait</span>
+                  </span>
+                  <span className="text-[10px] font-black text-emerald-300 font-mono">
+                    {statusMap["georings_population_fr"].ringsCompleted}/{statusMap["georings_population_fr"].totalRings} 🎯
+                  </span>
                 </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => router.push(`/play/georings?metric=population&scale=${selectedScalePop}&mode=daily`)}
-                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/30 hover:scale-[1.02]"
-              >
-                <Play className="w-4 h-4 fill-white" />
-                <span>Défi du Jour</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push(`/play/georings?metric=population&scale=${selectedScalePop}&mode=free`)}
-                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all hover:scale-[1.02]"
-              >
-                <Zap className="w-4 h-4 text-amber-400" />
-                <span>Partie Rapide</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Card 2 : Aéroports & Trafic (Nouvelle Variante) */}
-          <div className="relative group bg-slate-900/90 border-2 border-sky-500/60 hover:border-sky-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
-            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-5 group-hover:opacity-15 transition-opacity">
-              <Plane className="w-40 h-40 text-sky-400" />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Plane className="w-3.5 h-3.5" />
-                  <span>Critère : Trafic Aérien</span>
-                </span>
-                <span className="text-xs text-slate-400 font-mono">5 Anneaux Calibrés</span>
-              </div>
-
-              <h3 className="text-2xl font-extrabold text-white mb-2 flex items-center gap-2">
-                <span>Aéroports & Trafic</span>
-              </h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                À partir d'un <b>aéroport de départ</b>, trouvez le hub au trafic passagers annuel le plus important dans chaque anneau concentrique (DGAC / Eurostat / ACI).
-              </p>
-
-              {/* Scale Selection */}
-              <div className="flex flex-col gap-2 mb-6">
-                <span className="text-xs text-slate-400 font-medium">Échelle de jeu :</span>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedScaleAir("fr")}
-                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedScaleAir === "fr"
-                        ? "bg-sky-600 border-sky-500 text-white shadow-md"
-                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-                    }`}
-                  >
-                    🇫🇷 France
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedScaleAir("eu")}
-                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedScaleAir === "eu"
-                        ? "bg-sky-600 border-sky-500 text-white shadow-md"
-                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-                    }`}
-                  >
-                    🇪🇺 Europe
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedScaleAir("world")}
-                    className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all ${
-                      selectedScaleAir === "world"
-                        ? "bg-sky-600 border-sky-500 text-white shadow-md"
-                        : "bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-800"
-                    }`}
-                  >
-                    🌍 Monde
-                  </button>
+              ) : (
+                <div className="mt-2.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                    <span>À relever</span>
+                  </span>
                 </div>
-              </div>
-            </div>
+              )}
+            </button>
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            {/* Europe Pop */}
+            <button
+              type="button"
+              onClick={() => router.push("/play/georings?metric=population&scale=eu&mode=daily")}
+              className={"p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between " + (
+                statusMap["georings_population_eu"]?.completed
+                  ? "border-blue-500/60 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
+                  : "border-slate-800 hover:border-blue-500/60"
+              )}
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-blue-300">🇪🇺 Europe</span>
+                <span className="text-[10px] text-slate-400 font-medium">Population</span>
+              </div>
+              {statusMap["georings_population_eu"]?.completed ? (
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                    <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                    <span>Fait</span>
+                  </span>
+                  <span className="text-[10px] font-black text-emerald-300 font-mono">
+                    {statusMap["georings_population_eu"].ringsCompleted}/{statusMap["georings_population_eu"].totalRings} 🎯
+                  </span>
+                </div>
+              ) : (
+                <div className="mt-2.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                    <span>À relever</span>
+                  </span>
+                </div>
+              )}
+            </button>
+
+            {/* Monde Pop */}
+            <button
+              type="button"
+              onClick={() => router.push("/play/georings?metric=population&scale=world&mode=daily")}
+              className={"p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between " + (
+                statusMap["georings_population_world"]?.completed
+                  ? "border-blue-500/60 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
+                  : "border-slate-800 hover:border-blue-500/60"
+              )}
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-blue-300">🌍 Monde</span>
+                <span className="text-[10px] text-slate-400 font-medium">Population</span>
+              </div>
+              {statusMap["georings_population_world"]?.completed ? (
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                    <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                    <span>Fait</span>
+                  </span>
+                  <span className="text-[10px] font-black text-emerald-300 font-mono">
+                    {statusMap["georings_population_world"].ringsCompleted}/{statusMap["georings_population_world"].totalRings} 🎯
+                  </span>
+                </div>
+              ) : (
+                <div className="mt-2.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                    <span>À relever</span>
+                  </span>
+                </div>
+              )}
+            </button>
+
+            {/* France Aéroports */}
+            <button
+              type="button"
+              onClick={() => router.push("/play/georings?metric=airports&scale=fr&mode=daily")}
+              className={"p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between " + (
+                statusMap["georings_airports_fr"]?.completed
+                  ? "border-sky-500/60 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
+                  : "border-slate-800 hover:border-sky-500/60"
+              )}
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-sky-300">✈️ France</span>
+                <span className="text-[10px] text-slate-400 font-medium">Aéroports</span>
+              </div>
+              {statusMap["georings_airports_fr"]?.completed ? (
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                    <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                    <span>Fait</span>
+                  </span>
+                  <span className="text-[10px] font-black text-emerald-300 font-mono">
+                    {statusMap["georings_airports_fr"].ringsCompleted}/{statusMap["georings_airports_fr"].totalRings} 🎯
+                  </span>
+                </div>
+              ) : (
+                <div className="mt-2.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                    <span>À relever</span>
+                  </span>
+                </div>
+              )}
+            </button>
+
+            {/* Monde Aéroports */}
+            <button
+              type="button"
+              onClick={() => router.push("/play/georings?metric=airports&scale=world&mode=daily")}
+              className={"p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between " + (
+                statusMap["georings_airports_world"]?.completed
+                  ? "border-sky-500/60 shadow-[0_0_15px_rgba(14,165,233,0.15)]"
+                  : "border-slate-800 hover:border-sky-500/60"
+              )}
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-sky-300">🛫 Monde</span>
+                <span className="text-[10px] text-slate-400 font-medium">Aéroports</span>
+              </div>
+              {statusMap["georings_airports_world"]?.completed ? (
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                    <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                    <span>Fait</span>
+                  </span>
+                  <span className="text-[10px] font-black text-emerald-300 font-mono">
+                    {statusMap["georings_airports_world"].ringsCompleted}/{statusMap["georings_airports_world"].totalRings} 🎯
+                  </span>
+                </div>
+              ) : (
+                <div className="mt-2.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                    <span>À relever</span>
+                  </span>
+                </div>
+              )}
+            </button>
+          </div>
+        </section>
+
+        {/* 2. ESPACE PARTIE RAPIDE GEORINGS */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-slate-900 border-2 border-slate-800 space-y-6 shadow-2xl">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div>
+              <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
+                <Zap className="w-5 h-5 text-amber-400" />
+                <span>Lancement de Partie Rapide</span>
+              </h2>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Centre géographique tiré au sort. Choisissez votre critère et l échelle géographique.
+              </p>
+            </div>
+            <span className="text-xs text-slate-400 font-mono">5 Anneaux • 3 Vies</span>
+          </div>
+
+          {/* Critère de jeu */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+              1. Critère Mesuré
+            </label>
+            <div className="grid grid-cols-2 gap-3 text-xs font-bold">
               <button
                 type="button"
-                onClick={() => router.push(`/play/georings?metric=airports&scale=${selectedScaleAir}&mode=daily`)}
-                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs sm:text-sm transition-all shadow-lg shadow-sky-600/30 hover:scale-[1.02]"
+                onClick={() => setSelectedMetric("population")}
+                className={"py-3.5 px-4 rounded-2xl border transition-all flex items-center justify-center gap-2.5 " + (
+                  selectedMetric === "population"
+                    ? "bg-blue-600 text-white border-blue-500 shadow-lg shadow-blue-600/30 scale-[1.01]"
+                    : "bg-slate-950/80 text-slate-400 border-slate-800 hover:text-white hover:border-slate-700"
+                )}
               >
-                <Play className="w-4 h-4 fill-white" />
-                <span>Défi du Jour</span>
+                <Users className="w-4 h-4" />
+                <span>👥 Population</span>
               </button>
               <button
                 type="button"
-                onClick={() => router.push(`/play/georings?metric=airports&scale=${selectedScaleAir}&mode=free`)}
-                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all hover:scale-[1.02]"
+                onClick={() => {
+                  setSelectedMetric("airports");
+                  if (selectedScale === "eu") setSelectedScale("fr");
+                }}
+                className={"py-3.5 px-4 rounded-2xl border transition-all flex items-center justify-center gap-2.5 " + (
+                  selectedMetric === "airports"
+                    ? "bg-sky-600 text-white border-sky-500 shadow-lg shadow-sky-600/30 scale-[1.01]"
+                    : "bg-slate-950/80 text-slate-400 border-slate-800 hover:text-white hover:border-slate-700"
+                )}
               >
-                <Zap className="w-4 h-4 text-amber-400" />
-                <span>Partie Rapide</span>
+                <Plane className="w-4 h-4" />
+                <span>✈️ Aéroports (Trafic)</span>
               </button>
             </div>
           </div>
-        </div>
+
+          {/* Échelle géographique */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+              2. Échelle Géographique
+            </label>
+            <div
+              className={"grid gap-2.5 text-xs font-bold " + (
+                selectedMetric === "population" ? "grid-cols-3" : "grid-cols-2"
+              )}
+            >
+              <button
+                type="button"
+                onClick={() => setSelectedScale("fr")}
+                className={"py-3 px-3 rounded-2xl border transition-all flex items-center justify-center gap-1.5 " + (
+                  selectedScale === "fr"
+                    ? "bg-blue-600 text-white border-blue-500 shadow-md"
+                    : "bg-slate-950/80 text-slate-400 border-slate-800 hover:text-white"
+                )}
+              >
+                <span>🇫🇷 France</span>
+              </button>
+              {selectedMetric === "population" && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedScale("eu")}
+                  className={"py-3 px-3 rounded-2xl border transition-all flex items-center justify-center gap-1.5 " + (
+                    selectedScale === "eu"
+                      ? "bg-blue-600 text-white border-blue-500 shadow-md"
+                      : "bg-slate-950/80 text-slate-400 border-slate-800 hover:text-white"
+                  )}
+                >
+                  <span>🇪🇺 Europe</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setSelectedScale("world")}
+                className={"py-3 px-3 rounded-2xl border transition-all flex items-center justify-center gap-1.5 " + (
+                  selectedScale === "world"
+                    ? "bg-blue-600 text-white border-blue-500 shadow-md"
+                    : "bg-slate-950/80 text-slate-400 border-slate-800 hover:text-white"
+                )}
+              >
+                <span>🌍 Monde</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Launch CTA */}
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={() =>
+                router.push(
+                  "/play/georings?metric=" + selectedMetric + "&scale=" + selectedScale + "&mode=free"
+                )
+              }
+              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-base shadow-2xl shadow-blue-600/30 transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99]"
+            >
+              <Play className="w-4 h-4 fill-white" />
+              <span>⚡ Lancer la Partie Rapide GeoRings</span>
+              <span>→</span>
+            </button>
+          </div>
+        </section>
+
+        {/* 3. GRAND ENCADRÉ PREMIUM CUSTOM GEORINGS */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-purple-950/50 via-slate-900 to-indigo-950/40 border-2 border-purple-500/50 hover:border-purple-400/80 transition-all shadow-2xl space-y-6 relative overflow-hidden group">
+          <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-purple-500/10 blur-3xl pointer-events-none rounded-full" />
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-500/20 pb-5">
+            <div className="space-y-1">
+              <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+                <Sliders className="w-3.5 h-3.5 text-purple-400" />
+                <span>GeoRings Custom & Amis</span>
+              </span>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight pt-1">
+                Personnalisez les Anneaux & le Centre de Départ
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+                Fixez vous-même la ville ou l aéroport de départ, ajustez les rayons en km ou passez à 5 vies pour défier vos amis sur un tirage sur-mesure.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowCustomModal(true)}
+              className="py-3.5 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-purple-600/30 transition-all flex items-center justify-center gap-2 shrink-0 group-hover:scale-105 active:scale-95"
+            >
+              <Sliders className="w-4 h-4" />
+              <span>Configurer GeoRings Custom</span>
+              <span>→</span>
+            </button>
+          </div>
+
+          {/* 3 Highlights */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-left">
+            <div className="p-4 rounded-2xl bg-slate-950/60 border border-purple-500/20 space-y-1">
+              <span className="text-base">📍</span>
+              <h4 className="text-xs font-bold text-white">Centre de Départ Libre</h4>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Démarrez depuis votre ville de cœur ou un hub aéroportuaire précis.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-950/60 border border-purple-500/20 space-y-1">
+              <span className="text-base">📏</span>
+              <h4 className="text-xs font-bold text-white">Rayons Paramétrables</h4>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Personnalisez les distances de chaque anneau en kilomètres pour doser la difficulté.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-950/60 border border-purple-500/20 space-y-1">
+              <span className="text-base">⚔️</span>
+              <h4 className="text-xs font-bold text-white">Lien de Défi Amis</h4>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Un lien direct avec vos règles exactes pour comparer vos scores sur la même partie.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       {/* Custom Game Modal in Lobby */}
       <CustomGameModal
         isOpen={showCustomModal}
         onClose={() => setShowCustomModal(false)}
-        currentScale={customModalMetric === "airports" ? selectedScaleAir : selectedScalePop}
-        initialMetric={customModalMetric}
+        currentScale={selectedScale}
+        initialMetric={selectedMetric}
       />
     </div>
   );
