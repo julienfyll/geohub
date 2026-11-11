@@ -249,6 +249,32 @@ export function validateStep(
 }
 
 /**
+ * Computes shortest distances to all reachable nodes from a start entity using single-source BFS (O(V+E), <0.2ms)
+ */
+export function computeDistancesFrom(
+  startId: string,
+  graph: BorderPassGraph
+): Map<string, number> {
+  const dist = new Map<string, number>([[startId, 0]]);
+  const queue: string[] = [startId];
+
+  while (queue.length > 0) {
+    const curr = queue.shift()!;
+    const d = dist.get(curr)!;
+    const neighbors = graph[curr]?.neighbors || [];
+
+    for (const nbr of neighbors) {
+      if (!dist.has(nbr) && graph[nbr]) {
+        dist.set(nbr, d + 1);
+        queue.push(nbr);
+      }
+    }
+  }
+
+  return dist;
+}
+
+/**
  * Autocomplete / fuzzy search for typing input
  */
 export function searchEntities(
@@ -296,56 +322,120 @@ export function searchEntities(
 }
 
 /**
+ * Generates a challenge (Daily, Free, or Custom)
+ */
+export function generateChallenge(options: {
+  pack?: BorderPassPack;
+  mode?: BorderPassMode;
+  seed?: string;
+  minSteps?: number;
+  maxSteps?: number;
+  startId?: string;
+  targetId?: string;
+}): BorderPassSessionInit {
+  const pack = options.pack || "monde";
+  const mode = options.mode || "daily";
+  const minSteps = options.minSteps || 4;
+  const maxSteps = options.maxSteps || 7;
+
+  const graph = getPackGraph(pack);
+  const entities = Object.values(graph);
+
+  // Filter playable entities (at least 2 neighbors for interesting graph paths)
+  const playable = entities.filter((e) => e.neighbors.length >= 2);
+  const pool = playable.length >= 5 ? playable : entities;
+
+  const seedString =
+    options.seed ||
+    (mode === "daily"
+      ? `borderpass-${new Date().toISOString().slice(0, 10)}-${pack}`
+      : `bp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`);
+
+  const rng = createRng(hashSeed(seedString));
+
+  let startEntity: BorderPassEntity | undefined;
+  let targetEntity: BorderPassEntity | undefined;
+  let optimalSteps = 0;
+
+  // Custom start and target requested
+  if (options.startId && options.targetId && graph[options.startId] && graph[options.targetId]) {
+    startEntity = graph[options.startId];
+    targetEntity = graph[options.targetId];
+    const path = findShortestPath(options.startId, options.targetId, graph);
+    optimalSteps = path.distance;
+  } else {
+    // Attempt up to 40 random starting points to find a balanced challenge in [minSteps, maxSteps]
+    const shuffled = [...pool].sort(() => rng() - 0.5);
+
+    for (const candidateStart of shuffled) {
+      const distances = computeDistancesFrom(candidateStart.id, graph);
+      const targetsInRange: { entity: BorderPassEntity; dist: number }[] = [];
+
+      for (const [id, d] of distances.entries()) {
+        if (d >= minSteps && d <= maxSteps && graph[id]) {
+          targetsInRange.push({ entity: graph[id], dist: d });
+        }
+      }
+
+      if (targetsInRange.length > 0) {
+        const picked = targetsInRange[Math.floor(rng() * targetsInRange.length)];
+        startEntity = candidateStart;
+        targetEntity = picked.entity;
+        optimalSteps = picked.dist;
+        break;
+      }
+    }
+
+    // Fallback if no target within [minSteps, maxSteps] (e.g. small graph)
+    if (!startEntity || !targetEntity) {
+      for (const candidateStart of shuffled) {
+        const distances = computeDistancesFrom(candidateStart.id, graph);
+        const reachable = [...distances.entries()]
+          .filter(([id, d]) => d >= 2 && graph[id])
+          .sort((a, b) => b[1] - a[1]);
+
+        if (reachable.length > 0) {
+          const picked = reachable[0];
+          startEntity = candidateStart;
+          targetEntity = graph[picked[0]];
+          optimalSteps = picked[1];
+          break;
+        }
+      }
+    }
+  }
+
+  // Absolute fallback
+  if (!startEntity || !targetEntity) {
+    startEntity = pool[0];
+    targetEntity = pool[pool.length - 1];
+    optimalSteps = 3;
+  }
+
+  return {
+    sessionId: `bp_${mode}_${pack}_${hashSeed(seedString)}`,
+    pack,
+    mode,
+    seed: seedString,
+    startEntity,
+    targetEntity,
+    minOptimalSteps: optimalSteps,
+    allowedEntityIds: Object.keys(graph),
+  };
+}
+
+/**
  * Generates the daily challenge for a given pack and date
  */
 export function generateDailyChallenge(
   pack: BorderPassPack = "monde",
   dateStr: string = new Date().toISOString().slice(0, 10)
 ): BorderPassSessionInit {
-  const graph = getPackGraph(pack);
-  const entities = Object.values(graph);
-  const seedString = `borderpass-${dateStr}-${pack}`;
-  const rng = createRng(hashSeed(seedString));
-
-  // Find candidate pairs with optimal steps between 4 and 8
-  const validPairs: { start: BorderPassEntity; target: BorderPassEntity; steps: number }[] = [];
-
-  // Filter entities with at least 2 neighbors for richer paths
-  const playableEntities = entities.filter((e) => e.neighbors.length >= 2);
-
-  for (let i = 0; i < playableEntities.length; i++) {
-    for (let j = i + 1; j < playableEntities.length; j++) {
-      const start = playableEntities[i];
-      const target = playableEntities[j];
-
-      const shortest = findShortestPath(start.id, target.id, graph);
-      if (shortest.found && shortest.distance >= 4 && shortest.distance <= 7) {
-        validPairs.push({ start, target, steps: shortest.distance });
-      }
-    }
-  }
-
-  let selectedPair = validPairs[0];
-  if (validPairs.length > 0) {
-    const chosenIndex = Math.floor(rng() * validPairs.length);
-    selectedPair = validPairs[chosenIndex];
-  } else {
-    // Fallback default
-    selectedPair = {
-      start: entities[0],
-      target: entities[entities.length - 1],
-      steps: 4,
-    };
-  }
-
-  return {
-    sessionId: `bp_daily_${pack}_${hashSeed(seedString)}`,
+  return generateChallenge({
     pack,
     mode: "daily",
-    seed: seedString,
-    startEntity: selectedPair.start,
-    targetEntity: selectedPair.target,
-    minOptimalSteps: selectedPair.steps,
-    allowedEntityIds: Object.keys(graph),
-  };
+    seed: `borderpass-${dateStr}-${pack}`,
+    minSteps: 4,
+    maxSteps: 7,
+  });
 }
