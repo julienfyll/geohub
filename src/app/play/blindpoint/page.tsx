@@ -26,7 +26,9 @@ import {
   Landmark,
   Building2,
   Sliders,
+  CheckCircle2,
 } from "lucide-react";
+import { useDailyChallenges } from "@/lib/stats/useDailyChallenges";
 import { BlindPointMap } from "@/components/map/BlindPointMap";
 import { BlindPointHUD } from "@/components/game/blindpoint/BlindPointHUD";
 import { BlindPointResultModal } from "@/components/game/blindpoint/BlindPointResultModal";
@@ -53,6 +55,7 @@ import {
 function BlindPointGame() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { statusMap: dailyStatusMap } = useDailyChallenges();
 
   const rawPack = searchParams.get("pack") || "villes_france";
   const rawPacks = searchParams.get("packs") || "";
@@ -618,90 +621,170 @@ function BlindPointGame() {
               <button
                 type="button"
                 onClick={() => handleStartGame("villes_france", "all", "daily")}
-                className="p-3 rounded-2xl bg-slate-950/80 border-2 border-emerald-500/50 hover:border-emerald-400 text-left transition-all group shadow-[0_0_15px_rgba(16,185,129,0.2)] flex flex-col justify-between"
+                className={`p-3 rounded-2xl bg-slate-950/80 border-2 text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_villes_france"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-emerald-500/50 hover:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                }`}
               >
                 <div>
                   <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🇫🇷 France</span>
                   <span className="text-[10px] text-slate-400 font-mono">139 villes</span>
                 </div>
-                <div className="mt-2.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
-                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
-                    <span>À relever</span>
-                  </span>
-                </div>
+                {dailyStatusMap["blindpoint_villes_france"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_villes_france"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
               </button>
 
               {/* Europe */}
               <button
                 type="button"
                 onClick={() => handleStartGame("villes_europe", "all", "daily")}
-                className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 text-left transition-all group flex flex-col justify-between"
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_villes_europe"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
               >
                 <div>
                   <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🇪🇺 Europe</span>
                   <span className="text-[10px] text-slate-400 font-mono">42 métropoles</span>
                 </div>
-                <div className="mt-2.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
-                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
-                    <span>À relever</span>
-                  </span>
-                </div>
+                {dailyStatusMap["blindpoint_villes_europe"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_villes_europe"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
               </button>
 
               {/* Monde */}
               <button
                 type="button"
                 onClick={() => handleStartGame("villes_monde", "all", "daily")}
-                className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 text-left transition-all group flex flex-col justify-between"
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_villes_monde"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
               >
                 <div>
                   <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🌍 Monde</span>
                   <span className="text-[10px] text-slate-400 font-mono">167 mégapoles</span>
                 </div>
-                <div className="mt-2.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
-                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
-                    <span>À relever</span>
-                  </span>
-                </div>
+                {dailyStatusMap["blindpoint_villes_monde"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_villes_monde"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
               </button>
 
               {/* Paris */}
               <button
                 type="button"
                 onClick={() => handleStartGame("lieux_paris", "all", "daily")}
-                className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 text-left transition-all group flex flex-col justify-between"
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_lieux_paris"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
               >
                 <div>
                   <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🗼 Paris</span>
                   <span className="text-[10px] text-slate-400 font-mono">105 trésors</span>
                 </div>
-                <div className="mt-2.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
-                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
-                    <span>À relever</span>
-                  </span>
-                </div>
+                {dailyStatusMap["blindpoint_lieux_paris"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_lieux_paris"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
               </button>
 
               {/* Merveilles */}
               <button
                 type="button"
                 onClick={() => handleStartGame("lieux_monde", "all", "daily")}
-                className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 text-left transition-all group flex flex-col justify-between"
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_lieux_monde"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
               >
                 <div>
                   <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🏛️ Merveilles</span>
                   <span className="text-[10px] text-slate-400 font-mono">50 sites UNESCO</span>
                 </div>
-                <div className="mt-2.5">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
-                    <span className="w-1 h-1 rounded-full bg-white animate-ping" />
-                    <span>À relever</span>
-                  </span>
-                </div>
+                {dailyStatusMap["blindpoint_lieux_monde"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_lieux_monde"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
               </button>
             </div>
           </section>
