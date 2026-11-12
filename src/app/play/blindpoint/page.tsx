@@ -36,6 +36,7 @@ import { BlindPointLearningCard } from "@/components/game/blindpoint/BlindPointL
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
 import { BlindPointCustomModal } from "@/components/game/blindpoint/BlindPointCustomModal";
+import { BlindPointRetraceGame } from "@/components/game/blindpoint/BlindPointRetraceGame";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
@@ -108,6 +109,7 @@ function BlindPointGame() {
 
   // Lobby vs Active Game State
   const isPlaying = rawPlay;
+  const isRetraceCustomMode = isPlaying && searchParams.get("customType") === "retrace";
   const [selectedCategory, setSelectedCategory] = useState<BlindPointCategory>(
     isLieuxInitial ? "lieux_emblematiques" : "villes"
   );
@@ -313,7 +315,7 @@ function BlindPointGame() {
 
   // Load game session whenever in active play mode (play=1) and parameters are defined
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && searchParams.get("customType") !== "retrace") {
       loadGameSession(
         pack,
         difficulty,
@@ -335,6 +337,7 @@ function BlindPointGame() {
     rawRounds,
     rawTimer,
     rawContinent,
+    searchParams,
     loadGameSession,
   ]);
 
@@ -1068,6 +1071,30 @@ function BlindPointGame() {
           initialDifficulty={selectedDifficulty}
         />
       </div>
+    );
+  }
+
+  // Retrace le Réseau Mode (Custom Metro game mode)
+  if (isRetraceCustomMode) {
+    const linesParam = searchParams.get("lines");
+    const activeLines = linesParam ? linesParam.split(",") : ["1", "4", "6"];
+    const activeTolerance = searchParams.get("tolerance") || "300";
+
+    return (
+      <>
+        <BlindPointRetraceGame
+          initialTolerance={activeTolerance}
+          selectedLines={activeLines}
+          onBackToLobby={() => router.push("/play/blindpoint?pack=metro_paris&mode=free")}
+          onOpenCustomModal={() => setShowCustomModal(true)}
+        />
+        <BlindPointCustomModal
+          isOpen={showCustomModal}
+          onClose={() => setShowCustomModal(false)}
+          initialPack="metro_paris"
+          initialDifficulty="all"
+        />
+      </>
     );
   }
 

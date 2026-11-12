@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retrace le Réseau — Métro de Paris | Prototype Expérimental</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- MapLibre GL -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* MapLibre Popups */
+    .maplibregl-popup-content {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+      border-radius: 1rem !important;
+      padding: 0.75rem !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7) !important;
+    }
+    .maplibregl-popup-tip {
+      border-top-color: #334155 !important;
+    }
+
+    /* Glow on connected line */
+    @keyframes line-glow {
+      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 2px currentColor); }
+      50% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen flex flex-col font-sans overflow-hidden select-none">
+
+  <!-- ========================================================================= -->
+  <!-- TOP APP BAR WITH LIVE SWITCHERS (Vector vs Real curves, Tolerance, Scope) -->
+  <!-- ========================================================================= -->
+  <header class="h-16 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-30 shrink-0 gap-3">
+    
+    <!-- Title & Back -->
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5">
+        <span>← Retour Lab</span>
+      </a>
+      <div class="h-5 w-px bg-slate-800"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl">✨</span>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm font-black tracking-tight text-white">Retrace le Réseau</h1>
+            <span class="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 font-mono text-[10px] font-bold border border-purple-500/30">Mode Illimité</span>
+          </div>
+          <p class="text-[10px] text-slate-400 hidden sm:block">Place les stations et illumine les voies connectées</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Controls : Style Tracé & Tolérance -->
+    <div class="flex items-center gap-2">
+      
+      <!-- C. Style de Tracé : Option 1 (Vectoriel épuré) vs Option 2 (Courbes réelles RATP) -->
+      <div class="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700 text-xs">
+        <span class="text-[10px] text-slate-400 font-bold px-2 hidden md:inline">Tracé :</span>
+        <button
+          id="btn-style-vector"
+          onclick="setLineStyle('vector')"
+          class="px-2.5 py-1 rounded-lg font-bold text-xs transition-all bg-purple-600 text-white shadow-sm"
+          title="Option 1 : Segments épurés directs style Mini Metro"
+        >
+          <span>📐 Mini Metro (Opt. 1)</span>
+        </button>
+        <button
+          id="btn-style-curved"
+          onclick="setLineStyle('curved')"
+          class="px-2.5 py-1 rounded-lg font-semibold text-xs text-slate-400 hover:text-white transition-all"
+          title="Option 2 : Courbes réelles souterraines sous les boulevards"
+        >
+          <span>🚇 Tunnels Réels (Opt. 2)</span>
+        </button>
+      </div>
+
+      <!-- Tolérance d'ancrage -->
+      <div class="hidden lg:flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700 text-xs">
+        <span class="text-[10px] text-slate-400 font-bold px-2">Tolérance :</span>
+        <select
+          id="sel-tolerance"
+          onchange="setTolerance(this.value)"
+          class="bg-slate-900 text-white font-bold text-xs rounded-lg px-2 py-1 border border-slate-700 focus:outline-none focus:border-purple-500"
+        >
+          <option value="chill">Chill (Toujours ancré)</option>
+          <option value="500">500 m</option>
+          <option value="300" selected>300 m (Équilibré)</option>
+          <option value="150">150 m (Précis)</option>
+          <option value="75">75 m (Expert)</option>
+        </select>
+      </div>
+
+      <!-- Reset local progression -->
+      <button
+        onclick="resetProgress()"
+        class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 border border-slate-700 hover:border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1.5"
+        title="Réinitialiser la progression et effacer le réseau"
+      >
+        <span>🗑️ Reset</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN MAP & COCKPIT -->
+  <!-- ========================================================================= -->
+  <main class="relative flex-1 h-full w-full overflow-hidden">
+
+    <!-- MAP CONTAINER -->
+    <div id="map" class="absolute inset-0 bg-slate-950"></div>
+
+    <!-- HUD STATS COMPLÉTION (TOP RIGHT) -->
+    <div class="absolute top-4 right-4 z-20 pointer-events-auto">
+      <div class="bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-3.5 shadow-2xl space-y-2 text-xs min-w-[210px]">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400 font-bold text-[11px] uppercase tracking-wider">Progression Réseau</span>
+          <span id="hud-pct" class="font-mono font-black text-purple-400 text-sm">0 %</span>
+        </div>
+
+        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+          <div id="hud-progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] pt-1 text-slate-300 font-mono border-t border-slate-800/60">
+          <span>Stations :</span>
+          <strong id="hud-stations-count" class="text-white">0 / 25</strong>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-300 font-mono">
+          <span>Tronçons allumés :</span>
+          <strong id="hud-tracks-count" class="text-emerald-400">0 / 24</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARGET PROMPT (TOP LEFT) -->
+    <div class="absolute top-4 left-4 z-20 max-w-sm pointer-events-auto">
+      <div class="bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-4 shadow-2xl space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+            Prochaine station à placer :
+          </span>
+          <span id="target-counter" class="text-[10px] bg-slate-800 text-purple-300 px-2 py-0.5 rounded-md font-mono font-bold">
+            Station 1
+          </span>
+        </div>
+
+        <div>
+          <h2 id="target-name" class="text-xl font-black text-white tracking-tight leading-tight">
+            Châtelet
+          </h2>
+          <div id="target-lines-chips" class="flex flex-wrap items-center gap-1.5 mt-2">
+            <!-- Dynamically populated with official line badges -->
+          </div>
+        </div>
+
+        <p id="target-hint" class="text-[11px] text-slate-400 leading-relaxed border-t border-slate-800/80 pt-2">
+          Place cette station sur la carte pour révéler ses correspondances et allumer les tronçons voisins.
+        </p>
+      </div>
+    </div>
+
+    <!-- VALIDATE FLOATING BUTTON (BOTTOM CENTER) -->
+    <div id="action-bar" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto transition-all duration-300">
+      <button
+        id="btn-validate"
+        onclick="validateCurrentStation()"
+        disabled
+        class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 text-white disabled:cursor-not-allowed font-black text-sm tracking-wide shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-2"
+      >
+        <span>📍 Ancrer la station</span>
+      </button>
+    </div>
+
+    <!-- FEEDBACK TOAST (FLOATING TOP CENTER) -->
+    <div id="feedback-toast" class="hidden absolute top-20 left-1/2 -translate-x-1/2 z-30 pointer-events-none transition-all duration-300">
+      <div id="feedback-card" class="bg-slate-900/95 border border-purple-500/50 rounded-2xl px-5 py-3 shadow-2xl backdrop-blur-md flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+        <span id="feedback-icon" class="text-2xl">⚡</span>
+        <div>
+          <span id="feedback-title" class="font-extrabold text-white text-xs block">Tronçon débloqué !</span>
+          <span id="feedback-desc" class="text-[11px] text-slate-300">La ligne 1 relie désormais Châtelet à Hôtel de Ville.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP LEGEND (BOTTOM LEFT) -->
+    <div class="hidden sm:block absolute bottom-6 left-4 z-10 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl text-[11px] space-y-1.5 max-w-xs pointer-events-auto">
+      <span class="font-bold text-white block text-xs">🚇 Règle de Connexion</span>
+      <p class="text-slate-400 text-[10.5px] leading-relaxed">
+        Une station isolée n'affiche que ses pastilles de lignes. Dès que deux stations consécutives d'une même ligne sont placées, <strong class="text-emerald-400">la voie s'illumine instantanément</strong>.
+      </p>
+    </div>
+
+  </main>
+
+  <script>
+    // Official RATP Metro line colors palette
+    const LINE_COLORS = {
+      "1": { bg: "#FFCD00", text: "#111827", name: "Ligne 1" },
+      "4": { bg: "#CF009E", text: "#FFFFFF", name: "Ligne 4" },
+      "6": { bg: "#169B62", text: "#FFFFFF", name: "Ligne 6" }
+    };
+
+    // Curated rich set of stations covering Lignes 1, 4 and 6 with interconnected topology
+    const STATIONS_POOL = [
+      // LIGNE 1
+      { id: "la_defense", name: "La Défense", coords: [2.2384, 48.8919], lines: ["1"], hint: "Terminus ouest au pied de la Grande Arche." },
+      { id: "porte_maillot", name: "Porte Maillot", coords: [2.2825, 48.8778], lines: ["1"], hint: "Palais des Congrès et Bois de Boulogne." },
+      { id: "etoile", name: "Charles de Gaulle - Étoile", coords: [2.2950, 48.8738], lines: ["1", "6"], hint: "Sous l'Arc de Triomphe (Connexion Lignes 1 et 6)." },
+      { id: "concorde", name: "Concorde", coords: [2.3218, 48.8653], lines: ["1"], hint: "Place de la Concorde, entre Étoile et Châtelet." },
+      { id: "chatelet", name: "Châtelet", coords: [2.3470, 48.8588], lines: ["1", "4"], hint: "Hub central névralgique (Connexion Lignes 1 et 4)." },
+      { id: "hotel_de_ville", name: "Hôtel de Ville", coords: [2.3524, 48.8573], lines: ["1"], hint: "Face à la Mairie de Paris." },
+      { id: "bastille", name: "Bastille", coords: [2.3691, 48.8531], lines: ["1"], hint: "Colonne de Juillet et port de l'Arsenal." },
+      { id: "gare_de_lyon", name: "Gare de Lyon", coords: [2.3734, 48.8449], lines: ["1"], hint: "Tour de l'Horloge et départs TGV Méditerranée." },
+      { id: "nation", name: "Nation", coords: [2.3960, 48.8482], lines: ["1", "6"], hint: "Grand carrefour de l'est (Connexion Lignes 1 et 6)." },
+      { id: "chateau_vincennes", name: "Château de Vincennes", coords: [2.4402, 48.8447], lines: ["1"], hint: "Terminus est, donjon médiéval." },
+
+      // LIGNE 4 (Crosses L1 at Châtelet, L6 at Montparnasse and Denfert)
+      { id: "porte_clignancourt", name: "Porte de Clignancourt", coords: [2.3444, 48.8978], lines: ["4"], hint: "Terminus nord, marché aux puces." },
+      { id: "barbes", name: "Barbès - Rochechouart", coords: [2.3499, 48.8836], lines: ["4"], hint: "Carrefour populaire sous le viaduc aérien." },
+      { id: "gare_du_nord", name: "Gare du Nord", coords: [2.3553, 48.8809], lines: ["4"], hint: "Première gare d'Europe en trafic ferroviaire." },
+      { id: "les_halles", name: "Les Halles", coords: [2.3461, 48.8617], lines: ["4"], hint: "Sous la Canopée, voisin direct de Châtelet." },
+      { id: "cite", name: "Cité", coords: [2.3456, 48.8550], lines: ["4"], hint: "Sous l'Île de la Cité, entre Châtelet et Saint-Michel." },
+      { id: "saint_michel", name: "Saint-Michel", coords: [2.3442, 48.8533], lines: ["4"], hint: "Fontaine Saint-Michel et entrée du Quartier Latin." },
+      { id: "saint_germain", name: "Saint-Germain-des-Prés", coords: [2.3332, 48.8540], lines: ["4"], hint: "Café de Flore et église médiévale." },
+      { id: "montparnasse", name: "Montparnasse-Bienvenüe", coords: [2.3219, 48.8421], lines: ["4", "6"], hint: "Tour Montparnasse (Connexion Lignes 4 et 6)." },
+      { id: "denfert", name: "Denfert-Rochereau", coords: [2.3323, 48.8338], lines: ["4", "6"], hint: "Lion de Belfort et Catacombes (Connexion L4 et L6)." },
+      { id: "porte_orleans", name: "Porte d'Orléans", coords: [2.3255, 48.8236], lines: ["4"], hint: "Historique terminus sud de la 4." },
+
+      // LIGNE 6 (Circle line connecting Étoile to Nation via South Paris)
+      { id: "trocadero", name: "Trocadéro", coords: [2.2871, 48.8631], lines: ["6"], hint: "Esplanade face à la Tour Eiffel." },
+      { id: "bir_hakeim", name: "Bir-Hakeim", coords: [2.2900, 48.8539], lines: ["6"], hint: "Station aérienne surplombant la Seine." },
+      { id: "pasteur", name: "Pasteur", coords: [2.3128, 48.8428], lines: ["6"], hint: "Institut Pasteur, voisine de Montparnasse." },
+      { id: "place_italie", name: "Place d'Italie", coords: [2.3553, 48.8315], lines: ["6"], hint: "Grand carrefour du 13e arrondissement." },
+      { id: "bercy", name: "Bercy", coords: [2.3800, 48.8403], lines: ["6"], hint: "Accor Arena et ministère des Finances." }
+    ];
+
+    // TOPOLOGICAL SEQUENCE PER LINE (Consecutive stations order)
+    const LINE_TOPOLOGY = {
+      "1": [
+        "la_defense",
+        "porte_maillot",
+        "etoile",
+        "concorde",
+        "chatelet",
+        "hotel_de_ville",
+        "bastille",
+        "gare_de_lyon",
+        "nation",
+        "chateau_vincennes"
+      ],
+      "4": [
+        "porte_clignancourt",
+        "barbes",
+        "gare_du_nord",
+        "les_halles",
+        "chatelet",
+        "cite",
+        "saint_michel",
+        "saint_germain",
+        "montparnasse",
+        "denfert",
+        "porte_orleans"
+      ],
+      "6": [
+        "etoile",
+        "trocadero",
+        "bir_hakeim",
+        "pasteur",
+        "montparnasse",
+        "denfert",
+        "place_italie",
+        "bercy",
+        "nation"
+      ]
+    };
+
+    // Total available segments across all 3 lines
+    const TOTAL_SEGMENTS = 9 + 10 + 8; // 27 segments
+
+    // State
+    let map;
+    let lineStyleMode = 'vector'; // 'vector' (Option 1) vs 'curved' (Option 2)
+    let toleranceMode = '300';    // 'chill', '500', '300', '150', '75'
+    let discoveredStationIds = new Set();
+    let pendingGuessLngLat = null;
+    let pendingGuessMarker = null;
+    let targetStation = null;
+    let stationMarkersMap = new Map();
+
+    // Load state from localStorage if exists
+    function loadSavedState() {
+      try {
+        const saved = localStorage.getItem('geohub_retrace_metro_discovered');
+        if (saved) {
+          const arr = JSON.parse(saved);
+          discoveredStationIds = new Set(arr);
+        }
+      } catch (e) {
+        console.warn("Storage read error", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('geohub_retrace_metro_discovered', JSON.stringify([...discoveredStationIds]));
+      } catch (e) {
+        console.warn("Storage write error", e);
+      }
+    }
+
+    function resetProgress() {
+      if (!confirm("Voulez-vous vraiment effacer votre réseau et repartir de zéro ?")) return;
+      localStorage.removeItem('geohub_retrace_metro_discovered');
+      discoveredStationIds.clear();
+      // Clear markers
+      stationMarkersMap.forEach(m => m.remove());
+      stationMarkersMap.clear();
+      updateMapNetworkLayers();
+      updateHud();
+      pickNextTarget();
+    }
+
+    // Haversine distance in meters
+    function getDistanceMeters(coord1, coord2) {
+      const R = 6371e3;
+      const lat1 = (coord1[1] * Math.PI) / 180;
+      const lat2 = (coord2[1] * Math.PI) / 180;
+      const deltaLat = ((coord2[1] - coord1[1]) * Math.PI) / 180;
+      const deltaLng = ((coord2[0] - coord1[0]) * Math.PI) / 180;
+
+      const a =
+        Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return Math.round(R * c);
+    }
+
+    // Initialize Map
+    function initMap() {
+      loadSavedState();
+
+      map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+        center: [2.3488, 48.8534], // Paris
+        zoom: 12.3,
+        minZoom: 11,
+        maxZoom: 16,
+        attributionControl: false
+      });
+
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+
+      map.on('load', () => {
+        // Setup GeoJSON sources for each line
+        ['1', '4', '6'].forEach(line => {
+          map.addSource(`line-track-${line}`, {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: [] }
+          });
+
+          // Glow halo layer
+          map.addLayer({
+            id: `line-track-${line}-glow`,
+            type: 'line',
+            source: `line-track-${line}`,
+            paint: {
+              'line-color': LINE_COLORS[line].bg,
+              'line-width': 8,
+              'line-opacity': 0.35,
+              'line-blur': 4,
+              'line-offset': ['coalesce', ['get', 'offset'], 0]
+            }
+          });
+
+          // Main sharp line layer
+          map.addLayer({
+            id: `line-track-${line}-main`,
+            type: 'line',
+            source: `line-track-${line}`,
+            paint: {
+              'line-color': LINE_COLORS[line].bg,
+              'line-width': 4,
+              'line-opacity': 0.95,
+              'line-offset': ['coalesce', ['get', 'offset'], 0]
+            }
+          });
+        });
+
+        // Click to place guess
+        map.on('click', onMapClick);
+
+        // Render previously saved stations and tracks
+        renderAllDiscoveredStations();
+        updateMapNetworkLayers();
+        updateHud();
+
+        // Pick next target station
+        pickNextTarget();
+      });
+    }
+
+    function onMapClick(e) {
+      if (!targetStation) return;
+
+      pendingGuessLngLat = [e.lngLat.lng, e.lngLat.lat];
+
+      if (!pendingGuessMarker) {
+        const el = document.createElement('div');
+        el.className = 'w-5 h-5 rounded-full bg-purple-500 border-2 border-white shadow-xl shadow-purple-500/80 animate-bounce cursor-pointer';
+        pendingGuessMarker = new maplibregl.Marker({ element: el })
+          .setLngLat(pendingGuessLngLat)
+          .addTo(map);
+      } else {
+        pendingGuessMarker.setLngLat(pendingGuessLngLat);
+      }
+
+      document.getElementById('btn-validate').disabled = false;
+    }
+
+    function pickNextTarget() {
+      // Find remaining undiscovered stations
+      const undiscovered = STATIONS_POOL.filter(s => !discoveredStationIds.has(s.id));
+
+      if (undiscovered.length === 0) {
+        // 100% Complete!
+        targetStation = null;
+        document.getElementById('target-name').textContent = "🎉 Tout le réseau est relié !";
+        document.getElementById('target-lines-chips').innerHTML = '<span class="text-xs text-emerald-400 font-bold">Félicitations, carte 100% reconstituée</span>';
+        document.getElementById('target-hint').textContent = "Toutes les stations et toutes les voies ont été illuminées.";
+        document.getElementById('btn-validate').disabled = true;
+        return;
+      }
+
+      // Pick next
+      targetStation = undiscovered[Math.floor(Math.random() * undiscovered.length)];
+
+      document.getElementById('target-counter').textContent = `Station ${discoveredStationIds.size + 1} / ${STATIONS_POOL.length}`;
+      document.getElementById('target-name').textContent = targetStation.name;
+      document.getElementById('target-hint').textContent = targetStation.hint;
+
+      // Badges
+      const chipsEl = document.getElementById('target-lines-chips');
+      chipsEl.innerHTML = targetStation.lines.map(line => `
+        <span class="inline-flex items-center justify-center font-extrabold text-[11px] rounded-md px-2 py-0.5 shadow-sm" style="background-color:${LINE_COLORS[line].bg}; color:${LINE_COLORS[line].text}">
+          ${line}
+        </span>
+      `).join('');
+
+      // Clear pending guess
+      if (pendingGuessMarker) {
+        pendingGuessMarker.remove();
+        pendingGuessMarker = null;
+      }
+      pendingGuessLngLat = null;
+      document.getElementById('btn-validate').disabled = true;
+    }
+
+    function validateCurrentStation() {
+      if (!targetStation || !pendingGuessLngLat) return;
+
+      const distMeters = getDistanceMeters(pendingGuessLngLat, targetStation.coords);
+      
+      // Check tolerance threshold
+      let isAccepted = true;
+      let thresholdMeters = 300;
+      if (toleranceMode !== 'chill') {
+        thresholdMeters = parseInt(toleranceMode, 10);
+        if (distMeters > thresholdMeters) {
+          isAccepted = false;
+        }
+      }
+
+      if (!isAccepted) {
+        // Rejected due to distance
+        showToast(
+          "❌ Trop éloigné",
+          `Écart : ${distMeters} m (Seuil requis : ${thresholdMeters} m). Réessaie plus près !`,
+          "⚠️"
+        );
+        return;
+      }
+
+      // Accepted! Anchor station to its true coordinates
+      discoveredStationIds.add(targetStation.id);
+      saveState();
+
+      // Render marker on map
+      createStationMarkerOnMap(targetStation);
+
+      // Check which new tracks are unlocked!
+      const newTracksUnlocked = checkNewlyConnectedTracks(targetStation);
+
+      // Update map lines
+      updateMapNetworkLayers();
+      updateHud();
+
+      // Feedback Toast
+      if (newTracksUnlocked.length > 0) {
+        showToast(
+          "⚡ Tronçon(s) Illuminé(s) !",
+          `${targetStation.name} relie désormais ${newTracksUnlocked.join(' & ')}.`,
+          "✨"
+        );
+      } else {
+        showToast(
+          "📍 Station Ancrée !",
+          `${targetStation.name} posée. En attente de ses stations voisines pour allumer la voie.`,
+          "🎯"
+        );
+      }
+
+      // Fly smoothly to the validated station
+      map.flyTo({ center: targetStation.coords, zoom: Math.max(map.getZoom(), 13), duration: 800 });
+
+      // Pick next
+      setTimeout(() => {
+        pickNextTarget();
+      }, 700);
+    }
+
+    // Create styled node marker with line color badges
+    function createStationMarkerOnMap(station) {
+      if (stationMarkersMap.has(station.id)) return;
+
+      const el = document.createElement('div');
+      el.className = 'group flex flex-col items-center cursor-pointer pointer-events-auto';
+
+      // Line badges dots
+      const dotsHtml = station.lines.map(line => `
+        <span class="w-2.5 h-2.5 rounded-full border border-black/40 shadow-sm inline-block" style="background:${LINE_COLORS[line].bg}"></span>
+      `).join('');
+
+      el.innerHTML = `
+        <div class="px-2 py-0.5 rounded-md bg-slate-900/90 text-white font-extrabold text-[10px] shadow-lg border border-slate-700 mb-1 whitespace-nowrap group-hover:scale-105 transition-transform">
+          ${station.name}
+        </div>
+        <div class="relative flex items-center justify-center">
+          <div class="w-4 h-4 rounded-full bg-white border-2 border-slate-900 shadow-md flex items-center justify-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-900"></span>
+          </div>
+        </div>
+        <div class="flex items-center gap-0.5 mt-1 bg-slate-900/80 px-1 py-0.5 rounded-full border border-slate-800">
+          ${dotsHtml}
+        </div>
+      `;
+
+      const marker = new maplibregl.Marker({ element: el })
+        .setLngLat(station.coords)
+        .addTo(map);
+
+      stationMarkersMap.set(station.id, marker);
+    }
+
+    function renderAllDiscoveredStations() {
+      discoveredStationIds.forEach(id => {
+        const s = STATIONS_POOL.find(item => item.id === id);
+        if (s) {
+          createStationMarkerOnMap(s);
+        }
+      });
+    }
+
+    // Check topological neighbors on each line
+    function checkNewlyConnectedTracks(station) {
+      const connections = [];
+
+      station.lines.forEach(line => {
+        const topo = LINE_TOPOLOGY[line];
+        if (!topo) return;
+
+        const idx = topo.indexOf(station.id);
+        if (idx === -1) return;
+
+        // Prev neighbor
+        if (idx > 0) {
+          const prevId = topo[idx - 1];
+          if (discoveredStationIds.has(prevId)) {
+            const prevStation = STATIONS_POOL.find(s => s.id === prevId);
+            connections.push(`${station.name} ↔ ${prevStation.name} (L${line})`);
+          }
+        }
+
+        // Next neighbor
+        if (idx < topo.length - 1) {
+          const nextId = topo[idx + 1];
+          if (discoveredStationIds.has(nextId)) {
+            const nextStation = STATIONS_POOL.find(s => s.id === nextId);
+            connections.push(`${station.name} ↔ ${nextStation.name} (L${line})`);
+          }
+        }
+      });
+
+      return connections;
+    }
+
+    // Canonical key to detect shared segments between lines
+    function getCanonicalPairKey(id1, id2) {
+      return [id1, id2].sort().join('--');
+    }
+
+    function getLineSegmentOffset(line, allLinesInSegment, spacing = 5.5) {
+      if (allLinesInSegment.length <= 1) return 0;
+      const sorted = [...allLinesInSegment].sort();
+      const idx = sorted.indexOf(line);
+      if (idx === -1) return 0;
+      if (allLinesInSegment.length === 2) {
+        return idx === 0 ? -spacing * 0.65 : spacing * 0.65;
+      }
+      return (idx - (allLinesInSegment.length - 1) / 2) * spacing;
+    }
+
+    // Generate GeoJSON line segments for all discovered pairs
+    function updateMapNetworkLayers() {
+      // 1. Detect shared corridors (e.g. Montparnasse ↔ Denfert shared by Line 4 & Line 6)
+      const segmentLinesMap = new Map();
+      ['1', '4', '6'].forEach(line => {
+        const topo = LINE_TOPOLOGY[line];
+        for (let i = 0; i < topo.length - 1; i++) {
+          const s1 = topo[i];
+          const s2 = topo[i + 1];
+          if (discoveredStationIds.has(s1) && discoveredStationIds.has(s2)) {
+            const key = getCanonicalPairKey(s1, s2);
+            const list = segmentLinesMap.get(key) || [];
+            if (!list.includes(line)) list.push(line);
+            segmentLinesMap.set(key, list);
+          }
+        }
+      });
+
+      // 2. Build GeoJSON features per line with parallel track offsets
+      ['1', '4', '6'].forEach(line => {
+        const topo = LINE_TOPOLOGY[line];
+        const features = [];
+
+        for (let i = 0; i < topo.length - 1; i++) {
+          const s1Id = topo[i];
+          const s2Id = topo[i + 1];
+
+          // If BOTH consecutive stations are placed ➔ ILLUMINATE SEGMENT!
+          if (discoveredStationIds.has(s1Id) && discoveredStationIds.has(s2Id)) {
+            const st1 = STATIONS_POOL.find(s => s.id === s1Id);
+            const st2 = STATIONS_POOL.find(s => s.id === s2Id);
+
+            if (st1 && st2) {
+              const pairKey = getCanonicalPairKey(s1Id, s2Id);
+              const linesInSegment = segmentLinesMap.get(pairKey) || [line];
+              const offsetPx = getLineSegmentOffset(line, linesInSegment, 5.5);
+
+              // Use canonical coordinate order (s1Id < s2Id) so offset sign remains constant across lines
+              let coords = s1Id < s2Id ? [st1.coords, st2.coords] : [st2.coords, st1.coords];
+
+              // If Option 2 (Tunnels réels avec courbure) is enabled, interpolate curve
+              if (lineStyleMode === 'curved') {
+                coords = generateCurvedTunnelPath(coords[0], coords[1], line);
+              }
+
+              features.push({
+                type: 'Feature',
+                geometry: {
+                  type: 'LineString',
+                  coordinates: coords
+                },
+                properties: {
+                  line,
+                  offset: offsetPx
+                }
+              });
+            }
+          }
+        }
+
+        if (map.getSource(`line-track-${line}`)) {
+          map.getSource(`line-track-${line}`).setData({
+            type: 'FeatureCollection',
+            features: features
+          });
+        }
+      });
+    }
+
+    // Interpolates realistic curved tunnel track (Option 2 demo)
+    function generateCurvedTunnelPath(p1, p2, line) {
+      // Bezier curve approximation to mimic underground boulevard turns
+      const midLng = (p1[0] + p2[0]) / 2;
+      const midLat = (p1[1] + p2[1]) / 2;
+
+      // Subtle lateral deflection
+      const dx = p2[0] - p1[0];
+      const dy = p2[1] - p1[1];
+      const factor = line === '1' ? 0.15 : line === '4' ? -0.15 : 0.2;
+      const ctrlLng = midLng - dy * factor;
+      const ctrlLat = midLat + dx * factor;
+
+      const points = [];
+      const steps = 16;
+      for (let t = 0; t <= 1; t += 1 / steps) {
+        const x = (1 - t) * (1 - t) * p1[0] + 2 * (1 - t) * t * ctrlLng + t * t * p2[0];
+        const y = (1 - t) * (1 - t) * p1[1] + 2 * (1 - t) * t * ctrlLat + t * t * p2[1];
+        points.push([x, y]);
+      }
+      return points;
+    }
+
+    function setLineStyle(style) {
+      lineStyleMode = style;
+      const btnVec = document.getElementById('btn-style-vector');
+      const btnCur = document.getElementById('btn-style-curved');
+
+      if (style === 'vector') {
+        btnVec.className = "px-2.5 py-1 rounded-lg font-bold text-xs transition-all bg-purple-600 text-white shadow-sm";
+        btnCur.className = "px-2.5 py-1 rounded-lg font-semibold text-xs text-slate-400 hover:text-white transition-all";
+      } else {
+        btnCur.className = "px-2.5 py-1 rounded-lg font-bold text-xs transition-all bg-purple-600 text-white shadow-sm";
+        btnVec.className = "px-2.5 py-1 rounded-lg font-semibold text-xs text-slate-400 hover:text-white transition-all";
+      }
+
+      updateMapNetworkLayers();
+    }
+
+    function setTolerance(val) {
+      toleranceMode = val;
+    }
+
+    function updateHud() {
+      const placed = discoveredStationIds.size;
+      const total = STATIONS_POOL.length;
+      const pct = Math.round((placed / total) * 100);
+
+      document.getElementById('hud-pct').textContent = `${pct} %`;
+      document.getElementById('hud-progress-bar').style.width = `${pct}%`;
+      document.getElementById('hud-stations-count').textContent = `${placed} / ${total}`;
+
+      // Count illuminated segments
+      let illuminatedSegments = 0;
+      ['1', '4', '6'].forEach(line => {
+        const topo = LINE_TOPOLOGY[line];
+        for (let i = 0; i < topo.length - 1; i++) {
+          if (discoveredStationIds.has(topo[i]) && discoveredStationIds.has(topo[i + 1])) {
+            illuminatedSegments++;
+          }
+        }
+      });
+      document.getElementById('hud-tracks-count').textContent = `${illuminatedSegments} / ${TOTAL_SEGMENTS}`;
+    }
+
+    function showToast(title, desc, icon) {
+      const toast = document.getElementById('feedback-toast');
+      document.getElementById('feedback-title').textContent = title;
+      document.getElementById('feedback-desc').textContent = desc;
+      document.getElementById('feedback-icon').textContent = icon || "⚡";
+
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+
+    window.addEventListener('DOMContentLoaded', initMap);
+  </script>
+</body>
+</html>
