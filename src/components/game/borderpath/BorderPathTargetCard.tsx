@@ -19,76 +19,76 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
   remainingSteps,
 }) => {
   const delta = totalAttempts - optimalCountries;
-  const isPar = delta <= 0 && errorCount === 0;
+  const isOptimal = delta <= 0 && errorCount === 0;
 
   return (
     <div className="absolute bottom-8 left-4 sm:left-6 z-20 pointer-events-auto">
-      <div className="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 w-72 sm:w-80 transition-all">
-        {/* Header: Title + Explicit Par Status Badge */}
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200 uppercase tracking-wider">
-            <Target className="w-4 h-4 text-emerald-400" />
-            <span>Objectif de Parcours</span>
+      <div className="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 w-80 sm:w-88 transition-all">
+        {/* Header: Title + Explicit Optimal Status Badge */}
+        <div className="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200 uppercase tracking-wider shrink-0">
+            <Target className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>Objectif</span>
           </div>
 
-          <div>
-            {isPar ? (
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold font-mono">
-                🎯 Parfait (Par)
+          <div className="shrink-0">
+            {isOptimal ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold font-mono whitespace-nowrap">
+                🎯 Parcours Optimal
               </span>
             ) : (
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-bold font-mono">
-                +{delta} {delta > 1 ? "coups" : "coup"} vs Par
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-bold font-mono whitespace-nowrap">
+                +{delta} {delta > 1 ? "coups" : "coup"} de trop
               </span>
             )}
           </div>
         </div>
 
-        {/* Primary Metrics: Par Target vs Player Attempts (Compact & Balanced) */}
-        <div className="grid grid-cols-2 gap-2">
-          {/* Cible Par */}
-          <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <div className="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+        {/* Primary Metrics: Optimal Target vs Player Attempts */}
+        <div className="grid grid-cols-2 gap-2.5">
+          {/* Chemin Minimal */}
+          <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
               <span className="text-emerald-400 font-extrabold text-base font-mono">
                 {optimalCountries}
               </span>
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                Cible Par
+                Chemin direct
               </span>
-              <span className="text-[11px] font-medium text-emerald-300/90 truncate">
+              <span className="text-xs font-semibold text-emerald-300/90 whitespace-nowrap">
                 pays minimum
               </span>
             </div>
           </div>
 
           {/* Coups joués */}
-          <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <div className="w-9 h-9 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
+            <div className="w-10 h-10 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center shrink-0">
               <span className="text-white font-extrabold text-base font-mono">
                 {totalAttempts}
               </span>
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                Tentatives
+                Coups joués
               </span>
-              <span className="text-[11px] font-medium text-slate-300 truncate">
-                coups joués
+              <span className="text-xs font-semibold text-slate-300 whitespace-nowrap">
+                pays + erreurs
               </span>
             </div>
           </div>
         </div>
 
         {/* Transparent Breakdown of attempts (Explains placed + errors) */}
-        <div className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/90 flex flex-col gap-1.5 text-xs">
+        <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/90 flex flex-col gap-2 text-xs">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-slate-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-              <span className="text-[11px]">Pays validés sur la carte :</span>
+              <span className="text-xs">Pays validés sur la carte :</span>
             </div>
-            <span className="font-mono font-bold text-emerald-400 text-xs">
+            <span className="font-mono font-bold text-emerald-400 text-xs whitespace-nowrap">
               {uniquePlacedCount}
             </span>
           </div>
@@ -100,10 +100,10 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
                   errorCount > 0 ? "bg-rose-400" : "bg-slate-600"
                 }`}
               />
-              <span className="text-[11px]">Erreurs (non limitrophes) :</span>
+              <span className="text-xs">Erreurs (non limitrophes) :</span>
             </div>
             <span
-              className={`font-mono font-bold text-xs px-1.5 py-0.5 rounded ${
+              className={`font-mono font-bold text-xs px-2 py-0.5 rounded whitespace-nowrap ${
                 errorCount > 0
                   ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
                   : "text-slate-500"
@@ -114,9 +114,9 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
           </div>
 
           {delta > 0 && (
-            <div className="flex items-center justify-between pt-1.5 border-t border-slate-800/80 text-[11px] text-amber-300/90 font-medium">
-              <span>Écart au score Par :</span>
-              <span className="font-mono font-bold">
+            <div className="flex items-center justify-between pt-1.5 border-t border-slate-800/80 text-xs text-amber-300/90 font-medium">
+              <span>Écart vs chemin optimal :</span>
+              <span className="font-mono font-bold whitespace-nowrap">
                 +{delta} {delta > 1 ? "coups" : "coup"}
               </span>
             </div>
@@ -127,16 +127,16 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
         <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
           {remainingSteps > 0 ? (
             <>
-              <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+              <div className="flex items-center gap-1.5 text-slate-400 text-xs">
                 <Route className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>Distance estimée :</span>
+                <span>Distance restante estimée :</span>
               </div>
-              <span className="font-mono font-bold text-amber-400 text-xs">
+              <span className="font-mono font-bold text-amber-400 text-xs whitespace-nowrap">
                 ~{remainingSteps} {remainingSteps > 1 ? "frontières" : "frontière"}
               </span>
             </>
           ) : (
-            <div className="w-full flex items-center justify-center gap-1.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 font-bold text-xs border border-emerald-500/30">
+            <div className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 font-bold text-xs border border-emerald-500/30">
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>✓ Jonction établie !</span>
             </div>
