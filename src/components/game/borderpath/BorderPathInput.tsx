@@ -2,24 +2,24 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
-  BorderPassEntity,
-  BorderPassGraph,
-} from "@/lib/games/borderpass/types";
-import { searchEntities } from "@/lib/games/borderpass/engine";
+  BorderPathEntity,
+  BorderPathGraph,
+} from "@/lib/games/borderpath/types";
+import { searchEntities } from "@/lib/games/borderpath/engine";
 import { Search, CornerDownLeft, Undo2, AlertCircle, CheckCircle2, Flag } from "lucide-react";
 
-interface BorderPassInputProps {
-  currentEntity: BorderPassEntity;
-  targetEntity: BorderPassEntity;
-  graph: BorderPassGraph;
+interface BorderPathInputProps {
+  currentEntity: BorderPathEntity;
+  targetEntity: BorderPathEntity;
+  graph: BorderPathGraph;
   visitedIds: string[];
   isComplete: boolean;
-  onSelectCandidate: (entity: BorderPassEntity) => void;
+  onSelectCandidate: (entity: BorderPathEntity) => void;
   onUndoLastStep: () => void;
   feedbackMessage?: { text: string; type: "error" | "success" | "info" } | null;
 }
 
-export const BorderPassInput: React.FC<BorderPassInputProps> = ({
+export const BorderPathInput: React.FC<BorderPathInputProps> = ({
   currentEntity,
   targetEntity,
   graph,
@@ -69,7 +69,7 @@ export const BorderPassInput: React.FC<BorderPassInputProps> = ({
   }, [feedbackMessage]);
 
   const handleSelect = useCallback(
-    (entity: BorderPassEntity) => {
+    (entity: BorderPathEntity) => {
       onSelectCandidate(entity);
       setQuery("");
       setIsOpen(false);

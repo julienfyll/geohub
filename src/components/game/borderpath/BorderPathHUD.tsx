@@ -3,11 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import {
-  BorderPassEntity,
-  BorderPassPack,
-  BorderPassMode,
-} from "@/lib/games/borderpass/types";
-import { BorderPassMapTheme } from "./BorderPassMap";
+  BorderPathEntity,
+  BorderPathPack,
+  BorderPathMode,
+} from "@/lib/games/borderpath/types";
+import { BorderPathMapTheme } from "./BorderPathMap";
 import {
   Compass,
   ArrowRight,
@@ -21,15 +21,15 @@ import {
   Trophy,
 } from "lucide-react";
 
-interface BorderPassHUDProps {
-  pack: BorderPassPack;
-  mode: BorderPassMode;
-  startEntity: BorderPassEntity;
-  targetEntity: BorderPassEntity;
-  visitedEntities: BorderPassEntity[];
+interface BorderPathHUDProps {
+  pack: BorderPathPack;
+  mode: BorderPathMode;
+  startEntity: BorderPathEntity;
+  targetEntity: BorderPathEntity;
+  visitedEntities: BorderPathEntity[];
   minOptimalSteps: number;
   remainingSteps: number;
-  theme: BorderPassMapTheme;
+  theme: BorderPathMapTheme;
   hideBorders: boolean;
   onToggleTheme: () => void;
   onToggleHideBorders: () => void;
@@ -38,7 +38,7 @@ interface BorderPassHUDProps {
   onRestart: () => void;
 }
 
-export const BorderPassHUD: React.FC<BorderPassHUDProps> = ({
+export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   pack,
   mode,
   startEntity,
@@ -57,7 +57,7 @@ export const BorderPassHUD: React.FC<BorderPassHUDProps> = ({
   const currentStep = visitedEntities.length;
   const delta = currentStep - minOptimalSteps;
 
-  const packLabels: Record<BorderPassPack, string> = {
+  const packLabels: Record<BorderPathPack, string> = {
     monde: "Monde Continental",
     europe: "Europe",
     france_departements: "France — 96 Départements",
@@ -81,7 +81,7 @@ export const BorderPassHUD: React.FC<BorderPassHUDProps> = ({
 
           <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-semibold backdrop-blur-md">
             <span className="text-emerald-400 font-bold uppercase tracking-wider text-[10px]">
-              Border Pass
+              BorderPath
             </span>
             <span className="text-slate-600">•</span>
             <span>{packLabels[pack]}</span>

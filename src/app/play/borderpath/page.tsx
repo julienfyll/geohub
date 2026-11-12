@@ -5,44 +5,44 @@ export const dynamic = "force-dynamic";
 import React, { useState, useEffect, useCallback, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
-  BorderPassEntity,
-  BorderPassGraph,
-  BorderPassPack,
-  BorderPassMode,
-  BorderPassSessionInit,
-} from "@/lib/games/borderpass/types";
+  BorderPathEntity,
+  BorderPathGraph,
+  BorderPathPack,
+  BorderPathMode,
+  BorderPathSessionInit,
+} from "@/lib/games/borderpath/types";
 import {
   getPackGraph,
   generateChallenge,
   validateStep,
   findShortestPath,
-} from "@/lib/games/borderpass/engine";
-import { BorderPassMap, BorderPassMapTheme } from "@/components/game/borderpass/BorderPassMap";
-import { BorderPassHUD } from "@/components/game/borderpass/BorderPassHUD";
-import { BorderPassInput } from "@/components/game/borderpass/BorderPassInput";
-import { BorderPassSummaryModal } from "@/components/game/borderpass/BorderPassSummaryModal";
-import { BorderPassRulesModal } from "@/components/game/borderpass/BorderPassRulesModal";
-import { BorderPassPackModal } from "@/components/game/borderpass/BorderPassPackModal";
+} from "@/lib/games/borderpath/engine";
+import { BorderPathMap, BorderPathMapTheme } from "@/components/game/borderpath/BorderPathMap";
+import { BorderPathHUD } from "@/components/game/borderpath/BorderPathHUD";
+import { BorderPathInput } from "@/components/game/borderpath/BorderPathInput";
+import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathSummaryModal";
+import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
+import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
 
-function BorderPassGame() {
+function BorderPathGame() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const rawPack = searchParams.get("pack") as BorderPassPack | null;
-  const rawMode = searchParams.get("mode") as BorderPassMode | null;
+  const rawPack = searchParams.get("pack") as BorderPathPack | null;
+  const rawMode = searchParams.get("mode") as BorderPathMode | null;
 
-  const validPacks: BorderPassPack[] = [
+  const validPacks: BorderPathPack[] = [
     "monde",
     "europe",
     "france_departements",
     "ameriques",
     "afrique",
   ];
-  const pack: BorderPassPack = rawPack && validPacks.includes(rawPack) ? rawPack : "monde";
-  const mode: BorderPassMode = rawMode === "free" ? "free" : "daily";
+  const pack: BorderPathPack = rawPack && validPacks.includes(rawPack) ? rawPack : "monde";
+  const mode: BorderPathMode = rawMode === "free" ? "free" : "daily";
 
   // Map settings
-  const [theme, setTheme] = useState<BorderPassMapTheme>("dark");
+  const [theme, setTheme] = useState<BorderPathMapTheme>("dark");
   const [hideBorders, setHideBorders] = useState(false);
 
   // Modals
@@ -51,8 +51,8 @@ function BorderPassGame() {
   const [showPackModal, setShowPackModal] = useState(false);
 
   // Active Game State
-  const [session, setSession] = useState<BorderPassSessionInit | null>(null);
-  const [visitedEntities, setVisitedEntities] = useState<BorderPassEntity[]>([]);
+  const [session, setSession] = useState<BorderPathSessionInit | null>(null);
+  const [visitedEntities, setVisitedEntities] = useState<BorderPathEntity[]>([]);
   const [invalidFlashId, setInvalidFlashId] = useState<string | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<{
     text: string;
@@ -63,13 +63,13 @@ function BorderPassGame() {
   const [optimalSolutions, setOptimalSolutions] = useState<string[][]>([]);
 
   // Load graph for current pack
-  const graph = useMemo<BorderPassGraph>(() => {
+  const graph = useMemo<BorderPathGraph>(() => {
     return getPackGraph(pack);
   }, [pack]);
 
   // Initialize or restart session
   const initGameSession = useCallback(
-    (targetPack: BorderPassPack, targetMode: BorderPassMode) => {
+    (targetPack: BorderPathPack, targetMode: BorderPathMode) => {
       const newSession = generateChallenge({
         pack: targetPack,
         mode: targetMode,
@@ -99,7 +99,7 @@ function BorderPassGame() {
     initGameSession(pack, mode);
   }, [pack, mode, initGameSession]);
 
-  const currentEntity = useMemo<BorderPassEntity | null>(() => {
+  const currentEntity = useMemo<BorderPathEntity | null>(() => {
     if (!session) return null;
     return visitedEntities.length > 0
       ? visitedEntities[visitedEntities.length - 1]
@@ -115,7 +115,7 @@ function BorderPassGame() {
   }, [currentEntity, session, graph]);
 
   // Handle player candidate selection
-  const handleSelectCandidate = (candidate: BorderPassEntity) => {
+  const handleSelectCandidate = (candidate: BorderPathEntity) => {
     if (!session || !currentEntity || isComplete || gaveUp) return;
 
     const visitedIds = [session.startEntity.id, ...visitedEntities.map((e) => e.id)];
@@ -190,9 +190,9 @@ function BorderPassGame() {
   };
 
   // Handle pack & mode selection from PackModal
-  const handleSelectPackMode = (newPack: BorderPassPack, newMode: BorderPassMode) => {
+  const handleSelectPackMode = (newPack: BorderPathPack, newMode: BorderPathMode) => {
     setShowPackModal(false);
-    router.push(`/play/borderpass?pack=${newPack}&mode=${newMode}`);
+    router.push(`/play/borderpath?pack=${newPack}&mode=${newMode}`);
   };
 
   if (!session || !currentEntity) {
@@ -209,7 +209,7 @@ function BorderPassGame() {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-slate-950 select-none">
       {/* Map layer */}
-      <BorderPassMap
+      <BorderPathMap
         pack={pack}
         theme={theme}
         hideBorders={hideBorders}
@@ -225,7 +225,7 @@ function BorderPassGame() {
       />
 
       {/* Floating HUD */}
-      <BorderPassHUD
+      <BorderPathHUD
         pack={pack}
         mode={mode}
         startEntity={session.startEntity}
@@ -244,7 +244,7 @@ function BorderPassGame() {
 
       {/* Keyboard Input at Bottom */}
       <div className="absolute bottom-5 left-0 right-0 z-30">
-        <BorderPassInput
+        <BorderPathInput
           currentEntity={currentEntity}
           targetEntity={session.targetEntity}
           graph={graph}
@@ -257,7 +257,7 @@ function BorderPassGame() {
       </div>
 
       {/* Summary Modal */}
-      <BorderPassSummaryModal
+      <BorderPathSummaryModal
         isOpen={showSummaryModal}
         onCloseToMap={() => setShowSummaryModal(false)}
         pack={pack}
@@ -277,13 +277,13 @@ function BorderPassGame() {
       />
 
       {/* Rules Modal */}
-      <BorderPassRulesModal
+      <BorderPathRulesModal
         isOpen={showRulesModal}
         onClose={() => setShowRulesModal(false)}
       />
 
       {/* Pack & Mode Selector Modal */}
-      <BorderPassPackModal
+      <BorderPathPackModal
         isOpen={showPackModal}
         onClose={() => setShowPackModal(false)}
         currentPack={pack}
@@ -294,7 +294,7 @@ function BorderPassGame() {
   );
 }
 
-export default function BorderPassPage() {
+export default function BorderPathPage() {
   return (
     <Suspense
       fallback={
@@ -303,7 +303,7 @@ export default function BorderPassPage() {
         </div>
       }
     >
-      <BorderPassGame />
+      <BorderPathGame />
     </Suspense>
   );
 }

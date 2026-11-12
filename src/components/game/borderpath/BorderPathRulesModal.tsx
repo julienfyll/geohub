@@ -3,12 +3,12 @@
 import React from "react";
 import { X, HelpCircle, Compass, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
 
-interface BorderPassRulesModalProps {
+interface BorderPathRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const BorderPassRulesModal: React.FC<BorderPassRulesModalProps> = ({
+export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
   isOpen,
   onClose,
 }) => {
@@ -40,7 +40,7 @@ export const BorderPassRulesModal: React.FC<BorderPassRulesModalProps> = ({
           </div>
           <div>
             <h2 className="text-xl font-bold text-white tracking-tight">
-              Règles du Jeu — Border Pass
+              Règles du Jeu — BorderPath
             </h2>
             <p className="text-xs text-slate-400">
               Le jeu de transit frontalier et de stratégie territoriale

@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useCallback } from "react";
 import maplibregl, { StyleSpecification } from "maplibre-gl";
-import { BorderPassEntity, BorderPassPack } from "@/lib/games/borderpass/types";
+import { BorderPathEntity, BorderPathPack } from "@/lib/games/borderpath/types";
 
-export type BorderPassMapTheme = "dark" | "voyager" | "satellite";
+export type BorderPathMapTheme = "dark" | "voyager" | "satellite";
 
 const SATELLITE_STYLE: StyleSpecification = {
   version: 8,
@@ -32,24 +32,24 @@ const SATELLITE_STYLE: StyleSpecification = {
   ],
 };
 
-export const BASEMAP_STYLES: Record<BorderPassMapTheme, string | StyleSpecification> = {
+export const BASEMAP_STYLES: Record<BorderPathMapTheme, string | StyleSpecification> = {
   dark: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
   voyager: "https://basemaps.cartocdn.com/gl/voyager-nolabels-gl-style/style.json",
   satellite: SATELLITE_STYLE,
 };
 
-interface BorderPassMapProps {
-  pack: BorderPassPack;
-  theme: BorderPassMapTheme;
+interface BorderPathMapProps {
+  pack: BorderPathPack;
+  theme: BorderPathMapTheme;
   hideBorders?: boolean;
-  startEntity: BorderPassEntity;
-  targetEntity: BorderPassEntity;
-  visitedEntities: BorderPassEntity[];
+  startEntity: BorderPathEntity;
+  targetEntity: BorderPathEntity;
+  visitedEntities: BorderPathEntity[];
   invalidFlashId?: string | null;
   onMapClick?: (id: string) => void;
 }
 
-export const BorderPassMap: React.FC<BorderPassMapProps> = ({
+export const BorderPathMap: React.FC<BorderPathMapProps> = ({
   pack,
   theme,
   hideBorders = false,
@@ -324,12 +324,12 @@ export const BorderPassMap: React.FC<BorderPassMapProps> = ({
 
     // Helper to create marker
     const addMarker = (
-      entity: BorderPassEntity,
+      entity: BorderPathEntity,
       type: "start" | "target" | "step" | "current",
       stepNum?: number
     ) => {
       const el = document.createElement("div");
-      el.className = "borderpass-marker transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-transform hover:scale-110";
+      el.className = "borderpath-marker transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-transform hover:scale-110";
 
       if (type === "start") {
         el.innerHTML = `

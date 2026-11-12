@@ -1,17 +1,17 @@
 import {
-  BorderPassEntity,
-  BorderPassGraph,
-  BorderPassPack,
-  BorderPassPathResult,
-  BorderPassStepResult,
-  BorderPassSessionInit,
-  BorderPassMode,
+  BorderPathEntity,
+  BorderPathGraph,
+  BorderPathPack,
+  BorderPathPathResult,
+  BorderPathStepResult,
+  BorderPathSessionInit,
+  BorderPathMode,
 } from "./types";
 import worldBordersData from "./data/world_borders.json";
 import franceBordersData from "./data/france_borders.json";
 
-const worldGraph = worldBordersData as BorderPassGraph;
-const franceGraph = franceBordersData as BorderPassGraph;
+const worldGraph = worldBordersData as BorderPathGraph;
+const franceGraph = franceBordersData as BorderPathGraph;
 
 /**
  * Normalizes text for search (lowercased, accents removed, trimmed)
@@ -52,13 +52,13 @@ export function createRng(seedInt: number) {
 /**
  * Returns the relevant subgraph for the requested pack
  */
-export function getPackGraph(pack: BorderPassPack): BorderPassGraph {
+export function getPackGraph(pack: BorderPathPack): BorderPathGraph {
   if (pack === "france_departements") {
     return franceGraph;
   }
 
   if (pack === "europe") {
-    const filtered: BorderPassGraph = {};
+    const filtered: BorderPathGraph = {};
     for (const [id, entity] of Object.entries(worldGraph)) {
       if (entity.continentOrRegion === "Europe") {
         // Keep neighbors that are also in Europe
@@ -74,7 +74,7 @@ export function getPackGraph(pack: BorderPassPack): BorderPassGraph {
   }
 
   if (pack === "ameriques") {
-    const filtered: BorderPassGraph = {};
+    const filtered: BorderPathGraph = {};
     for (const [id, entity] of Object.entries(worldGraph)) {
       if (entity.continentOrRegion === "Americas") {
         filtered[id] = {
@@ -89,7 +89,7 @@ export function getPackGraph(pack: BorderPassPack): BorderPassGraph {
   }
 
   if (pack === "afrique") {
-    const filtered: BorderPassGraph = {};
+    const filtered: BorderPathGraph = {};
     for (const [id, entity] of Object.entries(worldGraph)) {
       if (entity.continentOrRegion === "Africa") {
         filtered[id] = {
@@ -113,9 +113,9 @@ export function getPackGraph(pack: BorderPassPack): BorderPassGraph {
 export function findShortestPath(
   startId: string,
   targetId: string,
-  graph: BorderPassGraph,
+  graph: BorderPathGraph,
   forbiddenIds: Set<string> = new Set()
-): BorderPassPathResult {
+): BorderPathPathResult {
   if (!graph[startId] || !graph[targetId]) {
     return { found: false, distance: -1, paths: [] };
   }
@@ -178,8 +178,8 @@ export function validateStep(
   candidateId: string,
   targetId: string,
   visitedIds: string[],
-  graph: BorderPassGraph
-): BorderPassStepResult {
+  graph: BorderPathGraph
+): BorderPathStepResult {
   const current = graph[currentId];
   const candidate = graph[candidateId];
 
@@ -253,7 +253,7 @@ export function validateStep(
  */
 export function computeDistancesFrom(
   startId: string,
-  graph: BorderPassGraph
+  graph: BorderPathGraph
 ): Map<string, number> {
   const dist = new Map<string, number>([[startId, 0]]);
   const queue: string[] = [startId];
@@ -279,13 +279,13 @@ export function computeDistancesFrom(
  */
 export function searchEntities(
   query: string,
-  graph: BorderPassGraph,
+  graph: BorderPathGraph,
   limit: number = 6
-): BorderPassEntity[] {
+): BorderPathEntity[] {
   const clean = normalizeSearchText(query);
   if (!clean || clean.length < 1) return [];
 
-  const matches: { entity: BorderPassEntity; score: number }[] = [];
+  const matches: { entity: BorderPathEntity; score: number }[] = [];
 
   for (const entity of Object.values(graph)) {
     const normName = entity.normalizedName;
@@ -325,14 +325,14 @@ export function searchEntities(
  * Generates a challenge (Daily, Free, or Custom)
  */
 export function generateChallenge(options: {
-  pack?: BorderPassPack;
-  mode?: BorderPassMode;
+  pack?: BorderPathPack;
+  mode?: BorderPathMode;
   seed?: string;
   minSteps?: number;
   maxSteps?: number;
   startId?: string;
   targetId?: string;
-}): BorderPassSessionInit {
+}): BorderPathSessionInit {
   const pack = options.pack || "monde";
   const mode = options.mode || "daily";
   const minSteps = options.minSteps || 4;
@@ -348,13 +348,13 @@ export function generateChallenge(options: {
   const seedString =
     options.seed ||
     (mode === "daily"
-      ? `borderpass-${new Date().toISOString().slice(0, 10)}-${pack}`
+      ? `borderpath-${new Date().toISOString().slice(0, 10)}-${pack}`
       : `bp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`);
 
   const rng = createRng(hashSeed(seedString));
 
-  let startEntity: BorderPassEntity | undefined;
-  let targetEntity: BorderPassEntity | undefined;
+  let startEntity: BorderPathEntity | undefined;
+  let targetEntity: BorderPathEntity | undefined;
   let optimalSteps = 0;
 
   // Custom start and target requested
@@ -369,7 +369,7 @@ export function generateChallenge(options: {
 
     for (const candidateStart of shuffled) {
       const distances = computeDistancesFrom(candidateStart.id, graph);
-      const targetsInRange: { entity: BorderPassEntity; dist: number }[] = [];
+      const targetsInRange: { entity: BorderPathEntity; dist: number }[] = [];
 
       for (const [id, d] of distances.entries()) {
         if (d >= minSteps && d <= maxSteps && graph[id]) {
@@ -428,13 +428,13 @@ export function generateChallenge(options: {
  * Generates the daily challenge for a given pack and date
  */
 export function generateDailyChallenge(
-  pack: BorderPassPack = "monde",
+  pack: BorderPathPack = "monde",
   dateStr: string = new Date().toISOString().slice(0, 10)
-): BorderPassSessionInit {
+): BorderPathSessionInit {
   return generateChallenge({
     pack,
     mode: "daily",
-    seed: `borderpass-${dateStr}-${pack}`,
+    seed: `borderpath-${dateStr}-${pack}`,
     minSteps: 4,
     maxSteps: 7,
   });

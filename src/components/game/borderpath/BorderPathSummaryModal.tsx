@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import {
-  BorderPassEntity,
-  BorderPassPack,
-  BorderPassMode,
-} from "@/lib/games/borderpass/types";
+  BorderPathEntity,
+  BorderPathPack,
+  BorderPathMode,
+} from "@/lib/games/borderpath/types";
 import {
   Trophy,
   Sparkles,
@@ -19,23 +19,23 @@ import {
   Layers,
 } from "lucide-react";
 
-interface BorderPassSummaryModalProps {
+interface BorderPathSummaryModalProps {
   isOpen: boolean;
   onCloseToMap: () => void;
-  pack: BorderPassPack;
-  mode: BorderPassMode;
-  startEntity: BorderPassEntity;
-  targetEntity: BorderPassEntity;
-  visitedEntities: BorderPassEntity[];
+  pack: BorderPathPack;
+  mode: BorderPathMode;
+  startEntity: BorderPathEntity;
+  targetEntity: BorderPathEntity;
+  visitedEntities: BorderPathEntity[];
   minOptimalSteps: number;
   optimalSolutions?: string[][];
-  allEntities: Record<string, BorderPassEntity>;
+  allEntities: Record<string, BorderPathEntity>;
   gaveUp: boolean;
   onReplay: () => void;
   onChangePack: () => void;
 }
 
-export const BorderPassSummaryModal: React.FC<BorderPassSummaryModalProps> = ({
+export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   isOpen,
   onCloseToMap,
   pack,
@@ -67,12 +67,12 @@ export const BorderPassSummaryModal: React.FC<BorderPassSummaryModalProps> = ({
       .map((_, i) => (i < minOptimalSteps ? "🟢" : "🟡"))
       .join("");
 
-    const text = `Border Pass #${today} ${packEmoji}
+    const text = `BorderPath #${today} ${packEmoji}
 ${startEntity.flagEmoji || "🏁"} ${startEntity.name} ➔ ${targetEntity.flagEmoji || "🎯"} ${targetEntity.name}
 Score : ${gaveUp ? "Abandonné" : `${totalSteps} étapes (Optimal : ${minOptimalSteps})`}
 ${emojiRow}
 
-Défie-moi sur GeoHub : https://geohub.fr/play/borderpass`;
+Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text);

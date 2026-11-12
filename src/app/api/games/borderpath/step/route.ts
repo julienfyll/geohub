@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPackGraph, validateStep, findShortestPath } from "@/lib/games/borderpass/engine";
-import { BorderPassPack } from "@/lib/games/borderpass/types";
+import { getPackGraph, validateStep, findShortestPath } from "@/lib/games/borderpath/engine";
+import { BorderPathPack } from "@/lib/games/borderpath/types";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const graph = getPackGraph(pack as BorderPassPack);
+    const graph = getPackGraph(pack as BorderPathPack);
     const stepResult = validateStep(
       currentId,
       candidateId,
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       optimalSolutions,
     });
   } catch (error) {
-    console.error("[BorderPass] Step validation error:", error);
+    console.error("[BorderPath] Step validation error:", error);
     return NextResponse.json(
       { success: false, error: "Erreur de validation de l'étape" },
       { status: 500 }

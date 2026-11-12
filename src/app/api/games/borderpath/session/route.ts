@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateChallenge, getPackGraph, findShortestPath } from "@/lib/games/borderpass/engine";
-import { BorderPassPack, BorderPassMode } from "@/lib/games/borderpass/types";
+import { generateChallenge } from "@/lib/games/borderpath/engine";
+import { BorderPathPack, BorderPathMode } from "@/lib/games/borderpath/types";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const pack = (searchParams.get("pack") as BorderPassPack) || "monde";
-    const mode = (searchParams.get("mode") as BorderPassMode) || "daily";
+    const pack = (searchParams.get("pack") as BorderPathPack) || "monde";
+    const mode = (searchParams.get("mode") as BorderPathMode) || "daily";
     const seed = searchParams.get("seed") || undefined;
     const startId = searchParams.get("start") || undefined;
     const targetId = searchParams.get("target") || undefined;
@@ -30,9 +30,9 @@ export async function GET(request: NextRequest) {
       session,
     });
   } catch (error) {
-    console.error("[BorderPass] Session generation error:", error);
+    console.error("[BorderPath] Session generation error:", error);
     return NextResponse.json(
-      { success: false, error: "Impossible d'initialiser la session Border Pass" },
+      { success: false, error: "Impossible d'initialiser la session BorderPath" },
       { status: 500 }
     );
   }
@@ -41,8 +41,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
-    const pack = (body.pack as BorderPassPack) || "monde";
-    const mode = (body.mode as BorderPassMode) || "daily";
+    const pack = (body.pack as BorderPathPack) || "monde";
+    const mode = (body.mode as BorderPathMode) || "daily";
     const seed = body.seed || undefined;
     const startId = body.startId || undefined;
     const targetId = body.targetId || undefined;
@@ -64,9 +64,9 @@ export async function POST(request: NextRequest) {
       session,
     });
   } catch (error) {
-    console.error("[BorderPass] Session POST error:", error);
+    console.error("[BorderPath] Session POST error:", error);
     return NextResponse.json(
-      { success: false, error: "Impossible d'initialiser la session Border Pass" },
+      { success: false, error: "Impossible d'initialiser la session BorderPath" },
       { status: 500 }
     );
   }

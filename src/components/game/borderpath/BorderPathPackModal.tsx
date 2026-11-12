@@ -1,18 +1,18 @@
 "use client";
 
 import React from "react";
-import { BorderPassPack, BorderPassMode } from "@/lib/games/borderpass/types";
+import { BorderPathPack, BorderPathMode } from "@/lib/games/borderpath/types";
 import { X, Globe, MapPin, Sparkles, Zap, Check } from "lucide-react";
 
-interface BorderPassPackModalProps {
+interface BorderPathPackModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentPack: BorderPassPack;
-  currentMode: BorderPassMode;
-  onSelect: (pack: BorderPassPack, mode: BorderPassMode) => void;
+  currentPack: BorderPathPack;
+  currentMode: BorderPathMode;
+  onSelect: (pack: BorderPathPack, mode: BorderPathMode) => void;
 }
 
-export const BorderPassPackModal: React.FC<BorderPassPackModalProps> = ({
+export const BorderPathPackModal: React.FC<BorderPathPackModalProps> = ({
   isOpen,
   onClose,
   currentPack,
@@ -22,7 +22,7 @@ export const BorderPassPackModal: React.FC<BorderPassPackModalProps> = ({
   if (!isOpen) return null;
 
   const packs: {
-    id: BorderPassPack;
+    id: BorderPathPack;
     title: string;
     description: string;
     flag: string;

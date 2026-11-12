@@ -1,6 +1,6 @@
-export type BorderPassPack = "monde" | "europe" | "france_departements" | "ameriques" | "afrique";
+export type BorderPathPack = "monde" | "europe" | "france_departements" | "ameriques" | "afrique";
 
-export type BorderPassMode = "daily" | "free" | "rush";
+export type BorderPathMode = "daily" | "free" | "rush";
 
 export interface FixedLink {
   targetId: string;
@@ -8,7 +8,7 @@ export interface FixedLink {
   type: "bridge" | "tunnel" | "causeway" | "ferry";
 }
 
-export interface BorderPassEntity {
+export interface BorderPathEntity {
   id: string;               // ISO-3 for countries (e.g. "FRA"), Dept code for France (e.g. "29")
   name: string;             // French name (e.g. "France", "Finistère")
   normalizedName: string;   // Clean lower-cased & accent-stripped for fast fuzzy matching
@@ -24,15 +24,15 @@ export interface BorderPassEntity {
   areaKm2?: number;         // For future area criteria
 }
 
-export type BorderPassGraph = Record<string, BorderPassEntity>;
+export type BorderPathGraph = Record<string, BorderPathEntity>;
 
-export interface BorderPassPathResult {
+export interface BorderPathPathResult {
   found: boolean;
   distance: number;         // Number of border crossings (edges)
   paths: string[][];        // List of shortest optimal paths (e.g. [["FRA", "DEU", "POL"]])
 }
 
-export interface BorderPassStepResult {
+export interface BorderPathStepResult {
   valid: boolean;
   isAdjacent: boolean;
   alreadyVisited: boolean;
@@ -44,13 +44,13 @@ export interface BorderPassStepResult {
   message?: string;
 }
 
-export interface BorderPassSessionInit {
+export interface BorderPathSessionInit {
   sessionId: string;
-  pack: BorderPassPack;
-  mode: BorderPassMode;
+  pack: BorderPathPack;
+  mode: BorderPathMode;
   seed: string;
-  startEntity: BorderPassEntity;
-  targetEntity: BorderPassEntity;
+  startEntity: BorderPathEntity;
+  targetEntity: BorderPathEntity;
   minOptimalSteps: number; // BFS optimal steps (e.g. 4)
   allowedEntityIds: string[];
 }

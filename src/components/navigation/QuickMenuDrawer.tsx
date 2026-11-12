@@ -247,15 +247,15 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                 </div>
               </div>
 
-              {/* Game 3 : Border Pass */}
+              {/* Game 3 : BorderPath */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between px-1">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5" /> Border Pass
+                    <Layers className="w-3.5 h-3.5" /> BorderPath
                   </span>
                   <button
                     type="button"
-                    onClick={() => handleNav("/play/borderpass")}
+                    onClick={() => handleNav("/play/borderpath")}
                     className="text-[10px] text-slate-400 hover:text-white transition-colors font-semibold"
                   >
                     Lobby
@@ -265,7 +265,7 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                 <div className="grid grid-cols-2 gap-1.5">
                   <button
                     type="button"
-                    onClick={() => handleNav("/play/borderpass?pack=monde&mode=daily")}
+                    onClick={() => handleNav("/play/borderpath?pack=monde&mode=daily")}
                     className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
                   >
                     <span className="text-xs font-bold text-slate-200 block">🌍 Monde</span>
@@ -274,7 +274,7 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
 
                   <button
                     type="button"
-                    onClick={() => handleNav("/play/borderpass?pack=france_departements&mode=daily")}
+                    onClick={() => handleNav("/play/borderpath?pack=france_departements&mode=daily")}
                     className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
                   >
                     <span className="text-xs font-bold text-slate-200 block">🇫🇷 Départements</span>
