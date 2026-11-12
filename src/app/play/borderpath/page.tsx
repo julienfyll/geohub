@@ -20,6 +20,7 @@ import {
 import { BorderPathMap, BorderPathMapTheme } from "@/components/game/borderpath/BorderPathMap";
 import { BorderPathHUD } from "@/components/game/borderpath/BorderPathHUD";
 import { BorderPathInput } from "@/components/game/borderpath/BorderPathInput";
+import { BorderPathTargetCard } from "@/components/game/borderpath/BorderPathTargetCard";
 import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathSummaryModal";
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
@@ -224,15 +225,13 @@ function BorderPathGame() {
         }}
       />
 
-      {/* Floating HUD */}
+      {/* Floating Top HUD */}
       <BorderPathHUD
         pack={pack}
         mode={mode}
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
         visitedEntities={visitedEntities}
-        minOptimalSteps={session.minOptimalSteps}
-        remainingSteps={remainingSteps}
         theme={theme}
         hideBorders={hideBorders}
         onToggleTheme={handleToggleTheme}
@@ -242,18 +241,27 @@ function BorderPathGame() {
         onRestart={() => initGameSession(pack, mode)}
       />
 
+      {/* Optimal Target Card (Bottom-Left) */}
+      <BorderPathTargetCard
+        minOptimalSteps={session.minOptimalSteps}
+        currentSteps={visitedEntities.length}
+        remainingSteps={remainingSteps}
+      />
+
       {/* Keyboard Input at Bottom */}
-      <div className="absolute bottom-5 left-0 right-0 z-30">
-        <BorderPathInput
-          currentEntity={currentEntity}
-          targetEntity={session.targetEntity}
-          graph={graph}
-          visitedIds={[session.startEntity.id, ...visitedEntities.map((e) => e.id)]}
-          isComplete={isComplete}
-          onSelectCandidate={handleSelectCandidate}
-          onUndoLastStep={handleUndoLastStep}
-          feedbackMessage={feedbackMessage}
-        />
+      <div className="absolute bottom-8 sm:bottom-10 left-0 right-0 z-30 pointer-events-none">
+        <div className="pointer-events-auto">
+          <BorderPathInput
+            currentEntity={currentEntity}
+            targetEntity={session.targetEntity}
+            graph={graph}
+            visitedIds={[session.startEntity.id, ...visitedEntities.map((e) => e.id)]}
+            isComplete={isComplete}
+            onSelectCandidate={handleSelectCandidate}
+            onUndoLastStep={handleUndoLastStep}
+            feedbackMessage={feedbackMessage}
+          />
+        </div>
       </div>
 
       {/* Summary Modal */}

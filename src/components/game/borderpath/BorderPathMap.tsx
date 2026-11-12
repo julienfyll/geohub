@@ -38,10 +38,15 @@ export const BASEMAP_STYLES: Record<BorderPathMapTheme, string | StyleSpecificat
   satellite: SATELLITE_STYLE,
 };
 
+// Global in-memory cache for parsed GeoJSON data
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const geojsonCache = new Map<string, any>();
+
 interface BorderPathMapProps {
   pack: BorderPathPack;
   theme: BorderPathMapTheme;
   hideBorders?: boolean;
+  highlightStart?: boolean;
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
   visitedEntities: BorderPathEntity[];
@@ -53,6 +58,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
   pack,
   theme,
   hideBorders = false,
+  highlightStart = true,
   startEntity,
   targetEntity,
   visitedEntities,
@@ -68,6 +74,46 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
   const geojsonUrl = isFrance
     ? "/data/geo/france_departements.geojson"
     : "/data/geo/world_countries.geojson";
+
+  // Apply feature states safely to the MapLibre source
+  const applyFeatureStates = useCallback(
+    (map: maplibregl.Map) => {
+      if (!map || !map.getSource("entities-geojson")) return;
+
+      const visitedSet = new Set(visitedEntities.map((e) => e.id));
+      const currentEntity =
+        visitedEntities.length > 0
+          ? visitedEntities[visitedEntities.length - 1]
+          : startEntity;
+
+      const allRelevantIds = Array.from(
+        new Set([
+          startEntity.id,
+          targetEntity.id,
+          ...visitedEntities.map((e) => e.id),
+          invalidFlashId,
+        ].filter(Boolean) as string[])
+      );
+
+      for (const id of allRelevantIds) {
+        const isStart = highlightStart && id === startEntity.id;
+        const isTarget = id === targetEntity.id;
+        const isVisited = visitedSet.has(id);
+        const isCurrent = currentEntity ? id === currentEntity.id : false;
+        const isInvalid = id === invalidFlashId;
+
+        try {
+          map.setFeatureState(
+            { source: "entities-geojson", id },
+            { isStart, isTarget, isVisited, isCurrent, isInvalid }
+          );
+        } catch {
+          // Ignore microstate missing in simplified geojson
+        }
+      }
+    },
+    [startEntity, targetEntity, visitedEntities, invalidFlashId, highlightStart]
+  );
 
   // Compute bounds for the corridor (start, target, visited)
   const fitToCorridor = useCallback(() => {
@@ -86,57 +132,19 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     );
 
     map.fitBounds(bounds, {
-      padding: { top: 100, bottom: 120, left: 60, right: 60 },
+      padding: { top: 90, bottom: 130, left: 70, right: 70 },
       maxZoom: isFrance ? 8.5 : 5.5,
       duration: 1200,
     });
   }, [startEntity, targetEntity, visitedEntities, isFrance]);
-
-  // Initialize Map
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
-
-    const initialCenter: [number, number] = isFrance
-      ? [2.2137, 46.2276]
-      : [startEntity ? (startEntity.longitude + targetEntity.longitude) / 2 : 20, 30];
-
-    const map = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: BASEMAP_STYLES[theme],
-      center: initialCenter,
-      zoom: isFrance ? 5.5 : 2.5,
-      attributionControl: false,
-    });
-
-    mapRef.current = map;
-    isLoadedRef.current = false;
-
-    map.on("load", () => {
-      isLoadedRef.current = true;
-      setupLayers(map);
-      fitToCorridor();
-    });
-
-    return () => {
-      map.remove();
-      mapRef.current = null;
-      isLoadedRef.current = false;
-    };
-  }, [theme, isFrance]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Setup polygon & corridor layers
   const setupLayers = useCallback(
     (map: maplibregl.Map) => {
       if (!map.isStyleLoaded()) return;
 
-      // 1. Add GeoJSON source for country/dept polygons
-      if (!map.getSource("entities-geojson")) {
-        map.addSource("entities-geojson", {
-          type: "geojson",
-          data: geojsonUrl,
-          generateId: false,
-          promoteId: "id",
-        });
+      const addPolygonLayers = () => {
+        if (map.getLayer("entity-fill")) return;
 
         // Layer: Polygon Fill
         map.addLayer({
@@ -156,7 +164,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               "#3b82f6", // Blue pulse
               ["boolean", ["feature-state", "isVisited"], false],
               "#10b981", // Emerald
-              "#0f172a", // Default
+              "#0f172a", // Default dark tint
             ],
             "fill-opacity": [
               "case",
@@ -165,7 +173,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               ["boolean", ["feature-state", "isTarget"], false],
               0.45,
               ["boolean", ["feature-state", "isStart"], false],
-              0.45,
+              0.55,
               ["boolean", ["feature-state", "isCurrent"], false],
               0.55,
               ["boolean", ["feature-state", "isVisited"], false],
@@ -202,12 +210,12 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               ["boolean", ["feature-state", "isVisited"], false],
               2.0,
               ["boolean", ["feature-state", "isStart"], false],
-              2.0,
+              2.5,
               ["boolean", ["feature-state", "isTarget"], false],
-              2.0,
+              2.5,
               hideBorders ? 0 : 0.8,
             ],
-            "line-opacity": hideBorders ? 0.3 : 0.8,
+            "line-opacity": hideBorders ? 0.3 : 0.85,
           },
         });
 
@@ -220,6 +228,53 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
             }
           });
         }
+
+        // Apply initial feature states immediately
+        applyFeatureStates(map);
+      };
+
+      // 1. Add GeoJSON source
+      if (!map.getSource("entities-geojson")) {
+        const cachedData = geojsonCache.get(geojsonUrl);
+        if (cachedData) {
+          map.addSource("entities-geojson", {
+            type: "geojson",
+            data: cachedData,
+            generateId: false,
+            promoteId: "id",
+          });
+          addPolygonLayers();
+        } else {
+          // Pre-fetch then add source for synchronous instant feature state mapping
+          fetch(geojsonUrl)
+            .then((r) => r.json())
+            .then((data) => {
+              geojsonCache.set(geojsonUrl, data);
+              if (mapRef.current && !mapRef.current.getSource("entities-geojson")) {
+                mapRef.current.addSource("entities-geojson", {
+                  type: "geojson",
+                  data,
+                  generateId: false,
+                  promoteId: "id",
+                });
+                addPolygonLayers();
+              }
+            })
+            .catch(() => {
+              // Fallback to direct URL
+              if (mapRef.current && !mapRef.current.getSource("entities-geojson")) {
+                mapRef.current.addSource("entities-geojson", {
+                  type: "geojson",
+                  data: geojsonUrl,
+                  generateId: false,
+                  promoteId: "id",
+                });
+                addPolygonLayers();
+              }
+            });
+        }
+      } else {
+        addPolygonLayers();
       }
 
       // 2. Add corridor polyline source
@@ -236,7 +291,6 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
           },
         });
 
-        // Corridor glowing line
         map.addLayer({
           id: "corridor-line",
           type: "line",
@@ -254,42 +308,57 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
         });
       }
     },
-    [geojsonUrl, theme, hideBorders, onMapClick]
+    [geojsonUrl, theme, hideBorders, onMapClick, applyFeatureStates]
   );
+
+  // Initialize Map
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    const initialCenter: [number, number] = isFrance
+      ? [2.2137, 46.2276]
+      : [startEntity ? (startEntity.longitude + targetEntity.longitude) / 2 : 20, 30];
+
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: BASEMAP_STYLES[theme],
+      center: initialCenter,
+      zoom: isFrance ? 5.5 : 2.5,
+      attributionControl: false,
+    });
+
+    mapRef.current = map;
+    isLoadedRef.current = false;
+
+    // Listen to sourcedata so whenever GeoJSON finishes loading, states are re-applied
+    const onSourceData = (e: maplibregl.MapSourceDataEvent) => {
+      if (e.sourceId === "entities-geojson" && e.isSourceLoaded) {
+        applyFeatureStates(map);
+      }
+    };
+    map.on("sourcedata", onSourceData);
+
+    map.on("load", () => {
+      isLoadedRef.current = true;
+      setupLayers(map);
+      fitToCorridor();
+      applyFeatureStates(map);
+    });
+
+    return () => {
+      map.off("sourcedata", onSourceData);
+      map.remove();
+      mapRef.current = null;
+      isLoadedRef.current = false;
+    };
+  }, [theme, isFrance]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update feature states whenever visitedEntities, start, target, or flash changes
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !isLoadedRef.current || !map.getSource("entities-geojson")) return;
 
-    const visitedSet = new Set(visitedEntities.map((e) => e.id));
-    const currentEntity = visitedEntities[visitedEntities.length - 1] || startEntity;
-
-    // Reset known active entities
-    const allRelevantIds = [
-      startEntity.id,
-      targetEntity.id,
-      ...visitedEntities.map((e) => e.id),
-      invalidFlashId,
-    ].filter(Boolean) as string[];
-
-    // Set feature states
-    for (const id of allRelevantIds) {
-      const isStart = id === startEntity.id;
-      const isTarget = id === targetEntity.id;
-      const isVisited = visitedSet.has(id);
-      const isCurrent = currentEntity ? id === currentEntity.id : false;
-      const isInvalid = id === invalidFlashId;
-
-      try {
-        map.setFeatureState(
-          { source: "entities-geojson", id },
-          { isStart, isTarget, isVisited, isCurrent, isInvalid }
-        );
-      } catch (err) {
-        // Ignore microstate missing in low-res geojson
-      }
-    }
+    applyFeatureStates(map);
 
     // Update Corridor Polyline coordinates
     const corridorCoords: [number, number][] = [
@@ -314,7 +383,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
 
     // Auto-fit camera when steps change
     fitToCorridor();
-  }, [startEntity, targetEntity, visitedEntities, invalidFlashId, fitToCorridor]);
+  }, [startEntity, targetEntity, visitedEntities, invalidFlashId, fitToCorridor, applyFeatureStates]);
 
   // Update HTML overlay markers
   const updateMarkers = (map: maplibregl.Map) => {
@@ -322,14 +391,14 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
-    // Helper to create marker
     const addMarker = (
       entity: BorderPathEntity,
       type: "start" | "target" | "step" | "current",
       stepNum?: number
     ) => {
       const el = document.createElement("div");
-      el.className = "borderpath-marker transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-transform hover:scale-110";
+      el.className =
+        "borderpath-marker transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-transform hover:scale-110";
 
       if (type === "start") {
         el.innerHTML = `
@@ -369,8 +438,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       markersRef.current.push(marker);
     };
 
-    // Add Start Marker
-    if (startEntity) {
+    // Add Start Marker (if highlight enabled)
+    if (startEntity && highlightStart) {
       addMarker(startEntity, "start");
     }
 

@@ -162,11 +162,8 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
             : "border-slate-700 hover:border-slate-600 focus-within:border-blue-500"
         } ${isComplete ? "opacity-50 pointer-events-none" : ""}`}
       >
-        <div className="pl-4 pr-2 text-slate-400 flex items-center gap-2">
+        <div className="pl-4 pr-1 text-slate-400 flex items-center">
           <Search className="w-5 h-5 text-slate-400" />
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">
-            De {currentEntity.name} vers
-          </span>
         </div>
 
         <input
@@ -175,8 +172,12 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Tapez le nom d'un pays voisin ou limitrophe..."
-          className="w-full py-3.5 px-2 bg-transparent text-white placeholder-slate-500 text-sm sm:text-base font-semibold focus:outline-none"
+          placeholder={
+            currentEntity.id.match(/^\d+$/)
+              ? "Rechercher un département limitrophe..."
+              : "Rechercher un pays limitrophe..."
+          }
+          className="w-full py-3.5 px-3 bg-transparent text-white placeholder-slate-500 text-sm sm:text-base font-semibold focus:outline-none"
           autoComplete="off"
           spellCheck="false"
           disabled={isComplete}
@@ -202,11 +203,11 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
         </div>
       </div>
 
-      {/* Autocomplete Dropdown */}
+      {/* Autocomplete Dropdown (Opens upwards to avoid off-screen overflow) */}
       {isOpen && suggestions.length > 0 && (
         <ul
           ref={listRef}
-          className="absolute left-4 right-4 mt-2 bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl z-50 divide-y divide-slate-800/80 max-h-72 overflow-y-auto"
+          className="absolute left-4 right-4 bottom-full mb-3 bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl z-50 divide-y divide-slate-800/80 max-h-60 sm:max-h-72 overflow-y-auto"
         >
           {suggestions.map((entity, idx) => {
             const isNeighbor = isCurrentNeighbor(entity.id);

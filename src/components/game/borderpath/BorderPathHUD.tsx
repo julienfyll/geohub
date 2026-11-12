@@ -17,8 +17,6 @@ import {
   HelpCircle,
   Flag,
   RotateCcw,
-  Sparkles,
-  Trophy,
 } from "lucide-react";
 
 interface BorderPathHUDProps {
@@ -27,8 +25,6 @@ interface BorderPathHUDProps {
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
   visitedEntities: BorderPathEntity[];
-  minOptimalSteps: number;
-  remainingSteps: number;
   theme: BorderPathMapTheme;
   hideBorders: boolean;
   onToggleTheme: () => void;
@@ -44,8 +40,6 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   startEntity,
   targetEntity,
   visitedEntities,
-  minOptimalSteps,
-  remainingSteps,
   theme,
   hideBorders,
   onToggleTheme,
@@ -54,9 +48,6 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   onGiveUp,
   onRestart,
 }) => {
-  const currentStep = visitedEntities.length;
-  const delta = currentStep - minOptimalSteps;
-
   const packLabels: Record<BorderPathPack, string> = {
     monde: "Monde Continental",
     europe: "Europe",
@@ -93,8 +84,8 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
           </div>
         </div>
 
-        {/* Center: Mission Corridor Badge (Start -> Target) */}
-        <div className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 shadow-2xl backdrop-blur-xl">
+        {/* Center: Mission Corridor Badge (Start -> Target) - Single clean source of truth */}
+        <div className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 shadow-2xl backdrop-blur-xl">
           {/* Start Pill */}
           <div className="flex items-center gap-1.5">
             <span className="text-base sm:text-lg">{startEntity.flagEmoji || "🏁"}</span>
@@ -126,31 +117,8 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
           </div>
         </div>
 
-        {/* Right: Controls & Metrics */}
+        {/* Right: Quick Controls */}
         <div className="pointer-events-auto flex items-center gap-2">
-          {/* Step Counter Badge */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white text-xs font-semibold backdrop-blur-md shadow-lg">
-            <div className="flex flex-col items-center">
-              <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold">
-                Étapes
-              </span>
-              <div className="flex items-center gap-1 font-mono font-bold text-sm">
-                <span>{currentStep}</span>
-                <span className="text-slate-500 font-normal">/ {minOptimalSteps}</span>
-              </div>
-            </div>
-
-            {delta > 0 ? (
-              <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold">
-                +{delta}
-              </span>
-            ) : (
-              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold">
-                Parfait
-              </span>
-            )}
-          </div>
-
           {/* Map theme switcher */}
           <button
             type="button"
@@ -207,49 +175,46 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
         </div>
       </div>
 
-      {/* Corridor Breadcrumb Trail (Visited Sequence) */}
-      <div className="pointer-events-auto flex items-center justify-center overflow-x-auto py-1 px-3 max-w-4xl mx-auto scrollbar-none">
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/80 border border-slate-800/80 backdrop-blur-md shadow-xl text-xs">
-          {/* Start entity badge */}
-          <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 font-bold shrink-0">
-            <span>{startEntity.flagEmoji || "🏁"}</span>
-            <span>{startEntity.name}</span>
+      {/* Corridor Breadcrumb Trail - ONLY shown once the player has started moving */}
+      {visitedEntities.length > 0 && (
+        <div className="pointer-events-auto flex items-center justify-center overflow-x-auto py-1 px-3 max-w-4xl mx-auto scrollbar-none animate-slide-down">
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/80 border border-slate-800/80 backdrop-blur-md shadow-xl text-xs">
+            {/* Start entity badge */}
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 font-bold shrink-0">
+              <span>{startEntity.flagEmoji || "🏁"}</span>
+              <span>{startEntity.name}</span>
+            </div>
+
+            {/* Visited Steps */}
+            {visitedEntities.map((e, idx) => (
+              <React.Fragment key={e.id}>
+                <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
+                <div
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border shrink-0 ${
+                    idx === visitedEntities.length - 1
+                      ? "bg-blue-950/90 border-blue-400 text-white font-extrabold ring-2 ring-blue-500/30"
+                      : "bg-emerald-950/80 border-emerald-500/40 text-emerald-300 font-medium"
+                  }`}
+                >
+                  <span>{e.flagEmoji || "📍"}</span>
+                  <span>{e.name}</span>
+                </div>
+              </React.Fragment>
+            ))}
+
+            {/* Target indicator if not yet reached */}
+            {visitedEntities.every((e) => e.id !== targetEntity.id) && (
+              <>
+                <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
+                <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-400 font-bold shrink-0 opacity-70">
+                  <span>{targetEntity.flagEmoji || "🎯"}</span>
+                  <span>{targetEntity.name}</span>
+                </div>
+              </>
+            )}
           </div>
-
-          {/* Steps */}
-          {visitedEntities.map((e, idx) => (
-            <React.Fragment key={e.id}>
-              <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-              <div
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border shrink-0 ${
-                  idx === visitedEntities.length - 1
-                    ? "bg-blue-950/90 border-blue-400 text-white font-extrabold ring-2 ring-blue-500/30"
-                    : "bg-emerald-950/80 border-emerald-500/40 text-emerald-300 font-medium"
-                }`}
-              >
-                <span>{e.flagEmoji || "📍"}</span>
-                <span>{e.name}</span>
-              </div>
-            </React.Fragment>
-          ))}
-
-          {/* Target teaser if not yet reached */}
-          {visitedEntities.every((e) => e.id !== targetEntity.id) && (
-            <>
-              <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-              <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-400 font-bold shrink-0 opacity-70">
-                <span>{targetEntity.flagEmoji || "🎯"}</span>
-                <span>{targetEntity.name}</span>
-                {remainingSteps > 0 && (
-                  <span className="text-[10px] text-amber-500/80 font-mono">
-                    (~{remainingSteps} frontières)
-                  </span>
-                )}
-              </div>
-            </>
-          )}
         </div>
-      </div>
+      )}
     </div>
   );
 };
