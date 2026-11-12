@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   X,
@@ -18,14 +18,17 @@ import {
   Square,
   Share2,
   Target,
-  Database,
   GitBranch,
+  ChevronLeft,
+  ChevronRight,
+  Info,
 } from "lucide-react";
 import {
   BlindPointPack,
   BlindPointDifficulty,
   BlindPointMapTheme,
 } from "@/lib/games/blindpoint/types";
+import { ALL_METRO_LINES } from "@/lib/games/blindpoint/data/metro_topology";
 
 interface BlindPointCustomModalProps {
   isOpen: boolean;
@@ -116,6 +119,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
   initialDifficulty = "all",
 }) => {
   const router = useRouter();
+  const linesCarouselRef = useRef<HTMLDivElement>(null);
 
   // Root Segmented Control: Classic Scored Quiz vs Retrace le Réseau (Solution 1)
   const [activeTab, setActiveTab] = useState<"classic" | "retrace">(
@@ -124,7 +128,9 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
 
   // Retrace le Réseau Dedicated Parameters
   const [tolerance, setTolerance] = useState<string>("300");
-  const [selectedLines, setSelectedLines] = useState<string[]>(["1", "4", "6"]);
+  const [selectedLines, setSelectedLines] = useState<string[]>(
+    ALL_METRO_LINES.map((l) => l.id)
+  );
 
   // Classic Points Aveugles Parameters
   const [selectedPacks, setSelectedPacks] = useState<BlindPointPack[]>([initialPack]);
@@ -165,7 +171,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
     });
   };
 
-  // Toggle line in Retrace mode
+  // Toggle single line in Retrace mode
   const toggleLine = (lineId: string) => {
     setSelectedLines((prev) => {
       if (prev.includes(lineId)) {
@@ -175,6 +181,22 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
         return [...prev, lineId];
       }
     });
+  };
+
+  // Toggle ALL lines in Retrace mode (Tout sélectionner / Tout désélectionner)
+  const toggleAllLines = () => {
+    if (selectedLines.length === ALL_METRO_LINES.length) {
+      setSelectedLines(["1"]); // Keep Line 1 minimum
+    } else {
+      setSelectedLines(ALL_METRO_LINES.map((l) => l.id));
+    }
+  };
+
+  // Scroll horizontal lines slider
+  const scrollLinesCarousel = (offset: number) => {
+    if (linesCarouselRef.current) {
+      linesCarouselRef.current.scrollBy({ left: offset, behavior: "smooth" });
+    }
   };
 
   const hasWorldPack = selectedPacks.some(
@@ -188,7 +210,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
     // Retrace le Réseau Mode URL
     if (activeTab === "retrace") {
       let url = `${origin}/play/blindpoint?pack=metro_paris&mode=custom&customType=retrace&tolerance=${tolerance}`;
-      if (selectedLines.length > 0 && selectedLines.length < 3) {
+      if (selectedLines.length > 0 && selectedLines.length < ALL_METRO_LINES.length) {
         url += `&lines=${selectedLines.join(",")}`;
       }
       url += `&play=1`;
@@ -224,6 +246,8 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
     onClose();
     router.push(localUrl);
   };
+
+  const isAllLinesSelected = selectedLines.length === ALL_METRO_LINES.length;
 
   return (
     <div
@@ -267,9 +291,9 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab("classic")}
-            className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black transition-all ${
+            className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
               activeTab === "classic"
-                ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
+                ? "bg-purple-600 text-white shadow-md shadow-purple-600/30 font-black"
                 : "text-slate-400 hover:text-white hover:bg-slate-900/60"
             }`}
           >
@@ -282,7 +306,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
             onClick={() => setActiveTab("retrace")}
             className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
               activeTab === "retrace"
-                ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
+                ? "bg-purple-600 text-white shadow-md shadow-purple-600/30 font-black"
                 : "text-slate-400 hover:text-white hover:bg-slate-900/60"
             }`}
           >
@@ -394,7 +418,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
                     step={1}
                     value={roundsCount}
                     onChange={(e) => setRoundsCount(parseInt(e.target.value, 10))}
-                    className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                    className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none"
                   />
                   <div className="flex justify-between items-center text-[10px] text-slate-500 font-mono">
                     <span>3 min</span>
@@ -530,14 +554,14 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
         )}
 
         {/* ======================================================== */}
-        {/* TAB 2: RETRACE LE RÉSEAU (Mini Metro, Lignes, Tolérance) */}
+        {/* TAB 2: RETRACE LE RÉSEAU WITH HORIZONTAL SLIDER & AIRY   */}
         {/* ======================================================== */}
         {activeTab === "retrace" && (
           <div className="flex flex-col gap-5 animate-in fade-in duration-150">
             {/* Hero Banner */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-950/50 via-slate-900 to-indigo-950/50 border border-purple-500/40 flex items-center justify-between gap-4">
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-950/40 via-slate-900 to-indigo-950/40 border border-purple-500/30 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                <div className="w-10 h-10 rounded-2xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-xl shadow-inner shrink-0">
                   🚇
                 </div>
                 <div>
@@ -552,152 +576,179 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
               </span>
             </div>
 
-            {/* Section: Lignes à inclure */}
+            {/* Section 1: SLIDER HORIZONTAL DES 16 LIGNES */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <GitBranch className="w-3.5 h-3.5 text-purple-400" />
-                  <span>1. Lignes du Réseau à Retracer</span>
-                </label>
-                <span className="text-[11px] text-slate-400 font-medium">
-                  {selectedLines.length} ligne{selectedLines.length > 1 ? "s" : ""} active{selectedLines.length > 1 ? "s" : ""}
-                </span>
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                    <GitBranch className="w-3.5 h-3.5 text-purple-400" />
+                    <span>1. Lignes du Réseau à Retracer</span>
+                  </label>
+                  <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-extrabold font-mono">
+                    {selectedLines.length}/{ALL_METRO_LINES.length} actives
+                  </span>
+                </div>
+
+                {/* Quick Action: Tout sélectionner / Tout désélectionner */}
+                <button
+                  type="button"
+                  onClick={toggleAllLines}
+                  className={`text-[11px] font-bold px-3 py-1 rounded-xl transition-all flex items-center gap-1.5 shadow-sm active:scale-95 ${
+                    isAllLinesSelected
+                      ? "bg-slate-800 hover:bg-slate-700 text-purple-300 hover:text-white border border-slate-700"
+                      : "bg-purple-600 hover:bg-purple-500 text-white border border-purple-500 shadow-purple-600/20"
+                  }`}
+                >
+                  <CheckSquare className="w-3.5 h-3.5" />
+                  <span>{isAllLinesSelected ? "Tout désélectionner" : "Tout sélectionner"}</span>
+                </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                {/* Ligne 1 */}
+              {/* Slider Track with Chevron Buttons */}
+              <div className="relative group">
                 <button
                   type="button"
-                  onClick={() => toggleLine("1")}
-                  className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between shadow-sm ${
-                    selectedLines.includes("1")
-                      ? "bg-amber-500/10 border-amber-500 text-white"
-                      : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-300"
-                  }`}
+                  onClick={() => scrollLinesCarousel(-280)}
+                  className="absolute -left-2.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-slate-900/95 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center shadow-2xl opacity-75 group-hover:opacity-100 transition-all hover:scale-110"
+                  title="Défiler vers la gauche"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-[#FFCD00] text-slate-950 font-black text-xs flex items-center justify-center shadow-sm">
-                      1
-                    </span>
-                    <div>
-                      <span className="text-xs font-bold block">Ligne 1</span>
-                      <span className="text-[10px] text-slate-400 block">Défense ↔ Vincennes</span>
-                    </div>
-                  </div>
-                  {selectedLines.includes("1") && (
-                    <Check className="w-4 h-4 text-amber-400 stroke-[3]" />
-                  )}
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
 
-                {/* Ligne 4 */}
-                <button
-                  type="button"
-                  onClick={() => toggleLine("4")}
-                  className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between shadow-sm ${
-                    selectedLines.includes("4")
-                      ? "bg-pink-500/10 border-pink-500 text-white"
-                      : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-300"
-                  }`}
+                <div
+                  ref={linesCarouselRef}
+                  className="flex items-center gap-2 overflow-x-auto py-1 px-1 scroll-smooth"
+                  style={{ scrollbarWidth: "none" }}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-[#CF009E] text-white font-black text-xs flex items-center justify-center shadow-sm">
-                      4
-                    </span>
-                    <div>
-                      <span className="text-xs font-bold block">Ligne 4</span>
-                      <span className="text-[10px] text-slate-400 block">Nord ↔ Sud (Châtelet)</span>
-                    </div>
-                  </div>
-                  {selectedLines.includes("4") && (
-                    <Check className="w-4 h-4 text-pink-400 stroke-[3]" />
-                  )}
-                </button>
+                  {ALL_METRO_LINES.map((line) => {
+                    const isSelected = selectedLines.includes(line.id);
+                    return (
+                      <button
+                        key={line.id}
+                        type="button"
+                        onClick={() => toggleLine(line.id)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-2xl border text-left transition-all shrink-0 min-w-[155px] hover:scale-[1.02] ${
+                          isSelected
+                            ? "bg-slate-900 border-purple-500 shadow-sm shadow-purple-500/10"
+                            : "bg-slate-950/40 border-slate-800 text-slate-500 opacity-60 hover:opacity-100"
+                        }`}
+                      >
+                        <span
+                          style={{ backgroundColor: line.bg, color: line.text }}
+                          className="w-6 h-6 rounded-full flex items-center justify-center font-black text-xs shadow-sm shrink-0"
+                        >
+                          {line.num}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-xs font-bold text-white block truncate leading-tight">
+                            {line.name}
+                          </span>
+                          <span className="text-[10px] text-slate-400 block truncate leading-tight mt-0.5">
+                            {line.route}
+                          </span>
+                        </div>
+                        <div
+                          className={`w-4 h-4 rounded-md flex items-center justify-center shrink-0 ${
+                            isSelected ? "text-purple-400" : "text-transparent"
+                          }`}
+                        >
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
 
-                {/* Ligne 6 */}
                 <button
                   type="button"
-                  onClick={() => toggleLine("6")}
-                  className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between shadow-sm ${
-                    selectedLines.includes("6")
-                      ? "bg-emerald-500/10 border-emerald-500 text-white"
-                      : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-300"
-                  }`}
+                  onClick={() => scrollLinesCarousel(280)}
+                  className="absolute -right-2.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-slate-900/95 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center shadow-2xl opacity-75 group-hover:opacity-100 transition-all hover:scale-110"
+                  title="Défiler vers la droite"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-6 h-6 rounded-full bg-[#169B62] text-white font-black text-xs flex items-center justify-center shadow-sm">
-                      6
-                    </span>
-                    <div>
-                      <span className="text-xs font-bold block">Ligne 6</span>
-                      <span className="text-[10px] text-slate-400 block">Étoile ↔ Nation</span>
-                    </div>
-                  </div>
-                  {selectedLines.includes("6") && (
-                    <Check className="w-4 h-4 text-emerald-400 stroke-[3]" />
-                  )}
+                  <ChevronRight className="w-4 h-4" />
                 </button>
+              </div>
+
+              <div className="flex items-center justify-between text-[10px] text-slate-500 mt-1 px-1">
+                <span>Glissez horizontalement ou cliquez sur les flèches pour voir toutes les lignes</span>
+                <span className="font-mono">16 lignes RATP</span>
               </div>
             </div>
 
-            {/* Section: Tolérance d'ancrage & Sauvegarde */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Tolérance */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                    <Target className="w-3.5 h-3.5 text-amber-400" />
-                    <span>2. Tolérance d'Ancrage</span>
-                  </label>
-                  <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 font-extrabold text-xs">
-                    {tolerance === "chill"
-                      ? "Chill (Libre)"
-                      : `${tolerance} m ${tolerance === "300" ? "(Standard)" : ""}`}
-                  </span>
-                </div>
-                <div className="grid grid-cols-5 gap-1 text-[11px]">
-                  {[
-                    { id: "chill", label: "Chill" },
-                    { id: "500", label: "500m" },
-                    { id: "300", label: "300m" },
-                    { id: "150", label: "150m" },
-                    { id: "75", label: "75m" },
-                  ].map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => setTolerance(t.id)}
-                      className={`py-2 px-1 rounded-xl border text-[11px] font-bold text-center transition-all ${
-                        tolerance === t.id
-                          ? "bg-amber-500 border-amber-400 text-slate-950 font-black shadow-sm"
-                          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:text-white"
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-                <span className="text-[10px] text-slate-500 mt-1 block">
-                  Distance maximale acceptée pour valider l'arrêt
+            {/* Section 2: TOLÉRANCE D'ANCRAGE AÉRÉE (PLEINE LARGEUR) */}
+            <div className="pt-2 border-t border-slate-800/80">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-amber-400" />
+                  <span>2. Tolérance d'Ancrage au Clic</span>
+                </label>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-black">
+                  {tolerance === "chill"
+                    ? "Chill — Libre (Toujours validé)"
+                    : tolerance === "500"
+                    ? "500 m — Initié"
+                    : tolerance === "300"
+                    ? "300 m — Standard (Recommandé)"
+                    : tolerance === "150"
+                    ? "150 m — Expert"
+                    : "75 m — Puriste"}
                 </span>
               </div>
 
-              {/* Persistance locale */}
-              <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
-                  <Database className="w-3.5 h-3.5 text-blue-400" />
-                  <span>3. Sauvegarde & Reprise</span>
-                </label>
-                <div className="p-2.5 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-bold text-white block">Progression Locale</span>
-                    <span className="text-[10px] text-slate-400">Auto-sauvegardé sur cet appareil</span>
-                  </div>
-                  <span className="px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[10px] font-extrabold uppercase">
-                    Actif
-                  </span>
-                </div>
-                <span className="text-[10px] text-slate-500 mt-1 block">
-                  Reprenez votre tracé à tout moment sans perte
+              {/* 5 Spacious Cards across full width */}
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                {[
+                  { id: "chill", icon: "🧘", label: "Chill", badge: "Libre", desc: "Toujours validé sans seuil" },
+                  { id: "500", icon: "🚶", label: "500 m", badge: "Initié", desc: "Échelle quartier large" },
+                  { id: "300", icon: "🎯", label: "300 m", badge: "Standard", desc: "Recommandé & équilibré" },
+                  { id: "150", icon: "⚡", label: "150 m", badge: "Expert", desc: "Carrefour précis de rue" },
+                  { id: "75", icon: "🔬", label: "75 m", badge: "Puriste", desc: "Bouche de métro exacte" },
+                ].map((item) => {
+                  const isSelected = tolerance === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setTolerance(item.id)}
+                      className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between gap-2 ${
+                        isSelected
+                          ? "bg-amber-500/10 border-amber-500 text-white shadow-md shadow-amber-500/10 ring-1 ring-amber-500/40"
+                          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-base">{item.icon}</span>
+                        <span
+                          className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase ${
+                            isSelected
+                              ? "bg-amber-500 text-slate-950 font-black"
+                              : "bg-slate-800 text-slate-400"
+                          }`}
+                        >
+                          {item.badge}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          className={`text-xs font-black block ${
+                            isSelected ? "text-amber-300" : "text-slate-200"
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+                        <span className="text-[10px] text-slate-400 block leading-tight mt-0.5">
+                          {item.desc}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center gap-2 mt-2 px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400">
+                <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>
+                  Un clic en deçà de la distance ancre instantanément l'arrêt et déverrouille les tronçons adjacents en double voie néon.
                 </span>
               </div>
             </div>
