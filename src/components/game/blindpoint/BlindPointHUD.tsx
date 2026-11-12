@@ -153,6 +153,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
     villes_europe: { name: "Villes d'Europe", shortName: "Villes Europe", icon: "🇪🇺" },
     lieux_france: { name: "Patrimoine de France", shortName: "Patrimoine", icon: "🏰" },
     lieux_paris: { name: "Monuments de Paris", shortName: "Paris", icon: "🗼" },
+    metro_paris: { name: "Métro de Paris", shortName: "Métro Paris", icon: "🚇" },
     lieux_monde: { name: "Merveilles du Monde", shortName: "Merveilles", icon: "🏛️" },
     monuments_monde: { name: "Monuments du Monde", shortName: "Monuments", icon: "🏛️" },
     chateaux_france: { name: "Châteaux de France", shortName: "Châteaux", icon: "🏰" },
@@ -333,6 +334,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
                       {[
                         { id: "lieux_france", name: "Patrimoine de France", icon: "🏰", desc: "58 châteaux de la Loire, citadelles & monuments" },
                         { id: "lieux_paris", name: "Monuments de Paris", icon: "🗼", desc: "105 trésors emblématiques des 20 arrondissements" },
+                        { id: "metro_paris", name: "Métro de Paris", icon: "🚇", desc: "Stations du réseau parisien RATP" },
                         { id: "lieux_monde", name: "Merveilles du Monde", icon: "🏛️", desc: "50 merveilles de l'humanité & sites UNESCO" },
                       ].map((p) => (
                         <button

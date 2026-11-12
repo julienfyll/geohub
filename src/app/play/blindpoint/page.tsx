@@ -76,6 +76,7 @@ function BlindPointGame() {
     "villes_europe",
     "lieux_france",
     "lieux_paris",
+    "metro_paris",
     "lieux_monde",
     "monuments_monde",
     "chateaux_france",
@@ -90,9 +91,9 @@ function BlindPointGame() {
       ? (rawDiff as BlindPointDifficulty)
       : "all";
 
-  const isLieuxInitial = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
+  const isLieuxInitial = pack.startsWith("lieux_") || pack === "metro_paris" || pack === "chateaux_france" || pack === "monuments_monde";
   const initialTerritory: "france" | "paris" | "monde" =
-    pack === "lieux_paris"
+    pack === "lieux_paris" || pack === "metro_paris"
       ? "paris"
       : pack === "villes_monde" || pack === "lieux_monde" || pack === "monuments_monde" || pack === "villes_europe"
       ? "monde"
@@ -809,7 +810,7 @@ function BlindPointGame() {
               <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
                 1. Déclinaison / Terrain
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                 <button
                   type="button"
                   onClick={() => setSelectedPack("villes_france")}
@@ -850,6 +851,20 @@ function BlindPointGame() {
                   <span className="text-lg block mb-1">🌍</span>
                   <span className="text-xs block">Monde</span>
                   <span className="text-[10px] text-slate-400 font-mono">167 villes</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedPack("metro_paris")}
+                  className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                    selectedPack === "metro_paris"
+                      ? "border-emerald-500 bg-emerald-950/30 text-white font-bold shadow-md shadow-emerald-500/10"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
+                  }`}
+                >
+                  <span className="text-lg block mb-1">🚇</span>
+                  <span className="text-xs block">Métro Paris</span>
+                  <span className="text-[10px] text-slate-400 font-mono">60 stations</span>
                 </button>
 
                 <button

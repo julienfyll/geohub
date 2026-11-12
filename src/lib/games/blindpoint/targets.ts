@@ -6,6 +6,7 @@ import citiesWorldData from "./data/cities_world.json";
 import lieuxFranceData from "./data/lieux_france.json";
 import lieuxMondeData from "./data/lieux_monde.json";
 import lieuxParisData from "./data/lieux_paris.json";
+import metroParisData from "./data/metro_paris.json";
 
 const monuments = monumentsData as BlindPointTarget[];
 const castles = castlesData as BlindPointTarget[];
@@ -14,6 +15,7 @@ const citiesWorld = citiesWorldData as BlindPointTarget[];
 const lieuxFrance = lieuxFranceData as BlindPointTarget[];
 const lieuxMonde = lieuxMondeData as BlindPointTarget[];
 const lieuxParis = lieuxParisData as BlindPointTarget[];
+const metroParis = metroParisData as BlindPointTarget[];
 
 export function getTargetsByPack(
   pack: BlindPointPack,
@@ -40,6 +42,9 @@ export function getTargetsByPack(
       break;
     case "lieux_paris":
       pool = lieuxParis;
+      break;
+    case "metro_paris":
+      pool = metroParis;
       break;
   }
 
@@ -111,7 +116,7 @@ export function getSessionTargets(
   const hasWorldPack = packsArray.some(
     (p) => p === "villes_monde" || p === "lieux_monde" || p === "monuments_monde" || p === "villes_europe"
   );
-  const onlyParis = packsArray.length === 1 && packsArray[0] === "lieux_paris";
+  const onlyParis = packsArray.length === 1 && (packsArray[0] === "lieux_paris" || packsArray[0] === "metro_paris");
 
   if (hasWorldPack) {
     scale = "world";
@@ -136,7 +141,7 @@ export function getSessionTargets(
   // Daily Mode: Balanced Gradual Progression (M1/M2 Facile, M3/M4 Moyen, M5 Difficile)
   if (mode === "daily" && packsArray.length === 1 && totalRounds === 5 && !continentFilter) {
     const p = packsArray[0];
-    if (p === "villes_france" || p === "villes_europe" || p === "lieux_paris") {
+    if (p === "villes_france" || p === "villes_europe" || p === "lieux_paris" || p === "metro_paris") {
       const allPool = getTargetsByPack(p);
       const faciles = allPool.filter((c) => c.difficulty === "facile");
       const moyens = allPool.filter((c) => c.difficulty === "moyen");

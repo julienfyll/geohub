@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
     "lieux_france",
     "lieux_monde",
     "lieux_paris",
+    "metro_paris",
     "monuments_monde",
     "chateaux_france",
   ];

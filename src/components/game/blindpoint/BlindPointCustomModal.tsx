@@ -59,6 +59,15 @@ const AVAILABLE_PACKS: {
     category: "lieux",
   },
   {
+    id: "metro_paris",
+    name: "Métro de Paris",
+    badge: "Réseau RATP",
+    icon: "🚇",
+    countLabel: "60 stations parisiennes",
+    isWorld: false,
+    category: "lieux",
+  },
+  {
     id: "lieux_france",
     name: "Châteaux & Patrimoine",
     badge: "France",

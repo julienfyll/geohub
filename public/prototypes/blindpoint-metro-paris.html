@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blind Point — Métro de Paris | Prototype Interactif</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- MapLibre GL -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom Pulse Animations */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.25); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.9; }
+    }
+    .animate-pulse-ring {
+      animation: pulse-ring 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* MapLibre Popups */
+    .maplibregl-popup-content {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border: 1px solid #334155 !important;
+      border-radius: 1rem !important;
+      padding: 0.75rem !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6) !important;
+    }
+    .maplibregl-popup-tip {
+      border-top-color: #334155 !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen flex flex-col font-sans overflow-hidden select-none">
+
+  <!-- ========================================================================= -->
+  <!-- TOP APP BAR -->
+  <!-- ========================================================================= -->
+  <header class="h-14 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5">
+        <span>← Retour Lab</span>
+      </a>
+      <div class="h-4 w-px bg-slate-800"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🚇</span>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm font-black tracking-tight text-white">Blind Point Métro</h1>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/30">Paris Prototype</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HUD Center: Round & Score -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs">
+        <span class="text-slate-400 font-medium">Manche</span>
+        <span id="hud-round" class="font-extrabold text-white font-mono">1 / 5</span>
+      </div>
+      <div class="flex items-center gap-2 px-3.5 py-1 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-xs shadow-inner">
+        <span class="text-emerald-400 font-semibold">Score :</span>
+        <span id="hud-score" class="font-black text-white font-mono text-sm">0 pts</span>
+      </div>
+    </div>
+
+    <!-- Quick settings toggle -->
+    <div class="flex items-center gap-2">
+      <button id="btn-toggle-lines" onclick="toggleMetroLines()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[11px] font-bold text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+        <span>🗺️ Lignes en filigrane :</span>
+        <span id="lbl-toggle-lines" class="text-amber-400 font-mono">OFF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN GAME CANVAS -->
+  <!-- ========================================================================= -->
+  <main class="relative flex-1 h-full w-full overflow-hidden">
+
+    <!-- MAP CONTAINER -->
+    <div id="map" class="absolute inset-0 bg-slate-950"></div>
+
+    <!-- FLOATING TARGET PROMPT (TOP LEFT) -->
+    <div class="absolute top-4 left-4 z-20 max-w-sm pointer-events-auto">
+      <div class="bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-4 shadow-2xl space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            Où se situe cette station ?
+          </span>
+          <span id="station-arrondissement" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-md font-mono font-bold">
+            18e Arr.
+          </span>
+        </div>
+
+        <div>
+          <h2 id="station-name" class="text-xl font-black text-white tracking-tight leading-tight">
+            Abbesses
+          </h2>
+          <!-- Lines Chips Container -->
+          <div id="station-lines-chips" class="flex flex-wrap items-center gap-1.5 mt-2">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Hint Accordion -->
+        <div class="border-t border-slate-800/80 pt-2">
+          <button id="btn-toggle-hint" onclick="toggleHint()" class="text-[11px] text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 transition-colors">
+            <span>💡 Afficher un indice</span>
+          </button>
+          <p id="station-hint" class="hidden text-[11px] text-slate-300 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 mt-2 leading-relaxed">
+            Station la plus profonde de Paris (36m sous terre), au coeur de Montmartre.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLOATING VALIDATE BUTTON (BOTTOM CENTER) -->
+    <div id="floating-action-bar" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto transition-all duration-300">
+      <button
+        id="btn-validate"
+        onclick="validateGuess()"
+        disabled
+        class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 text-slate-950 disabled:cursor-not-allowed font-black text-sm tracking-wide shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-2"
+      >
+        <span>🎯 Valider ma position</span>
+      </button>
+    </div>
+
+    <!-- FLOATING RESULT DRAWER (Appears after guess) -->
+    <div id="result-drawer" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-11/12 max-w-md pointer-events-auto">
+      <div class="bg-slate-900/95 backdrop-blur-md border border-slate-700/90 rounded-3xl p-5 shadow-2xl space-y-4 animate-in slide-in-from-bottom duration-300">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Résultat Manche</span>
+            <h3 id="res-station-name" class="text-base font-extrabold text-white">Abbesses</h3>
+          </div>
+          <div class="text-right">
+            <span id="res-score-badge" class="font-mono text-xl font-black text-emerald-400">+ 4 230 pts</span>
+            <span id="res-distance-badge" class="block text-[11px] font-bold text-slate-400 font-mono">142 m d'écart</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-400">Précision métrique</span>
+            <span id="res-precision-pct" class="text-emerald-400 font-mono">92 %</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div id="res-precision-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800 text-[11.5px] text-slate-300 leading-relaxed">
+          <span class="font-bold text-white block mb-0.5">Le saviez-vous ?</span>
+          <span id="res-trivia">Station la plus profonde de Paris (36m sous terre), au coeur de Montmartre.</span>
+        </div>
+
+        <button
+          id="btn-next-round"
+          onclick="nextRound()"
+          class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
+        >
+          <span id="btn-next-label">Manche suivante →</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAP SCALE / RULES INDICATOR (BOTTOM LEFT) -->
+    <div class="hidden sm:block absolute bottom-6 left-4 z-10 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3 rounded-2xl text-[11px] space-y-1 max-w-xs pointer-events-auto">
+      <span class="font-bold text-white block text-xs">📏 Barème Métrique Métro</span>
+      <p class="text-slate-400 text-[10.5px]">
+        &lt; 50 m = <strong class="text-emerald-400">5 000 pts (Parfait)</strong><br>
+        150 m = <strong class="text-teal-400">~ 3 800 pts</strong><br>
+        500 m = <strong class="text-amber-400">~ 1 500 pts</strong><br>
+        &gt; 1 500 m = <strong class="text-rose-400">0 pt</strong>
+      </p>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- FINAL SUMMARY MODAL -->
+  <!-- ========================================================================= -->
+  <div id="final-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-6 animate-in zoom-in-95 duration-200">
+      
+      <div class="text-center space-y-2">
+        <span class="text-4xl block">🏆</span>
+        <h2 class="text-2xl font-black text-white tracking-tight">Session Terminée !</h2>
+        <p class="text-xs text-slate-400">Voici le bilan de ta maîtrise du métro parisien</p>
+      </div>
+
+      <!-- Hero Score & Rank Card -->
+      <div class="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-blue-950/40 border border-emerald-500/30 flex items-center justify-between">
+        <div>
+          <span class="text-xs text-slate-400 block font-medium">Score Total</span>
+          <span id="summary-total-score" class="text-3xl font-black text-white font-mono">21 450</span>
+          <span class="text-xs text-slate-400"> / 25 000 pts</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-slate-400 block font-medium">Titre obtenu</span>
+          <span id="summary-rank" class="text-base font-extrabold text-emerald-400 block">👑 RATP Légendaire</span>
+          <span id="summary-avg-dist" class="text-[11px] text-slate-400 font-mono">118 m d'écart moy.</span>
+        </div>
+      </div>
+
+      <!-- Breakdown of 5 rounds -->
+      <div class="space-y-2">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Détail des 5 stations</span>
+        <div id="summary-rounds-list" class="space-y-1.5 text-xs max-h-48 overflow-y-auto pr-1">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex items-center gap-3 pt-2">
+        <button
+          onclick="restartGame()"
+          class="flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/25 transition-all text-center hover:scale-[1.02]"
+        >
+          🔄 Rejouer une partie
+        </button>
+        <a
+          href="index.html"
+          class="py-3.5 px-5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all text-center"
+        >
+          Retour Lab
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    // Official RATP Metro line colors palette
+    const LINE_COLORS = {
+      "1": { bg: "#FFCD00", text: "#111827" },
+      "2": { bg: "#0064B0", text: "#FFFFFF" },
+      "3": { bg: "#999738", text: "#FFFFFF" },
+      "3bis": { bg: "#83C3AD", text: "#111827" },
+      "4": { bg: "#CF009E", text: "#FFFFFF" },
+      "5": { bg: "#FF7E2E", text: "#FFFFFF" },
+      "6": { bg: "#169B62", text: "#FFFFFF" },
+      "7": { bg: "#FA9ABA", text: "#111827" },
+      "7bis": { bg: "#83C3AD", text: "#111827" },
+      "8": { bg: "#E19BDF", text: "#111827" },
+      "9": { bg: "#B6BD00", text: "#111827" },
+      "10": { bg: "#C9910D", text: "#FFFFFF" },
+      "11": { bg: "#704B1C", text: "#FFFFFF" },
+      "12": { bg: "#007852", text: "#FFFFFF" },
+      "13": { bg: "#6EC4E8", text: "#111827" },
+      "14": { bg: "#62259D", text: "#FFFFFF" }
+    };
+
+    // Realistic Paris Metro Stations Database (Verified WGS84 GPS coords)
+    const PARIS_METRO_STATIONS = [
+      {
+        id: "chatelet",
+        name: "Châtelet",
+        coords: [2.3470, 48.8588],
+        lines: ["1", "4", "7", "11", "14"],
+        arrondissement: "1er / 4e Arr.",
+        hint: "Le plus grand nœud souterrain d'Europe, au cœur névralgique de Paris."
+      },
+      {
+        id: "abbesses",
+        name: "Abbesses",
+        coords: [2.3385, 48.8845],
+        lines: ["12"],
+        arrondissement: "18e Arr.",
+        hint: "Station la plus profonde de Paris (36m sous terre), au pied de Montmartre."
+      },
+      {
+        id: "bir_hakeim",
+        name: "Bir-Hakeim (Tour Eiffel)",
+        coords: [2.2900, 48.8539],
+        lines: ["6"],
+        arrondissement: "15e Arr.",
+        hint: "Station aérienne surplombant la Seine, au pied direct de la Tour Eiffel."
+      },
+      {
+        id: "bastille",
+        name: "Bastille",
+        coords: [2.3691, 48.8531],
+        lines: ["1", "5", "8"],
+        arrondissement: "4e / 11e / 12e",
+        hint: "Au bord du Bassin de l'Arsenal et de la Colonne de Juillet."
+      },
+      {
+        id: "place_italie",
+        name: "Place d'Italie",
+        coords: [2.3553, 48.8315],
+        lines: ["5", "6", "7"],
+        arrondissement: "13e Arr.",
+        hint: "Grand rond-point d'où partent les avenues d'Italie et des Gobelins."
+      },
+      {
+        id: "montparnasse",
+        name: "Montparnasse-Bienvenüe",
+        coords: [2.3219, 48.8421],
+        lines: ["4", "6", "12", "13"],
+        arrondissement: "6e / 14e / 15e",
+        hint: "Au pied de la grande tour sombre et de la gare TGV Atlantique."
+      },
+      {
+        id: "concorde",
+        name: "Concorde",
+        coords: [2.3218, 48.8653],
+        lines: ["1", "8", "12"],
+        arrondissement: "1er / 8e Arr.",
+        hint: "Faïences carrelées avec la Déclaration des Droits de l'Homme, obélisque."
+      },
+      {
+        id: "cite",
+        name: "Cité",
+        coords: [2.3456, 48.8550],
+        lines: ["4"],
+        arrondissement: "4e Arr.",
+        hint: "Unique station sur l'Île de la Cité, sous la Préfecture et le Palais de Justice."
+      },
+      {
+        id: "belleville",
+        name: "Belleville",
+        coords: [2.3768, 48.8719],
+        lines: ["2", "11"],
+        arrondissement: "10e / 11e / 19e",
+        hint: "Carrefour populaire et multiculturel au sommet du boulevard."
+      },
+      {
+        id: "nation",
+        name: "Nation",
+        coords: [2.3960, 48.8482],
+        lines: ["1", "2", "6", "9"],
+        arrondissement: "11e / 12e Arr.",
+        hint: "Grand carrefour circulaire de l'est parisien avec la statue du Triomphe de la République."
+      },
+      {
+        id: "gare_du_nord",
+        name: "Gare du Nord",
+        coords: [2.3553, 48.8809],
+        lines: ["4", "5"],
+        arrondissement: "10e Arr.",
+        hint: "Première gare ferroviaire d'Europe en trafic, desservie par l'Eurostar."
+      },
+      {
+        id: "saint_germain",
+        name: "Saint-Germain-des-Prés",
+        coords: [2.3332, 48.8540],
+        lines: ["4"],
+        arrondissement: "6e Arr.",
+        hint: "Quartier des grands cafés littéraires : Café de Flore et Deux Magots."
+      },
+      {
+        id: "arts_et_metiers",
+        name: "Arts et Métiers",
+        coords: [2.3562, 48.8655],
+        lines: ["3", "11"],
+        arrondissement: "3e Arr.",
+        hint: "Ambiance sous-marine Nautilus ornée de plaques de cuivre rivetées."
+      },
+      {
+        id: "opera",
+        name: "Opéra",
+        coords: [2.3323, 48.8714],
+        lines: ["3", "7", "8"],
+        arrondissement: "2e / 9e Arr.",
+        hint: "Face à la somptueuse façade dorée du Palais Garnier."
+      },
+      {
+        id: "trocadero",
+        name: "Trocadéro",
+        coords: [2.2871, 48.8631],
+        lines: ["6", "9"],
+        arrondissement: "16e Arr.",
+        hint: "La plus célèbre vue en surplomb sur la Tour Eiffel et les jardins."
+      },
+      {
+        id: "gambetta",
+        name: "Gambetta",
+        coords: [2.3986, 48.8650],
+        lines: ["3", "3bis"],
+        arrondissement: "20e Arr.",
+        hint: "Face à la Mairie du 20e et à l'entrée haute du cimetière du Père-Lachaise."
+      },
+      {
+        id: "invalides",
+        name: "Invalides",
+        coords: [2.3164, 48.8596],
+        lines: ["8", "13"],
+        arrondissement: "7e Arr.",
+        hint: "Vaste esplanade menant au Dôme doré abritant le tombeau de Napoléon Ier."
+      },
+      {
+        id: "pont_neuf",
+        name: "Pont Neuf",
+        coords: [2.3414, 48.8584],
+        lines: ["7"],
+        arrondissement: "1er Arr.",
+        hint: "Face à la Samaritaine et au plus vieux pont en pierre de Paris."
+      },
+      {
+        id: "gare_de_lyon",
+        name: "Gare de Lyon",
+        coords: [2.3734, 48.8449],
+        lines: ["1", "14"],
+        arrondissement: "12e Arr.",
+        hint: "Gare des départs vers la Méditerranée, tour de l'Horloge et restaurant Le Train Bleu."
+      },
+      {
+        id: "liege",
+        name: "Liège",
+        coords: [2.3270, 48.8800],
+        lines: ["13"],
+        arrondissement: "8e / 9e Arr.",
+        hint: "Station atypique à quais décalés ornée de fresques en céramique de Liège."
+      },
+      {
+        id: "denfert_rochereau",
+        name: "Denfert-Rochereau",
+        coords: [2.3323, 48.8338],
+        lines: ["4", "6"],
+        arrondissement: "14e Arr.",
+        hint: "Le Lion de Belfort et l'entrée mystérieuse des Catacombes de Paris."
+      },
+      {
+        id: "etoile",
+        name: "Charles de Gaulle - Étoile",
+        coords: [2.2950, 48.8738],
+        lines: ["1", "2", "6"],
+        arrondissement: "8e / 16e / 17e",
+        hint: "Sous l'Arc de Triomphe et la tombe du Soldat Inconnu."
+      },
+      {
+        id: "palais_royal",
+        name: "Palais Royal - Musée du Louvre",
+        coords: [2.3364, 48.8625],
+        lines: ["1", "7"],
+        arrondissement: "1er Arr.",
+        hint: "Kiosque des Noctambules en perles de verre colorées de Jean-Michel Othoniel."
+      },
+      {
+        id: "olympiades",
+        name: "Olympiades",
+        coords: [2.3664, 48.8269],
+        lines: ["14"],
+        arrondissement: "13e Arr.",
+        hint: "Au cœur du quartier asiatique et de la dalle des Olympiades."
+      },
+      {
+        id: "cluny_sorbonne",
+        name: "Cluny - La Sorbonne",
+        coords: [2.3444, 48.8517],
+        lines: ["10"],
+        arrondissement: "5e Arr.",
+        hint: "Plafond orné des signatures en mosaïque des grands écrivains du Quartier Latin."
+      }
+    ];
+
+    // Game state
+    let map;
+    let currentRoundIndex = 0;
+    const TOTAL_ROUNDS = 5;
+    let selectedStations = [];
+    let currentGuessLngLat = null;
+    let currentGuessMarker = null;
+    let targetMarker = null;
+    let totalScore = 0;
+    let roundResults = [];
+    let showMetroLines = false;
+
+    // Haversine distance in METERS
+    function getDistanceMeters(coord1, coord2) {
+      const R = 6371e3; // Earth radius in meters
+      const lat1 = (coord1[1] * Math.PI) / 180;
+      const lat2 = (coord2[1] * Math.PI) / 180;
+      const deltaLat = ((coord2[1] - coord1[1]) * Math.PI) / 180;
+      const deltaLng = ((coord2[0] - coord1[0]) * Math.PI) / 180;
+
+      const a =
+        Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return Math.round(R * c);
+    }
+
+    // Precise Metric Score Formula for Paris Metro
+    // < 50m = 5000 pts (Parfait)
+    // 1500m+ = 0 pt
+    function calculateMetroScore(distMeters) {
+      if (distMeters <= 50) return 5000;
+      if (distMeters >= 1500) return 0;
+      const score = Math.round(5000 * Math.exp(-(distMeters - 50) / 380));
+      return Math.max(0, Math.min(5000, score));
+    }
+
+    // Pick 5 random unique stations for a session
+    function pickRandomStations() {
+      const shuffled = [...PARIS_METRO_STATIONS].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, TOTAL_ROUNDS);
+    }
+
+    // Map initialization
+    function initMap() {
+      map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+        center: [2.3488, 48.8534], // Paris Notre-Dame center
+        zoom: 12.8,
+        minZoom: 11.5,
+        maxZoom: 17,
+        attributionControl: false
+      });
+
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+
+      map.on('load', () => {
+        // Source for dashed connection line
+        map.addSource('guess-line', {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: [] }
+        });
+
+        map.addLayer({
+          id: 'guess-line-layer',
+          type: 'line',
+          source: 'guess-line',
+          paint: {
+            'line-color': '#10b981',
+            'line-width': 3,
+            'line-dasharray': [2, 2]
+          }
+        });
+
+        // Click to place a guess marker
+        map.on('click', onMapClick);
+
+        // Start round 1
+        selectedStations = pickRandomStations();
+        loadRound(0);
+      });
+    }
+
+    function onMapClick(e) {
+      // Don't allow click if round already submitted
+      if (document.getElementById('result-drawer').classList.contains('hidden') === false) return;
+
+      currentGuessLngLat = [e.lngLat.lng, e.lngLat.lat];
+
+      if (!currentGuessMarker) {
+        const el = document.createElement('div');
+        el.className = 'w-5 h-5 rounded-full bg-blue-500 border-2 border-white shadow-lg shadow-blue-500/80 animate-bounce cursor-pointer';
+        currentGuessMarker = new maplibregl.Marker({ element: el })
+          .setLngLat(currentGuessLngLat)
+          .addTo(map);
+      } else {
+        currentGuessMarker.setLngLat(currentGuessLngLat);
+      }
+
+      // Enable validate button
+      const btn = document.getElementById('btn-validate');
+      btn.disabled = false;
+    }
+
+    function loadRound(index) {
+      currentRoundIndex = index;
+      const target = selectedStations[index];
+
+      // Update HUD
+      document.getElementById('hud-round').textContent = `${index + 1} / ${TOTAL_ROUNDS}`;
+      document.getElementById('station-name').textContent = target.name;
+      document.getElementById('station-arrondissement').textContent = target.arrondissement;
+      document.getElementById('station-hint').textContent = target.hint;
+
+      // Reset Hint
+      document.getElementById('station-hint').classList.add('hidden');
+      document.getElementById('btn-toggle-hint').innerHTML = "<span>💡 Afficher un indice</span>";
+
+      // Populate line chips
+      const chipsContainer = document.getElementById('station-lines-chips');
+      chipsContainer.innerHTML = target.lines.map(line => {
+        const style = LINE_COLORS[line] || { bg: "#475569", text: "#FFFFFF" };
+        return `
+          <span class="inline-flex items-center justify-center font-extrabold text-[11px] rounded-md px-2 py-0.5 shadow-sm" style="background-color: ${style.bg}; color: ${style.text}; border: 1px solid rgba(0,0,0,0.15)">
+            ${line}
+          </span>
+        `;
+      }).join('');
+
+      // Clear previous markers & line
+      if (currentGuessMarker) {
+        currentGuessMarker.remove();
+        currentGuessMarker = null;
+      }
+      if (targetMarker) {
+        targetMarker.remove();
+        targetMarker = null;
+      }
+      map.getSource('guess-line').setData({ type: 'FeatureCollection', features: [] });
+
+      // Reset buttons
+      document.getElementById('btn-validate').disabled = true;
+      document.getElementById('result-drawer').classList.add('hidden');
+      document.getElementById('floating-action-bar').classList.remove('hidden');
+
+      // Re-center softly on Paris
+      map.flyTo({ center: [2.3488, 48.8534], zoom: 12.8, duration: 800 });
+    }
+
+    function toggleHint() {
+      const hint = document.getElementById('station-hint');
+      const btn = document.getElementById('btn-toggle-hint');
+      if (hint.classList.contains('hidden')) {
+        hint.classList.remove('hidden');
+        btn.innerHTML = "<span>🙈 Masquer l'indice</span>";
+      } else {
+        hint.classList.add('hidden');
+        btn.innerHTML = "<span>💡 Afficher un indice</span>";
+      }
+    }
+
+    function validateGuess() {
+      if (!currentGuessLngLat) return;
+
+      const target = selectedStations[currentRoundIndex];
+      const distMeters = getDistanceMeters(currentGuessLngLat, target.coords);
+      const score = calculateMetroScore(distMeters);
+
+      totalScore += score;
+      document.getElementById('hud-score').textContent = `${totalScore.toLocaleString()} pts`;
+
+      roundResults.push({
+        station: target,
+        guessCoords: currentGuessLngLat,
+        distanceMeters: distMeters,
+        score: score
+      });
+
+      // 1. Draw target marker (Green glowing beacon)
+      const targetEl = document.createElement('div');
+      targetEl.className = 'flex flex-col items-center pointer-events-auto';
+      targetEl.innerHTML = `
+        <div class="px-2 py-0.5 rounded-md bg-emerald-600 text-white font-extrabold text-[10px] shadow-lg border border-emerald-400/50 mb-1 whitespace-nowrap">
+          ${target.name}
+        </div>
+        <div class="w-4 h-4 rounded-full bg-emerald-400 border-2 border-white shadow-lg animate-ping"></div>
+      `;
+      targetMarker = new maplibregl.Marker({ element: targetEl })
+        .setLngLat(target.coords)
+        .addTo(map);
+
+      // 2. Draw line between guess and target
+      map.getSource('guess-line').setData({
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: [currentGuessLngLat, target.coords]
+          }
+        }]
+      });
+
+      // 3. Zoom into the bounding box of guess and target
+      const bounds = new maplibregl.LngLatBounds();
+      bounds.extend(currentGuessLngLat);
+      bounds.extend(target.coords);
+      map.fitBounds(bounds, { padding: 120, maxZoom: 15.5, duration: 1200 });
+
+      // 4. Populate Result Drawer
+      document.getElementById('res-station-name').textContent = target.name;
+      document.getElementById('res-score-badge').textContent = `+ ${score.toLocaleString()} pts`;
+      document.getElementById('res-distance-badge').textContent = `${distMeters} m d'écart`;
+      document.getElementById('res-trivia').textContent = target.hint;
+
+      const pct = Math.max(0, Math.min(100, Math.round((score / 5000) * 100)));
+      document.getElementById('res-precision-pct').textContent = `${pct} %`;
+      document.getElementById('res-precision-bar').style.width = `${pct}%`;
+
+      // Update next button label
+      if (currentRoundIndex + 1 === TOTAL_ROUNDS) {
+        document.getElementById('btn-next-label').textContent = "Voir le bilan final 🏆";
+      } else {
+        document.getElementById('btn-next-label').textContent = "Manche suivante →";
+      }
+
+      // Show result drawer
+      document.getElementById('floating-action-bar').classList.add('hidden');
+      document.getElementById('result-drawer').classList.remove('hidden');
+    }
+
+    function nextRound() {
+      if (currentRoundIndex + 1 < TOTAL_ROUNDS) {
+        loadRound(currentRoundIndex + 1);
+      } else {
+        showFinalSummary();
+      }
+    }
+
+    function showFinalSummary() {
+      document.getElementById('result-drawer').classList.add('hidden');
+      document.getElementById('final-modal').classList.remove('hidden');
+
+      document.getElementById('summary-total-score').textContent = totalScore.toLocaleString();
+
+      const avgDist = Math.round(roundResults.reduce((acc, r) => acc + r.distanceMeters, 0) / TOTAL_ROUNDS);
+      document.getElementById('summary-avg-dist').textContent = `${avgDist} m d'écart moy.`;
+
+      // Rank title
+      let rank = "🚶‍♂️ Piéton Égaré";
+      if (totalScore >= 23000) rank = "👑 RATP Légendaire";
+      else if (totalScore >= 19000) rank = "🧭 Navigo d'Or";
+      else if (totalScore >= 14000) rank = "🚇 Conducteur Émérite";
+      else if (totalScore >= 8000) rank = "🎫 Voyageur Régulier";
+      document.getElementById('summary-rank').textContent = rank;
+
+      // Populate list
+      const listEl = document.getElementById('summary-rounds-list');
+      listEl.innerHTML = roundResults.map((r, idx) => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/50 border border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 font-bold text-[10px] flex items-center justify-center font-mono">
+              ${idx + 1}
+            </span>
+            <div>
+              <span class="font-bold text-white block text-xs">${r.station.name}</span>
+              <span class="text-[10px] text-slate-400 font-mono">${r.distanceMeters} m d'écart</span>
+            </div>
+          </div>
+          <span class="font-mono font-black text-emerald-400 text-xs">
+            + ${r.score} pts
+          </span>
+        </div>
+      `).join('');
+    }
+
+    function restartGame() {
+      document.getElementById('final-modal').classList.add('hidden');
+      totalScore = 0;
+      roundResults = [];
+      document.getElementById('hud-score').textContent = "0 pts";
+      selectedStations = pickRandomStations();
+      loadRound(0);
+    }
+
+    // Toggle simulated metro line guides
+    function toggleMetroLines() {
+      showMetroLines = !showMetroLines;
+      const lbl = document.getElementById('lbl-toggle-lines');
+      lbl.textContent = showMetroLines ? "ON" : "OFF";
+      lbl.className = showMetroLines ? "text-emerald-400 font-mono font-bold" : "text-amber-400 font-mono";
+
+      // If toggled ON, adjust map contrast/brightness for subtle spatial awareness
+      if (showMetroLines) {
+        map.setPaintProperty('background', 'background-color', '#090d16');
+      } else {
+        map.setPaintProperty('background', 'background-color', '#020617');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initMap);
+  </script>
+</body>
+</html>
