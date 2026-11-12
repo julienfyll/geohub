@@ -3,6 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import React, { useState, useEffect, useCallback, useMemo, Suspense } from "react";
+import nextDynamic from "next/dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   BorderPathEntity,
@@ -17,13 +18,26 @@ import {
   validateStep,
   findShortestPath,
 } from "@/lib/games/borderpath/engine";
-import { BorderPathMap, BorderPathMapTheme } from "@/components/game/borderpath/BorderPathMap";
+import { BorderPathMapTheme } from "@/components/game/borderpath/BorderPathMap";
 import { BorderPathHUD } from "@/components/game/borderpath/BorderPathHUD";
 import { BorderPathInput } from "@/components/game/borderpath/BorderPathInput";
 import { BorderPathTargetCard } from "@/components/game/borderpath/BorderPathTargetCard";
 import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathSummaryModal";
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
+
+// Load MapLibre strictly on client side to prevent any SSR / Webpack manifest mismatch
+const BorderPathMap = nextDynamic(
+  () => import("@/components/game/borderpath/BorderPathMap").then((m) => m.BorderPathMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full bg-slate-950 flex items-center justify-center text-slate-500">
+        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    ),
+  }
+);
 
 function BorderPathGame() {
   const searchParams = useSearchParams();
@@ -51,8 +65,10 @@ function BorderPathGame() {
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [showPackModal, setShowPackModal] = useState(false);
 
-  // Active Game State
-  const [session, setSession] = useState<BorderPathSessionInit | null>(null);
+  // Active Game State - Initialized synchronously so UI renders immediately without blocking spinner
+  const [session, setSession] = useState<BorderPathSessionInit>(() =>
+    generateChallenge({ pack, mode })
+  );
   const [visitedEntities, setVisitedEntities] = useState<BorderPathEntity[]>([]);
   const [invalidFlashId, setInvalidFlashId] = useState<string | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<{
@@ -61,14 +77,22 @@ function BorderPathGame() {
   } | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [gaveUp, setGaveUp] = useState(false);
-  const [optimalSolutions, setOptimalSolutions] = useState<string[][]>([]);
+  const [optimalSolutions, setOptimalSolutions] = useState<string[][]>(() => {
+    const initGraph = getPackGraph(pack);
+    const shortest = findShortestPath(
+      session?.startEntity?.id || "",
+      session?.targetEntity?.id || "",
+      initGraph
+    );
+    return shortest.paths;
+  });
 
   // Load graph for current pack
   const graph = useMemo<BorderPathGraph>(() => {
     return getPackGraph(pack);
   }, [pack]);
 
-  // Initialize or restart session
+  // Restart / Re-generate session
   const initGameSession = useCallback(
     (targetPack: BorderPathPack, targetMode: BorderPathMode) => {
       const newSession = generateChallenge({
@@ -84,7 +108,6 @@ function BorderPathGame() {
       setGaveUp(false);
       setShowSummaryModal(false);
 
-      // Pre-compute optimal path for reference
       const shortest = findShortestPath(
         newSession.startEntity.id,
         newSession.targetEntity.id,
@@ -95,17 +118,18 @@ function BorderPathGame() {
     []
   );
 
-  // Init on mount or pack/mode change
+  // When URL query params change (pack or mode), regenerate session
   useEffect(() => {
-    initGameSession(pack, mode);
-  }, [pack, mode, initGameSession]);
+    if (session.pack !== pack || session.mode !== mode) {
+      initGameSession(pack, mode);
+    }
+  }, [pack, mode, session.pack, session.mode, initGameSession]);
 
-  const currentEntity = useMemo<BorderPathEntity | null>(() => {
-    if (!session) return null;
+  const currentEntity = useMemo<BorderPathEntity>(() => {
     return visitedEntities.length > 0
       ? visitedEntities[visitedEntities.length - 1]
       : session.startEntity;
-  }, [session, visitedEntities]);
+  }, [session.startEntity, visitedEntities]);
 
   // Dynamic remaining BFS distance
   const remainingSteps = useMemo(() => {
@@ -148,7 +172,6 @@ function BorderPathGame() {
         text: "🎯 Destination atteinte ! Félicitations !",
         type: "success",
       });
-      // Show summary after slight delay to see map connection
       setTimeout(() => {
         setShowSummaryModal(true);
       }, 1000);
@@ -196,20 +219,9 @@ function BorderPathGame() {
     router.push(`/play/borderpath?pack=${newPack}&mode=${newMode}`);
   };
 
-  if (!session || !currentEntity) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm font-semibold">Génération du défi frontalier...</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-slate-950 select-none">
-      {/* Map layer */}
+      {/* Map layer (Client-only dynamically loaded) */}
       <BorderPathMap
         pack={pack}
         theme={theme}
