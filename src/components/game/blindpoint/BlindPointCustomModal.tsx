@@ -17,7 +17,9 @@ import {
   CheckSquare,
   Square,
   Share2,
-  Zap,
+  Target,
+  Database,
+  GitBranch,
 } from "lucide-react";
 import {
   BlindPointPack,
@@ -115,34 +117,26 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
 }) => {
   const router = useRouter();
 
-  // 1. Packs selection (Multiple checkboxes)
-  const [selectedPacks, setSelectedPacks] = useState<BlindPointPack[]>([initialPack]);
-
-  // Special Metro Mode: Classic vs Retrace le Réseau
-  const [customGameType, setCustomGameType] = useState<"classic" | "retrace">(
+  // Root Segmented Control: Classic Scored Quiz vs Retrace le Réseau (Solution 1)
+  const [activeTab, setActiveTab] = useState<"classic" | "retrace">(
     initialPack === "metro_paris" ? "retrace" : "classic"
   );
+
+  // Retrace le Réseau Dedicated Parameters
   const [tolerance, setTolerance] = useState<string>("300");
   const [selectedLines, setSelectedLines] = useState<string[]>(["1", "4", "6"]);
 
-  // 2. Continent filter (for world targets)
+  // Classic Points Aveugles Parameters
+  const [selectedPacks, setSelectedPacks] = useState<BlindPointPack[]>([initialPack]);
   const [continent, setContinent] = useState<string>("");
-
-  // 3. Difficulty level
   const [difficulty, setDifficulty] = useState<BlindPointDifficulty | "all">(initialDifficulty);
-
-  // 4. Rounds count
   const [roundsCount, setRoundsCount] = useState<number>(5);
-
-  // 5. Timer per round (seconds, 0 = infinite)
   const [timerSeconds, setTimerSeconds] = useState<number>(0);
-
-  // 6. Map layout conditions (soft overrides)
   const [mapTheme, setMapTheme] = useState<BlindPointMapTheme>("dark");
   const [showBorders, setShowBorders] = useState<boolean>(true);
   const [showRoads, setShowRoads] = useState<boolean>(true);
 
-  // 7. Seed & Copy state
+  // Seed & Copy state
   const [seed, setSeed] = useState<string>(() => `custom-${Date.now().toString(36)}`);
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -152,33 +146,30 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
       setSeed(`custom-${Date.now().toString(36)}`);
       setCopied(false);
       if (initialPack === "metro_paris") {
-        setCustomGameType("retrace");
+        setActiveTab("retrace");
       }
     }
   }, [isOpen, initialPack]);
 
   if (!isOpen) return null;
 
-  // Toggle pack in list
+  // Toggle pack in list (Classic mode)
   const togglePack = (packId: BlindPointPack) => {
     setSelectedPacks((prev) => {
       if (prev.includes(packId)) {
         if (prev.length === 1) return prev; // At least one pack required
         return prev.filter((p) => p !== packId);
       } else {
-        const next = [...prev, packId];
-        if (packId === "metro_paris" && prev.length === 0) {
-          setCustomGameType("retrace");
-        }
-        return next;
+        return [...prev, packId];
       }
     });
   };
 
+  // Toggle line in Retrace mode
   const toggleLine = (lineId: string) => {
     setSelectedLines((prev) => {
       if (prev.includes(lineId)) {
-        if (prev.length === 1) return prev;
+        if (prev.length === 1) return prev; // At least one line required
         return prev.filter((l) => l !== lineId);
       } else {
         return [...prev, lineId];
@@ -194,8 +185,8 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
   const buildChallengeUrl = (includeOrigin = true) => {
     const origin = typeof window !== "undefined" && includeOrigin ? window.location.origin : "";
 
-    // If Retrace le Réseau is active on Metro pack
-    if (selectedPacks.includes("metro_paris") && customGameType === "retrace") {
+    // Retrace le Réseau Mode URL
+    if (activeTab === "retrace") {
       let url = `${origin}/play/blindpoint?pack=metro_paris&mode=custom&customType=retrace&tolerance=${tolerance}`;
       if (selectedLines.length > 0 && selectedLines.length < 3) {
         url += `&lines=${selectedLines.join(",")}`;
@@ -204,6 +195,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
       return url;
     }
 
+    // Classic Scored Quiz Mode URL
     const packsStr = selectedPacks.join(",");
     let url = `${origin}/play/blindpoint?mode=custom&packs=${packsStr}&rounds=${roundsCount}`;
     if (timerSeconds > 0) url += `&timer=${timerSeconds}`;
@@ -240,7 +232,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
       }}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200"
     >
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col gap-6 max-h-[92vh] overflow-y-auto select-none">
+      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col gap-5 max-h-[92vh] overflow-y-auto select-none">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -270,171 +262,91 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
           </button>
         </div>
 
-        {/* Section 1: Thématiques combinables */}
-        <div>
-          <div className="flex items-center justify-between mb-2.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-purple-400" />
-              <span>1. Thématiques & Packs à inclure</span>
-            </label>
-            <span className="text-[11px] text-slate-400 font-medium">
-              {selectedPacks.length} sélectionné{selectedPacks.length > 1 ? "s" : ""}
+        {/* Top Segmented Control (Solution 1: Modularity by Root Tabs) */}
+        <div className="grid grid-cols-2 p-1 rounded-2xl bg-slate-950 border border-slate-800">
+          <button
+            type="button"
+            onClick={() => setActiveTab("classic")}
+            className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black transition-all ${
+              activeTab === "classic"
+                ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
+                : "text-slate-400 hover:text-white hover:bg-slate-900/60"
+            }`}
+          >
+            <span>🎯</span>
+            <span>Points Aveugles (Standard)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("retrace")}
+            className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
+              activeTab === "retrace"
+                ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
+                : "text-slate-400 hover:text-white hover:bg-slate-900/60"
+            }`}
+          >
+            <span>🚇</span>
+            <span>Retrace le Réseau (Mini Metro)</span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase ml-1">
+              Nouveau
             </span>
-          </div>
+          </button>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {AVAILABLE_PACKS.map((p) => {
-              const isChecked = selectedPacks.includes(p.id);
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => togglePack(p.id)}
-                  className={`flex items-center justify-between p-3 rounded-2xl border text-left transition-all ${
-                    isChecked
-                      ? "bg-purple-950/30 border-purple-500/60 shadow-md shadow-purple-500/10 text-white"
-                      : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-200"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="text-xl shrink-0">{p.icon}</span>
-                    <div className="truncate">
-                      <p className="text-xs font-bold text-white truncate">{p.name}</p>
-                      <p className="text-[10px] text-slate-400 truncate">{p.countLabel}</p>
-                    </div>
-                  </div>
-                  <div
-                    className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
-                      isChecked
-                        ? "bg-purple-600 border-purple-500 text-white"
-                        : "border-slate-700 bg-slate-900/60 text-transparent"
-                    }`}
-                  >
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Option Spéciale Métro Paris : Choix entre Points Aveugles et Retrace le Réseau */}
-          {selectedPacks.includes("metro_paris") && (
-            <div className="mt-3 p-4 rounded-2xl bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border border-purple-500/40 flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-black uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Mode Spécial Métro de Paris</span>
+        {/* ======================================================== */}
+        {/* TAB 1: POINTS AVEUGLES CLASSIQUE (Multi-packs, Manches) */}
+        {/* ======================================================== */}
+        {activeTab === "classic" && (
+          <div className="flex flex-col gap-5 animate-in fade-in duration-150">
+            {/* Section 1: Thématiques combinables */}
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5 text-purple-400" />
+                  <span>1. Thématiques & Packs à inclure</span>
                 </label>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 font-bold uppercase">
-                  Exclusif RATP
+                <span className="text-[11px] text-slate-400 font-medium">
+                  {selectedPacks.length} sélectionné{selectedPacks.length > 1 ? "s" : ""}
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCustomGameType("classic")}
-                  className={`p-3 rounded-xl border text-left transition-all ${
-                    customGameType === "classic"
-                      ? "bg-purple-600 border-purple-400 text-white shadow-md shadow-purple-600/20"
-                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700"
-                  }`}
-                >
-                  <span className="text-xs font-bold block flex items-center gap-1.5">
-                    <span>🎯</span> Points Aveugles Classique
-                  </span>
-                  <span className="text-[10px] text-slate-200/80 block mt-0.5">
-                    Manches courtes au score métrique standard.
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setCustomGameType("retrace")}
-                  className={`p-3 rounded-xl border text-left transition-all ${
-                    customGameType === "retrace"
-                      ? "bg-purple-600 border-purple-400 text-white shadow-md shadow-purple-600/20"
-                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700"
-                  }`}
-                >
-                  <span className="text-xs font-bold block flex items-center gap-1.5">
-                    <span>🚇</span> Retrace le Réseau (Mini Metro)
-                  </span>
-                  <span className="text-[10px] text-slate-200/80 block mt-0.5">
-                    Illimité • Tracé des lignes, double-voies et sauvegarde.
-                  </span>
-                </button>
+                {AVAILABLE_PACKS.map((p) => {
+                  const isChecked = selectedPacks.includes(p.id);
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => togglePack(p.id)}
+                      className={`flex items-center justify-between p-3 rounded-2xl border text-left transition-all ${
+                        isChecked
+                          ? "bg-purple-950/30 border-purple-500/60 shadow-md shadow-purple-500/10 text-white"
+                          : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="text-xl shrink-0">{p.icon}</span>
+                        <div className="truncate">
+                          <p className="text-xs font-bold text-white truncate">{p.name}</p>
+                          <p className="text-[10px] text-slate-400 truncate">{p.countLabel}</p>
+                        </div>
+                      </div>
+                      <div
+                        className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                          isChecked
+                            ? "bg-purple-600 border-purple-500 text-white"
+                            : "border-slate-700 bg-slate-900/60 text-transparent"
+                        }`}
+                      >
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
-
-              {/* Si Retrace le Réseau est actif : Réglage de tolérance et sélection de lignes */}
-              {customGameType === "retrace" && (
-                <div className="pt-2 border-t border-purple-500/20 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-300 mb-1.5 block">
-                      Tolérance d'ancrage réglable :
-                    </label>
-                    <div className="grid grid-cols-5 gap-1 text-[11px]">
-                      {[
-                        { id: "chill", label: "Chill" },
-                        { id: "500", label: "500m" },
-                        { id: "300", label: "300m" },
-                        { id: "150", label: "150m" },
-                        { id: "75", label: "75m" },
-                      ].map((t) => (
-                        <button
-                          key={t.id}
-                          type="button"
-                          onClick={() => setTolerance(t.id)}
-                          className={`py-1.5 px-0.5 rounded-lg border font-bold text-center transition-all ${
-                            tolerance === t.id
-                              ? "bg-amber-500 border-amber-400 text-slate-950 font-black shadow-sm"
-                              : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white"
-                          }`}
-                        >
-                          {t.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-300 mb-1.5 block">
-                      Lignes à retracer :
-                    </label>
-                    <div className="flex items-center gap-1.5">
-                      {[
-                        { id: "1", label: "L1", color: "#FFCD00", text: "#111827" },
-                        { id: "4", label: "L4", color: "#CF009E", text: "#FFFFFF" },
-                        { id: "6", label: "L6", color: "#169B62", text: "#FFFFFF" },
-                      ].map((l) => {
-                        const isSelected = selectedLines.includes(l.id);
-                        return (
-                          <button
-                            key={l.id}
-                            type="button"
-                            onClick={() => toggleLine(l.id)}
-                            style={{
-                              backgroundColor: isSelected ? l.color : "#1e293b",
-                              color: isSelected ? l.text : "#94a3b8",
-                              borderColor: isSelected ? l.color : "#334155",
-                            }}
-                            className="flex-1 py-1.5 rounded-lg border font-black text-xs text-center transition-all shadow-sm"
-                          >
-                            {l.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
-          )}
-        </div>
 
-        {/* Sections standard cachées si Mode Retrace le Réseau actif */}
-        {!(selectedPacks.includes("metro_paris") && customGameType === "retrace") && (
-          <>
             {/* Section 2: Filtre Continent (si au moins 1 pack monde coché) */}
             {hasWorldPack && (
               <div className="animate-in fade-in slide-in-from-top-1 duration-150">
@@ -484,12 +396,12 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
                     onChange={(e) => setRoundsCount(parseInt(e.target.value, 10))}
                     className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
                   />
-                  <div className="flex justify-between items-center text-[10px] text-slate-500">
-                    <span className="font-mono">3 min</span>
+                  <div className="flex justify-between items-center text-[10px] text-slate-500 font-mono">
+                    <span>3 min</span>
                     <span className="text-slate-400 font-medium">
                       Max : {(roundsCount * 5000).toLocaleString("fr-FR")} pts
                     </span>
-                    <span className="font-mono">50 max</span>
+                    <span>50 max</span>
                   </div>
                 </div>
               </div>
@@ -614,7 +526,182 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
                 </div>
               </div>
             </div>
-          </>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* TAB 2: RETRACE LE RÉSEAU (Mini Metro, Lignes, Tolérance) */}
+        {/* ======================================================== */}
+        {activeTab === "retrace" && (
+          <div className="flex flex-col gap-5 animate-in fade-in duration-150">
+            {/* Hero Banner */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-950/50 via-slate-900 to-indigo-950/50 border border-purple-500/40 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                  🚇
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-white">Retrace le Réseau — Métro de Paris</h3>
+                  <p className="text-[11px] text-slate-300 mt-0.5">
+                    Placez les stations sur le plan aveugle : dès que deux arrêts se connectent, les rails s'illuminent en double voie officielle RATP.
+                  </p>
+                </div>
+              </div>
+              <span className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-black uppercase shrink-0">
+                Mode Illimité
+              </span>
+            </div>
+
+            {/* Section: Lignes à inclure */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <GitBranch className="w-3.5 h-3.5 text-purple-400" />
+                  <span>1. Lignes du Réseau à Retracer</span>
+                </label>
+                <span className="text-[11px] text-slate-400 font-medium">
+                  {selectedLines.length} ligne{selectedLines.length > 1 ? "s" : ""} active{selectedLines.length > 1 ? "s" : ""}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {/* Ligne 1 */}
+                <button
+                  type="button"
+                  onClick={() => toggleLine("1")}
+                  className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between shadow-sm ${
+                    selectedLines.includes("1")
+                      ? "bg-amber-500/10 border-amber-500 text-white"
+                      : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-6 h-6 rounded-full bg-[#FFCD00] text-slate-950 font-black text-xs flex items-center justify-center shadow-sm">
+                      1
+                    </span>
+                    <div>
+                      <span className="text-xs font-bold block">Ligne 1</span>
+                      <span className="text-[10px] text-slate-400 block">Défense ↔ Vincennes</span>
+                    </div>
+                  </div>
+                  {selectedLines.includes("1") && (
+                    <Check className="w-4 h-4 text-amber-400 stroke-[3]" />
+                  )}
+                </button>
+
+                {/* Ligne 4 */}
+                <button
+                  type="button"
+                  onClick={() => toggleLine("4")}
+                  className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between shadow-sm ${
+                    selectedLines.includes("4")
+                      ? "bg-pink-500/10 border-pink-500 text-white"
+                      : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-6 h-6 rounded-full bg-[#CF009E] text-white font-black text-xs flex items-center justify-center shadow-sm">
+                      4
+                    </span>
+                    <div>
+                      <span className="text-xs font-bold block">Ligne 4</span>
+                      <span className="text-[10px] text-slate-400 block">Nord ↔ Sud (Châtelet)</span>
+                    </div>
+                  </div>
+                  {selectedLines.includes("4") && (
+                    <Check className="w-4 h-4 text-pink-400 stroke-[3]" />
+                  )}
+                </button>
+
+                {/* Ligne 6 */}
+                <button
+                  type="button"
+                  onClick={() => toggleLine("6")}
+                  className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between shadow-sm ${
+                    selectedLines.includes("6")
+                      ? "bg-emerald-500/10 border-emerald-500 text-white"
+                      : "bg-slate-950/40 border-slate-800/80 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-6 h-6 rounded-full bg-[#169B62] text-white font-black text-xs flex items-center justify-center shadow-sm">
+                      6
+                    </span>
+                    <div>
+                      <span className="text-xs font-bold block">Ligne 6</span>
+                      <span className="text-[10px] text-slate-400 block">Étoile ↔ Nation</span>
+                    </div>
+                  </div>
+                  {selectedLines.includes("6") && (
+                    <Check className="w-4 h-4 text-emerald-400 stroke-[3]" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Section: Tolérance d'ancrage & Sauvegarde */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Tolérance */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                    <Target className="w-3.5 h-3.5 text-amber-400" />
+                    <span>2. Tolérance d'Ancrage</span>
+                  </label>
+                  <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 font-extrabold text-xs">
+                    {tolerance === "chill"
+                      ? "Chill (Libre)"
+                      : `${tolerance} m ${tolerance === "300" ? "(Standard)" : ""}`}
+                  </span>
+                </div>
+                <div className="grid grid-cols-5 gap-1 text-[11px]">
+                  {[
+                    { id: "chill", label: "Chill" },
+                    { id: "500", label: "500m" },
+                    { id: "300", label: "300m" },
+                    { id: "150", label: "150m" },
+                    { id: "75", label: "75m" },
+                  ].map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setTolerance(t.id)}
+                      className={`py-2 px-1 rounded-xl border text-[11px] font-bold text-center transition-all ${
+                        tolerance === t.id
+                          ? "bg-amber-500 border-amber-400 text-slate-950 font-black shadow-sm"
+                          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1 block">
+                  Distance maximale acceptée pour valider l'arrêt
+                </span>
+              </div>
+
+              {/* Persistance locale */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
+                  <Database className="w-3.5 h-3.5 text-blue-400" />
+                  <span>3. Sauvegarde & Reprise</span>
+                </label>
+                <div className="p-2.5 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-white block">Progression Locale</span>
+                    <span className="text-[10px] text-slate-400">Auto-sauvegardé sur cet appareil</span>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[10px] font-extrabold uppercase">
+                    Actif
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1 block">
+                  Reprenez votre tracé à tout moment sans perte
+                </span>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Section 5: Link Preview & Action CTAs */}
@@ -665,7 +752,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
             >
               <Play className="w-4 h-4 fill-white" />
               <span>
-                {selectedPacks.includes("metro_paris") && customGameType === "retrace"
+                {activeTab === "retrace"
                   ? "🚇 Lancer Retrace le Réseau"
                   : `Lancer le Défi (${roundsCount} Manches)`}
               </span>
