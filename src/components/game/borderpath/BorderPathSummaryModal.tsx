@@ -12,7 +12,6 @@ import {
   Share2,
   Check,
   RotateCcw,
-  Compass,
   ArrowRight,
   X,
   Flag,
@@ -26,7 +25,8 @@ interface BorderPathSummaryModalProps {
   mode: BorderPathMode;
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
-  visitedEntities: BorderPathEntity[];
+  fullConnectedPath: BorderPathEntity[];
+  totalAttempts: number;
   minOptimalSteps: number;
   optimalSolutions?: string[][];
   allEntities: Record<string, BorderPathEntity>;
@@ -42,7 +42,8 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   mode,
   startEntity,
   targetEntity,
-  visitedEntities,
+  fullConnectedPath,
+  totalAttempts,
   minOptimalSteps,
   optimalSolutions = [],
   allEntities,
@@ -54,22 +55,27 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
 
   if (!isOpen) return null;
 
-  const totalSteps = visitedEntities.length;
-  const delta = totalSteps - minOptimalSteps;
+  const delta = totalAttempts - minOptimalSteps;
   const isPerfect = !gaveUp && delta <= 0;
+  const score = gaveUp
+    ? 0
+    : Math.max(1000, Math.round(10000 - Math.max(0, delta) * 1500));
+
+  const optimalCountriesCount = minOptimalSteps + 1;
+  const userCountriesCount = fullConnectedPath.length > 0 ? fullConnectedPath.length : totalAttempts + 1;
 
   // Generate shareable text
   const handleShare = () => {
     const today = new Date().toISOString().slice(0, 10);
     const packEmoji = pack === "france_departements" ? "🇫🇷" : "🌍";
 
-    const emojiRow = visitedEntities
-      .map((_, i) => (i < minOptimalSteps ? "🟢" : "🟡"))
+    const emojiRow = fullConnectedPath
+      .map((_, i) => (i < optimalCountriesCount ? "🟢" : "🟡"))
       .join("");
 
     const text = `BorderPath #${today} ${packEmoji}
 ${startEntity.flagEmoji || "🏁"} ${startEntity.name} ➔ ${targetEntity.flagEmoji || "🎯"} ${targetEntity.name}
-Score : ${gaveUp ? "Abandonné" : `${totalSteps} étapes (Optimal : ${minOptimalSteps})`}
+Score : ${gaveUp ? "Abandonné" : `${score} pts • ${userCountriesCount} pays (Optimal : ${optimalCountriesCount})`}
 ${emojiRow}
 
 Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
@@ -121,35 +127,47 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            {gaveUp ? "Solution Révélée" : isPerfect ? "Parcours Parfait !" : "Mission Accomplie !"}
+            {gaveUp ? "Solution Révélée" : isPerfect ? "Parcours Parfait !" : "Jonction Réussie !"}
           </h2>
 
           <p className="text-sm text-slate-400 mt-1 max-w-sm">
             {gaveUp
               ? "Voici l'itinéraire optimal pour relier ces deux territoires."
               : isPerfect
-              ? "Score optimal absolu ! Vous avez trouvé le chemin le plus court."
-              : `Vous avez relié ${startEntity.name} à ${targetEntity.name} en ${totalSteps} étapes.`}
+              ? `Score optimal absolu ! Vous avez relié les deux rives en ${totalAttempts} maillons.`
+              : `Vous avez relié ${startEntity.name} et ${targetEntity.name} en ${userCountriesCount} pays.`}
           </p>
+
+          {!gaveUp && (
+            <div className="mt-3 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 font-extrabold text-base">
+              Score : {score.toLocaleString("fr-FR")} / 10 000 pts
+            </div>
+          )}
         </div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid: Compared against Optimal */}
         <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 text-center">
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Vos Étapes
+              Vos Pays
             </span>
             <span className="text-2xl font-mono font-extrabold text-white mt-0.5">
-              {gaveUp ? "—" : totalSteps}
+              {gaveUp ? "—" : userCountriesCount}
+            </span>
+            <span className="text-[10px] text-slate-500 mt-0.5">
+              {gaveUp ? "" : `${totalAttempts} maillons`}
             </span>
           </div>
 
           <div className="flex flex-col items-center border-x border-slate-700/60">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Optimal (BFS)
+              Trajet Optimal
             </span>
             <span className="text-2xl font-mono font-extrabold text-emerald-400 mt-0.5">
-              {minOptimalSteps}
+              {optimalCountriesCount}
+            </span>
+            <span className="text-[10px] text-emerald-500/80 mt-0.5">
+              {minOptimalSteps} maillons
             </span>
           </div>
 
@@ -170,23 +188,31 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
             >
               {gaveUp ? "—" : delta <= 0 ? "0 (Par)" : `+${delta}`}
             </span>
+            <span className="text-[10px] text-slate-500 mt-0.5">
+              {gaveUp ? "" : delta <= 0 ? "Sans détour" : "Détours"}
+            </span>
           </div>
         </div>
 
-        {/* User Corridor Path */}
-        {!gaveUp && visitedEntities.length > 0 && (
+        {/* User Reconstructed Corridor Path */}
+        {!gaveUp && fullConnectedPath.length > 0 && (
           <div className="flex flex-col gap-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Votre corridor emprunté :
+              Votre corridor complet reconstitué ({fullConnectedPath.length} pays) :
             </span>
             <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
-              <span className="px-2 py-1 rounded-lg bg-cyan-950 border border-cyan-500/40 text-cyan-300 font-bold">
-                {startEntity.flagEmoji} {startEntity.name}
-              </span>
-              {visitedEntities.map((e) => (
-                <React.Fragment key={e.id}>
-                  <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-                  <span className="px-2 py-1 rounded-lg bg-emerald-950 border border-emerald-500/40 text-emerald-300 font-medium">
+              {fullConnectedPath.map((e, idx) => (
+                <React.Fragment key={`corridor-${e.id}`}>
+                  {idx > 0 && <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />}
+                  <span
+                    className={`px-2 py-1 rounded-lg border font-medium ${
+                      idx === 0
+                        ? "bg-cyan-950 border-cyan-500/40 text-cyan-300 font-bold"
+                        : idx === fullConnectedPath.length - 1
+                        ? "bg-amber-950 border-amber-500/40 text-amber-300 font-bold"
+                        : "bg-emerald-950 border-emerald-500/40 text-emerald-300"
+                    }`}
+                  >
                     {e.flagEmoji} {e.name}
                   </span>
                 </React.Fragment>
@@ -200,13 +226,13 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
           <div className="flex flex-col gap-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Chemin le plus court ({minOptimalSteps} frontières) :</span>
+              <span>Chemin le plus court ({optimalCountriesCount} pays) :</span>
             </span>
             <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
               {optimalSolutions[0].map((id, idx) => {
                 const entity = allEntities[id];
                 return (
-                  <React.Fragment key={id}>
+                  <React.Fragment key={`opt-${id}`}>
                     {idx > 0 && <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />}
                     <span className="px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 font-medium">
                       {entity?.flagEmoji} {entity?.name || id}

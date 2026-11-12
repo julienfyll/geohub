@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPackGraph, validateStep, findShortestPath } from "@/lib/games/borderpath/engine";
+import {
+  getPackGraph,
+  validateStep,
+  validateBidirectionalStep,
+  findShortestPath,
+} from "@/lib/games/borderpath/engine";
 import { BorderPathPack } from "@/lib/games/borderpath/types";
 
 export const dynamic = "force-dynamic";
@@ -7,19 +12,53 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { currentId, candidateId, targetId, visitedIds = [], pack = "monde" } = body;
+    const {
+      candidateId,
+      branchAIds,
+      branchBIds,
+      currentId,
+      targetId,
+      visitedIds = [],
+      pack = "monde",
+    } = body;
 
+    const graph = getPackGraph(pack as BorderPathPack);
+
+    // Bidirectional mode validation
+    if (branchAIds && branchBIds && candidateId) {
+      const result = validateBidirectionalStep(
+        candidateId,
+        branchAIds,
+        branchBIds,
+        graph
+      );
+
+      let optimalSolutions: string[][] = [];
+      if (result.isComplete) {
+        const startId = branchAIds[0];
+        const endId = branchBIds[0];
+        const shortest = findShortestPath(startId, endId, graph);
+        optimalSolutions = shortest.paths.slice(0, 3);
+      }
+
+      return NextResponse.json({
+        success: true,
+        result,
+        optimalSolutions,
+      });
+    }
+
+    // Classic single-directed fallback
     if (!currentId || !candidateId || !targetId) {
       return NextResponse.json(
         {
           success: false,
-          error: "Paramètres manquants : currentId, candidateId et targetId sont requis.",
+          error: "Paramètres manquants : candidateId et soit (branchAIds, branchBIds), soit (currentId, targetId) sont requis.",
         },
         { status: 400 }
       );
     }
 
-    const graph = getPackGraph(pack as BorderPathPack);
     const stepResult = validateStep(
       currentId,
       candidateId,
@@ -30,7 +69,6 @@ export async function POST(request: NextRequest) {
 
     let optimalSolutions: string[][] = [];
     if (stepResult.isComplete) {
-      // Return the optimal shortest paths from original start to target for post-game comparison
       const startId = visitedIds[0] || currentId;
       const shortest = findShortestPath(startId, targetId, graph);
       optimalSolutions = shortest.paths.slice(0, 3);

@@ -44,6 +44,19 @@ export interface BorderPathStepResult {
   message?: string;
 }
 
+export interface BorderPathBidirectionalStepResult {
+  valid: boolean;
+  attachedTo?: "branchA" | "branchB" | "bridge";
+  alreadyVisited: boolean;
+  isComplete: boolean;
+  newHeadAId: string;
+  newHeadBId: string;
+  minRemainingDistance: number;
+  totalAttempts: number;
+  fullConnectedPath?: string[];
+  message?: string;
+}
+
 export interface BorderPathSessionInit {
   sessionId: string;
   pack: BorderPathPack;

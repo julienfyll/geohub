@@ -24,7 +24,11 @@ interface BorderPathHUDProps {
   mode: BorderPathMode;
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
-  visitedEntities: BorderPathEntity[];
+  headA: BorderPathEntity;
+  headB: BorderPathEntity;
+  branchAEntities: BorderPathEntity[];
+  branchBEntities: BorderPathEntity[];
+  remainingSteps: number;
   theme: BorderPathMapTheme;
   hideBorders: boolean;
   onToggleTheme: () => void;
@@ -39,7 +43,11 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   mode,
   startEntity,
   targetEntity,
-  visitedEntities,
+  headA,
+  headB,
+  branchAEntities = [],
+  branchBEntities = [],
+  remainingSteps = 0,
   theme,
   hideBorders,
   onToggleTheme,
@@ -56,9 +64,11 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
     afrique: "Afrique",
   };
 
+  const hasMoves = (branchAEntities?.length || 0) > 1 || (branchBEntities?.length || 0) > 1;
+
   return (
     <div className="absolute top-0 left-0 right-0 p-3 sm:p-4 z-20 pointer-events-none flex flex-col gap-2.5">
-      {/* Top Bar: Platform Header + Target Corridor + Quick Controls */}
+      {/* Top Bar: Platform Header + Mission Corridor + Quick Controls */}
       <div className="flex items-center justify-between gap-3 w-full max-w-7xl mx-auto">
         {/* Left: Platform Logo & Mode Badge */}
         <div className="pointer-events-auto flex items-center gap-2">
@@ -84,17 +94,17 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
           </div>
         </div>
 
-        {/* Center: Mission Corridor Badge (Start -> Target) - Single clean source of truth */}
+        {/* Center: Mission Corridor Badge (Active Front A -> Active Front B) */}
         <div className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 shadow-2xl backdrop-blur-xl">
-          {/* Start Pill */}
+          {/* Front A Pill */}
           <div className="flex items-center gap-1.5">
-            <span className="text-base sm:text-lg">{startEntity.flagEmoji || "🏁"}</span>
+            <span className="text-base sm:text-lg">{headA.flagEmoji || "🏁"}</span>
             <div className="flex flex-col">
               <span className="text-[10px] font-bold uppercase text-cyan-400 tracking-wider">
-                Départ
+                {headA.id === startEntity.id ? "Départ" : "Front Départ"}
               </span>
               <span className="font-extrabold text-xs sm:text-sm text-white leading-tight">
-                {startEntity.name}
+                {headA.name}
               </span>
             </div>
           </div>
@@ -103,15 +113,15 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
 
-          {/* Target Pill */}
+          {/* Front B Pill */}
           <div className="flex items-center gap-1.5">
-            <span className="text-base sm:text-lg">{targetEntity.flagEmoji || "🎯"}</span>
+            <span className="text-base sm:text-lg">{headB.flagEmoji || "🎯"}</span>
             <div className="flex flex-col">
               <span className="text-[10px] font-bold uppercase text-amber-400 tracking-wider">
-                Arrivée
+                {headB.id === targetEntity.id ? "Arrivée" : "Front Arrivée"}
               </span>
               <span className="font-extrabold text-xs sm:text-sm text-white leading-tight">
-                {targetEntity.name}
+                {headB.name}
               </span>
             </div>
           </div>
@@ -175,25 +185,19 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
         </div>
       </div>
 
-      {/* Corridor Breadcrumb Trail - ONLY shown once the player has started moving */}
-      {visitedEntities.length > 0 && (
+      {/* Corridor Breadcrumb Trail - Displays the marching fronts when moves have started */}
+      {hasMoves && (
         <div className="pointer-events-auto flex items-center justify-center overflow-x-auto py-1 px-3 max-w-4xl mx-auto scrollbar-none animate-slide-down">
           <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/80 border border-slate-800/80 backdrop-blur-md shadow-xl text-xs">
-            {/* Start entity badge */}
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 font-bold shrink-0">
-              <span>{startEntity.flagEmoji || "🏁"}</span>
-              <span>{startEntity.name}</span>
-            </div>
-
-            {/* Visited Steps */}
-            {visitedEntities.map((e, idx) => (
-              <React.Fragment key={e.id}>
-                <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
+            {/* Branch A sequence */}
+            {branchAEntities.map((e, idx) => (
+              <React.Fragment key={`a-${e.id}`}>
+                {idx > 0 && <ArrowRight className="w-3 h-3 text-cyan-600 shrink-0" />}
                 <div
                   className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border shrink-0 ${
-                    idx === visitedEntities.length - 1
-                      ? "bg-blue-950/90 border-blue-400 text-white font-extrabold ring-2 ring-blue-500/30"
-                      : "bg-emerald-950/80 border-emerald-500/40 text-emerald-300 font-medium"
+                    idx === branchAEntities.length - 1
+                      ? "bg-cyan-950/90 border-cyan-400 text-white font-extrabold ring-2 ring-cyan-500/30"
+                      : "bg-cyan-950/60 border-cyan-800 text-cyan-300 font-medium"
                   }`}
                 >
                   <span>{e.flagEmoji || "📍"}</span>
@@ -202,16 +206,34 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
               </React.Fragment>
             ))}
 
-            {/* Target indicator if not yet reached */}
-            {visitedEntities.every((e) => e.id !== targetEntity.id) && (
-              <>
-                <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
-                <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-400 font-bold shrink-0 opacity-70">
-                  <span>{targetEntity.flagEmoji || "🎯"}</span>
-                  <span>{targetEntity.name}</span>
-                </div>
-              </>
-            )}
+            {/* Gap indicator */}
+            <div className="px-2 py-1 text-slate-500 font-mono text-[11px] font-bold shrink-0 flex items-center gap-1">
+              <span>···</span>
+              {remainingSteps > 0 && (
+                <span className="text-amber-400 text-[10px]">~{remainingSteps} fr.</span>
+              )}
+              <span>···</span>
+            </div>
+
+            {/* Branch B sequence (displayed in reverse order, marching inwards) */}
+            {branchBEntities
+              .slice()
+              .reverse()
+              .map((e, idx) => (
+                <React.Fragment key={`b-${e.id}`}>
+                  {idx > 0 && <ArrowRight className="w-3 h-3 text-amber-600 shrink-0" />}
+                  <div
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border shrink-0 ${
+                      idx === 0
+                        ? "bg-amber-950/90 border-amber-400 text-white font-extrabold ring-2 ring-amber-500/30"
+                        : "bg-amber-950/60 border-amber-800 text-amber-300 font-medium"
+                    }`}
+                  >
+                    <span>{e.flagEmoji || "📍"}</span>
+                    <span>{e.name}</span>
+                  </div>
+                </React.Fragment>
+              ))}
           </div>
         </div>
       )}

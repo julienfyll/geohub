@@ -15,7 +15,7 @@ import {
 import {
   getPackGraph,
   generateChallenge,
-  validateStep,
+  validateBidirectionalStep,
   findShortestPath,
 } from "@/lib/games/borderpath/engine";
 import { BorderPathMapTheme } from "@/components/game/borderpath/BorderPathMap";
@@ -69,7 +69,19 @@ function BorderPathGame() {
   const [session, setSession] = useState<BorderPathSessionInit>(() =>
     generateChallenge({ pack, mode })
   );
-  const [visitedEntities, setVisitedEntities] = useState<BorderPathEntity[]>([]);
+
+  // Bidirectional branches: Branch A (from Start) and Branch B (from Target)
+  const [branchAEntities, setBranchAEntities] = useState<BorderPathEntity[]>(() => [
+    session.startEntity,
+  ]);
+  const [branchBEntities, setBranchBEntities] = useState<BorderPathEntity[]>(() => [
+    session.targetEntity,
+  ]);
+  const [moveHistory, setMoveHistory] = useState<
+    { entity: BorderPathEntity; branch: "A" | "B" }[]
+  >([]);
+  const [fullConnectedPath, setFullConnectedPath] = useState<BorderPathEntity[]>([]);
+
   const [invalidFlashId, setInvalidFlashId] = useState<string | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<{
     text: string;
@@ -77,6 +89,8 @@ function BorderPathGame() {
   } | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [gaveUp, setGaveUp] = useState(false);
+
+  // Precomputed optimal solutions
   const [optimalSolutions, setOptimalSolutions] = useState<string[][]>(() => {
     const initGraph = getPackGraph(pack);
     const shortest = findShortestPath(
@@ -92,6 +106,15 @@ function BorderPathGame() {
     return getPackGraph(pack);
   }, [pack]);
 
+  // Active heads for each front
+  const headA = useMemo<BorderPathEntity>(() => {
+    return branchAEntities[branchAEntities.length - 1] || session.startEntity;
+  }, [branchAEntities, session.startEntity]);
+
+  const headB = useMemo<BorderPathEntity>(() => {
+    return branchBEntities[branchBEntities.length - 1] || session.targetEntity;
+  }, [branchBEntities, session.targetEntity]);
+
   // Restart / Re-generate session
   const initGameSession = useCallback(
     (targetPack: BorderPathPack, targetMode: BorderPathMode) => {
@@ -101,7 +124,10 @@ function BorderPathGame() {
       });
 
       setSession(newSession);
-      setVisitedEntities([]);
+      setBranchAEntities([newSession.startEntity]);
+      setBranchBEntities([newSession.targetEntity]);
+      setMoveHistory([]);
+      setFullConnectedPath([]);
       setInvalidFlashId(null);
       setFeedbackMessage(null);
       setIsComplete(false);
@@ -125,30 +151,28 @@ function BorderPathGame() {
     }
   }, [pack, mode, session.pack, session.mode, initGameSession]);
 
-  const currentEntity = useMemo<BorderPathEntity>(() => {
-    return visitedEntities.length > 0
-      ? visitedEntities[visitedEntities.length - 1]
-      : session.startEntity;
-  }, [session.startEntity, visitedEntities]);
-
-  // Dynamic remaining BFS distance
+  // Remaining BFS distance between Head A and Head B
   const remainingSteps = useMemo(() => {
-    if (!currentEntity || !session) return 0;
-    if (currentEntity.id === session.targetEntity.id) return 0;
-    const shortest = findShortestPath(currentEntity.id, session.targetEntity.id, graph);
+    if (isComplete) return 0;
+    if (headA.id === headB.id) return 0;
+    const shortest = findShortestPath(headA.id, headB.id, graph);
     return shortest.found ? shortest.distance : -1;
-  }, [currentEntity, session, graph]);
+  }, [headA.id, headB.id, graph, isComplete]);
 
-  // Handle player candidate selection
+  // Total attempts / intermediate countries placed
+  const totalAttempts = branchAEntities.length + branchBEntities.length - 2;
+
+  // Handle player candidate selection (Bidirectional)
   const handleSelectCandidate = (candidate: BorderPathEntity) => {
-    if (!session || !currentEntity || isComplete || gaveUp) return;
+    if (isComplete || gaveUp) return;
 
-    const visitedIds = [session.startEntity.id, ...visitedEntities.map((e) => e.id)];
-    const result = validateStep(
-      currentEntity.id,
+    const branchAIds = branchAEntities.map((e) => e.id);
+    const branchBIds = branchBEntities.map((e) => e.id);
+
+    const result = validateBidirectionalStep(
       candidate.id,
-      session.targetEntity.id,
-      visitedIds,
+      branchAIds,
+      branchBIds,
       graph
     );
 
@@ -162,22 +186,34 @@ function BorderPathGame() {
       return;
     }
 
-    // Step is valid
-    const updated = [...visitedEntities, candidate];
-    setVisitedEntities(updated);
+    // Candidate is valid
+    if (result.attachedTo === "branchA") {
+      setBranchAEntities((prev) => [...prev, candidate]);
+      setMoveHistory((prev) => [...prev, { entity: candidate, branch: "A" }]);
+    } else if (result.attachedTo === "branchB") {
+      setBranchBEntities((prev) => [...prev, candidate]);
+      setMoveHistory((prev) => [...prev, { entity: candidate, branch: "B" }]);
+    } else if (result.attachedTo === "bridge") {
+      setBranchAEntities((prev) => [...prev, candidate]);
+      setMoveHistory((prev) => [...prev, { entity: candidate, branch: "A" }]);
+    }
 
-    if (result.isComplete) {
+    if (result.isComplete && result.fullConnectedPath) {
       setIsComplete(true);
+      const fullPathEntities = result.fullConnectedPath
+        .map((id) => graph[id])
+        .filter(Boolean);
+      setFullConnectedPath(fullPathEntities);
       setFeedbackMessage({
-        text: "🎯 Destination atteinte ! Félicitations !",
+        text: result.message || "🎯 Jonction réussie ! Félicitations !",
         type: "success",
       });
       setTimeout(() => {
         setShowSummaryModal(true);
-      }, 1000);
+      }, 1200);
     } else {
       setFeedbackMessage({
-        text: result.message || `Frontière franchie : ${candidate.name}`,
+        text: result.message || `Maillon posé : ${candidate.name}`,
         type: "info",
       });
       setTimeout(() => setFeedbackMessage(null), 3500);
@@ -186,10 +222,19 @@ function BorderPathGame() {
 
   // Undo last step
   const handleUndoLastStep = () => {
-    if (visitedEntities.length === 0 || isComplete) return;
-    setVisitedEntities((prev) => prev.slice(0, prev.length - 1));
+    if (moveHistory.length === 0 || isComplete) return;
+
+    const lastMove = moveHistory[moveHistory.length - 1];
+    setMoveHistory((prev) => prev.slice(0, -1));
+
+    if (lastMove.branch === "A") {
+      setBranchAEntities((prev) => prev.slice(0, -1));
+    } else {
+      setBranchBEntities((prev) => prev.slice(0, -1));
+    }
+
     setFeedbackMessage({
-      text: "Étape précédente rétablie",
+      text: `Dernier maillon annulé (${lastMove.entity.name})`,
       type: "info",
     });
     setTimeout(() => setFeedbackMessage(null), 2000);
@@ -197,7 +242,12 @@ function BorderPathGame() {
 
   // Give Up
   const handleGiveUp = () => {
-    if (!session || isComplete) return;
+    if (isComplete) return;
+    const shortest = findShortestPath(session.startEntity.id, session.targetEntity.id, graph);
+    if (shortest.found && shortest.paths.length > 0) {
+      const fullEntities = shortest.paths[0].map((id) => graph[id]).filter(Boolean);
+      setFullConnectedPath(fullEntities);
+    }
     setGaveUp(true);
     setIsComplete(true);
     setShowSummaryModal(true);
@@ -219,31 +269,38 @@ function BorderPathGame() {
     router.push(`/play/borderpath?pack=${newPack}&mode=${newMode}`);
   };
 
+  const visitedIds = [
+    ...branchAEntities.map((e) => e.id),
+    ...branchBEntities.map((e) => e.id),
+  ];
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-slate-950 select-none">
-      {/* Map layer (Client-only dynamically loaded) */}
+      {/* Map layer (Client-only dynamically loaded) - Zero click interaction */}
       <BorderPathMap
         pack={pack}
         theme={theme}
         hideBorders={hideBorders}
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
-        visitedEntities={visitedEntities}
+        branchAEntities={branchAEntities}
+        branchBEntities={branchBEntities}
+        fullConnectedPathEntities={fullConnectedPath}
+        isComplete={isComplete}
         invalidFlashId={invalidFlashId}
-        onMapClick={(clickedId) => {
-          if (graph[clickedId]) {
-            handleSelectCandidate(graph[clickedId]);
-          }
-        }}
       />
 
-      {/* Floating Top HUD */}
+      {/* Floating Top HUD (Shows active marching fronts) */}
       <BorderPathHUD
         pack={pack}
         mode={mode}
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
-        visitedEntities={visitedEntities}
+        headA={headA}
+        headB={headB}
+        branchAEntities={branchAEntities}
+        branchBEntities={branchBEntities}
+        remainingSteps={remainingSteps}
         theme={theme}
         hideBorders={hideBorders}
         onToggleTheme={handleToggleTheme}
@@ -256,18 +313,19 @@ function BorderPathGame() {
       {/* Optimal Target Card (Bottom-Left) */}
       <BorderPathTargetCard
         minOptimalSteps={session.minOptimalSteps}
-        currentSteps={visitedEntities.length}
+        currentSteps={totalAttempts}
         remainingSteps={remainingSteps}
       />
 
-      {/* Keyboard Input at Bottom */}
+      {/* 100% Keyboard Input at Bottom */}
       <div className="absolute bottom-8 sm:bottom-10 left-0 right-0 z-30 pointer-events-none">
         <div className="pointer-events-auto">
           <BorderPathInput
-            currentEntity={currentEntity}
-            targetEntity={session.targetEntity}
+            headA={headA}
+            headB={headB}
             graph={graph}
-            visitedIds={[session.startEntity.id, ...visitedEntities.map((e) => e.id)]}
+            visitedIds={visitedIds}
+            canUndo={moveHistory.length > 0}
             isComplete={isComplete}
             onSelectCandidate={handleSelectCandidate}
             onUndoLastStep={handleUndoLastStep}
@@ -284,7 +342,8 @@ function BorderPathGame() {
         mode={mode}
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
-        visitedEntities={visitedEntities}
+        fullConnectedPath={fullConnectedPath}
+        totalAttempts={totalAttempts}
         minOptimalSteps={session.minOptimalSteps}
         optimalSolutions={optimalSolutions}
         allEntities={graph}

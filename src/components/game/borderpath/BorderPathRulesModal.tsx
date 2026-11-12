@@ -49,13 +49,23 @@ export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
         </div>
 
         {/* Content list */}
-        <div className="space-y-4 text-xs sm:text-sm text-slate-300">
+        <div className="space-y-3.5 text-xs sm:text-sm text-slate-300">
           <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
             <div>
               <strong className="text-white block mb-0.5">1. Mission : Le Maillon Frontalier</strong>
               <span>
-                Reliez le territoire de départ au territoire d&apos;arrivée en nommant une séquence ininterrompue de pays (ou départements) ayant une frontière terrestre commune.
+                Reliez le territoire de départ au territoire d&apos;arrivée en nommant une chaîne ininterrompue de pays (ou départements) ayant une frontière terrestre commune.
+              </span>
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
+            <CheckCircle2 className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-white block mb-0.5">2. Progression Bidirectionnelle (Deux Fronts)</strong>
+              <span>
+                Vous pouvez avancer depuis le <strong>Départ</strong> (en Cyan) OU remonter depuis l&apos;<strong>Arrivée</strong> (en Ambre) ! Dès que les deux fronts se rejoignent ou qu&apos;un pays scelle la jonction, le parcours est gagné.
               </span>
             </div>
           </div>
@@ -63,19 +73,9 @@ export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
           <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <strong className="text-white block mb-0.5">2. 100% au Clavier</strong>
+              <strong className="text-white block mb-0.5">3. 100% au Clavier</strong>
               <span>
-                Tapez le nom du pays ou du département dans la barre de saisie. Utilisez <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">↑</kbd> et <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">↓</kbd> pour naviguer dans l&apos;autocomplétion, puis <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">Entrée</kbd> pour valider.
-              </span>
-            </div>
-          </div>
-
-          <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
-            <div>
-              <strong className="text-white block mb-0.5">3. Ponts & Liaisons Fixes</strong>
-              <span>
-                Les îles coupées du monde sont exclues. Les franchissements majeurs fixes sont autorisés (ex : pont de l&apos;Øresund entre Danemark et Suède, Eurotunnel France ⇄ Royaume-Uni).
+                Tapez le nom d&apos;un pays limitrophe de l&apos;un des deux fronts. Utilisez <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">↑</kbd> et <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">↓</kbd> pour naviguer dans l&apos;autocomplétion, puis <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">Entrée</kbd> pour valider.
               </span>
             </div>
           </div>
@@ -83,9 +83,9 @@ export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
           <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <strong className="text-white block mb-0.5">4. Score Optimal &amp; Par</strong>
+              <strong className="text-white block mb-0.5">4. Calcul du Score &amp; Optimal (BFS)</strong>
               <span>
-                Chaque déplacement compte pour 1 étape. Votre objectif est d&apos;égaler le chemin le plus court calculé par l&apos;algorithme BFS (&ldquo;Par&rdquo;).
+                Votre score est calculé en comparant le nombre de pays tentés au nombre minimal de pays du trajet optimal BFS. Moins vous faites de détours, plus vous maximisez vos points (jusqu&apos;à 10 000 pts) !
               </span>
             </div>
           </div>

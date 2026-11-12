@@ -49,9 +49,11 @@ interface BorderPathMapProps {
   highlightStart?: boolean;
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
-  visitedEntities: BorderPathEntity[];
+  branchAEntities: BorderPathEntity[];
+  branchBEntities: BorderPathEntity[];
+  fullConnectedPathEntities?: BorderPathEntity[];
+  isComplete: boolean;
   invalidFlashId?: string | null;
-  onMapClick?: (id: string) => void;
 }
 
 export const BorderPathMap: React.FC<BorderPathMapProps> = ({
@@ -61,9 +63,11 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
   highlightStart = true,
   startEntity,
   targetEntity,
-  visitedEntities,
+  branchAEntities = [],
+  branchBEntities = [],
+  fullConnectedPathEntities = [],
+  isComplete,
   invalidFlashId,
-  onMapClick,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -75,56 +79,86 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     ? "/data/geo/france_departements.geojson"
     : "/data/geo/world_countries.geojson";
 
+  const headA =
+    branchAEntities && branchAEntities.length > 0
+      ? branchAEntities[branchAEntities.length - 1]
+      : startEntity;
+  const headB =
+    branchBEntities && branchBEntities.length > 0
+      ? branchBEntities[branchBEntities.length - 1]
+      : targetEntity;
+
   // Apply feature states safely to the MapLibre source
   const applyFeatureStates = useCallback(
     (map: maplibregl.Map) => {
       if (!map || !map.getSource("entities-geojson")) return;
 
-      const visitedSet = new Set(visitedEntities.map((e) => e.id));
-      const currentEntity =
-        visitedEntities.length > 0
-          ? visitedEntities[visitedEntities.length - 1]
-          : startEntity;
+      const setA = new Set(branchAEntities.map((e) => e.id));
+      const setB = new Set(branchBEntities.map((e) => e.id));
+      const fullSet = new Set(fullConnectedPathEntities?.map((e) => e.id) || []);
 
       const allRelevantIds = Array.from(
         new Set([
           startEntity.id,
           targetEntity.id,
-          ...visitedEntities.map((e) => e.id),
+          ...branchAEntities.map((e) => e.id),
+          ...branchBEntities.map((e) => e.id),
+          ...(fullConnectedPathEntities?.map((e) => e.id) || []),
           invalidFlashId,
         ].filter(Boolean) as string[])
       );
 
       for (const id of allRelevantIds) {
-        const isStart = highlightStart && id === startEntity.id;
-        const isTarget = id === targetEntity.id;
-        const isVisited = visitedSet.has(id);
-        const isCurrent = currentEntity ? id === currentEntity.id : false;
+        const isConn = isComplete && fullSet.has(id);
+        const inA = !isComplete && setA.has(id);
+        const inB = !isComplete && setB.has(id);
+        const isHeadA = !isComplete && id === headA.id;
+        const isHeadB = !isComplete && id === headB.id;
         const isInvalid = id === invalidFlashId;
 
         try {
           map.setFeatureState(
             { source: "entities-geojson", id },
-            { isStart, isTarget, isVisited, isCurrent, isInvalid }
+            {
+              isComplete: isConn,
+              inBranchA: inA,
+              inBranchB: inB,
+              isHeadA,
+              isHeadB,
+              isInvalid,
+            }
           );
         } catch {
           // Ignore microstate missing in simplified geojson
         }
       }
     },
-    [startEntity, targetEntity, visitedEntities, invalidFlashId, highlightStart]
+    [
+      startEntity,
+      targetEntity,
+      branchAEntities,
+      branchBEntities,
+      fullConnectedPathEntities,
+      headA.id,
+      headB.id,
+      isComplete,
+      invalidFlashId,
+    ]
   );
 
-  // Compute bounds for the corridor (start, target, visited)
+  // Compute bounds for both branches
   const fitToCorridor = useCallback(() => {
     const map = mapRef.current;
     if (!map || !startEntity || !targetEntity) return;
 
     const coords: [number, number][] = [
-      [startEntity.longitude, startEntity.latitude],
-      [targetEntity.longitude, targetEntity.latitude],
-      ...visitedEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
+      ...branchAEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
+      ...branchBEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
     ];
+
+    if (coords.length < 2) {
+      coords.push([targetEntity.longitude, targetEntity.latitude]);
+    }
 
     const bounds = coords.reduce(
       (b, coord) => b.extend(coord),
@@ -134,9 +168,9 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     map.fitBounds(bounds, {
       padding: { top: 90, bottom: 130, left: 70, right: 70 },
       maxZoom: isFrance ? 8.5 : 5.5,
-      duration: 1200,
+      duration: 1000,
     });
-  }, [startEntity, targetEntity, visitedEntities, isFrance]);
+  }, [startEntity, targetEntity, branchAEntities, branchBEntities, isFrance]);
 
   // Setup polygon & corridor layers
   const setupLayers = useCallback(
@@ -156,28 +190,32 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               "case",
               ["boolean", ["feature-state", "isInvalid"], false],
               "#ef4444", // Red flash
-              ["boolean", ["feature-state", "isTarget"], false],
-              "#f59e0b", // Amber/Gold
-              ["boolean", ["feature-state", "isStart"], false],
-              "#06b6d4", // Cyan
-              ["boolean", ["feature-state", "isCurrent"], false],
-              "#3b82f6", // Blue pulse
-              ["boolean", ["feature-state", "isVisited"], false],
-              "#10b981", // Emerald
+              ["boolean", ["feature-state", "isComplete"], false],
+              "#10b981", // Emerald when path is connected
+              ["boolean", ["feature-state", "isHeadA"], false],
+              "#06b6d4", // Cyan active head
+              ["boolean", ["feature-state", "isHeadB"], false],
+              "#f59e0b", // Amber active head
+              ["boolean", ["feature-state", "inBranchA"], false],
+              "#0284c7", // Sky blue for Branch A
+              ["boolean", ["feature-state", "inBranchB"], false],
+              "#d97706", // Amber 600 for Branch B
               "#0f172a", // Default dark tint
             ],
             "fill-opacity": [
               "case",
               ["boolean", ["feature-state", "isInvalid"], false],
               0.65,
-              ["boolean", ["feature-state", "isTarget"], false],
+              ["boolean", ["feature-state", "isComplete"], false],
+              0.55,
+              ["boolean", ["feature-state", "isHeadA"], false],
+              0.60,
+              ["boolean", ["feature-state", "isHeadB"], false],
+              0.60,
+              ["boolean", ["feature-state", "inBranchA"], false],
               0.45,
-              ["boolean", ["feature-state", "isStart"], false],
-              0.55,
-              ["boolean", ["feature-state", "isCurrent"], false],
-              0.55,
-              ["boolean", ["feature-state", "isVisited"], false],
-              0.4,
+              ["boolean", ["feature-state", "inBranchB"], false],
+              0.45,
               theme === "satellite" ? 0 : 0.08,
             ],
           },
@@ -193,41 +231,35 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               "case",
               ["boolean", ["feature-state", "isInvalid"], false],
               "#ef4444",
-              ["boolean", ["feature-state", "isTarget"], false],
-              "#fbbf24",
-              ["boolean", ["feature-state", "isStart"], false],
-              "#22d3ee",
-              ["boolean", ["feature-state", "isCurrent"], false],
-              "#60a5fa",
-              ["boolean", ["feature-state", "isVisited"], false],
+              ["boolean", ["feature-state", "isComplete"], false],
               "#34d399",
+              ["boolean", ["feature-state", "isHeadA"], false],
+              "#22d3ee",
+              ["boolean", ["feature-state", "isHeadB"], false],
+              "#fbbf24",
+              ["boolean", ["feature-state", "inBranchA"], false],
+              "#38bdf8",
+              ["boolean", ["feature-state", "inBranchB"], false],
+              "#fcd34d",
               hideBorders ? "transparent" : theme === "voyager" ? "#cbd5e1" : "#334155",
             ],
             "line-width": [
               "case",
-              ["boolean", ["feature-state", "isCurrent"], false],
+              ["boolean", ["feature-state", "isComplete"], false],
               2.5,
-              ["boolean", ["feature-state", "isVisited"], false],
-              2.0,
-              ["boolean", ["feature-state", "isStart"], false],
+              ["boolean", ["feature-state", "isHeadA"], false],
               2.5,
-              ["boolean", ["feature-state", "isTarget"], false],
+              ["boolean", ["feature-state", "isHeadB"], false],
               2.5,
+              ["boolean", ["feature-state", "inBranchA"], false],
+              1.8,
+              ["boolean", ["feature-state", "inBranchB"], false],
+              1.8,
               hideBorders ? 0 : 0.8,
             ],
             "line-opacity": hideBorders ? 0.3 : 0.85,
           },
         });
-
-        // Click handler on polygons
-        if (onMapClick) {
-          map.on("click", "entity-fill", (e) => {
-            if (e.features && e.features.length > 0) {
-              const id = e.features[0].id || e.features[0].properties?.id;
-              if (id) onMapClick(String(id));
-            }
-          });
-        }
 
         // Apply initial feature states immediately
         applyFeatureStates(map);
@@ -245,7 +277,6 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
           });
           addPolygonLayers();
         } else {
-          // Pre-fetch then add source for synchronous instant feature state mapping
           fetch(geojsonUrl)
             .then((r) => r.json())
             .then((data) => {
@@ -261,7 +292,6 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               }
             })
             .catch(() => {
-              // Fallback to direct URL
               if (mapRef.current && !mapRef.current.getSource("entities-geojson")) {
                 mapRef.current.addSource("entities-geojson", {
                   type: "geojson",
@@ -277,38 +307,82 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
         addPolygonLayers();
       }
 
-      // 2. Add corridor polyline source
-      if (!map.getSource("corridor-source")) {
-        map.addSource("corridor-source", {
+      // 2. Add corridor polyline sources
+      // Branch A Line (Cyan)
+      if (!map.getSource("corridor-a-source")) {
+        map.addSource("corridor-a-source", {
           type: "geojson",
           data: {
             type: "Feature",
             properties: {},
-            geometry: {
-              type: "LineString",
-              coordinates: [],
-            },
+            geometry: { type: "LineString", coordinates: [] },
           },
         });
 
         map.addLayer({
-          id: "corridor-line",
+          id: "corridor-a-line",
           type: "line",
-          source: "corridor-source",
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
+          source: "corridor-a-source",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": "#06b6d4",
+            "line-width": 3.5,
+            "line-dasharray": [1.5, 1],
+            "line-opacity": 0.9,
           },
+        });
+      }
+
+      // Branch B Line (Amber)
+      if (!map.getSource("corridor-b-source")) {
+        map.addSource("corridor-b-source", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: { type: "LineString", coordinates: [] },
+          },
+        });
+
+        map.addLayer({
+          id: "corridor-b-line",
+          type: "line",
+          source: "corridor-b-source",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": "#f59e0b",
+            "line-width": 3.5,
+            "line-dasharray": [1.5, 1],
+            "line-opacity": 0.9,
+          },
+        });
+      }
+
+      // Completed Merged Corridor Line (Emerald)
+      if (!map.getSource("corridor-complete-source")) {
+        map.addSource("corridor-complete-source", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: { type: "LineString", coordinates: [] },
+          },
+        });
+
+        map.addLayer({
+          id: "corridor-complete-line",
+          type: "line",
+          source: "corridor-complete-source",
+          layout: { "line-join": "round", "line-cap": "round" },
           paint: {
             "line-color": "#10b981",
-            "line-width": 4,
-            "line-dasharray": [1.5, 1],
-            "line-opacity": 0.85,
+            "line-width": 4.5,
+            "line-opacity": 1.0,
           },
         });
       }
     },
-    [geojsonUrl, theme, hideBorders, onMapClick, applyFeatureStates]
+    [geojsonUrl, theme, hideBorders, applyFeatureStates]
   );
 
   // Initialize Map
@@ -330,7 +404,6 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     mapRef.current = map;
     isLoadedRef.current = false;
 
-    // Listen to sourcedata so whenever GeoJSON finishes loading, states are re-applied
     const onSourceData = (e: maplibregl.MapSourceDataEvent) => {
       if (e.sourceId === "entities-geojson" && e.isSourceLoaded) {
         applyFeatureStates(map);
@@ -353,28 +426,51 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     };
   }, [theme, isFrance]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Update feature states whenever visitedEntities, start, target, or flash changes
+  // Update feature states and lines whenever state changes
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !isLoadedRef.current || !map.getSource("entities-geojson")) return;
 
     applyFeatureStates(map);
 
-    // Update Corridor Polyline coordinates
-    const corridorCoords: [number, number][] = [
-      [startEntity.longitude, startEntity.latitude],
-      ...visitedEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
-    ];
-
-    const corridorSource = map.getSource("corridor-source") as maplibregl.GeoJSONSource | undefined;
-    if (corridorSource) {
-      corridorSource.setData({
+    // Update Branch A Line
+    const coordsA: [number, number][] = branchAEntities.map(
+      (e) => [e.longitude, e.latitude] as [number, number]
+    );
+    const sourceA = map.getSource("corridor-a-source") as maplibregl.GeoJSONSource | undefined;
+    if (sourceA) {
+      sourceA.setData({
         type: "Feature",
         properties: {},
-        geometry: {
-          type: "LineString",
-          coordinates: corridorCoords,
-        },
+        geometry: { type: "LineString", coordinates: isComplete ? [] : coordsA },
+      });
+    }
+
+    // Update Branch B Line
+    const coordsB: [number, number][] = branchBEntities.map(
+      (e) => [e.longitude, e.latitude] as [number, number]
+    );
+    const sourceB = map.getSource("corridor-b-source") as maplibregl.GeoJSONSource | undefined;
+    if (sourceB) {
+      sourceB.setData({
+        type: "Feature",
+        properties: {},
+        geometry: { type: "LineString", coordinates: isComplete ? [] : coordsB },
+      });
+    }
+
+    // Update Completed Line
+    const coordsComplete: [number, number][] = (fullConnectedPathEntities || []).map(
+      (e) => [e.longitude, e.latitude] as [number, number]
+    );
+    const sourceComplete = map.getSource("corridor-complete-source") as
+      | maplibregl.GeoJSONSource
+      | undefined;
+    if (sourceComplete) {
+      sourceComplete.setData({
+        type: "Feature",
+        properties: {},
+        geometry: { type: "LineString", coordinates: isComplete ? coordsComplete : [] },
       });
     }
 
@@ -383,50 +479,81 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
 
     // Auto-fit camera when steps change
     fitToCorridor();
-  }, [startEntity, targetEntity, visitedEntities, invalidFlashId, fitToCorridor, applyFeatureStates]);
+  }, [
+    startEntity,
+    targetEntity,
+    branchAEntities,
+    branchBEntities,
+    fullConnectedPathEntities,
+    isComplete,
+    invalidFlashId,
+    fitToCorridor,
+    applyFeatureStates,
+  ]);
 
   // Update HTML overlay markers
   const updateMarkers = (map: maplibregl.Map) => {
-    // Clear old markers
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
     const addMarker = (
       entity: BorderPathEntity,
-      type: "start" | "target" | "step" | "current",
-      stepNum?: number
+      type: "start" | "target" | "headA" | "headB" | "stepA" | "stepB" | "complete"
     ) => {
       const el = document.createElement("div");
       el.className =
-        "borderpath-marker transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-transform hover:scale-110";
+        "borderpath-marker transform -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none";
 
-      if (type === "start") {
+      if (type === "complete") {
         el.innerHTML = `
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-950/90 border-2 border-cyan-400 text-cyan-300 font-extrabold text-xs shadow-lg shadow-cyan-500/30 backdrop-blur-md">
+          <div class="w-6 h-6 rounded-full bg-emerald-600 border border-emerald-300 text-white flex items-center justify-center font-bold text-[10px] shadow-lg">
+            ✓
+          </div>
+        `;
+      } else if (type === "start") {
+        el.innerHTML = `
+          <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-950/90 border-2 border-cyan-400 text-cyan-300 font-extrabold text-xs shadow-lg shadow-cyan-500/30 backdrop-blur-md">
             <span>${entity.flagEmoji || "🏁"}</span>
-            <span class="tracking-wide">${entity.name}</span>
+            <span>${entity.name}</span>
           </div>
         `;
       } else if (type === "target") {
         el.innerHTML = `
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-950/90 border-2 border-amber-400 text-amber-300 font-extrabold text-xs shadow-lg shadow-amber-500/30 backdrop-blur-md animate-pulse">
+          <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-950/90 border-2 border-amber-400 text-amber-300 font-extrabold text-xs shadow-lg shadow-amber-500/30 backdrop-blur-md">
             <span>${entity.flagEmoji || "🎯"}</span>
-            <span class="tracking-wide">${entity.name}</span>
+            <span>${entity.name}</span>
           </div>
         `;
-      } else if (type === "current") {
+      } else if (type === "headA") {
         el.innerHTML = `
           <div class="relative flex items-center justify-center">
-            <div class="absolute w-10 h-10 rounded-full bg-blue-500/30 animate-ping"></div>
-            <div class="w-8 h-8 rounded-full bg-blue-600 border-2 border-white text-white flex items-center justify-center font-bold text-xs shadow-xl">
-              ${stepNum || "★"}
+            <div class="absolute w-9 h-9 rounded-full bg-cyan-500/40 animate-ping"></div>
+            <div class="px-2 py-0.5 rounded-full bg-cyan-600 border-2 border-white text-white font-bold text-xs shadow-xl flex items-center gap-1">
+              <span>${entity.flagEmoji || "🏁"}</span>
+              <span>${entity.name}</span>
             </div>
+          </div>
+        `;
+      } else if (type === "headB") {
+        el.innerHTML = `
+          <div class="relative flex items-center justify-center">
+            <div class="absolute w-9 h-9 rounded-full bg-amber-500/40 animate-ping"></div>
+            <div class="px-2 py-0.5 rounded-full bg-amber-600 border-2 border-white text-white font-bold text-xs shadow-xl flex items-center gap-1">
+              <span>${entity.flagEmoji || "🎯"}</span>
+              <span>${entity.name}</span>
+            </div>
+          </div>
+        `;
+      } else if (type === "stepA") {
+        el.innerHTML = `
+          <div class="w-5 h-5 rounded-full bg-cyan-800 border border-cyan-300 text-cyan-100 flex items-center justify-center font-bold text-[9px] shadow-sm">
+            ●
           </div>
         `;
       } else {
         el.innerHTML = `
-          <div class="w-6 h-6 rounded-full bg-emerald-700/90 border border-emerald-300 text-emerald-100 flex items-center justify-center font-bold text-[10px] shadow-md backdrop-blur-sm">
-            ${stepNum}
+          <div class="w-5 h-5 rounded-full bg-amber-800 border border-amber-300 text-amber-100 flex items-center justify-center font-bold text-[9px] shadow-sm">
+            ●
           </div>
         `;
       }
@@ -438,29 +565,44 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       markersRef.current.push(marker);
     };
 
-    // Add Start Marker (if highlight enabled)
-    if (startEntity && highlightStart) {
-      addMarker(startEntity, "start");
+    if (isComplete && fullConnectedPathEntities) {
+      fullConnectedPathEntities.forEach((entity, idx) => {
+        if (idx === 0) addMarker(entity, "start");
+        else if (idx === fullConnectedPathEntities.length - 1) addMarker(entity, "target");
+        else addMarker(entity, "complete");
+      });
+      return;
     }
 
-    // Add Visited Markers
-    visitedEntities.forEach((entity, idx) => {
-      const isCurrent = idx === visitedEntities.length - 1;
-      if (isCurrent && entity.id !== targetEntity.id) {
-        addMarker(entity, "current", idx + 1);
+    // Branch A markers
+    branchAEntities.forEach((entity, idx) => {
+      const isHead = idx === branchAEntities.length - 1;
+      if (idx === 0) {
+        if (isHead) addMarker(entity, "start");
+        else addMarker(entity, "start");
+      } else if (isHead) {
+        addMarker(entity, "headA");
       } else {
-        addMarker(entity, "step", idx + 1);
+        addMarker(entity, "stepA");
       }
     });
 
-    // Add Target Marker
-    if (targetEntity) {
-      addMarker(targetEntity, "target");
-    }
+    // Branch B markers
+    branchBEntities.forEach((entity, idx) => {
+      const isHead = idx === branchBEntities.length - 1;
+      if (idx === 0) {
+        if (isHead) addMarker(entity, "target");
+        else addMarker(entity, "target");
+      } else if (isHead) {
+        addMarker(entity, "headB");
+      } else {
+        addMarker(entity, "stepB");
+      }
+    });
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden select-none">
+    <div className="relative w-full h-full overflow-hidden select-none cursor-default">
       <div ref={mapContainerRef} className="w-full h-full" />
     </div>
   );

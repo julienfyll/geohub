@@ -6,13 +6,14 @@ import {
   BorderPathGraph,
 } from "@/lib/games/borderpath/types";
 import { searchEntities } from "@/lib/games/borderpath/engine";
-import { Search, CornerDownLeft, Undo2, AlertCircle, CheckCircle2, Flag } from "lucide-react";
+import { Search, CornerDownLeft, Undo2, AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface BorderPathInputProps {
-  currentEntity: BorderPathEntity;
-  targetEntity: BorderPathEntity;
+  headA: BorderPathEntity;
+  headB: BorderPathEntity;
   graph: BorderPathGraph;
   visitedIds: string[];
+  canUndo: boolean;
   isComplete: boolean;
   onSelectCandidate: (entity: BorderPathEntity) => void;
   onUndoLastStep: () => void;
@@ -20,10 +21,11 @@ interface BorderPathInputProps {
 }
 
 export const BorderPathInput: React.FC<BorderPathInputProps> = ({
-  currentEntity,
-  targetEntity,
+  headA,
+  headB,
   graph,
   visitedIds,
+  canUndo,
   isComplete,
   onSelectCandidate,
   onUndoLastStep,
@@ -41,7 +43,7 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
     if (!isComplete && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isComplete, currentEntity]);
+  }, [isComplete, headA, headB]);
 
   // Compute suggestions via engine's client-side fuzzy search
   const suggestions = React.useMemo(() => {
@@ -119,16 +121,19 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
     }
 
     // 5. Backspace on empty input: Undo last step
-    if (e.key === "Backspace" && query === "" && visitedIds.length > 0) {
+    if (e.key === "Backspace" && query === "" && canUndo) {
       e.preventDefault();
       onUndoLastStep();
       return;
     }
   };
 
-  const isCurrentNeighbor = (id: string) => {
-    return currentEntity.neighbors.includes(id);
-  };
+  const isAdjA = (id: string) => headA.neighbors.includes(id);
+  const isAdjB = (id: string) => headB.neighbors.includes(id);
+
+  const placeholderText = headA.id.match(/^\d+$/)
+    ? `Rechercher un département limitrophe (du ${headA.name} ou du ${headB.name})...`
+    : `Rechercher un pays limitrophe (de ${headA.name} ou ${headB.name})...`;
 
   return (
     <div className="relative w-full max-w-xl mx-auto px-4 z-30">
@@ -172,25 +177,21 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={
-            currentEntity.id.match(/^\d+$/)
-              ? "Rechercher un département limitrophe..."
-              : "Rechercher un pays limitrophe..."
-          }
+          placeholder={placeholderText}
           className="w-full py-3.5 px-3 bg-transparent text-white placeholder-slate-500 text-sm sm:text-base font-semibold focus:outline-none"
           autoComplete="off"
           spellCheck="false"
           disabled={isComplete}
         />
 
-        {/* Enter key badge */}
+        {/* Enter key badge & Undo button */}
         <div className="pr-3 flex items-center gap-1.5 shrink-0">
-          {visitedIds.length > 0 && (
+          {canUndo && (
             <button
               type="button"
               onClick={onUndoLastStep}
               className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
-              title="Annuler la dernière étape (Retour arrière)"
+              title="Annuler le dernier pays posé (Retour arrière)"
             >
               <Undo2 className="w-4 h-4" />
             </button>
@@ -203,17 +204,18 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
         </div>
       </div>
 
-      {/* Autocomplete Dropdown (Opens upwards to avoid off-screen overflow) */}
+      {/* Autocomplete Dropdown (Opens UPWARDS above the input to avoid screen overflow) */}
       {isOpen && suggestions.length > 0 && (
         <ul
           ref={listRef}
           className="absolute left-4 right-4 bottom-full mb-3 bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl z-50 divide-y divide-slate-800/80 max-h-60 sm:max-h-72 overflow-y-auto"
         >
           {suggestions.map((entity, idx) => {
-            const isNeighbor = isCurrentNeighbor(entity.id);
+            const adjA = isAdjA(entity.id);
+            const adjB = isAdjB(entity.id);
             const isVisited = visitedIds.includes(entity.id);
-            const isTarget = entity.id === targetEntity.id;
             const isSelected = idx === selectedIndex;
+            const isBridge = adjA && adjB;
 
             return (
               <li
@@ -246,25 +248,25 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {isTarget && (
-                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold uppercase tracking-wider animate-pulse">
-                      🎯 Destination
+                  {isVisited ? (
+                    <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold">
+                      Déjà placé
                     </span>
-                  )}
-
-                  {isNeighbor ? (
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold uppercase tracking-wider">
-                      Voisin direct
+                  ) : isBridge ? (
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold uppercase tracking-wider animate-pulse">
+                      🎯 Scelle la jonction !
+                    </span>
+                  ) : adjA ? (
+                    <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold uppercase tracking-wider">
+                      Voisin de {headA.name}
+                    </span>
+                  ) : adjB ? (
+                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold uppercase tracking-wider">
+                      Voisin de {headB.name}
                     </span>
                   ) : (
                     <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-500 text-[10px] font-semibold">
                       Non adjacent
-                    </span>
-                  )}
-
-                  {isVisited && (
-                    <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold">
-                      Déjà visité
                     </span>
                   )}
                 </div>
@@ -274,22 +276,22 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
         </ul>
       )}
 
-      {/* Helpful keyboard navigation instructions */}
+      {/* Keyboard helper hints */}
       <div className="flex items-center justify-between mt-2 px-2 text-[11px] text-slate-500 select-none">
         <div className="flex items-center gap-3">
           <span>
-            <strong className="text-slate-400">↑ / ↓</strong> pour naviguer
+            <strong className="text-slate-400">↑ / ↓</strong> naviguer
           </span>
           <span>
-            <strong className="text-slate-400">Entrée</strong> pour valider
+            <strong className="text-slate-400">Entrée</strong> valider
           </span>
           <span>
-            <strong className="text-slate-400">Échap</strong> pour effacer
+            <strong className="text-slate-400">Échap</strong> effacer
           </span>
         </div>
-        {visitedIds.length > 0 && (
+        {canUndo && (
           <span>
-            <strong className="text-slate-400">Retour arrière</strong> annule la dernière étape
+            <strong className="text-slate-400">Retour arrière</strong> annuler le dernier maillon
           </span>
         )}
       </div>
