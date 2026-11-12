@@ -117,9 +117,10 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
     }
   };
 
-  const placeholderText = headA.id.match(/^\d+$/)
-    ? `Rechercher un département limitrophe (du ${headA.name} ou du ${headB.name})...`
-    : `Rechercher un pays limitrophe (de ${headA.name} ou ${headB.name})...`;
+  const isFrance = headA.id.match(/^\d+$/);
+  const placeholderText = isFrance
+    ? "Rechercher un département limitrophe..."
+    : "Rechercher un pays limitrophe...";
 
   return (
     <div className="relative w-full max-w-xl mx-auto px-4 z-30">

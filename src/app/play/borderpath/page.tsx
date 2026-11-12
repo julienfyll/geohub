@@ -17,6 +17,8 @@ import {
   generateChallenge,
   validateBidirectionalStep,
   findShortestPath,
+  findMinDistanceBetweenSets,
+  findShortestPathWithinSet,
 } from "@/lib/games/borderpath/engine";
 import { BorderPathMap } from "@/components/game/borderpath/BorderPathMap";
 import { BorderPathHUD } from "@/components/game/borderpath/BorderPathHUD";
@@ -134,13 +136,50 @@ function BorderPathGame() {
     }
   }, [pack, mode, session.pack, session.mode, initGameSession]);
 
-  // Remaining BFS distance between Head A and Head B
+  // Remaining BFS distance between Side A and Side B
   const remainingSteps = useMemo(() => {
     if (isComplete) return 0;
-    if (headA.id === headB.id) return 0;
-    const shortest = findShortestPath(headA.id, headB.id, graph);
-    return shortest.found ? shortest.distance : -1;
-  }, [headA.id, headB.id, graph, isComplete]);
+    const branchAIds = branchAEntities.map((e) => e.id);
+    const branchBIds = branchBEntities.map((e) => e.id);
+    return findMinDistanceBetweenSets(branchAIds, branchBIds, graph);
+  }, [branchAEntities, branchBEntities, graph, isComplete]);
+
+  // Auto-complete immediately if Side A and Side B touch each other
+  useEffect(() => {
+    if (isComplete || gaveUp) return;
+    const branchAIds = branchAEntities.map((e) => e.id);
+    const branchBIds = branchBEntities.map((e) => e.id);
+    const areTouching = branchAIds.some((aId) =>
+      branchBIds.some((bId) => graph[aId]?.neighbors.includes(bId))
+    );
+    if (areTouching && branchAIds.length > 0 && branchBIds.length > 0) {
+      const allPlacedSet = new Set([...branchAIds, ...branchBIds]);
+      const connectedPath = findShortestPathWithinSet(
+        session.startEntity.id,
+        session.targetEntity.id,
+        allPlacedSet,
+        graph
+      );
+      if (connectedPath) {
+        setIsComplete(true);
+        const fullEntities = connectedPath.map((id) => graph[id]).filter(Boolean);
+        setFullConnectedPath(fullEntities);
+        setFeedbackMessage({
+          text: "🎯 Jonction réussie ! Les deux côtés se touchent !",
+          type: "success",
+        });
+        setTimeout(() => setShowSummaryModal(true), 1200);
+      }
+    }
+  }, [
+    branchAEntities,
+    branchBEntities,
+    graph,
+    isComplete,
+    gaveUp,
+    session.startEntity.id,
+    session.targetEntity.id,
+  ]);
 
   // Total attempts / intermediate countries placed
   const totalAttempts = branchAEntities.length + branchBEntities.length - 2;
@@ -250,17 +289,12 @@ function BorderPathGame() {
         invalidFlashId={invalidFlashId}
       />
 
-      {/* Floating Top HUD (Shows active marching fronts) */}
+      {/* Floating Top HUD */}
       <BorderPathHUD
         pack={pack}
         mode={mode}
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
-        headA={headA}
-        headB={headB}
-        branchAEntities={branchAEntities}
-        branchBEntities={branchBEntities}
-        remainingSteps={remainingSteps}
         theme={theme}
         hideBorders={hideBorders}
         onToggleTheme={handleToggleTheme}

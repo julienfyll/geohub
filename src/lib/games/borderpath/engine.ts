@@ -249,7 +249,84 @@ export function validateStep(
 }
 
 /**
+ * Finds shortest path between startId and targetId restricted strictly to allowedIds
+ */
+export function findShortestPathWithinSet(
+  startId: string,
+  targetId: string,
+  allowedIds: Set<string>,
+  graph: BorderPathGraph
+): string[] | null {
+  if (!allowedIds.has(startId) || !allowedIds.has(targetId)) return null;
+  if (startId === targetId) return [startId];
+
+  const queue: string[][] = [[startId]];
+  const visited = new Set<string>([startId]);
+
+  while (queue.length > 0) {
+    const path = queue.shift()!;
+    const node = path[path.length - 1];
+
+    const neighbors = graph[node]?.neighbors || [];
+    for (const nbr of neighbors) {
+      if (!allowedIds.has(nbr)) continue;
+      if (nbr === targetId) {
+        return [...path, nbr];
+      }
+      if (!visited.has(nbr)) {
+        visited.add(nbr);
+        queue.push([...path, nbr]);
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Finds minimum distance (number of intermediate borders) between setA and setB in graph
+ */
+export function findMinDistanceBetweenSets(
+  setA: string[],
+  setB: string[],
+  graph: BorderPathGraph
+): number {
+  if (setA.length === 0 || setB.length === 0) return -1;
+  const targetSet = new Set(setB);
+
+  // Check if any element in A already borders an element in B
+  for (const a of setA) {
+    const nbrs = graph[a]?.neighbors || [];
+    for (const nbr of nbrs) {
+      if (targetSet.has(nbr)) return 0; // Directly touching!
+    }
+  }
+
+  // Multi-source BFS from setA to find closest node in setB
+  const queue: [string, number][] = setA.map((id) => [id, 0]);
+  const visited = new Set<string>(setA);
+
+  while (queue.length > 0) {
+    const [current, dist] = queue.shift()!;
+
+    const neighbors = graph[current]?.neighbors || [];
+    for (const nbr of neighbors) {
+      if (targetSet.has(nbr)) {
+        return dist + 1; // Number of border transitions
+      }
+      if (!visited.has(nbr) && graph[nbr]) {
+        visited.add(nbr);
+        queue.push([nbr, dist + 1]);
+      }
+    }
+  }
+
+  return -1;
+}
+
+/**
  * Validates a candidate step in bidirectional mode (growing from Start A and/or Target B)
+ * Completes as soon as ANY country from side A touches ANY country from side B.
  */
 export function validateBidirectionalStep(
   candidateId: string,
@@ -269,14 +346,14 @@ export function validateBidirectionalStep(
   message?: string;
 } {
   const candidate = graph[candidateId];
+  const startId = branchAIds[0];
+  const targetId = branchBIds[0];
   const headAId = branchAIds[branchAIds.length - 1];
   const headBId = branchBIds[branchBIds.length - 1];
-  const headA = graph[headAId];
-  const headB = graph[headBId];
 
   const currentAttempts = branchAIds.length + branchBIds.length - 2;
 
-  if (!candidate || !headA || !headB) {
+  if (!candidate) {
     return {
       valid: false,
       alreadyVisited: false,
@@ -290,159 +367,95 @@ export function validateBidirectionalStep(
   }
 
   const allVisited = new Set([...branchAIds, ...branchBIds]);
-  const isAlreadyVisited = allVisited.has(candidateId);
-
-  // Direct connection check: candidate is headB and touches headA
-  if (candidateId === headBId) {
-    if (headA.neighbors.includes(headBId)) {
-      const fullPath = [...branchAIds, ...branchBIds.slice(0, -1).reverse()];
-      return {
-        valid: true,
-        attachedTo: "bridge",
-        alreadyVisited: false,
-        isComplete: true,
-        newHeadAId: headAId,
-        newHeadBId: headBId,
-        minRemainingDistance: 0,
-        totalAttempts: currentAttempts + 1,
-        fullConnectedPath: fullPath,
-        message: `🎯 Jonction directe : ${headA.name} et ${headB.name} sont limitrophes !`,
-      };
-    } else {
-      return {
-        valid: false,
-        alreadyVisited: true,
-        isComplete: false,
-        newHeadAId: headAId,
-        newHeadBId: headBId,
-        minRemainingDistance: findShortestPath(headAId, headBId, graph).distance,
-        totalAttempts: currentAttempts,
-        message: `${headB.name} n'est pas limitrophe de ${headA.name}.`,
-      };
-    }
-  }
-
-  // Direct connection check: candidate is headA and touches headB
-  if (candidateId === headAId) {
-    if (headB.neighbors.includes(headAId)) {
-      const fullPath = [...branchAIds, ...branchBIds.slice(0, -1).reverse()];
-      return {
-        valid: true,
-        attachedTo: "bridge",
-        alreadyVisited: false,
-        isComplete: true,
-        newHeadAId: headAId,
-        newHeadBId: headBId,
-        minRemainingDistance: 0,
-        totalAttempts: currentAttempts + 1,
-        fullConnectedPath: fullPath,
-        message: `🎯 Jonction directe : ${headB.name} et ${headA.name} sont limitrophes !`,
-      };
-    } else {
-      return {
-        valid: false,
-        alreadyVisited: true,
-        isComplete: false,
-        newHeadAId: headAId,
-        newHeadBId: headBId,
-        minRemainingDistance: findShortestPath(headAId, headBId, graph).distance,
-        totalAttempts: currentAttempts,
-        message: `${headA.name} n'est pas limitrophe de ${headB.name}.`,
-      };
-    }
-  }
-
-  if (isAlreadyVisited) {
+  if (allVisited.has(candidateId)) {
     return {
       valid: false,
       alreadyVisited: true,
       isComplete: false,
       newHeadAId: headAId,
       newHeadBId: headBId,
-      minRemainingDistance: findShortestPath(headAId, headBId, graph).distance,
+      minRemainingDistance: findMinDistanceBetweenSets(branchAIds, branchBIds, graph),
       totalAttempts: currentAttempts,
-      message: `Vous avez déjà placé ${candidate.name} dans votre parcours !`,
+      message: `${candidate.name} a déjà été placé dans votre parcours !`,
     };
   }
 
-  const adjA = headA.neighbors.includes(candidateId);
-  const adjB = headB.neighbors.includes(candidateId);
+  // Check if candidate borders ANY country in Branch A, and/or ANY country in Branch B
+  const touchesA = branchAIds.some((id) => graph[id]?.neighbors.includes(candidateId));
+  const touchesB = branchBIds.some((id) => graph[id]?.neighbors.includes(candidateId));
 
-  if (!adjA && !adjB) {
+  if (!touchesA && !touchesB) {
     return {
       valid: false,
       alreadyVisited: false,
       isComplete: false,
       newHeadAId: headAId,
       newHeadBId: headBId,
-      minRemainingDistance: findShortestPath(headAId, headBId, graph).distance,
+      minRemainingDistance: findMinDistanceBetweenSets(branchAIds, branchBIds, graph),
       totalAttempts: currentAttempts,
-      message: `${candidate.name} n'est limitrophe ni de ${headA.name} (Départ) ni de ${headB.name} (Arrivée).`,
+      message: `${candidate.name} n'est limitrophe d'aucun pays déjà placé.`,
     };
   }
 
-  // Case: Bridges BOTH fronts simultaneously!
-  if (adjA && adjB) {
-    const fullPath = [...branchAIds, candidateId, ...branchBIds.slice().reverse()];
-    const totalAttempts = currentAttempts + 1;
+  let newBranchA = [...branchAIds];
+  let newBranchB = [...branchBIds];
+  let attachedTo: "branchA" | "branchB" | "bridge" = "branchA";
+  let newHeadA = headAId;
+  let newHeadB = headBId;
+
+  if (touchesA && touchesB) {
+    newBranchA.push(candidateId);
+    attachedTo = "bridge";
+    newHeadA = candidateId;
+  } else if (touchesA) {
+    newBranchA.push(candidateId);
+    attachedTo = "branchA";
+    newHeadA = candidateId;
+  } else {
+    newBranchB.push(candidateId);
+    attachedTo = "branchB";
+    newHeadB = candidateId;
+  }
+
+  const updatedAttempts = currentAttempts + 1;
+  const allPlacedSet = new Set([...newBranchA, ...newBranchB]);
+
+  // Two sides touch as soon as any country in side A shares a border with any country in side B
+  const areTouching =
+    touchesA && touchesB
+      ? true
+      : newBranchA.some((aId) =>
+          newBranchB.some((bId) => graph[aId]?.neighbors.includes(bId))
+        );
+
+  if (areTouching) {
+    const connectedPath = findShortestPathWithinSet(startId, targetId, allPlacedSet, graph);
     return {
       valid: true,
-      attachedTo: "bridge",
+      attachedTo,
       alreadyVisited: false,
       isComplete: true,
-      newHeadAId: candidateId,
-      newHeadBId: candidateId,
+      newHeadAId: newHeadA,
+      newHeadBId: newHeadB,
       minRemainingDistance: 0,
-      totalAttempts,
-      fullConnectedPath: fullPath,
-      message: `🎯 Jonction scellée par ${candidate.name} ! Les deux fronts sont reliés !`,
+      totalAttempts: updatedAttempts,
+      fullConnectedPath: connectedPath || [...newBranchA, ...newBranchB.slice().reverse()],
+      message: `🎯 Jonction réussie ! Les deux côtés se touchent grâce à ${candidate.name} !`,
     };
   }
 
-  // Case: Attaches to Branch A
-  if (adjA) {
-    const newBranchA = [...branchAIds, candidateId];
-    const touchesB = candidate.neighbors.includes(headBId);
-    const newRemaining = touchesB ? 0 : findShortestPath(candidateId, headBId, graph).distance;
-    const isComplete = touchesB;
-    const fullPath = isComplete ? [...newBranchA, ...branchBIds.slice().reverse()] : undefined;
-
-    return {
-      valid: true,
-      attachedTo: "branchA",
-      alreadyVisited: false,
-      isComplete,
-      newHeadAId: candidateId,
-      newHeadBId: headBId,
-      minRemainingDistance: newRemaining,
-      totalAttempts: currentAttempts + 1,
-      fullConnectedPath: fullPath,
-      message: isComplete
-        ? `🎯 Jonction réussie : ${candidate.name} touche ${headB.name} !`
-        : `Front de départ avancé : ${candidate.name} rattaché à ${headA.name}.`,
-    };
-  }
-
-  // Case: Attaches to Branch B
-  const newBranchB = [...branchBIds, candidateId];
-  const touchesA = candidate.neighbors.includes(headAId);
-  const newRemaining = touchesA ? 0 : findShortestPath(headAId, candidateId, graph).distance;
-  const isComplete = touchesA;
-  const fullPath = isComplete ? [...branchAIds, ...newBranchB.slice().reverse()] : undefined;
+  const remaining = findMinDistanceBetweenSets(newBranchA, newBranchB, graph);
 
   return {
     valid: true,
-    attachedTo: "branchB",
+    attachedTo,
     alreadyVisited: false,
-    isComplete,
-    newHeadAId: headAId,
-    newHeadBId: candidateId,
-    minRemainingDistance: newRemaining,
-    totalAttempts: currentAttempts + 1,
-    fullConnectedPath: fullPath,
-    message: isComplete
-      ? `🎯 Jonction réussie : ${candidate.name} touche ${headA.name} !`
-      : `Front d'arrivée avancé : ${candidate.name} rattaché à ${headB.name}.`,
+    isComplete: false,
+    newHeadAId: newHeadA,
+    newHeadBId: newHeadB,
+    minRemainingDistance: remaining,
+    totalAttempts: updatedAttempts,
+    message: `Maillon posé : ${candidate.name}`,
   };
 }
 

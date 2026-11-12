@@ -304,81 +304,6 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       } else {
         addPolygonLayers();
       }
-
-      // 2. Add corridor polyline sources
-      // Branch A Line (Cyan)
-      if (!map.getSource("corridor-a-source")) {
-        map.addSource("corridor-a-source", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            properties: {},
-            geometry: { type: "LineString", coordinates: [] },
-          },
-        });
-
-        map.addLayer({
-          id: "corridor-a-line",
-          type: "line",
-          source: "corridor-a-source",
-          layout: { "line-join": "round", "line-cap": "round" },
-          paint: {
-            "line-color": "#06b6d4",
-            "line-width": 3.5,
-            "line-dasharray": [1.5, 1],
-            "line-opacity": 0.9,
-          },
-        });
-      }
-
-      // Branch B Line (Amber)
-      if (!map.getSource("corridor-b-source")) {
-        map.addSource("corridor-b-source", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            properties: {},
-            geometry: { type: "LineString", coordinates: [] },
-          },
-        });
-
-        map.addLayer({
-          id: "corridor-b-line",
-          type: "line",
-          source: "corridor-b-source",
-          layout: { "line-join": "round", "line-cap": "round" },
-          paint: {
-            "line-color": "#f59e0b",
-            "line-width": 3.5,
-            "line-dasharray": [1.5, 1],
-            "line-opacity": 0.9,
-          },
-        });
-      }
-
-      // Completed Merged Corridor Line (Emerald)
-      if (!map.getSource("corridor-complete-source")) {
-        map.addSource("corridor-complete-source", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            properties: {},
-            geometry: { type: "LineString", coordinates: [] },
-          },
-        });
-
-        map.addLayer({
-          id: "corridor-complete-line",
-          type: "line",
-          source: "corridor-complete-source",
-          layout: { "line-join": "round", "line-cap": "round" },
-          paint: {
-            "line-color": "#10b981",
-            "line-width": 4.5,
-            "line-opacity": 1.0,
-          },
-        });
-      }
     },
     [geojsonUrl, theme, hideBorders, applyFeatureStates]
   );
@@ -430,47 +355,6 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     if (!map || !isLoadedRef.current || !map.getSource("entities-geojson")) return;
 
     applyFeatureStates(map);
-
-    // Update Branch A Line
-    const coordsA: [number, number][] = branchAEntities.map(
-      (e) => [e.longitude, e.latitude] as [number, number]
-    );
-    const sourceA = map.getSource("corridor-a-source") as maplibregl.GeoJSONSource | undefined;
-    if (sourceA) {
-      sourceA.setData({
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates: isComplete ? [] : coordsA },
-      });
-    }
-
-    // Update Branch B Line
-    const coordsB: [number, number][] = branchBEntities.map(
-      (e) => [e.longitude, e.latitude] as [number, number]
-    );
-    const sourceB = map.getSource("corridor-b-source") as maplibregl.GeoJSONSource | undefined;
-    if (sourceB) {
-      sourceB.setData({
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates: isComplete ? [] : coordsB },
-      });
-    }
-
-    // Update Completed Line
-    const coordsComplete: [number, number][] = (fullConnectedPathEntities || []).map(
-      (e) => [e.longitude, e.latitude] as [number, number]
-    );
-    const sourceComplete = map.getSource("corridor-complete-source") as
-      | maplibregl.GeoJSONSource
-      | undefined;
-    if (sourceComplete) {
-      sourceComplete.setData({
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates: isComplete ? coordsComplete : [] },
-      });
-    }
 
     // Update HTML Markers
     updateMarkers(map);

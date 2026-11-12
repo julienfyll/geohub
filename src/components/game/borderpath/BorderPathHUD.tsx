@@ -24,11 +24,6 @@ interface BorderPathHUDProps {
   mode: BorderPathMode;
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
-  headA: BorderPathEntity;
-  headB: BorderPathEntity;
-  branchAEntities: BorderPathEntity[];
-  branchBEntities: BorderPathEntity[];
-  remainingSteps: number;
   theme: BorderPathMapTheme;
   hideBorders: boolean;
   onToggleTheme: () => void;
@@ -43,11 +38,6 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   mode,
   startEntity,
   targetEntity,
-  headA,
-  headB,
-  branchAEntities = [],
-  branchBEntities = [],
-  remainingSteps = 0,
   theme,
   hideBorders,
   onToggleTheme,
@@ -63,8 +53,6 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
     ameriques: "Amériques",
     afrique: "Afrique",
   };
-
-  const hasMoves = (branchAEntities?.length || 0) > 1 || (branchBEntities?.length || 0) > 1;
 
   return (
     <div className="absolute top-0 left-0 right-0 p-3 sm:p-4 z-20 pointer-events-none flex flex-col gap-2.5">
@@ -94,17 +82,16 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
           </div>
         </div>
 
-        {/* Center: Mission Corridor Badge (Active Front A -> Active Front B) */}
+        {/* Center: Mission Corridor Badge (Start -> Target) */}
         <div className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-slate-900/90 border border-slate-700/80 shadow-2xl backdrop-blur-xl">
-          {/* Front A Pill */}
           <div className="flex items-center gap-1.5">
-            <span className="text-base sm:text-lg">{headA.flagEmoji || "🏁"}</span>
+            <span className="text-base sm:text-lg">{startEntity.flagEmoji || "🏁"}</span>
             <div className="flex flex-col">
               <span className="text-[10px] font-bold uppercase text-cyan-400 tracking-wider">
-                {headA.id === startEntity.id ? "Départ" : "Front Départ"}
+                Départ
               </span>
               <span className="font-extrabold text-xs sm:text-sm text-white leading-tight">
-                {headA.name}
+                {startEntity.name}
               </span>
             </div>
           </div>
@@ -113,15 +100,14 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
 
-          {/* Front B Pill */}
           <div className="flex items-center gap-1.5">
-            <span className="text-base sm:text-lg">{headB.flagEmoji || "🎯"}</span>
+            <span className="text-base sm:text-lg">{targetEntity.flagEmoji || "🎯"}</span>
             <div className="flex flex-col">
               <span className="text-[10px] font-bold uppercase text-amber-400 tracking-wider">
-                {headB.id === targetEntity.id ? "Arrivée" : "Front Arrivée"}
+                Arrivée
               </span>
               <span className="font-extrabold text-xs sm:text-sm text-white leading-tight">
-                {headB.name}
+                {targetEntity.name}
               </span>
             </div>
           </div>
@@ -184,59 +170,6 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Corridor Breadcrumb Trail - Displays the marching fronts when moves have started */}
-      {hasMoves && (
-        <div className="pointer-events-auto flex items-center justify-center overflow-x-auto py-1 px-3 max-w-4xl mx-auto scrollbar-none animate-slide-down">
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-950/80 border border-slate-800/80 backdrop-blur-md shadow-xl text-xs">
-            {/* Branch A sequence */}
-            {branchAEntities.map((e, idx) => (
-              <React.Fragment key={`a-${e.id}`}>
-                {idx > 0 && <ArrowRight className="w-3 h-3 text-cyan-600 shrink-0" />}
-                <div
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border shrink-0 ${
-                    idx === branchAEntities.length - 1
-                      ? "bg-cyan-950/90 border-cyan-400 text-white font-extrabold ring-2 ring-cyan-500/30"
-                      : "bg-cyan-950/60 border-cyan-800 text-cyan-300 font-medium"
-                  }`}
-                >
-                  <span>{e.flagEmoji || "📍"}</span>
-                  <span>{e.name}</span>
-                </div>
-              </React.Fragment>
-            ))}
-
-            {/* Gap indicator */}
-            <div className="px-2 py-1 text-slate-500 font-mono text-[11px] font-bold shrink-0 flex items-center gap-1">
-              <span>···</span>
-              {remainingSteps > 0 && (
-                <span className="text-amber-400 text-[10px]">~{remainingSteps} fr.</span>
-              )}
-              <span>···</span>
-            </div>
-
-            {/* Branch B sequence (displayed in reverse order, marching inwards) */}
-            {branchBEntities
-              .slice()
-              .reverse()
-              .map((e, idx) => (
-                <React.Fragment key={`b-${e.id}`}>
-                  {idx > 0 && <ArrowRight className="w-3 h-3 text-amber-600 shrink-0" />}
-                  <div
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-xl border shrink-0 ${
-                      idx === 0
-                        ? "bg-amber-950/90 border-amber-400 text-white font-extrabold ring-2 ring-amber-500/30"
-                        : "bg-amber-950/60 border-amber-800 text-amber-300 font-medium"
-                    }`}
-                  >
-                    <span>{e.flagEmoji || "📍"}</span>
-                    <span>{e.name}</span>
-                  </div>
-                </React.Fragment>
-              ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
