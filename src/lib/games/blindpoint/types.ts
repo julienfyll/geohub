@@ -7,6 +7,7 @@ export type BlindPointPack =
   | "lieux_france"
   | "lieux_monde"
   | "lieux_paris"
+  | "metro_paris"
   | "monuments_monde"
   | "chateaux_france";
 

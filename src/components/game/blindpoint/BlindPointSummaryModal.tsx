@@ -111,6 +111,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
     villes_europe: "Villes d'Europe",
     lieux_france: "Patrimoine de France",
     lieux_paris: "Monuments de Paris",
+    metro_paris: "Métro de Paris",
     lieux_monde: "Merveilles du Monde",
     monuments_monde: "Monuments du Monde",
     chateaux_france: "Châteaux & Patrimoine",
@@ -122,6 +123,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
     villes_europe: "Europe",
     lieux_france: "Patrimoine",
     lieux_paris: "Paris",
+    metro_paris: "Métro",
     lieux_monde: "Merveilles",
     monuments_monde: "Monuments",
     chateaux_france: "Châteaux",
@@ -381,6 +383,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
             <div className="grid grid-cols-3 gap-2">
               {[
                 { id: "villes_france", label: "🇫🇷 Villes" },
+                { id: "metro_paris", label: "🚇 Métro" },
                 { id: "lieux_france", label: "🏰 France" },
                 { id: "lieux_paris", label: "🗼 Paris" },
                 { id: "lieux_monde", label: "🏛️ Monde" },
