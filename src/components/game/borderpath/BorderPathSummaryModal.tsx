@@ -27,6 +27,7 @@ interface BorderPathSummaryModalProps {
   targetEntity: BorderPathEntity;
   fullConnectedPath: BorderPathEntity[];
   totalCountriesPlaced: number;
+  failedAttempts: BorderPathEntity[];
   minOptimalSteps: number;
   gaveUp: boolean;
   onReplaySame: () => void;
@@ -43,6 +44,7 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   targetEntity,
   fullConnectedPath,
   totalCountriesPlaced,
+  failedAttempts = [],
   minOptimalSteps,
   gaveUp,
   onReplaySame,
@@ -53,15 +55,14 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
 
   if (!isOpen) return null;
 
-  const optimalCountriesCount = minOptimalSteps + 1;
-  const userCountriesCount = totalCountriesPlaced > 0 ? totalCountriesPlaced : fullConnectedPath.length;
-  const delta = Math.max(0, userCountriesCount - optimalCountriesCount);
-  const isPerfect = !gaveUp && delta === 0;
-
-  // Score: 10 000 max, -1 000 pts per extra country/detour (minimum 1 000 pts if completed, 0 if gave up)
-  const score = gaveUp
-    ? 0
-    : Math.max(1000, 10000 - delta * 1000);
+  const optimalCountries = minOptimalSteps + 1;
+  const corridorCount = fullConnectedPath.length;
+  const errorCount = failedAttempts.length;
+  // Detours = valid countries placed that are not in the main connecting corridor
+  const detourCount = Math.max(0, totalCountriesPlaced - corridorCount);
+  const totalAttempts = totalCountriesPlaced + errorCount;
+  const delta = totalAttempts - optimalCountries;
+  const isPerfect = !gaveUp && delta === 0 && errorCount === 0;
 
   // Generate shareable text
   const handleShare = () => {
@@ -70,7 +71,13 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
 
     const text = `BorderPath #${today} ${packEmoji}
 ${startEntity.flagEmoji || "🏁"} ${startEntity.name} ➔ ${targetEntity.flagEmoji || "🎯"} ${targetEntity.name}
-${gaveUp ? "Abandonné" : `Score : ${score.toLocaleString("fr-FR")} pts • ${userCountriesCount} pays (Objectif optimal : ${optimalCountriesCount} pays)`}
+${
+  gaveUp
+    ? "Partie abandonnée"
+    : `Résultat : ${totalAttempts} tentatives (Par : ${optimalCountries}) • ${
+        isPerfect ? "Par (0) 🏆" : `+${delta}`
+      }${errorCount > 0 ? ` (${errorCount} err.)` : ""}`
+}
 
 Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
 
@@ -88,7 +95,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col gap-6 text-slate-100"
+        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col gap-5 text-slate-100"
       >
         {/* Close cross top-right */}
         <button
@@ -103,12 +110,12 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
         {/* Modal Header */}
         <div className="flex flex-col items-center text-center">
           <div
-            className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-3 shadow-xl ${
+            className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-2.5 shadow-xl ${
               gaveUp
                 ? "bg-red-500/20 border border-red-500/40 text-red-400"
                 : isPerfect
-                ? "bg-amber-500/20 border border-amber-500/40 text-amber-400 animate-bounce-subtle"
-                : "bg-emerald-500/20 border border-emerald-500/40 text-emerald-400"
+                ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 animate-bounce-subtle"
+                : "bg-blue-500/20 border border-blue-500/40 text-blue-400"
             }`}
           >
             {gaveUp ? (
@@ -121,26 +128,36 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            {gaveUp ? "Partie Abandonnée" : isPerfect ? "Parcours Parfait !" : "Jonction Réussie !"}
+            {gaveUp ? "Partie Abandonnée" : isPerfect ? "Parcours Optimal (Par) !" : "Jonction Réussie !"}
           </h2>
 
           <p className="text-sm text-slate-400 mt-1 max-w-sm">
             {gaveUp
               ? "Vous n'avez pas terminé la jonction."
               : isPerfect
-              ? `Score optimal absolu ! Jonction directe en ${optimalCountriesCount} pays sans aucun détour.`
-              : `Vous avez relié ${startEntity.name} et ${targetEntity.name} en ${userCountriesCount} pays.`}
+              ? `Performance parfaite ! Jonction en ${optimalCountries} pays sans aucune erreur ni détour.`
+              : `Vous avez relié ${startEntity.name} et ${targetEntity.name} en ${totalAttempts} tentatives.`}
           </p>
 
           {!gaveUp && (
-            <div className="mt-3 flex flex-col items-center gap-1">
-              <div className="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 font-extrabold text-base">
-                Score : {score.toLocaleString("fr-FR")} / 10 000 pts
+            <div className="mt-2.5 flex flex-col items-center gap-1">
+              <div
+                className={`px-4 py-1.5 rounded-full border font-extrabold text-sm sm:text-base ${
+                  isPerfect
+                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+                    : "bg-blue-500/10 border-blue-500/30 text-blue-300"
+                }`}
+              >
+                {isPerfect
+                  ? `🏆 Par Parfait : ${optimalCountries} / ${optimalCountries}`
+                  : `${totalAttempts} tentatives (Par : ${optimalCountries}) • +${delta}`}
               </div>
               <span className="text-[11px] text-slate-400">
                 {isPerfect
-                  ? "10 000 pts max (zéro pays superflu)"
-                  : `Base 10 000 pts • -1 000 pts par pays de détour (${delta} × -1 000)`}
+                  ? "Zéro erreur • Zéro détour"
+                  : `${errorCount > 0 ? `${errorCount} erreur${errorCount > 1 ? "s" : ""}` : ""}${
+                      errorCount > 0 && detourCount > 0 ? " • " : ""
+                    }${detourCount > 0 ? `${detourCount} détour${detourCount > 1 ? "s" : ""}` : ""}`}
               </span>
             </div>
           )}
@@ -150,50 +167,91 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
         <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 text-center">
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Vos Pays
+              Tentatives
             </span>
             <span className="text-2xl font-mono font-extrabold text-white mt-0.5">
-              {gaveUp ? "—" : userCountriesCount}
+              {gaveUp ? "—" : totalAttempts}
             </span>
             <span className="text-[10px] text-slate-500 mt-0.5">
-              {gaveUp ? "" : "pays posés"}
+              {gaveUp ? "" : errorCount > 0 ? `${errorCount} err.` : "sans faute"}
             </span>
           </div>
 
           <div className="flex flex-col items-center border-x border-slate-700/60">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Objectif Optimal
+              Objectif (Par)
             </span>
             <span className="text-2xl font-mono font-extrabold text-emerald-400 mt-0.5">
-              {optimalCountriesCount}
+              {optimalCountries}
             </span>
             <span className="text-[10px] text-emerald-500/80 mt-0.5">
-              trajet le plus court
+              trajet minimal
             </span>
           </div>
 
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Détours
+              Écart (Par)
             </span>
             <span
               className={`text-2xl font-mono font-extrabold mt-0.5 ${
                 gaveUp
                   ? "text-slate-500"
-                  : delta === 0
+                  : isPerfect
                   ? "text-emerald-400"
                   : delta === 1
                   ? "text-amber-400"
                   : "text-blue-400"
               }`}
             >
-              {gaveUp ? "—" : delta === 0 ? "0 (Par)" : `+${delta}`}
+              {gaveUp ? "—" : isPerfect ? "Par (0)" : `+${delta}`}
             </span>
             <span className="text-[10px] text-slate-500 mt-0.5">
-              {gaveUp ? "" : delta === 0 ? "Sans détour" : delta === 1 ? "1 pays superflu" : `${delta} pays superflus`}
+              {gaveUp ? "" : isPerfect ? "Sans déchet" : `${delta} coup${delta > 1 ? "s" : ""} de trop`}
             </span>
           </div>
         </div>
+
+        {/* Breakdown Card */}
+        {!gaveUp && (
+          <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col gap-2 text-xs">
+            <div className="flex items-center justify-between text-slate-300">
+              <span className="text-slate-400">Pays du corridor principal :</span>
+              <span className="font-bold font-mono text-white">{corridorCount} pays</span>
+            </div>
+            {detourCount > 0 && (
+              <div className="flex items-center justify-between text-slate-300">
+                <span className="text-amber-400/90">Détours (pays posés hors corridor) :</span>
+                <span className="font-bold font-mono text-amber-400">+{detourCount}</span>
+              </div>
+            )}
+            <div className="flex items-center justify-between text-slate-300">
+              <span className={errorCount > 0 ? "text-red-400 font-semibold" : "text-slate-400"}>
+                Erreurs (pays non limitrophes) :
+              </span>
+              <span
+                className={`font-bold font-mono ${
+                  errorCount > 0 ? "text-red-400" : "text-emerald-400"
+                }`}
+              >
+                {errorCount}
+              </span>
+            </div>
+            {errorCount > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-800">
+                <span className="text-[11px] text-slate-400">Pays refusés :</span>
+                {failedAttempts.map((f, i) => (
+                  <span
+                    key={`failed-${f.id}-${i}`}
+                    className="px-2 py-0.5 rounded-md bg-red-950/80 border border-red-500/40 text-red-300 font-medium text-[11px]"
+                  >
+                    {f.flagEmoji} {f.name}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* User Reconstructed Corridor Path (Only the user's path, NEVER the optimal solution) */}
         {!gaveUp && fullConnectedPath.length > 0 && (
@@ -223,12 +281,12 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
         )}
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-3 pt-2">
+        <div className="flex flex-col gap-3 pt-1">
           {/* Share Button */}
           <button
             type="button"
             onClick={handleShare}
-            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-blue-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-blue-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             {copied ? (
               <>
@@ -238,7 +296,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
             ) : (
               <>
                 <Share2 className="w-4 h-4" />
-                <span>Partager mon score avec mes amis</span>
+                <span>Partager mon résultat avec mes amis</span>
               </>
             )}
           </button>

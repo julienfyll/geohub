@@ -4,51 +4,61 @@ import React from "react";
 import { Target } from "lucide-react";
 
 interface BorderPathTargetCardProps {
-  minOptimalSteps: number;
-  currentSteps: number;
+  optimalCountries: number;
+  totalAttempts: number;
+  errorCount?: number;
   remainingSteps: number;
 }
 
 export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
-  minOptimalSteps,
-  currentSteps,
+  optimalCountries,
+  totalAttempts,
+  errorCount = 0,
   remainingSteps,
 }) => {
-  const delta = currentSteps - minOptimalSteps;
+  const delta = totalAttempts - optimalCountries;
+  const isPar = delta <= 0 && errorCount === 0;
 
   return (
     <div className="absolute bottom-8 left-4 sm:left-6 z-20 pointer-events-auto">
-      <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-3 sm:p-3.5 shadow-2xl backdrop-blur-xl flex flex-col gap-2 min-w-[190px]">
+      <div className="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-3 sm:p-3.5 shadow-2xl backdrop-blur-xl flex flex-col gap-2 min-w-[200px]">
         {/* Card Header */}
         <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5">
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
             <Target className="w-3.5 h-3.5 text-amber-400" />
-            <span>Objectif Optimal</span>
+            <span>Objectif (Par)</span>
           </div>
-          {delta <= 0 ? (
-            <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold font-mono">
-              Par
-            </span>
-          ) : (
-            <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold font-mono">
-              +{delta}
-            </span>
-          )}
+          <div className="flex items-center gap-1">
+            {errorCount > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-bold font-mono">
+                {errorCount} {errorCount > 1 ? "err." : "err."}
+              </span>
+            )}
+            {isPar ? (
+              <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold font-mono">
+                Par
+              </span>
+            ) : (
+              <span className="px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold font-mono">
+                {delta > 0 ? `+${delta}` : `+${errorCount}`}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 gap-2 text-center py-0.5">
           <div className="flex flex-col items-center p-1.5 rounded-xl bg-slate-800/50 border border-slate-700/50">
-            <span className="text-[10px] text-slate-400 font-semibold">Cible (Pays)</span>
+            <span className="text-[10px] text-slate-400 font-semibold">Par (Cible)</span>
             <span className="text-base sm:text-lg font-extrabold font-mono text-emerald-400">
-              {minOptimalSteps}
+              {optimalCountries}
             </span>
           </div>
 
           <div className="flex flex-col items-center p-1.5 rounded-xl bg-slate-800/50 border border-slate-700/50">
-            <span className="text-[10px] text-slate-400 font-semibold">Vos Pays</span>
+            <span className="text-[10px] text-slate-400 font-semibold">Tentatives</span>
             <span className="text-base sm:text-lg font-extrabold font-mono text-white">
-              {currentSteps}
+              {totalAttempts}
             </span>
           </div>
         </div>

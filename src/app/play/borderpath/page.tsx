@@ -67,6 +67,7 @@ function BorderPathGame() {
     session.targetEntity,
   ]);
   const [fullConnectedPath, setFullConnectedPath] = useState<BorderPathEntity[]>([]);
+  const [failedAttempts, setFailedAttempts] = useState<BorderPathEntity[]>([]);
 
   const [invalidFlashId, setInvalidFlashId] = useState<string | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<{
@@ -113,6 +114,7 @@ function BorderPathGame() {
       setBranchAEntities([newSession.startEntity]);
       setBranchBEntities([newSession.targetEntity]);
       setFullConnectedPath([]);
+      setFailedAttempts([]);
       setInvalidFlashId(null);
       setFeedbackMessage(null);
       setIsComplete(false);
@@ -190,7 +192,7 @@ function BorderPathGame() {
     return set.size;
   }, [branchAEntities, branchBEntities]);
 
-  const totalAttempts = Math.max(0, uniquePlacedCount - 2);
+  const totalAttempts = uniquePlacedCount + failedAttempts.length;
 
   // Handle player candidate selection (Bidirectional)
   const handleSelectCandidate = (candidate: BorderPathEntity) => {
@@ -211,6 +213,7 @@ function BorderPathGame() {
         text: result.message || "Mouvement impossible",
         type: "error",
       });
+      setFailedAttempts((prev) => [...prev, candidate]);
       setInvalidFlashId(candidate.id);
       setTimeout(() => setInvalidFlashId(null), 1000);
       return;
@@ -261,6 +264,7 @@ function BorderPathGame() {
     setBranchAEntities([session.startEntity]);
     setBranchBEntities([session.targetEntity]);
     setFullConnectedPath([]);
+    setFailedAttempts([]);
     setInvalidFlashId(null);
     setFeedbackMessage(null);
     setIsComplete(false);
@@ -327,8 +331,9 @@ function BorderPathGame() {
 
       {/* Optimal Target Card (Bottom-Left) */}
       <BorderPathTargetCard
-        minOptimalSteps={session.minOptimalSteps + 1}
-        currentSteps={uniquePlacedCount}
+        optimalCountries={session.minOptimalSteps + 1}
+        totalAttempts={totalAttempts}
+        errorCount={failedAttempts.length}
         remainingSteps={remainingSteps}
       />
 
@@ -357,6 +362,7 @@ function BorderPathGame() {
         targetEntity={session.targetEntity}
         fullConnectedPath={fullConnectedPath}
         totalCountriesPlaced={uniquePlacedCount}
+        failedAttempts={failedAttempts}
         minOptimalSteps={session.minOptimalSteps}
         gaveUp={gaveUp}
         onReplaySame={handleReplaySameChallenge}

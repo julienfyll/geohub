@@ -71,6 +71,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const isLoadedRef = useRef(false);
+  const prevInvalidIdRef = useRef<string | null>(null);
 
   const isFrance = pack === "france_departements";
   const geojsonUrl = isFrance
@@ -95,6 +96,9 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       const setB = new Set(branchBEntities.map((e) => e.id));
       const fullSet = new Set(fullConnectedPathEntities?.map((e) => e.id) || []);
 
+      const lastInvalid = prevInvalidIdRef.current;
+      prevInvalidIdRef.current = invalidFlashId || null;
+
       const allRelevantIds = Array.from(
         new Set([
           startEntity.id,
@@ -103,6 +107,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
           ...branchBEntities.map((e) => e.id),
           ...(fullConnectedPathEntities?.map((e) => e.id) || []),
           invalidFlashId,
+          lastInvalid,
         ].filter(Boolean) as string[])
       );
 
