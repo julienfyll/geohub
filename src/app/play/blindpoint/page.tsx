@@ -84,7 +84,14 @@ function BlindPointGame() {
   const pack: BlindPointPack = validPacks.includes(rawPack as BlindPointPack)
     ? (rawPack as BlindPointPack)
     : "villes_france";
-  const mode: BlindPointMode = rawMode === "custom" ? "custom" : rawMode === "free" ? "free" : "daily";
+  const mode: BlindPointMode =
+    pack === "metro_paris" && rawMode === "daily"
+      ? "free"
+      : rawMode === "custom"
+      ? "custom"
+      : rawMode === "free"
+      ? "free"
+      : "daily";
 
   const difficulty: BlindPointDifficulty | "all" =
     rawDiff === "all" ? "all" : ["facile", "moyen", "difficile"].includes(rawDiff)

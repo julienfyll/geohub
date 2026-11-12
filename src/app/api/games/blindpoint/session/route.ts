@@ -44,7 +44,14 @@ export async function GET(request: NextRequest) {
   }
 
   const primaryPack = packsToUse[0];
-  const mode: BlindPointMode = rawMode === "custom" ? "custom" : rawMode === "free" ? "free" : "daily";
+  const mode: BlindPointMode =
+    primaryPack === "metro_paris" && rawMode === "daily"
+      ? "free"
+      : rawMode === "custom"
+      ? "custom"
+      : rawMode === "free"
+      ? "free"
+      : "daily";
 
   const difficulty: BlindPointDifficulty | "all" =
     rawDiff === "all" ? "all" : ["facile", "moyen", "difficile"].includes(rawDiff)
