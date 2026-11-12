@@ -17,6 +17,7 @@ import {
   CheckSquare,
   Square,
   Share2,
+  Zap,
 } from "lucide-react";
 import {
   BlindPointPack,
@@ -117,6 +118,13 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
   // 1. Packs selection (Multiple checkboxes)
   const [selectedPacks, setSelectedPacks] = useState<BlindPointPack[]>([initialPack]);
 
+  // Special Metro Mode: Classic vs Retrace le Réseau
+  const [customGameType, setCustomGameType] = useState<"classic" | "retrace">(
+    initialPack === "metro_paris" ? "retrace" : "classic"
+  );
+  const [tolerance, setTolerance] = useState<string>("300");
+  const [selectedLines, setSelectedLines] = useState<string[]>(["1", "4", "6"]);
+
   // 2. Continent filter (for world targets)
   const [continent, setContinent] = useState<string>("");
 
@@ -143,8 +151,11 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
     if (isOpen) {
       setSeed(`custom-${Date.now().toString(36)}`);
       setCopied(false);
+      if (initialPack === "metro_paris") {
+        setCustomGameType("retrace");
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialPack]);
 
   if (!isOpen) return null;
 
@@ -155,7 +166,22 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
         if (prev.length === 1) return prev; // At least one pack required
         return prev.filter((p) => p !== packId);
       } else {
-        return [...prev, packId];
+        const next = [...prev, packId];
+        if (packId === "metro_paris" && prev.length === 0) {
+          setCustomGameType("retrace");
+        }
+        return next;
+      }
+    });
+  };
+
+  const toggleLine = (lineId: string) => {
+    setSelectedLines((prev) => {
+      if (prev.includes(lineId)) {
+        if (prev.length === 1) return prev;
+        return prev.filter((l) => l !== lineId);
+      } else {
+        return [...prev, lineId];
       }
     });
   };
@@ -167,6 +193,17 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
   // Build the shareable challenge URL
   const buildChallengeUrl = (includeOrigin = true) => {
     const origin = typeof window !== "undefined" && includeOrigin ? window.location.origin : "";
+
+    // If Retrace le Réseau is active on Metro pack
+    if (selectedPacks.includes("metro_paris") && customGameType === "retrace") {
+      let url = `${origin}/play/blindpoint?pack=metro_paris&mode=custom&customType=retrace&tolerance=${tolerance}`;
+      if (selectedLines.length > 0 && selectedLines.length < 3) {
+        url += `&lines=${selectedLines.join(",")}`;
+      }
+      url += `&play=1`;
+      return url;
+    }
+
     const packsStr = selectedPacks.join(",");
     let url = `${origin}/play/blindpoint?mode=custom&packs=${packsStr}&rounds=${roundsCount}`;
     if (timerSeconds > 0) url += `&timer=${timerSeconds}`;
@@ -279,187 +316,306 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
               );
             })}
           </div>
-        </div>
 
-        {/* Section 2: Filtre Continent (si au moins 1 pack monde coché) */}
-        {hasWorldPack && (
-          <div className="animate-in fade-in slide-in-from-top-1 duration-150">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-blue-400" />
-              <span>Zone Géographique (Packs Monde)</span>
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-              {CONTINENTS.map((c) => (
+          {/* Option Spéciale Métro Paris : Choix entre Points Aveugles et Retrace le Réseau */}
+          {selectedPacks.includes("metro_paris") && (
+            <div className="mt-3 p-4 rounded-2xl bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border border-purple-500/40 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-black uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Mode Spécial Métro de Paris</span>
+                </label>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-400/30 font-bold uppercase">
+                  Exclusif RATP
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <button
-                  key={c.code}
                   type="button"
-                  onClick={() => setContinent(c.code)}
-                  className={`py-1.5 px-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${
-                    continent === c.code
-                      ? "bg-blue-600 border-blue-500 text-white shadow-sm"
-                      : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                  onClick={() => setCustomGameType("classic")}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    customGameType === "classic"
+                      ? "bg-purple-600 border-purple-400 text-white shadow-md shadow-purple-600/20"
+                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700"
                   }`}
                 >
-                  {c.label}
+                  <span className="text-xs font-bold block flex items-center gap-1.5">
+                    <span>🎯</span> Points Aveugles Classique
+                  </span>
+                  <span className="text-[10px] text-slate-200/80 block mt-0.5">
+                    Manches courtes au score métrique standard.
+                  </span>
                 </button>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {/* Section 3: Nombre de Manches & Difficulté */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Manches */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>2. Nombre de Manches</span>
-              </label>
-              <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 font-extrabold text-xs">
-                {roundsCount} manches
-              </span>
+                <button
+                  type="button"
+                  onClick={() => setCustomGameType("retrace")}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    customGameType === "retrace"
+                      ? "bg-purple-600 border-purple-400 text-white shadow-md shadow-purple-600/20"
+                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700"
+                  }`}
+                >
+                  <span className="text-xs font-bold block flex items-center gap-1.5">
+                    <span>🚇</span> Retrace le Réseau (Mini Metro)
+                  </span>
+                  <span className="text-[10px] text-slate-200/80 block mt-0.5">
+                    Illimité • Tracé des lignes, double-voies et sauvegarde.
+                  </span>
+                </button>
+              </div>
+
+              {/* Si Retrace le Réseau est actif : Réglage de tolérance et sélection de lignes */}
+              {customGameType === "retrace" && (
+                <div className="pt-2 border-t border-purple-500/20 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 mb-1.5 block">
+                      Tolérance d'ancrage réglable :
+                    </label>
+                    <div className="grid grid-cols-5 gap-1 text-[11px]">
+                      {[
+                        { id: "chill", label: "Chill" },
+                        { id: "500", label: "500m" },
+                        { id: "300", label: "300m" },
+                        { id: "150", label: "150m" },
+                        { id: "75", label: "75m" },
+                      ].map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => setTolerance(t.id)}
+                          className={`py-1.5 px-0.5 rounded-lg border font-bold text-center transition-all ${
+                            tolerance === t.id
+                              ? "bg-amber-500 border-amber-400 text-slate-950 font-black shadow-sm"
+                              : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white"
+                          }`}
+                        >
+                          {t.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-bold text-slate-300 mb-1.5 block">
+                      Lignes à retracer :
+                    </label>
+                    <div className="flex items-center gap-1.5">
+                      {[
+                        { id: "1", label: "L1", color: "#FFCD00", text: "#111827" },
+                        { id: "4", label: "L4", color: "#CF009E", text: "#FFFFFF" },
+                        { id: "6", label: "L6", color: "#169B62", text: "#FFFFFF" },
+                      ].map((l) => {
+                        const isSelected = selectedLines.includes(l.id);
+                        return (
+                          <button
+                            key={l.id}
+                            type="button"
+                            onClick={() => toggleLine(l.id)}
+                            style={{
+                              backgroundColor: isSelected ? l.color : "#1e293b",
+                              color: isSelected ? l.text : "#94a3b8",
+                              borderColor: isSelected ? l.color : "#334155",
+                            }}
+                            className="flex-1 py-1.5 rounded-lg border font-black text-xs text-center transition-all shadow-sm"
+                          >
+                            {l.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="space-y-1.5 pt-1">
-              <input
-                type="range"
-                min={3}
-                max={50}
-                step={1}
-                value={roundsCount}
-                onChange={(e) => setRoundsCount(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
-              />
-              <div className="flex justify-between items-center text-[10px] text-slate-500">
-                <span className="font-mono">3 min</span>
-                <span className="text-slate-400 font-medium">
-                  Max : {(roundsCount * 5000).toLocaleString("fr-FR")} pts
+          )}
+        </div>
+
+        {/* Sections standard cachées si Mode Retrace le Réseau actif */}
+        {!(selectedPacks.includes("metro_paris") && customGameType === "retrace") && (
+          <>
+            {/* Section 2: Filtre Continent (si au moins 1 pack monde coché) */}
+            {hasWorldPack && (
+              <div className="animate-in fade-in slide-in-from-top-1 duration-150">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
+                  <Globe className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Zone Géographique (Packs Monde)</span>
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                  {CONTINENTS.map((c) => (
+                    <button
+                      key={c.code}
+                      type="button"
+                      onClick={() => setContinent(c.code)}
+                      className={`py-1.5 px-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${
+                        continent === c.code
+                          ? "bg-blue-600 border-blue-500 text-white shadow-sm"
+                          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                      }`}
+                    >
+                      {c.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Section 3: Nombre de Manches & Difficulté */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Manches */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span>2. Nombre de Manches</span>
+                  </label>
+                  <span className="px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 font-extrabold text-xs">
+                    {roundsCount} manches
+                  </span>
+                </div>
+                <div className="space-y-1.5 pt-1">
+                  <input
+                    type="range"
+                    min={3}
+                    max={50}
+                    step={1}
+                    value={roundsCount}
+                    onChange={(e) => setRoundsCount(parseInt(e.target.value, 10))}
+                    className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  />
+                  <div className="flex justify-between items-center text-[10px] text-slate-500">
+                    <span className="font-mono">3 min</span>
+                    <span className="text-slate-400 font-medium">
+                      Max : {(roundsCount * 5000).toLocaleString("fr-FR")} pts
+                    </span>
+                    <span className="font-mono">50 max</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Difficulté */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>3. Niveau de Difficulté</span>
+                </label>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {[
+                    { id: "all" as const, label: "🎲 Tous" },
+                    { id: "facile" as const, label: "🟢 Facile" },
+                    { id: "moyen" as const, label: "🟡 Moyen" },
+                    { id: "difficile" as const, label: "🔴 Difficile" },
+                  ].map((d) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      onClick={() => setDifficulty(d.id)}
+                      className={`py-2 px-1 rounded-xl border text-[11px] font-bold text-center transition-all ${
+                        difficulty === d.id
+                          ? "bg-emerald-600 border-emerald-500 text-white shadow-sm"
+                          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                      }`}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1 block">
+                  Tolérance de distance standard calibrée
                 </span>
-                <span className="font-mono">50 max</span>
               </div>
             </div>
-          </div>
 
-          {/* Difficulté */}
-          <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              <span>3. Niveau de Difficulté</span>
-            </label>
-            <div className="grid grid-cols-4 gap-1.5">
-              {[
-                { id: "all" as const, label: "🎲 Tous" },
-                { id: "facile" as const, label: "🟢 Facile" },
-                { id: "moyen" as const, label: "🟡 Moyen" },
-                { id: "difficile" as const, label: "🔴 Difficile" },
-              ].map((d) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  onClick={() => setDifficulty(d.id)}
-                  className={`py-2 px-1 rounded-xl border text-[11px] font-bold text-center transition-all ${
-                    difficulty === d.id
-                      ? "bg-emerald-600 border-emerald-500 text-white shadow-sm"
-                      : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
-                  }`}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </div>
-            <span className="text-[10px] text-slate-500 mt-1 block">
-              Tolérance de distance standard calibrée
-            </span>
-          </div>
-        </div>
+            {/* Section 4: Chronomètre & Layout de la Carte */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Chronomètre */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-rose-400" />
+                  <span>4. Chronomètre par Manche</span>
+                </label>
+                <div className="grid grid-cols-5 gap-1">
+                  {[
+                    { sec: 0, label: "Off" },
+                    { sec: 10, label: "10s" },
+                    { sec: 15, label: "15s" },
+                    { sec: 30, label: "30s" },
+                    { sec: 60, label: "60s" },
+                  ].map((t) => (
+                    <button
+                      key={t.sec}
+                      type="button"
+                      onClick={() => setTimerSeconds(t.sec)}
+                      className={`py-2 px-1 rounded-xl border text-xs font-bold text-center transition-all ${
+                        timerSeconds === t.sec
+                          ? "bg-rose-600 border-rose-500 text-white shadow-sm"
+                          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-        {/* Section 4: Chronomètre & Layout de la Carte */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Chronomètre */}
-          <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-rose-400" />
-              <span>4. Chronomètre par Manche</span>
-            </label>
-            <div className="grid grid-cols-5 gap-1">
-              {[
-                { sec: 0, label: "Off" },
-                { sec: 10, label: "10s" },
-                { sec: 15, label: "15s" },
-                { sec: 30, label: "30s" },
-                { sec: 60, label: "60s" },
-              ].map((t) => (
-                <button
-                  key={t.sec}
-                  type="button"
-                  onClick={() => setTimerSeconds(t.sec)}
-                  className={`py-2 px-1 rounded-xl border text-xs font-bold text-center transition-all ${
-                    timerSeconds === t.sec
-                      ? "bg-rose-600 border-rose-500 text-white shadow-sm"
-                      : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
+              {/* Map Layout Soft Override */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
+                  <Eye className="w-3.5 h-3.5 text-sky-400" />
+                  <span>5. Thème & Repères de Carte</span>
+                </label>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {[
+                    { id: "dark" as const, label: "🌙 Sombre" },
+                    { id: "satellite" as const, label: "🛰️ Satellite" },
+                    { id: "voyager" as const, label: "☀️ Clair" },
+                  ].map((th) => (
+                    <button
+                      key={th.id}
+                      type="button"
+                      onClick={() => setMapTheme(th.id)}
+                      className={`py-2 px-1 rounded-xl border text-[11px] font-bold text-center transition-all ${
+                        mapTheme === th.id
+                          ? "bg-sky-600 border-sky-500 text-white shadow-sm"
+                          : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                      }`}
+                    >
+                      {th.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-4 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowBorders((prev) => !prev)}
+                    className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white"
+                  >
+                    {showBorders ? (
+                      <CheckSquare className="w-3.5 h-3.5 text-sky-400" />
+                    ) : (
+                      <Square className="w-3.5 h-3.5 text-slate-600" />
+                    )}
+                    <span>Frontières</span>
+                  </button>
 
-          {/* Map Layout Soft Override */}
-          <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2 flex items-center gap-1.5">
-              <Eye className="w-3.5 h-3.5 text-sky-400" />
-              <span>5. Thème & Repères de Carte</span>
-            </label>
-            <div className="grid grid-cols-3 gap-1.5">
-              {[
-                { id: "dark" as const, label: "🌙 Sombre" },
-                { id: "satellite" as const, label: "🛰️ Satellite" },
-                { id: "voyager" as const, label: "☀️ Clair" },
-              ].map((th) => (
-                <button
-                  key={th.id}
-                  type="button"
-                  onClick={() => setMapTheme(th.id)}
-                  className={`py-2 px-1 rounded-xl border text-[11px] font-bold text-center transition-all ${
-                    mapTheme === th.id
-                      ? "bg-sky-600 border-sky-500 text-white shadow-sm"
-                      : "bg-slate-950/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
-                  }`}
-                >
-                  {th.label}
-                </button>
-              ))}
+                  <button
+                    type="button"
+                    onClick={() => setShowRoads((prev) => !prev)}
+                    className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white"
+                  >
+                    {showRoads ? (
+                      <CheckSquare className="w-3.5 h-3.5 text-sky-400" />
+                    ) : (
+                      <Square className="w-3.5 h-3.5 text-slate-600" />
+                    )}
+                    <span>Réseau routier</span>
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-4 mt-2">
-              <button
-                type="button"
-                onClick={() => setShowBorders((prev) => !prev)}
-                className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white"
-              >
-                {showBorders ? (
-                  <CheckSquare className="w-3.5 h-3.5 text-sky-400" />
-                ) : (
-                  <Square className="w-3.5 h-3.5 text-slate-600" />
-                )}
-                <span>Frontières</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowRoads((prev) => !prev)}
-                className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white"
-              >
-                {showRoads ? (
-                  <CheckSquare className="w-3.5 h-3.5 text-sky-400" />
-                ) : (
-                  <Square className="w-3.5 h-3.5 text-slate-600" />
-                )}
-                <span>Réseau routier</span>
-              </button>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
 
         {/* Section 5: Link Preview & Action CTAs */}
         <div className="border-t border-slate-800/90 pt-4 flex flex-col gap-3">
@@ -508,7 +664,11 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
               className="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:via-indigo-500 hover:to-blue-500 text-white font-extrabold text-sm shadow-xl shadow-purple-600/25 border border-purple-400/40 transition-all hover:scale-[1.01] active:scale-[0.99]"
             >
               <Play className="w-4 h-4 fill-white" />
-              <span>Lancer le Défi ({roundsCount} Manches)</span>
+              <span>
+                {selectedPacks.includes("metro_paris") && customGameType === "retrace"
+                  ? "🚇 Lancer Retrace le Réseau"
+                  : `Lancer le Défi (${roundsCount} Manches)`}
+              </span>
             </button>
           </div>
         </div>
