@@ -74,8 +74,8 @@ ${startEntity.flagEmoji || "🏁"} ${startEntity.name} ➔ ${targetEntity.flagEm
 ${
   gaveUp
     ? "Partie abandonnée"
-    : `Résultat : ${totalAttempts} tentatives (Par : ${optimalCountries}) • ${
-        isPerfect ? "Par (0) 🏆" : `+${delta}`
+    : `Résultat : ${totalAttempts} tentatives (Chemin optimal : ${optimalCountries} pays) • ${
+        isPerfect ? "Parcours Idéal 🏆" : `+${delta} coups`
       }${errorCount > 0 ? ` (${errorCount} err.)` : ""}`
 }
 
@@ -128,7 +128,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            {gaveUp ? "Partie Abandonnée" : isPerfect ? "Parcours Optimal (Par) !" : "Jonction Réussie !"}
+            {gaveUp ? "Partie Abandonnée" : isPerfect ? "Parcours Optimal !" : "Jonction Réussie !"}
           </h2>
 
           <p className="text-sm text-slate-400 mt-1 max-w-sm">
@@ -149,8 +149,8 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
                 }`}
               >
                 {isPerfect
-                  ? `🏆 Par Parfait : ${optimalCountries} / ${optimalCountries}`
-                  : `${totalAttempts} tentatives (Par : ${optimalCountries}) • +${delta}`}
+                  ? `🏆 Parcours Optimal : ${optimalCountries} pays (sans faute)`
+                  : `${totalAttempts} coups • Idéal : ${optimalCountries} (+${delta} de trop)`}
               </div>
               <span className="text-[11px] text-slate-400">
                 {isPerfect
@@ -167,7 +167,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
         <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 text-center">
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Tentatives
+              Coups joués
             </span>
             <span className="text-2xl font-mono font-extrabold text-white mt-0.5">
               {gaveUp ? "—" : totalAttempts}
@@ -179,19 +179,19 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
 
           <div className="flex flex-col items-center border-x border-slate-700/60">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Objectif (Par)
+              Trajet minimal
             </span>
             <span className="text-2xl font-mono font-extrabold text-emerald-400 mt-0.5">
               {optimalCountries}
             </span>
             <span className="text-[10px] text-emerald-500/80 mt-0.5">
-              trajet minimal
+              pays minimum
             </span>
           </div>
 
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Écart (Par)
+              Écart vs idéal
             </span>
             <span
               className={`text-2xl font-mono font-extrabold mt-0.5 ${
@@ -204,7 +204,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
                   : "text-blue-400"
               }`}
             >
-              {gaveUp ? "—" : isPerfect ? "Par (0)" : `+${delta}`}
+              {gaveUp ? "—" : isPerfect ? "0 (Idéal)" : `+${delta}`}
             </span>
             <span className="text-[10px] text-slate-500 mt-0.5">
               {gaveUp ? "" : isPerfect ? "Sans déchet" : `${delta} coup${delta > 1 ? "s" : ""} de trop`}

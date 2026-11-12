@@ -67,12 +67,12 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   return (
     <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
       {/* Left: QuickMenuDrawer + Back to Hub + Game Branding */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 shrink-0">
         <QuickMenuDrawer />
 
         <Link
           href="/"
-          className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
+          className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
           title="Retour au Hub d'accueil"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
@@ -80,23 +80,23 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
         </Link>
 
         <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-6 h-6 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+          <div className="flex items-center justify-center w-6 h-6 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shrink-0">
             <Layers className="w-3.5 h-3.5" />
           </div>
-          <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block">
+          <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block whitespace-nowrap">
             BorderPath
           </h1>
         </div>
       </div>
 
       {/* Center: Mode Segmented Pill + Pack Selector + Compact Mission Corridor */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 shrink-0">
         {/* Mode Switcher */}
-        <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+        <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium shrink-0">
           <button
             type="button"
             onClick={() => onChangeMode?.("daily")}
-            className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+            className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap ${
               mode === "daily"
                 ? "bg-blue-600 text-white font-semibold shadow-sm"
                 : "text-slate-400 hover:text-white"
@@ -109,7 +109,7 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
           <button
             type="button"
             onClick={() => onChangeMode?.("free")}
-            className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+            className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap ${
               mode === "free"
                 ? "bg-blue-600 text-white font-semibold shadow-sm"
                 : "text-slate-400 hover:text-white"
@@ -125,18 +125,18 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
         <button
           type="button"
           onClick={onOpenPackModal}
-          className="group flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer"
+          className="group flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer shrink-0"
           title="Changer de pack / territoire"
         >
-          <span className="text-base">{currentPackMeta.icon}</span>
-          <span className="font-bold text-white group-hover:text-blue-300 transition-colors hidden sm:inline">
+          <span className="text-base shrink-0">{currentPackMeta.icon}</span>
+          <span className="font-bold text-white group-hover:text-blue-300 transition-colors hidden sm:inline whitespace-nowrap">
             {currentPackMeta.shortName}
           </span>
-          <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform" />
+          <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform shrink-0" />
         </button>
 
         {/* Compact Mission Corridor (Start -> Target) */}
-        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-inner">
+        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-inner whitespace-nowrap shrink-0">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mr-1">
             Mission :
           </span>
@@ -149,7 +149,7 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
       </div>
 
       {/* Right: Map & Game Controls + UserNav */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
         {/* Map Theme Toggle */}
         <button
           type="button"
