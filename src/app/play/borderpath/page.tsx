@@ -3,7 +3,6 @@
 export const dynamic = "force-dynamic";
 
 import React, { useState, useEffect, useCallback, useMemo, Suspense } from "react";
-import nextDynamic from "next/dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   BorderPathEntity,
@@ -19,25 +18,13 @@ import {
   validateBidirectionalStep,
   findShortestPath,
 } from "@/lib/games/borderpath/engine";
+import { BorderPathMap } from "@/components/game/borderpath/BorderPathMap";
 import { BorderPathHUD } from "@/components/game/borderpath/BorderPathHUD";
 import { BorderPathInput } from "@/components/game/borderpath/BorderPathInput";
 import { BorderPathTargetCard } from "@/components/game/borderpath/BorderPathTargetCard";
 import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathSummaryModal";
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
-
-// Load MapLibre strictly on client side to prevent any SSR / Webpack manifest mismatch
-const BorderPathMap = nextDynamic(
-  () => import("@/components/game/borderpath/BorderPathMap").then((m) => m.BorderPathMap),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-full bg-slate-950 flex items-center justify-center text-slate-500">
-        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    ),
-  }
-);
 
 function BorderPathGame() {
   const searchParams = useSearchParams();
@@ -77,9 +64,6 @@ function BorderPathGame() {
   const [branchBEntities, setBranchBEntities] = useState<BorderPathEntity[]>(() => [
     session.targetEntity,
   ]);
-  const [moveHistory, setMoveHistory] = useState<
-    { entity: BorderPathEntity; branch: "A" | "B" }[]
-  >([]);
   const [fullConnectedPath, setFullConnectedPath] = useState<BorderPathEntity[]>([]);
 
   const [invalidFlashId, setInvalidFlashId] = useState<string | null>(null);
@@ -126,7 +110,6 @@ function BorderPathGame() {
       setSession(newSession);
       setBranchAEntities([newSession.startEntity]);
       setBranchBEntities([newSession.targetEntity]);
-      setMoveHistory([]);
       setFullConnectedPath([]);
       setInvalidFlashId(null);
       setFeedbackMessage(null);
@@ -189,13 +172,10 @@ function BorderPathGame() {
     // Candidate is valid
     if (result.attachedTo === "branchA") {
       setBranchAEntities((prev) => [...prev, candidate]);
-      setMoveHistory((prev) => [...prev, { entity: candidate, branch: "A" }]);
     } else if (result.attachedTo === "branchB") {
       setBranchBEntities((prev) => [...prev, candidate]);
-      setMoveHistory((prev) => [...prev, { entity: candidate, branch: "B" }]);
     } else if (result.attachedTo === "bridge") {
       setBranchAEntities((prev) => [...prev, candidate]);
-      setMoveHistory((prev) => [...prev, { entity: candidate, branch: "A" }]);
     }
 
     if (result.isComplete && result.fullConnectedPath) {
@@ -218,26 +198,6 @@ function BorderPathGame() {
       });
       setTimeout(() => setFeedbackMessage(null), 3500);
     }
-  };
-
-  // Undo last step
-  const handleUndoLastStep = () => {
-    if (moveHistory.length === 0 || isComplete) return;
-
-    const lastMove = moveHistory[moveHistory.length - 1];
-    setMoveHistory((prev) => prev.slice(0, -1));
-
-    if (lastMove.branch === "A") {
-      setBranchAEntities((prev) => prev.slice(0, -1));
-    } else {
-      setBranchBEntities((prev) => prev.slice(0, -1));
-    }
-
-    setFeedbackMessage({
-      text: `Dernier maillon annulé (${lastMove.entity.name})`,
-      type: "info",
-    });
-    setTimeout(() => setFeedbackMessage(null), 2000);
   };
 
   // Give Up
@@ -325,10 +285,8 @@ function BorderPathGame() {
             headB={headB}
             graph={graph}
             visitedIds={visitedIds}
-            canUndo={moveHistory.length > 0}
             isComplete={isComplete}
             onSelectCandidate={handleSelectCandidate}
-            onUndoLastStep={handleUndoLastStep}
             feedbackMessage={feedbackMessage}
           />
         </div>
