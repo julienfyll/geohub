@@ -325,6 +325,10 @@ function BorderPathGame() {
         onToggleTheme={handleToggleTheme}
         onToggleHideBorders={handleToggleHideBorders}
         onOpenRules={() => setShowRulesModal(true)}
+        onOpenPackModal={() => setShowPackModal(true)}
+        onChangeMode={(newMode) => {
+          router.push(`/play/borderpath?pack=${pack}&mode=${newMode}`);
+        }}
         onGiveUp={handleGiveUp}
         onRestart={() => initGameSession(pack, mode)}
       />
@@ -333,6 +337,7 @@ function BorderPathGame() {
       <BorderPathTargetCard
         optimalCountries={session.minOptimalSteps + 1}
         totalAttempts={totalAttempts}
+        uniquePlacedCount={uniquePlacedCount}
         errorCount={failedAttempts.length}
         remainingSteps={remainingSteps}
       />
