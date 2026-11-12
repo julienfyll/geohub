@@ -108,8 +108,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
 
       for (const id of allRelevantIds) {
         const isConn = isComplete && fullSet.has(id);
-        const inA = !isComplete && setA.has(id);
-        const inB = !isComplete && setB.has(id);
+        const inA = !isConn && setA.has(id);
+        const inB = !isConn && setB.has(id);
         const isHeadA = !isComplete && id === headA.id;
         const isHeadB = !isComplete && id === headB.id;
         const isInvalid = id === invalidFlashId;
@@ -447,22 +447,12 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       markersRef.current.push(marker);
     };
 
-    if (isComplete && fullConnectedPathEntities) {
-      fullConnectedPathEntities.forEach((entity, idx) => {
-        if (idx === 0) addMarker(entity, "start");
-        else if (idx === fullConnectedPathEntities.length - 1) addMarker(entity, "target");
-        else addMarker(entity, "complete");
-      });
-      return;
-    }
-
     // Branch A markers
     branchAEntities.forEach((entity, idx) => {
       const isHead = idx === branchAEntities.length - 1;
       if (idx === 0) {
-        if (isHead) addMarker(entity, "start");
-        else addMarker(entity, "start");
-      } else if (isHead) {
+        addMarker(entity, "start");
+      } else if (isHead && !isComplete) {
         addMarker(entity, "headA");
       } else {
         addMarker(entity, "stepA");
@@ -473,9 +463,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     branchBEntities.forEach((entity, idx) => {
       const isHead = idx === branchBEntities.length - 1;
       if (idx === 0) {
-        if (isHead) addMarker(entity, "target");
-        else addMarker(entity, "target");
-      } else if (isHead) {
+        addMarker(entity, "target");
+      } else if (isHead && !isComplete) {
         addMarker(entity, "headB");
       } else {
         addMarker(entity, "stepB");

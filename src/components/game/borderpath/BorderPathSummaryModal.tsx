@@ -26,12 +26,11 @@ interface BorderPathSummaryModalProps {
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
   fullConnectedPath: BorderPathEntity[];
-  totalAttempts: number;
+  totalCountriesPlaced: number;
   minOptimalSteps: number;
-  optimalSolutions?: string[][];
-  allEntities: Record<string, BorderPathEntity>;
   gaveUp: boolean;
-  onReplay: () => void;
+  onReplaySame: () => void;
+  onNewChallenge: () => void;
   onChangePack: () => void;
 }
 
@@ -43,40 +42,35 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   startEntity,
   targetEntity,
   fullConnectedPath,
-  totalAttempts,
+  totalCountriesPlaced,
   minOptimalSteps,
-  optimalSolutions = [],
-  allEntities,
   gaveUp,
-  onReplay,
+  onReplaySame,
+  onNewChallenge,
   onChangePack,
 }) => {
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
-  const delta = totalAttempts - minOptimalSteps;
-  const isPerfect = !gaveUp && delta <= 0;
+  const optimalCountriesCount = minOptimalSteps + 1;
+  const userCountriesCount = totalCountriesPlaced > 0 ? totalCountriesPlaced : fullConnectedPath.length;
+  const delta = Math.max(0, userCountriesCount - optimalCountriesCount);
+  const isPerfect = !gaveUp && delta === 0;
+
+  // Score: 10 000 max, -1 000 pts per extra country/detour (minimum 1 000 pts if completed, 0 if gave up)
   const score = gaveUp
     ? 0
-    : Math.max(1000, Math.round(10000 - Math.max(0, delta) * 1500));
-
-  const optimalCountriesCount = minOptimalSteps + 1;
-  const userCountriesCount = fullConnectedPath.length > 0 ? fullConnectedPath.length : totalAttempts + 1;
+    : Math.max(1000, 10000 - delta * 1000);
 
   // Generate shareable text
   const handleShare = () => {
     const today = new Date().toISOString().slice(0, 10);
     const packEmoji = pack === "france_departements" ? "🇫🇷" : "🌍";
 
-    const emojiRow = fullConnectedPath
-      .map((_, i) => (i < optimalCountriesCount ? "🟢" : "🟡"))
-      .join("");
-
     const text = `BorderPath #${today} ${packEmoji}
 ${startEntity.flagEmoji || "🏁"} ${startEntity.name} ➔ ${targetEntity.flagEmoji || "🎯"} ${targetEntity.name}
-Score : ${gaveUp ? "Abandonné" : `${score} pts • ${userCountriesCount} pays (Optimal : ${optimalCountriesCount})`}
-${emojiRow}
+${gaveUp ? "Abandonné" : `Score : ${score.toLocaleString("fr-FR")} pts • ${userCountriesCount} pays (Objectif optimal : ${optimalCountriesCount} pays)`}
 
 Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
 
@@ -127,25 +121,32 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            {gaveUp ? "Solution Révélée" : isPerfect ? "Parcours Parfait !" : "Jonction Réussie !"}
+            {gaveUp ? "Partie Abandonnée" : isPerfect ? "Parcours Parfait !" : "Jonction Réussie !"}
           </h2>
 
           <p className="text-sm text-slate-400 mt-1 max-w-sm">
             {gaveUp
-              ? "Voici l'itinéraire optimal pour relier ces deux territoires."
+              ? "Vous n'avez pas terminé la jonction."
               : isPerfect
-              ? `Score optimal absolu ! Vous avez relié les deux rives en ${totalAttempts} maillons.`
+              ? `Score optimal absolu ! Jonction directe en ${optimalCountriesCount} pays sans aucun détour.`
               : `Vous avez relié ${startEntity.name} et ${targetEntity.name} en ${userCountriesCount} pays.`}
           </p>
 
           {!gaveUp && (
-            <div className="mt-3 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 font-extrabold text-base">
-              Score : {score.toLocaleString("fr-FR")} / 10 000 pts
+            <div className="mt-3 flex flex-col items-center gap-1">
+              <div className="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 font-extrabold text-base">
+                Score : {score.toLocaleString("fr-FR")} / 10 000 pts
+              </div>
+              <span className="text-[11px] text-slate-400">
+                {isPerfect
+                  ? "10 000 pts max (zéro pays superflu)"
+                  : `Base 10 000 pts • -1 000 pts par pays de détour (${delta} × -1 000)`}
+              </span>
             </div>
           )}
         </div>
 
-        {/* Stats Grid: Compared against Optimal */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 text-center">
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
@@ -155,50 +156,50 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
               {gaveUp ? "—" : userCountriesCount}
             </span>
             <span className="text-[10px] text-slate-500 mt-0.5">
-              {gaveUp ? "" : `${totalAttempts} maillons`}
+              {gaveUp ? "" : "pays posés"}
             </span>
           </div>
 
           <div className="flex flex-col items-center border-x border-slate-700/60">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Trajet Optimal
+              Objectif Optimal
             </span>
             <span className="text-2xl font-mono font-extrabold text-emerald-400 mt-0.5">
               {optimalCountriesCount}
             </span>
             <span className="text-[10px] text-emerald-500/80 mt-0.5">
-              {minOptimalSteps} maillons
+              trajet le plus court
             </span>
           </div>
 
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Écart
+              Détours
             </span>
             <span
               className={`text-2xl font-mono font-extrabold mt-0.5 ${
                 gaveUp
                   ? "text-slate-500"
-                  : delta <= 0
+                  : delta === 0
                   ? "text-emerald-400"
-                  : delta <= 1
+                  : delta === 1
                   ? "text-amber-400"
                   : "text-blue-400"
               }`}
             >
-              {gaveUp ? "—" : delta <= 0 ? "0 (Par)" : `+${delta}`}
+              {gaveUp ? "—" : delta === 0 ? "0 (Par)" : `+${delta}`}
             </span>
             <span className="text-[10px] text-slate-500 mt-0.5">
-              {gaveUp ? "" : delta <= 0 ? "Sans détour" : "Détours"}
+              {gaveUp ? "" : delta === 0 ? "Sans détour" : delta === 1 ? "1 pays superflu" : `${delta} pays superflus`}
             </span>
           </div>
         </div>
 
-        {/* User Reconstructed Corridor Path */}
+        {/* User Reconstructed Corridor Path (Only the user's path, NEVER the optimal solution) */}
         {!gaveUp && fullConnectedPath.length > 0 && (
           <div className="flex flex-col gap-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Votre corridor complet reconstitué ({fullConnectedPath.length} pays) :
+              Votre corridor réussi ({fullConnectedPath.length} pays) :
             </span>
             <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
               {fullConnectedPath.map((e, idx) => (
@@ -217,29 +218,6 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
                   </span>
                 </React.Fragment>
               ))}
-            </div>
-          </div>
-        )}
-
-        {/* Optimal Path Reference */}
-        {optimalSolutions.length > 0 && (
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Chemin le plus court ({optimalCountriesCount} pays) :</span>
-            </span>
-            <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
-              {optimalSolutions[0].map((id, idx) => {
-                const entity = allEntities[id];
-                return (
-                  <React.Fragment key={`opt-${id}`}>
-                    {idx > 0 && <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />}
-                    <span className="px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 font-medium">
-                      {entity?.flagEmoji} {entity?.name || id}
-                    </span>
-                  </React.Fragment>
-                );
-              })}
             </div>
           </div>
         )}
@@ -265,24 +243,36 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
             )}
           </button>
 
-          {/* Replay & Pack Selector */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Replay Same, New Challenge, & Pack Selector */}
+          <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={onReplay}
-              className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs sm:text-sm border border-slate-700 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              onClick={onReplaySame}
+              className="py-3 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
+              title="Réessayer exactement cette même partie"
             >
-              <RotateCcw className="w-4 h-4" />
-              <span>Rejouer un défi</span>
+              <RotateCcw className="w-4 h-4 shrink-0 text-cyan-400" />
+              <span>Rejouer la même</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onNewChallenge}
+              className="py-3 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
+              title="Générer une nouvelle paire dans ce pack"
+            >
+              <Sparkles className="w-4 h-4 shrink-0 text-amber-400" />
+              <span>Nouveau défi</span>
             </button>
 
             <button
               type="button"
               onClick={onChangePack}
-              className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs sm:text-sm border border-slate-700 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              className="py-3 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
+              title="Choisir un autre pack géographique"
             >
-              <Layers className="w-4 h-4" />
-              <span>Changer de pack</span>
+              <Layers className="w-4 h-4 shrink-0 text-indigo-400" />
+              <span>Changer pack</span>
             </button>
           </div>
         </div>

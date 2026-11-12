@@ -181,8 +181,16 @@ function BorderPathGame() {
     session.targetEntity.id,
   ]);
 
-  // Total attempts / intermediate countries placed
-  const totalAttempts = branchAEntities.length + branchBEntities.length - 2;
+  // Total unique countries placed so far
+  const uniquePlacedCount = useMemo(() => {
+    const set = new Set([
+      ...branchAEntities.map((e) => e.id),
+      ...branchBEntities.map((e) => e.id),
+    ]);
+    return set.size;
+  }, [branchAEntities, branchBEntities]);
+
+  const totalAttempts = Math.max(0, uniquePlacedCount - 2);
 
   // Handle player candidate selection (Bidirectional)
   const handleSelectCandidate = (candidate: BorderPathEntity) => {
@@ -239,17 +247,30 @@ function BorderPathGame() {
     }
   };
 
-  // Give Up
+  // Give Up (never spoilers the optimal path)
   const handleGiveUp = () => {
     if (isComplete) return;
-    const shortest = findShortestPath(session.startEntity.id, session.targetEntity.id, graph);
-    if (shortest.found && shortest.paths.length > 0) {
-      const fullEntities = shortest.paths[0].map((id) => graph[id]).filter(Boolean);
-      setFullConnectedPath(fullEntities);
-    }
     setGaveUp(true);
     setIsComplete(true);
+    setFullConnectedPath([]);
     setShowSummaryModal(true);
+  };
+
+  // Replay exactly the same challenge
+  const handleReplaySameChallenge = () => {
+    setBranchAEntities([session.startEntity]);
+    setBranchBEntities([session.targetEntity]);
+    setFullConnectedPath([]);
+    setInvalidFlashId(null);
+    setFeedbackMessage(null);
+    setIsComplete(false);
+    setGaveUp(false);
+    setShowSummaryModal(false);
+  };
+
+  // New random challenge in current pack
+  const handleNewChallenge = () => {
+    initGameSession(pack, "free");
   };
 
   // Toggle Theme
@@ -306,8 +327,8 @@ function BorderPathGame() {
 
       {/* Optimal Target Card (Bottom-Left) */}
       <BorderPathTargetCard
-        minOptimalSteps={session.minOptimalSteps}
-        currentSteps={totalAttempts}
+        minOptimalSteps={session.minOptimalSteps + 1}
+        currentSteps={uniquePlacedCount}
         remainingSteps={remainingSteps}
       />
 
@@ -335,12 +356,11 @@ function BorderPathGame() {
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
         fullConnectedPath={fullConnectedPath}
-        totalAttempts={totalAttempts}
+        totalCountriesPlaced={uniquePlacedCount}
         minOptimalSteps={session.minOptimalSteps}
-        optimalSolutions={optimalSolutions}
-        allEntities={graph}
         gaveUp={gaveUp}
-        onReplay={() => initGameSession(pack, "free")}
+        onReplaySame={handleReplaySameChallenge}
+        onNewChallenge={handleNewChallenge}
         onChangePack={() => {
           setShowSummaryModal(false);
           setShowPackModal(true);

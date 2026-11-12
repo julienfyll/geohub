@@ -39,14 +39,14 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 gap-2 text-center py-0.5">
           <div className="flex flex-col items-center p-1.5 rounded-xl bg-slate-800/50 border border-slate-700/50">
-            <span className="text-[10px] text-slate-400 font-semibold">Cible (BFS)</span>
+            <span className="text-[10px] text-slate-400 font-semibold">Cible (Pays)</span>
             <span className="text-base sm:text-lg font-extrabold font-mono text-emerald-400">
               {minOptimalSteps}
             </span>
           </div>
 
           <div className="flex flex-col items-center p-1.5 rounded-xl bg-slate-800/50 border border-slate-700/50">
-            <span className="text-[10px] text-slate-400 font-semibold">Étapes</span>
+            <span className="text-[10px] text-slate-400 font-semibold">Vos Pays</span>
             <span className="text-base sm:text-lg font-extrabold font-mono text-white">
               {currentSteps}
             </span>
