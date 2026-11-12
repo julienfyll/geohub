@@ -147,7 +147,7 @@
           </span>
         </div>
 
-        <!-- Section 1: LIGNES DU RÉSEAU (SLIDER DÉFILANT HORIZONTAL + BOUTON TOUT SÉLECTIONNER) -->
+        <!-- Section 1: LIGNES DU RÉSEAU (SLIDER DÉFILANT VERTICAL + BOUTON TOUT SÉLECTIONNER) -->
         <div>
           <div class="flex items-center justify-between mb-2.5">
             <div class="flex items-center gap-2">
@@ -171,35 +171,18 @@
             </button>
           </div>
 
-          <!-- Carousel Container with Arrows and Horizontal Scroll -->
-          <div class="relative group">
-            <!-- Left scroll chevron -->
-            <button 
-              onclick="scrollLinesCarousel(-280)" 
-              type="button" 
-              class="absolute -left-2.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-slate-900/95 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center shadow-2xl opacity-75 group-hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
-              <i data-lucide="chevron-left" class="w-4 h-4"></i>
-            </button>
-
-            <!-- Scrollable Track (16 Metro Lines) -->
+          <!-- Vertical Scroll Track Container (2 Columns Grid with sleek scrollbar) -->
+          <div class="rounded-2xl bg-slate-950/40 border border-slate-800/80 p-2 shadow-inner">
             <div 
-              id="lines-carousel-track" 
-              class="flex items-center gap-2 overflow-x-auto py-1 px-1 scroll-smooth no-scrollbar"
-              style="scrollbar-width: none;">
+              id="lines-vertical-track" 
+              class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[175px] overflow-y-auto pr-1.5"
+              style="scrollbar-width: thin;">
               <!-- Generated dynamically via JS -->
             </div>
-
-            <!-- Right scroll chevron -->
-            <button 
-              onclick="scrollLinesCarousel(280)" 
-              type="button" 
-              class="absolute -right-2.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-slate-900/95 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center shadow-2xl opacity-75 group-hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
-              <i data-lucide="chevron-right" class="w-4 h-4"></i>
-            </button>
           </div>
 
           <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1 px-1">
-            <span>Glissez horizontalement ou cliquez sur les flèches pour voir toutes les lignes</span>
+            <span>Faites défiler verticalement pour parcourir les 16 lignes</span>
             <span class="font-mono">16 lignes RATP disponibles</span>
           </div>
         </div>
@@ -298,14 +281,6 @@
               </div>
             </button>
           </div>
-
-          <!-- Explanatory note -->
-          <div class="flex items-center gap-2 mt-2 px-3 py-2 rounded-xl bg-slate-950/60 border border-slate-800/80 text-[11px] text-slate-400">
-            <i data-lucide="info" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
-            <span>
-              Un clic en deçà de la distance ancre instantanément l'arrêt et déverrouille les tronçons adjacents en double voie néon.
-            </span>
-          </div>
         </div>
 
       </div>
@@ -376,9 +351,10 @@
     let selectedTolerance = '300';
     let activeTab = 'retrace';
 
-    // Render horizontal line slider
+    // Render vertical lines slider
     function renderLinesSlider() {
-      const track = document.getElementById('lines-carousel-track');
+      const track = document.getElementById('lines-vertical-track');
+      if (!track) return;
       track.innerHTML = '';
 
       ALL_METRO_LINES.forEach(line => {
@@ -389,18 +365,20 @@
         card.onclick = () => toggleSingleLine(line.id);
 
         if (isSelected) {
-          card.className = "flex items-center gap-2 px-3 py-2 rounded-2xl border text-left transition-all shrink-0 bg-slate-900 border-purple-500 shadow-sm shadow-purple-500/10 min-w-[155px] cursor-pointer hover:scale-102";
+          card.className = "flex items-center justify-between p-2.5 rounded-xl border text-left transition-all bg-slate-900 border-purple-500 shadow-sm shadow-purple-500/10 cursor-pointer hover:border-purple-400";
         } else {
-          card.className = "flex items-center gap-2 px-3 py-2 rounded-2xl border text-left transition-all shrink-0 bg-slate-950/40 border-slate-800 text-slate-500 opacity-60 hover:opacity-100 min-w-[155px] cursor-pointer";
+          card.className = "flex items-center justify-between p-2.5 rounded-xl border text-left transition-all bg-slate-950/60 border-slate-800/80 text-slate-500 opacity-60 hover:opacity-100 hover:border-slate-700 cursor-pointer";
         }
 
         card.innerHTML = `
-          <span style="background-color: ${line.bg}; color: ${line.text};" class="w-6 h-6 rounded-full flex items-center justify-center font-black text-xs shadow-sm shrink-0">
-            ${line.num}
-          </span>
-          <div class="min-w-0 flex-1">
-            <span class="text-xs font-bold text-white block truncate leading-tight">${line.name}</span>
-            <span class="text-[10px] text-slate-400 block truncate leading-tight mt-0.5">${line.route}</span>
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span style="background-color: ${line.bg}; color: ${line.text};" class="w-6 h-6 rounded-full flex items-center justify-center font-black text-xs shadow-sm shrink-0">
+              ${line.num}
+            </span>
+            <div class="min-w-0 truncate">
+              <span class="text-xs font-bold text-white block truncate leading-tight">${line.name}</span>
+              <span class="text-[10px] text-slate-400 block truncate leading-tight mt-0.5">${line.route}</span>
+            </div>
           </div>
           <div class="w-4 h-4 rounded-md flex items-center justify-center shrink-0 ${isSelected ? 'text-purple-400' : 'text-transparent'}">
             <i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>
@@ -411,12 +389,6 @@
 
       updateToggleAllButton();
       lucide.createIcons();
-    }
-
-    // Scroll carousel smoothly
-    function scrollLinesCarousel(offset) {
-      const track = document.getElementById('lines-carousel-track');
-      track.scrollBy({ left: offset, behavior: 'smooth' });
     }
 
     // Toggle single line
