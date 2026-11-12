@@ -2,9 +2,7 @@
 
 import React, { useEffect, useRef, useCallback } from "react";
 import maplibregl, { StyleSpecification } from "maplibre-gl";
-import { BorderPathEntity, BorderPathPack } from "@/lib/games/borderpath/types";
-
-export type BorderPathMapTheme = "dark" | "voyager" | "satellite";
+import { BorderPathEntity, BorderPathPack, BorderPathMapTheme } from "@/lib/games/borderpath/types";
 
 const SATELLITE_STYLE: StyleSpecification = {
   version: 8,

@@ -6,8 +6,8 @@ import {
   BorderPathEntity,
   BorderPathPack,
   BorderPathMode,
+  BorderPathMapTheme,
 } from "@/lib/games/borderpath/types";
-import { BorderPathMapTheme } from "./BorderPathMap";
 import {
   Compass,
   ArrowRight,

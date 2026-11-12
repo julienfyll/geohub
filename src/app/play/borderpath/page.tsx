@@ -11,6 +11,7 @@ import {
   BorderPathPack,
   BorderPathMode,
   BorderPathSessionInit,
+  BorderPathMapTheme,
 } from "@/lib/games/borderpath/types";
 import {
   getPackGraph,
@@ -18,7 +19,6 @@ import {
   validateBidirectionalStep,
   findShortestPath,
 } from "@/lib/games/borderpath/engine";
-import { BorderPathMapTheme } from "@/components/game/borderpath/BorderPathMap";
 import { BorderPathHUD } from "@/components/game/borderpath/BorderPathHUD";
 import { BorderPathInput } from "@/components/game/borderpath/BorderPathInput";
 import { BorderPathTargetCard } from "@/components/game/borderpath/BorderPathTargetCard";

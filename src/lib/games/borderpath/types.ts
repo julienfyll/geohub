@@ -2,6 +2,8 @@ export type BorderPathPack = "monde" | "europe" | "france_departements" | "ameri
 
 export type BorderPathMode = "daily" | "free" | "rush";
 
+export type BorderPathMapTheme = "dark" | "voyager" | "satellite";
+
 export interface FixedLink {
   targetId: string;
   label: string; // e.g. "Pont de l'Øresund", "Eurotunnel"
