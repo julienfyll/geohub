@@ -17,6 +17,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/play/borderpass",
+        destination: "/play/borderpath",
+        permanent: true,
+      },
+      {
+        source: "/api/games/borderpass/:path*",
+        destination: "/api/games/borderpath/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

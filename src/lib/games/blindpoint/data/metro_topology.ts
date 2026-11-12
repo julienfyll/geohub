@@ -16,13 +16,41 @@ export interface MetroLineInfo {
   bg: string;
   text: string;
   name: string;
+  route?: string;
+  num?: string;
 }
 
-export const METRO_LINE_COLORS: Record<string, MetroLineInfo> = {
-  "1": { bg: "#FFCD00", text: "#111827", name: "Ligne 1" },
-  "4": { bg: "#CF009E", text: "#FFFFFF", name: "Ligne 4" },
-  "6": { bg: "#169B62", text: "#FFFFFF", name: "Ligne 6" },
-};
+export interface MetroLineDefinition {
+  id: string;
+  num: string;
+  bg: string;
+  text: string;
+  name: string;
+  route: string;
+}
+
+export const ALL_METRO_LINES: MetroLineDefinition[] = [
+  { id: "1", num: "1", bg: "#FFCD00", text: "#111827", name: "Ligne 1", route: "La Défense ↔ Vincennes" },
+  { id: "2", num: "2", bg: "#0064B0", text: "#FFFFFF", name: "Ligne 2", route: "Porte Dauphine ↔ Nation" },
+  { id: "3", num: "3", bg: "#9F9825", text: "#FFFFFF", name: "Ligne 3", route: "Pont de Levallois ↔ Gallieni" },
+  { id: "3bis", num: "3b", bg: "#98D4E2", text: "#111827", name: "Ligne 3bis", route: "Porte des Lilas ↔ Gambetta" },
+  { id: "4", num: "4", bg: "#CF009E", text: "#FFFFFF", name: "Ligne 4", route: "Clignancourt ↔ Bagneux" },
+  { id: "5", num: "5", bg: "#FF7E2E", text: "#FFFFFF", name: "Ligne 5", route: "Bobigny ↔ Place d'Italie" },
+  { id: "6", num: "6", bg: "#169B62", text: "#FFFFFF", name: "Ligne 6", route: "Étoile ↔ Nation" },
+  { id: "7", num: "7", bg: "#FA9ABA", text: "#111827", name: "Ligne 7", route: "La Courneuve ↔ Villejuif / Ivry" },
+  { id: "7bis", num: "7b", bg: "#6ECA97", text: "#111827", name: "Ligne 7bis", route: "Louis Blanc ↔ Pré-St-Gervais" },
+  { id: "8", num: "8", bg: "#CEADD2", text: "#111827", name: "Ligne 8", route: "Balard ↔ Créteil" },
+  { id: "9", num: "9", bg: "#B6BD00", text: "#111827", name: "Ligne 9", route: "Pont de Sèvres ↔ Montreuil" },
+  { id: "10", num: "10", bg: "#C9910D", text: "#FFFFFF", name: "Ligne 10", route: "Boulogne ↔ Austerlitz" },
+  { id: "11", num: "11", bg: "#704B1C", text: "#FFFFFF", name: "Ligne 11", route: "Châtelet ↔ Rosny" },
+  { id: "12", num: "12", bg: "#007852", text: "#FFFFFF", name: "Ligne 12", route: "Aubervilliers ↔ Mairie d'Issy" },
+  { id: "13", num: "13", bg: "#6EC4E8", text: "#111827", name: "Ligne 13", route: "Asnières / St-Denis ↔ Châtillon" },
+  { id: "14", num: "14", bg: "#62259D", text: "#FFFFFF", name: "Ligne 14", route: "St-Denis Pleyel ↔ Orly" },
+];
+
+export const METRO_LINE_COLORS: Record<string, MetroLineInfo> = Object.fromEntries(
+  ALL_METRO_LINES.map((l) => [l.id, { bg: l.bg, text: l.text, name: l.name, route: l.route, num: l.num }])
+);
 
 export const METRO_TOPOLOGY_STATIONS: MetroStationTopology[] = [
   // LIGNE 1

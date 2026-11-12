@@ -14,6 +14,7 @@ import {
   Users,
   ChevronRight,
   Trophy,
+  Layers,
 } from "lucide-react";
 import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 
@@ -242,6 +243,42 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                       <Plane className="w-3 h-3 text-sky-400" /> Aéroports EU
                     </span>
                     <span className="text-[10px] text-slate-500">Passagers</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Game 3 : BorderPath */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5" /> BorderPath
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/borderpath")}
+                    className="text-[10px] text-slate-400 hover:text-white transition-colors font-semibold"
+                  >
+                    Lobby
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/borderpath?pack=monde&mode=daily")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🌍 Monde</span>
+                    <span className="text-[10px] text-slate-500">Du Jour</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/borderpath?pack=france_departements&mode=daily")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🇫🇷 Départements</span>
+                    <span className="text-[10px] text-slate-500">96 métropolitains</span>
                   </button>
                 </div>
               </div>

@@ -199,30 +199,77 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Game 3 : BorderPath (Coming Soon) */}
-          <div className="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between opacity-75">
+          {/* Game 3 : BorderPath (Active) */}
+          <div className="relative group bg-slate-900/90 border-2 border-indigo-500/50 hover:border-indigo-400 rounded-3xl p-6 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+              <Layers className="w-32 h-32 text-indigo-400" />
+            </div>
+
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-medium uppercase tracking-wider">
-                  Sprint 2 • Bientôt
+                <span className="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 text-xs font-bold uppercase tracking-wider">
+                  ★ Nouveau (Jouable)
                 </span>
-                <Layers className="w-5 h-5 text-slate-500" />
+                <span className="text-xs text-slate-400 font-mono">100% Clavier • BFS Optimal</span>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-300 mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2">
                 BorderPath — Le Maillon Frontalier
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                Reliez deux pays éloignés (ex: Portugal à la Chine) en nommant la séquence minimale de pays contigus ayant des frontières terrestres communes.
+                Reliez deux pays éloignés (ex: Portugal à la Chine) ou deux départements français en nommant au clavier la séquence minimale de territoires limitrophes contigus.
               </p>
+
+              {/* Modes & Packs disponibles */}
+              <div className="flex flex-col gap-3 mb-6">
+                <div>
+                  <span className="text-xs text-slate-400 font-medium block mb-1.5">🗺️ Territoires disponibles :</span>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href="/play/borderpath?pack=monde&mode=daily"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🌍</span>
+                      <span>Monde</span>
+                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 167 pays</span>
+                    </Link>
+                    <Link
+                      href="/play/borderpath?pack=france_departements&mode=daily"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🇫🇷</span>
+                      <span>France</span>
+                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 96 départements</span>
+                    </Link>
+                    <Link
+                      href="/play/borderpath?pack=europe&mode=daily"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🇪🇺</span>
+                      <span>Europe</span>
+                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 46 pays</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <button
-              disabled
-              className="w-full py-3 px-4 rounded-xl bg-slate-800/60 text-slate-500 font-semibold text-xs border border-slate-700/50 cursor-not-allowed"
-            >
-              En cours de développement
-            </button>
+            <div className="grid grid-cols-2 gap-2.5">
+              <Link
+                href="/play/borderpath?pack=monde&mode=daily"
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-indigo-600/20"
+              >
+                <Play className="w-4 h-4 fill-white" />
+                <span>Jouer à BorderPath</span>
+              </Link>
+              <Link
+                href="/play/borderpath?pack=monde&mode=free"
+                className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Défi Aléatoire</span>
+              </Link>
+            </div>
           </div>
 
           {/* Game 4 : Capital Blitz (Coming Soon) */}

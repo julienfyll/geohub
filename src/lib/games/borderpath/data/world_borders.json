@@ -1,0 +1,4056 @@
+{
+  "AFG": {
+    "id": "AFG",
+    "name": "Afghanistan",
+    "normalizedName": "afghanistan",
+    "aliases": [
+      "Afghanistan",
+      "AF",
+      "AFG",
+      "République islamique d'Afghanistan"
+    ],
+    "capitalOrChefLieu": "Kabul",
+    "continentOrRegion": "Asia",
+    "latitude": 33,
+    "longitude": 65,
+    "neighbors": [
+      "IRN",
+      "PAK",
+      "TKM",
+      "UZB",
+      "TJK",
+      "CHN"
+    ],
+    "flagEmoji": "🇦🇫",
+    "population": 0,
+    "areaKm2": 652230
+  },
+  "AGO": {
+    "id": "AGO",
+    "name": "Angola",
+    "normalizedName": "angola",
+    "aliases": [
+      "Angola",
+      "AO",
+      "AGO",
+      "République d'Angola"
+    ],
+    "capitalOrChefLieu": "Luanda",
+    "continentOrRegion": "Africa",
+    "latitude": -12.5,
+    "longitude": 18.5,
+    "neighbors": [
+      "COG",
+      "COD",
+      "ZMB",
+      "NAM"
+    ],
+    "flagEmoji": "🇦🇴",
+    "population": 0,
+    "areaKm2": 1246700
+  },
+  "ALB": {
+    "id": "ALB",
+    "name": "Albanie",
+    "normalizedName": "albanie",
+    "aliases": [
+      "Albania",
+      "AL",
+      "ALB",
+      "République d'Albanie"
+    ],
+    "capitalOrChefLieu": "Tirana",
+    "continentOrRegion": "Europe",
+    "latitude": 41,
+    "longitude": 20,
+    "neighbors": [
+      "MNE",
+      "GRC",
+      "MKD",
+      "UNK"
+    ],
+    "flagEmoji": "🇦🇱",
+    "population": 0,
+    "areaKm2": 28748
+  },
+  "AND": {
+    "id": "AND",
+    "name": "Andorre",
+    "normalizedName": "andorre",
+    "aliases": [
+      "Andorra",
+      "AD",
+      "AND",
+      "Principauté d'Andorre"
+    ],
+    "capitalOrChefLieu": "Andorra la Vella",
+    "continentOrRegion": "Europe",
+    "latitude": 42.5,
+    "longitude": 1.5,
+    "neighbors": [
+      "FRA",
+      "ESP"
+    ],
+    "flagEmoji": "🇦🇩",
+    "population": 0,
+    "areaKm2": 468
+  },
+  "ARE": {
+    "id": "ARE",
+    "name": "Émirats arabes unis",
+    "normalizedName": "emirats arabes unis",
+    "aliases": [
+      "United Arab Emirates",
+      "AE",
+      "ARE",
+      "Émirats arabes unis"
+    ],
+    "capitalOrChefLieu": "Abu Dhabi",
+    "continentOrRegion": "Asia",
+    "latitude": 24,
+    "longitude": 54,
+    "neighbors": [
+      "OMN",
+      "SAU"
+    ],
+    "flagEmoji": "🇦🇪",
+    "population": 0,
+    "areaKm2": 83600
+  },
+  "ARG": {
+    "id": "ARG",
+    "name": "Argentine",
+    "normalizedName": "argentine",
+    "aliases": [
+      "Argentina",
+      "AR",
+      "ARG",
+      "République argentine"
+    ],
+    "capitalOrChefLieu": "Buenos Aires",
+    "continentOrRegion": "Americas",
+    "latitude": -34,
+    "longitude": -64,
+    "neighbors": [
+      "BOL",
+      "BRA",
+      "CHL",
+      "PRY",
+      "URY"
+    ],
+    "flagEmoji": "🇦🇷",
+    "population": 0,
+    "areaKm2": 2780400
+  },
+  "ARM": {
+    "id": "ARM",
+    "name": "Arménie",
+    "normalizedName": "armenie",
+    "aliases": [
+      "Armenia",
+      "AM",
+      "ARM",
+      "République d'Arménie"
+    ],
+    "capitalOrChefLieu": "Yerevan",
+    "continentOrRegion": "Asia",
+    "latitude": 40,
+    "longitude": 45,
+    "neighbors": [
+      "AZE",
+      "GEO",
+      "IRN",
+      "TUR"
+    ],
+    "flagEmoji": "🇦🇲",
+    "population": 0,
+    "areaKm2": 29743
+  },
+  "AUT": {
+    "id": "AUT",
+    "name": "Autriche",
+    "normalizedName": "autriche",
+    "aliases": [
+      "Austria",
+      "AT",
+      "AUT",
+      "République d'Autriche"
+    ],
+    "capitalOrChefLieu": "Vienna",
+    "continentOrRegion": "Europe",
+    "latitude": 47.33333333,
+    "longitude": 13.33333333,
+    "neighbors": [
+      "CZE",
+      "DEU",
+      "HUN",
+      "ITA",
+      "LIE",
+      "SVK",
+      "SVN",
+      "CHE"
+    ],
+    "flagEmoji": "🇦🇹",
+    "population": 0,
+    "areaKm2": 83871
+  },
+  "AZE": {
+    "id": "AZE",
+    "name": "Azerbaïdjan",
+    "normalizedName": "azerbaidjan",
+    "aliases": [
+      "Azerbaijan",
+      "AZ",
+      "AZE",
+      "République d'Azerbaïdjan"
+    ],
+    "capitalOrChefLieu": "Baku",
+    "continentOrRegion": "Asia",
+    "latitude": 40.5,
+    "longitude": 47.5,
+    "neighbors": [
+      "ARM",
+      "GEO",
+      "IRN",
+      "RUS",
+      "TUR"
+    ],
+    "flagEmoji": "🇦🇿",
+    "population": 0,
+    "areaKm2": 86600
+  },
+  "BDI": {
+    "id": "BDI",
+    "name": "Burundi",
+    "normalizedName": "burundi",
+    "aliases": [
+      "Burundi",
+      "BI",
+      "BDI",
+      "République du Burundi"
+    ],
+    "capitalOrChefLieu": "Gitega",
+    "continentOrRegion": "Africa",
+    "latitude": -3.5,
+    "longitude": 30,
+    "neighbors": [
+      "COD",
+      "RWA",
+      "TZA"
+    ],
+    "flagEmoji": "🇧🇮",
+    "population": 0,
+    "areaKm2": 27834
+  },
+  "BEL": {
+    "id": "BEL",
+    "name": "Belgique",
+    "normalizedName": "belgique",
+    "aliases": [
+      "Belgium",
+      "BE",
+      "BEL",
+      "Royaume de Belgique"
+    ],
+    "capitalOrChefLieu": "Brussels",
+    "continentOrRegion": "Europe",
+    "latitude": 50.83333333,
+    "longitude": 4,
+    "neighbors": [
+      "FRA",
+      "DEU",
+      "LUX",
+      "NLD"
+    ],
+    "flagEmoji": "🇧🇪",
+    "population": 0,
+    "areaKm2": 30528
+  },
+  "BEN": {
+    "id": "BEN",
+    "name": "Bénin",
+    "normalizedName": "benin",
+    "aliases": [
+      "Benin",
+      "BJ",
+      "BEN",
+      "République du Bénin"
+    ],
+    "capitalOrChefLieu": "Porto-Novo",
+    "continentOrRegion": "Africa",
+    "latitude": 9.5,
+    "longitude": 2.25,
+    "neighbors": [
+      "BFA",
+      "NER",
+      "NGA",
+      "TGO"
+    ],
+    "flagEmoji": "🇧🇯",
+    "population": 0,
+    "areaKm2": 112622
+  },
+  "BFA": {
+    "id": "BFA",
+    "name": "Burkina Faso",
+    "normalizedName": "burkina faso",
+    "aliases": [
+      "Burkina Faso",
+      "BF",
+      "BFA",
+      "République du Burkina"
+    ],
+    "capitalOrChefLieu": "Ouagadougou",
+    "continentOrRegion": "Africa",
+    "latitude": 13,
+    "longitude": -2,
+    "neighbors": [
+      "BEN",
+      "CIV",
+      "GHA",
+      "MLI",
+      "NER",
+      "TGO"
+    ],
+    "flagEmoji": "🇧🇫",
+    "population": 0,
+    "areaKm2": 272967
+  },
+  "BGD": {
+    "id": "BGD",
+    "name": "Bangladesh",
+    "normalizedName": "bangladesh",
+    "aliases": [
+      "Bangladesh",
+      "BD",
+      "BGD",
+      "La République populaire du Bangladesh"
+    ],
+    "capitalOrChefLieu": "Dhaka",
+    "continentOrRegion": "Asia",
+    "latitude": 24,
+    "longitude": 90,
+    "neighbors": [
+      "MMR",
+      "IND"
+    ],
+    "flagEmoji": "🇧🇩",
+    "population": 0,
+    "areaKm2": 147570
+  },
+  "BGR": {
+    "id": "BGR",
+    "name": "Bulgarie",
+    "normalizedName": "bulgarie",
+    "aliases": [
+      "Bulgaria",
+      "BG",
+      "BGR",
+      "République de Bulgarie"
+    ],
+    "capitalOrChefLieu": "Sofia",
+    "continentOrRegion": "Europe",
+    "latitude": 43,
+    "longitude": 25,
+    "neighbors": [
+      "GRC",
+      "MKD",
+      "ROU",
+      "SRB",
+      "TUR"
+    ],
+    "flagEmoji": "🇧🇬",
+    "population": 0,
+    "areaKm2": 110879
+  },
+  "BHR": {
+    "id": "BHR",
+    "name": "Bahreïn",
+    "normalizedName": "bahrein",
+    "aliases": [
+      "Bahrain",
+      "BH",
+      "BHR",
+      "Royaume de Bahreïn"
+    ],
+    "capitalOrChefLieu": "Manama",
+    "continentOrRegion": "Asia",
+    "latitude": 26,
+    "longitude": 50.55,
+    "neighbors": [
+      "SAU"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "SAU",
+        "label": "Chaussée du Roi Fahd",
+        "type": "causeway"
+      }
+    ],
+    "flagEmoji": "🇧🇭",
+    "population": 0,
+    "areaKm2": 765
+  },
+  "BIH": {
+    "id": "BIH",
+    "name": "Bosnie-Herzégovine",
+    "normalizedName": "bosnie-herzegovine",
+    "aliases": [
+      "Bosnia and Herzegovina",
+      "BA",
+      "BIH",
+      "Bosnie-et-Herzégovine"
+    ],
+    "capitalOrChefLieu": "Sarajevo",
+    "continentOrRegion": "Europe",
+    "latitude": 44,
+    "longitude": 18,
+    "neighbors": [
+      "HRV",
+      "MNE",
+      "SRB"
+    ],
+    "flagEmoji": "🇧🇦",
+    "population": 0,
+    "areaKm2": 51209
+  },
+  "BLR": {
+    "id": "BLR",
+    "name": "Biélorussie",
+    "normalizedName": "bielorussie",
+    "aliases": [
+      "Belarus",
+      "BY",
+      "BLR",
+      "République de Biélorussie"
+    ],
+    "capitalOrChefLieu": "Minsk",
+    "continentOrRegion": "Europe",
+    "latitude": 53,
+    "longitude": 28,
+    "neighbors": [
+      "LVA",
+      "LTU",
+      "POL",
+      "RUS",
+      "UKR"
+    ],
+    "flagEmoji": "🇧🇾",
+    "population": 0,
+    "areaKm2": 207600
+  },
+  "BLZ": {
+    "id": "BLZ",
+    "name": "Belize",
+    "normalizedName": "belize",
+    "aliases": [
+      "Belize",
+      "BZ",
+      "BLZ",
+      "Belize"
+    ],
+    "capitalOrChefLieu": "Belmopan",
+    "continentOrRegion": "Americas",
+    "latitude": 17.25,
+    "longitude": -88.75,
+    "neighbors": [
+      "GTM",
+      "MEX"
+    ],
+    "flagEmoji": "🇧🇿",
+    "population": 0,
+    "areaKm2": 22966
+  },
+  "BOL": {
+    "id": "BOL",
+    "name": "Bolivie",
+    "normalizedName": "bolivie",
+    "aliases": [
+      "Bolivia",
+      "BO",
+      "BOL",
+      "État plurinational de Bolivie"
+    ],
+    "capitalOrChefLieu": "Sucre",
+    "continentOrRegion": "Americas",
+    "latitude": -17,
+    "longitude": -65,
+    "neighbors": [
+      "ARG",
+      "BRA",
+      "CHL",
+      "PRY",
+      "PER"
+    ],
+    "flagEmoji": "🇧🇴",
+    "population": 0,
+    "areaKm2": 1098581
+  },
+  "BRA": {
+    "id": "BRA",
+    "name": "Brésil",
+    "normalizedName": "bresil",
+    "aliases": [
+      "Brazil",
+      "BR",
+      "BRA",
+      "République fédérative du Brésil"
+    ],
+    "capitalOrChefLieu": "Brasília",
+    "continentOrRegion": "Americas",
+    "latitude": -10,
+    "longitude": -55,
+    "neighbors": [
+      "ARG",
+      "BOL",
+      "COL",
+      "GUF",
+      "GUY",
+      "PRY",
+      "PER",
+      "SUR",
+      "URY",
+      "VEN"
+    ],
+    "flagEmoji": "🇧🇷",
+    "population": 0,
+    "areaKm2": 8515767
+  },
+  "BRN": {
+    "id": "BRN",
+    "name": "Brunei",
+    "normalizedName": "brunei",
+    "aliases": [
+      "Brunei",
+      "BN",
+      "BRN",
+      "État de Brunei Darussalam"
+    ],
+    "capitalOrChefLieu": "Bandar Seri Begawan",
+    "continentOrRegion": "Asia",
+    "latitude": 4.5,
+    "longitude": 114.66666666,
+    "neighbors": [
+      "MYS"
+    ],
+    "flagEmoji": "🇧🇳",
+    "population": 0,
+    "areaKm2": 5765
+  },
+  "BTN": {
+    "id": "BTN",
+    "name": "Bhoutan",
+    "normalizedName": "bhoutan",
+    "aliases": [
+      "Bhutan",
+      "BT",
+      "BTN",
+      "Royaume du Bhoutan"
+    ],
+    "capitalOrChefLieu": "Thimphu",
+    "continentOrRegion": "Asia",
+    "latitude": 27.5,
+    "longitude": 90.5,
+    "neighbors": [
+      "CHN",
+      "IND"
+    ],
+    "flagEmoji": "🇧🇹",
+    "population": 0,
+    "areaKm2": 38394
+  },
+  "BWA": {
+    "id": "BWA",
+    "name": "Botswana",
+    "normalizedName": "botswana",
+    "aliases": [
+      "Botswana",
+      "BW",
+      "BWA",
+      "République du Botswana"
+    ],
+    "capitalOrChefLieu": "Gaborone",
+    "continentOrRegion": "Africa",
+    "latitude": -22,
+    "longitude": 24,
+    "neighbors": [
+      "NAM",
+      "ZAF",
+      "ZMB",
+      "ZWE"
+    ],
+    "flagEmoji": "🇧🇼",
+    "population": 0,
+    "areaKm2": 582000
+  },
+  "CAF": {
+    "id": "CAF",
+    "name": "République centrafricaine",
+    "normalizedName": "republique centrafricaine",
+    "aliases": [
+      "Central African Republic",
+      "CF",
+      "CAF",
+      "République centrafricaine"
+    ],
+    "capitalOrChefLieu": "Bangui",
+    "continentOrRegion": "Africa",
+    "latitude": 7,
+    "longitude": 21,
+    "neighbors": [
+      "CMR",
+      "TCD",
+      "COD",
+      "COG",
+      "SSD",
+      "SDN"
+    ],
+    "flagEmoji": "🇨🇫",
+    "population": 0,
+    "areaKm2": 622984
+  },
+  "CAN": {
+    "id": "CAN",
+    "name": "Canada",
+    "normalizedName": "canada",
+    "aliases": [
+      "Canada",
+      "CA",
+      "CAN",
+      "Canada"
+    ],
+    "capitalOrChefLieu": "Ottawa",
+    "continentOrRegion": "Americas",
+    "latitude": 60,
+    "longitude": -95,
+    "neighbors": [
+      "USA"
+    ],
+    "flagEmoji": "🇨🇦",
+    "population": 0,
+    "areaKm2": 9984670
+  },
+  "CHE": {
+    "id": "CHE",
+    "name": "Suisse",
+    "normalizedName": "suisse",
+    "aliases": [
+      "Switzerland",
+      "CH",
+      "CHE",
+      "Confédération suisse"
+    ],
+    "capitalOrChefLieu": "Bern",
+    "continentOrRegion": "Europe",
+    "latitude": 47,
+    "longitude": 8,
+    "neighbors": [
+      "AUT",
+      "FRA",
+      "ITA",
+      "LIE",
+      "DEU"
+    ],
+    "flagEmoji": "🇨🇭",
+    "population": 0,
+    "areaKm2": 41284
+  },
+  "CHL": {
+    "id": "CHL",
+    "name": "Chili",
+    "normalizedName": "chili",
+    "aliases": [
+      "Chile",
+      "CL",
+      "CHL",
+      "République du Chili"
+    ],
+    "capitalOrChefLieu": "Santiago",
+    "continentOrRegion": "Americas",
+    "latitude": -30,
+    "longitude": -71,
+    "neighbors": [
+      "ARG",
+      "BOL",
+      "PER"
+    ],
+    "flagEmoji": "🇨🇱",
+    "population": 0,
+    "areaKm2": 756102
+  },
+  "CHN": {
+    "id": "CHN",
+    "name": "Chine",
+    "normalizedName": "chine",
+    "aliases": [
+      "China",
+      "CN",
+      "CHN",
+      "République populaire de Chine"
+    ],
+    "capitalOrChefLieu": "Beijing",
+    "continentOrRegion": "Asia",
+    "latitude": 35,
+    "longitude": 105,
+    "neighbors": [
+      "AFG",
+      "BTN",
+      "MMR",
+      "HKG",
+      "IND",
+      "KAZ",
+      "NPL",
+      "PRK",
+      "KGZ",
+      "LAO",
+      "MAC",
+      "MNG",
+      "PAK",
+      "RUS",
+      "TJK",
+      "VNM"
+    ],
+    "flagEmoji": "🇨🇳",
+    "population": 0,
+    "areaKm2": 9706961
+  },
+  "CIV": {
+    "id": "CIV",
+    "name": "Côte d'Ivoire",
+    "normalizedName": "cote d'ivoire",
+    "aliases": [
+      "Ivory Coast",
+      "CI",
+      "CIV",
+      "République de Côte d' Ivoire"
+    ],
+    "capitalOrChefLieu": "Yamoussoukro",
+    "continentOrRegion": "Africa",
+    "latitude": 8,
+    "longitude": -5,
+    "neighbors": [
+      "BFA",
+      "GHA",
+      "GIN",
+      "LBR",
+      "MLI"
+    ],
+    "flagEmoji": "🇨🇮",
+    "population": 0,
+    "areaKm2": 322463
+  },
+  "CMR": {
+    "id": "CMR",
+    "name": "Cameroun",
+    "normalizedName": "cameroun",
+    "aliases": [
+      "Cameroon",
+      "CM",
+      "CMR",
+      "République du Cameroun"
+    ],
+    "capitalOrChefLieu": "Yaoundé",
+    "continentOrRegion": "Africa",
+    "latitude": 6,
+    "longitude": 12,
+    "neighbors": [
+      "CAF",
+      "TCD",
+      "COG",
+      "GNQ",
+      "GAB",
+      "NGA"
+    ],
+    "flagEmoji": "🇨🇲",
+    "population": 0,
+    "areaKm2": 475442
+  },
+  "COD": {
+    "id": "COD",
+    "name": "Congo (Rép. dém.)",
+    "normalizedName": "congo (rep. dem.)",
+    "aliases": [
+      "DR Congo",
+      "CD",
+      "COD",
+      "République démocratique du Congo"
+    ],
+    "capitalOrChefLieu": "Kinshasa",
+    "continentOrRegion": "Africa",
+    "latitude": 0,
+    "longitude": 25,
+    "neighbors": [
+      "AGO",
+      "BDI",
+      "CAF",
+      "COG",
+      "RWA",
+      "SSD",
+      "TZA",
+      "UGA",
+      "ZMB"
+    ],
+    "flagEmoji": "🇨🇩",
+    "population": 0,
+    "areaKm2": 2344858
+  },
+  "COG": {
+    "id": "COG",
+    "name": "Congo",
+    "normalizedName": "congo",
+    "aliases": [
+      "Congo",
+      "CG",
+      "COG",
+      "République du Congo"
+    ],
+    "capitalOrChefLieu": "Brazzaville",
+    "continentOrRegion": "Africa",
+    "latitude": -1,
+    "longitude": 15,
+    "neighbors": [
+      "AGO",
+      "CMR",
+      "CAF",
+      "COD",
+      "GAB"
+    ],
+    "flagEmoji": "🇨🇬",
+    "population": 0,
+    "areaKm2": 342000
+  },
+  "COL": {
+    "id": "COL",
+    "name": "Colombie",
+    "normalizedName": "colombie",
+    "aliases": [
+      "Colombia",
+      "CO",
+      "COL",
+      "République de Colombie"
+    ],
+    "capitalOrChefLieu": "Bogotá",
+    "continentOrRegion": "Americas",
+    "latitude": 4,
+    "longitude": -72,
+    "neighbors": [
+      "BRA",
+      "ECU",
+      "PAN",
+      "PER",
+      "VEN"
+    ],
+    "flagEmoji": "🇨🇴",
+    "population": 0,
+    "areaKm2": 1141748
+  },
+  "CRI": {
+    "id": "CRI",
+    "name": "Costa Rica",
+    "normalizedName": "costa rica",
+    "aliases": [
+      "Costa Rica",
+      "CR",
+      "CRI",
+      "République du Costa Rica"
+    ],
+    "capitalOrChefLieu": "San José",
+    "continentOrRegion": "Americas",
+    "latitude": 10,
+    "longitude": -84,
+    "neighbors": [
+      "NIC",
+      "PAN"
+    ],
+    "flagEmoji": "🇨🇷",
+    "population": 0,
+    "areaKm2": 51100
+  },
+  "CZE": {
+    "id": "CZE",
+    "name": "Tchéquie",
+    "normalizedName": "tchequie",
+    "aliases": [
+      "Czechia",
+      "CZ",
+      "CZE",
+      "République tchèque"
+    ],
+    "capitalOrChefLieu": "Prague",
+    "continentOrRegion": "Europe",
+    "latitude": 49.75,
+    "longitude": 15.5,
+    "neighbors": [
+      "AUT",
+      "DEU",
+      "POL",
+      "SVK"
+    ],
+    "flagEmoji": "🇨🇿",
+    "population": 0,
+    "areaKm2": 78865
+  },
+  "DEU": {
+    "id": "DEU",
+    "name": "Allemagne",
+    "normalizedName": "allemagne",
+    "aliases": [
+      "Germany",
+      "DE",
+      "DEU",
+      "République fédérale d'Allemagne"
+    ],
+    "capitalOrChefLieu": "Berlin",
+    "continentOrRegion": "Europe",
+    "latitude": 51,
+    "longitude": 9,
+    "neighbors": [
+      "AUT",
+      "BEL",
+      "CZE",
+      "DNK",
+      "FRA",
+      "LUX",
+      "NLD",
+      "POL",
+      "CHE"
+    ],
+    "flagEmoji": "🇩🇪",
+    "population": 0,
+    "areaKm2": 357114
+  },
+  "DJI": {
+    "id": "DJI",
+    "name": "Djibouti",
+    "normalizedName": "djibouti",
+    "aliases": [
+      "Djibouti",
+      "DJ",
+      "DJI",
+      "République de Djibouti"
+    ],
+    "capitalOrChefLieu": "Djibouti",
+    "continentOrRegion": "Africa",
+    "latitude": 11.5,
+    "longitude": 43,
+    "neighbors": [
+      "ERI",
+      "ETH",
+      "SOM"
+    ],
+    "flagEmoji": "🇩🇯",
+    "population": 0,
+    "areaKm2": 23200
+  },
+  "DNK": {
+    "id": "DNK",
+    "name": "Danemark",
+    "normalizedName": "danemark",
+    "aliases": [
+      "Denmark",
+      "DK",
+      "DNK",
+      "Royaume du Danemark"
+    ],
+    "capitalOrChefLieu": "Copenhagen",
+    "continentOrRegion": "Europe",
+    "latitude": 56,
+    "longitude": 10,
+    "neighbors": [
+      "DEU",
+      "SWE"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "SWE",
+        "label": "Pont de l'Øresund",
+        "type": "bridge"
+      }
+    ],
+    "flagEmoji": "🇩🇰",
+    "population": 0,
+    "areaKm2": 43094
+  },
+  "DOM": {
+    "id": "DOM",
+    "name": "République dominicaine",
+    "normalizedName": "republique dominicaine",
+    "aliases": [
+      "Dominican Republic",
+      "DO",
+      "DOM",
+      "République Dominicaine"
+    ],
+    "capitalOrChefLieu": "Santo Domingo",
+    "continentOrRegion": "Americas",
+    "latitude": 19,
+    "longitude": -70.66666666,
+    "neighbors": [
+      "HTI"
+    ],
+    "flagEmoji": "🇩🇴",
+    "population": 0,
+    "areaKm2": 48671
+  },
+  "DZA": {
+    "id": "DZA",
+    "name": "Algérie",
+    "normalizedName": "algerie",
+    "aliases": [
+      "Algeria",
+      "DZ",
+      "DZA",
+      "République démocratique et populaire d'Algérie"
+    ],
+    "capitalOrChefLieu": "Algiers",
+    "continentOrRegion": "Africa",
+    "latitude": 28,
+    "longitude": 3,
+    "neighbors": [
+      "TUN",
+      "LBY",
+      "NER",
+      "ESH",
+      "MRT",
+      "MLI",
+      "MAR"
+    ],
+    "flagEmoji": "🇩🇿",
+    "population": 0,
+    "areaKm2": 2381741
+  },
+  "ECU": {
+    "id": "ECU",
+    "name": "Équateur",
+    "normalizedName": "equateur",
+    "aliases": [
+      "Ecuador",
+      "EC",
+      "ECU",
+      "République de l'Équateur"
+    ],
+    "capitalOrChefLieu": "Quito",
+    "continentOrRegion": "Americas",
+    "latitude": -2,
+    "longitude": -77.5,
+    "neighbors": [
+      "COL",
+      "PER"
+    ],
+    "flagEmoji": "🇪🇨",
+    "population": 0,
+    "areaKm2": 276841
+  },
+  "EGY": {
+    "id": "EGY",
+    "name": "Égypte",
+    "normalizedName": "egypte",
+    "aliases": [
+      "Egypt",
+      "EG",
+      "EGY",
+      "République arabe d'Égypte"
+    ],
+    "capitalOrChefLieu": "Cairo",
+    "continentOrRegion": "Africa",
+    "latitude": 27,
+    "longitude": 30,
+    "neighbors": [
+      "ISR",
+      "LBY",
+      "PSE",
+      "SDN"
+    ],
+    "flagEmoji": "🇪🇬",
+    "population": 0,
+    "areaKm2": 1002450
+  },
+  "ERI": {
+    "id": "ERI",
+    "name": "Érythrée",
+    "normalizedName": "erythree",
+    "aliases": [
+      "Eritrea",
+      "ER",
+      "ERI",
+      "État d'Érythrée"
+    ],
+    "capitalOrChefLieu": "Asmara",
+    "continentOrRegion": "Africa",
+    "latitude": 15,
+    "longitude": 39,
+    "neighbors": [
+      "DJI",
+      "ETH",
+      "SDN"
+    ],
+    "flagEmoji": "🇪🇷",
+    "population": 0,
+    "areaKm2": 117600
+  },
+  "ESH": {
+    "id": "ESH",
+    "name": "Sahara Occidental",
+    "normalizedName": "sahara occidental",
+    "aliases": [
+      "Western Sahara",
+      "EH",
+      "ESH",
+      "République arabe sahraouie démocratique"
+    ],
+    "capitalOrChefLieu": "El Aaiún",
+    "continentOrRegion": "Africa",
+    "latitude": 24.5,
+    "longitude": -13,
+    "neighbors": [
+      "DZA",
+      "MRT",
+      "MAR"
+    ],
+    "flagEmoji": "🇪🇭",
+    "population": 0,
+    "areaKm2": 266000
+  },
+  "ESP": {
+    "id": "ESP",
+    "name": "Espagne",
+    "normalizedName": "espagne",
+    "aliases": [
+      "Spain",
+      "ES",
+      "ESP",
+      "Royaume d'Espagne"
+    ],
+    "capitalOrChefLieu": "Madrid",
+    "continentOrRegion": "Europe",
+    "latitude": 40,
+    "longitude": -4,
+    "neighbors": [
+      "AND",
+      "FRA",
+      "GIB",
+      "PRT",
+      "MAR"
+    ],
+    "flagEmoji": "🇪🇸",
+    "population": 0,
+    "areaKm2": 505992
+  },
+  "EST": {
+    "id": "EST",
+    "name": "Estonie",
+    "normalizedName": "estonie",
+    "aliases": [
+      "Estonia",
+      "EE",
+      "EST",
+      "République d'Estonie"
+    ],
+    "capitalOrChefLieu": "Tallinn",
+    "continentOrRegion": "Europe",
+    "latitude": 59,
+    "longitude": 26,
+    "neighbors": [
+      "LVA",
+      "RUS"
+    ],
+    "flagEmoji": "🇪🇪",
+    "population": 0,
+    "areaKm2": 45227
+  },
+  "ETH": {
+    "id": "ETH",
+    "name": "Éthiopie",
+    "normalizedName": "ethiopie",
+    "aliases": [
+      "Ethiopia",
+      "ET",
+      "ETH",
+      "République fédérale démocratique d'Éthiopie"
+    ],
+    "capitalOrChefLieu": "Addis Ababa",
+    "continentOrRegion": "Africa",
+    "latitude": 8,
+    "longitude": 38,
+    "neighbors": [
+      "DJI",
+      "ERI",
+      "KEN",
+      "SOM",
+      "SSD",
+      "SDN"
+    ],
+    "flagEmoji": "🇪🇹",
+    "population": 0,
+    "areaKm2": 1104300
+  },
+  "FIN": {
+    "id": "FIN",
+    "name": "Finlande",
+    "normalizedName": "finlande",
+    "aliases": [
+      "Finland",
+      "FI",
+      "FIN",
+      "République de Finlande"
+    ],
+    "capitalOrChefLieu": "Helsinki",
+    "continentOrRegion": "Europe",
+    "latitude": 64,
+    "longitude": 26,
+    "neighbors": [
+      "NOR",
+      "SWE",
+      "RUS"
+    ],
+    "flagEmoji": "🇫🇮",
+    "population": 0,
+    "areaKm2": 338424
+  },
+  "FRA": {
+    "id": "FRA",
+    "name": "France",
+    "normalizedName": "france",
+    "aliases": [
+      "France",
+      "FR",
+      "FRA",
+      "République française"
+    ],
+    "capitalOrChefLieu": "Paris",
+    "continentOrRegion": "Europe",
+    "latitude": 46,
+    "longitude": 2,
+    "neighbors": [
+      "AND",
+      "BEL",
+      "DEU",
+      "ITA",
+      "LUX",
+      "MCO",
+      "ESP",
+      "CHE",
+      "GBR"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "GBR",
+        "label": "Eurotunnel",
+        "type": "tunnel"
+      }
+    ],
+    "flagEmoji": "🇫🇷",
+    "population": 0,
+    "areaKm2": 551695
+  },
+  "GAB": {
+    "id": "GAB",
+    "name": "Gabon",
+    "normalizedName": "gabon",
+    "aliases": [
+      "Gabon",
+      "GA",
+      "GAB",
+      "République gabonaise"
+    ],
+    "capitalOrChefLieu": "Libreville",
+    "continentOrRegion": "Africa",
+    "latitude": -1,
+    "longitude": 11.75,
+    "neighbors": [
+      "CMR",
+      "COG",
+      "GNQ"
+    ],
+    "flagEmoji": "🇬🇦",
+    "population": 0,
+    "areaKm2": 267668
+  },
+  "GBR": {
+    "id": "GBR",
+    "name": "Royaume-Uni",
+    "normalizedName": "royaume-uni",
+    "aliases": [
+      "United Kingdom",
+      "GB",
+      "GBR",
+      "Royaume-Uni de Grande-Bretagne et d'Irlande du Nord"
+    ],
+    "capitalOrChefLieu": "London",
+    "continentOrRegion": "Europe",
+    "latitude": 54,
+    "longitude": -2,
+    "neighbors": [
+      "IRL",
+      "FRA"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "FRA",
+        "label": "Eurotunnel",
+        "type": "tunnel"
+      }
+    ],
+    "flagEmoji": "🇬🇧",
+    "population": 0,
+    "areaKm2": 242900
+  },
+  "GEO": {
+    "id": "GEO",
+    "name": "Géorgie",
+    "normalizedName": "georgie",
+    "aliases": [
+      "Georgia",
+      "GE",
+      "GEO",
+      "République de Géorgie"
+    ],
+    "capitalOrChefLieu": "Tbilisi",
+    "continentOrRegion": "Asia",
+    "latitude": 42,
+    "longitude": 43.5,
+    "neighbors": [
+      "ARM",
+      "AZE",
+      "RUS",
+      "TUR"
+    ],
+    "flagEmoji": "🇬🇪",
+    "population": 0,
+    "areaKm2": 69700
+  },
+  "GHA": {
+    "id": "GHA",
+    "name": "Ghana",
+    "normalizedName": "ghana",
+    "aliases": [
+      "Ghana",
+      "GH",
+      "GHA",
+      "République du Ghana"
+    ],
+    "capitalOrChefLieu": "Accra",
+    "continentOrRegion": "Africa",
+    "latitude": 8,
+    "longitude": -2,
+    "neighbors": [
+      "BFA",
+      "CIV",
+      "TGO"
+    ],
+    "flagEmoji": "🇬🇭",
+    "population": 0,
+    "areaKm2": 238533
+  },
+  "GIB": {
+    "id": "GIB",
+    "name": "Gibraltar",
+    "normalizedName": "gibraltar",
+    "aliases": [
+      "Gibraltar",
+      "GI",
+      "GIB",
+      "Gibraltar"
+    ],
+    "capitalOrChefLieu": "Gibraltar",
+    "continentOrRegion": "Europe",
+    "latitude": 36.13333333,
+    "longitude": -5.35,
+    "neighbors": [
+      "ESP"
+    ],
+    "flagEmoji": "🇬🇮",
+    "population": 0,
+    "areaKm2": 6
+  },
+  "GIN": {
+    "id": "GIN",
+    "name": "Guinée",
+    "normalizedName": "guinee",
+    "aliases": [
+      "Guinea",
+      "GN",
+      "GIN",
+      "République de Guinée"
+    ],
+    "capitalOrChefLieu": "Conakry",
+    "continentOrRegion": "Africa",
+    "latitude": 11,
+    "longitude": -10,
+    "neighbors": [
+      "CIV",
+      "GNB",
+      "LBR",
+      "MLI",
+      "SEN",
+      "SLE"
+    ],
+    "flagEmoji": "🇬🇳",
+    "population": 0,
+    "areaKm2": 245857
+  },
+  "GMB": {
+    "id": "GMB",
+    "name": "Gambie",
+    "normalizedName": "gambie",
+    "aliases": [
+      "Gambia",
+      "GM",
+      "GMB",
+      "République de Gambie"
+    ],
+    "capitalOrChefLieu": "Banjul",
+    "continentOrRegion": "Africa",
+    "latitude": 13.46666666,
+    "longitude": -16.56666666,
+    "neighbors": [
+      "SEN"
+    ],
+    "flagEmoji": "🇬🇲",
+    "population": 0,
+    "areaKm2": 10689
+  },
+  "GNB": {
+    "id": "GNB",
+    "name": "Guinée-Bissau",
+    "normalizedName": "guinee-bissau",
+    "aliases": [
+      "Guinea-Bissau",
+      "GW",
+      "GNB",
+      "République de Guinée-Bissau"
+    ],
+    "capitalOrChefLieu": "Bissau",
+    "continentOrRegion": "Africa",
+    "latitude": 12,
+    "longitude": -15,
+    "neighbors": [
+      "GIN",
+      "SEN"
+    ],
+    "flagEmoji": "🇬🇼",
+    "population": 0,
+    "areaKm2": 36125
+  },
+  "GNQ": {
+    "id": "GNQ",
+    "name": "Guinée équatoriale",
+    "normalizedName": "guinee equatoriale",
+    "aliases": [
+      "Equatorial Guinea",
+      "GQ",
+      "GNQ",
+      "République de Guinée équatoriale"
+    ],
+    "capitalOrChefLieu": "Ciudad de la Paz",
+    "continentOrRegion": "Africa",
+    "latitude": 2,
+    "longitude": 10,
+    "neighbors": [
+      "CMR",
+      "GAB"
+    ],
+    "flagEmoji": "🇬🇶",
+    "population": 0,
+    "areaKm2": 28051
+  },
+  "GRC": {
+    "id": "GRC",
+    "name": "Grèce",
+    "normalizedName": "grece",
+    "aliases": [
+      "Greece",
+      "GR",
+      "GRC",
+      "République hellénique"
+    ],
+    "capitalOrChefLieu": "Athens",
+    "continentOrRegion": "Europe",
+    "latitude": 39,
+    "longitude": 22,
+    "neighbors": [
+      "ALB",
+      "BGR",
+      "TUR",
+      "MKD"
+    ],
+    "flagEmoji": "🇬🇷",
+    "population": 0,
+    "areaKm2": 131990
+  },
+  "GTM": {
+    "id": "GTM",
+    "name": "Guatemala",
+    "normalizedName": "guatemala",
+    "aliases": [
+      "Guatemala",
+      "GT",
+      "GTM",
+      "République du Guatemala"
+    ],
+    "capitalOrChefLieu": "Guatemala City",
+    "continentOrRegion": "Americas",
+    "latitude": 15.5,
+    "longitude": -90.25,
+    "neighbors": [
+      "BLZ",
+      "SLV",
+      "HND",
+      "MEX"
+    ],
+    "flagEmoji": "🇬🇹",
+    "population": 0,
+    "areaKm2": 108889
+  },
+  "GUF": {
+    "id": "GUF",
+    "name": "Guyane",
+    "normalizedName": "guyane",
+    "aliases": [
+      "French Guiana",
+      "GF",
+      "GUF",
+      "Guyane"
+    ],
+    "capitalOrChefLieu": "Cayenne",
+    "continentOrRegion": "Americas",
+    "latitude": 4,
+    "longitude": -53,
+    "neighbors": [
+      "BRA",
+      "SUR"
+    ],
+    "flagEmoji": "🇬🇫",
+    "population": 0,
+    "areaKm2": 83534
+  },
+  "GUY": {
+    "id": "GUY",
+    "name": "Guyana",
+    "normalizedName": "guyana",
+    "aliases": [
+      "Guyana",
+      "GY",
+      "GUY",
+      "République coopérative de Guyana"
+    ],
+    "capitalOrChefLieu": "Georgetown",
+    "continentOrRegion": "Americas",
+    "latitude": 5,
+    "longitude": -59,
+    "neighbors": [
+      "BRA",
+      "SUR",
+      "VEN"
+    ],
+    "flagEmoji": "🇬🇾",
+    "population": 0,
+    "areaKm2": 214969
+  },
+  "HKG": {
+    "id": "HKG",
+    "name": "Hong Kong",
+    "normalizedName": "hong kong",
+    "aliases": [
+      "Hong Kong",
+      "HK",
+      "HKG",
+      "Région administrative spéciale de Hong Kong de la République populaire de Chine"
+    ],
+    "capitalOrChefLieu": "City of Victoria",
+    "continentOrRegion": "Asia",
+    "latitude": 22.267,
+    "longitude": 114.188,
+    "neighbors": [
+      "CHN"
+    ],
+    "flagEmoji": "🇭🇰",
+    "population": 0,
+    "areaKm2": 1104
+  },
+  "HND": {
+    "id": "HND",
+    "name": "Honduras",
+    "normalizedName": "honduras",
+    "aliases": [
+      "Honduras",
+      "HN",
+      "HND",
+      "République du Honduras"
+    ],
+    "capitalOrChefLieu": "Tegucigalpa",
+    "continentOrRegion": "Americas",
+    "latitude": 15,
+    "longitude": -86.5,
+    "neighbors": [
+      "GTM",
+      "SLV",
+      "NIC"
+    ],
+    "flagEmoji": "🇭🇳",
+    "population": 0,
+    "areaKm2": 112492
+  },
+  "HRV": {
+    "id": "HRV",
+    "name": "Croatie",
+    "normalizedName": "croatie",
+    "aliases": [
+      "Croatia",
+      "HR",
+      "HRV",
+      "République de Croatie"
+    ],
+    "capitalOrChefLieu": "Zagreb",
+    "continentOrRegion": "Europe",
+    "latitude": 45.16666666,
+    "longitude": 15.5,
+    "neighbors": [
+      "BIH",
+      "HUN",
+      "MNE",
+      "SRB",
+      "SVN"
+    ],
+    "flagEmoji": "🇭🇷",
+    "population": 0,
+    "areaKm2": 56594
+  },
+  "HTI": {
+    "id": "HTI",
+    "name": "Haïti",
+    "normalizedName": "haiti",
+    "aliases": [
+      "Haiti",
+      "HT",
+      "HTI",
+      "République d'Haïti"
+    ],
+    "capitalOrChefLieu": "Port-au-Prince",
+    "continentOrRegion": "Americas",
+    "latitude": 19,
+    "longitude": -72.41666666,
+    "neighbors": [
+      "DOM"
+    ],
+    "flagEmoji": "🇭🇹",
+    "population": 0,
+    "areaKm2": 27750
+  },
+  "HUN": {
+    "id": "HUN",
+    "name": "Hongrie",
+    "normalizedName": "hongrie",
+    "aliases": [
+      "Hungary",
+      "HU",
+      "HUN",
+      "Hongrie"
+    ],
+    "capitalOrChefLieu": "Budapest",
+    "continentOrRegion": "Europe",
+    "latitude": 47,
+    "longitude": 20,
+    "neighbors": [
+      "AUT",
+      "HRV",
+      "ROU",
+      "SRB",
+      "SVK",
+      "SVN",
+      "UKR"
+    ],
+    "flagEmoji": "🇭🇺",
+    "population": 0,
+    "areaKm2": 93028
+  },
+  "IDN": {
+    "id": "IDN",
+    "name": "Indonésie",
+    "normalizedName": "indonesie",
+    "aliases": [
+      "Indonesia",
+      "ID",
+      "IDN",
+      "République d'Indonésie"
+    ],
+    "capitalOrChefLieu": "Jakarta",
+    "continentOrRegion": "Asia",
+    "latitude": -5,
+    "longitude": 120,
+    "neighbors": [
+      "TLS",
+      "MYS",
+      "PNG"
+    ],
+    "flagEmoji": "🇮🇩",
+    "population": 0,
+    "areaKm2": 1904569
+  },
+  "IND": {
+    "id": "IND",
+    "name": "Inde",
+    "normalizedName": "inde",
+    "aliases": [
+      "India",
+      "IN",
+      "IND",
+      "République de l'Inde"
+    ],
+    "capitalOrChefLieu": "New Delhi",
+    "continentOrRegion": "Asia",
+    "latitude": 20,
+    "longitude": 77,
+    "neighbors": [
+      "BGD",
+      "BTN",
+      "MMR",
+      "CHN",
+      "NPL",
+      "PAK",
+      "LKA"
+    ],
+    "flagEmoji": "🇮🇳",
+    "population": 0,
+    "areaKm2": 3287590
+  },
+  "IRL": {
+    "id": "IRL",
+    "name": "Irlande",
+    "normalizedName": "irlande",
+    "aliases": [
+      "Ireland",
+      "IE",
+      "IRL",
+      "République d'Irlande"
+    ],
+    "capitalOrChefLieu": "Dublin",
+    "continentOrRegion": "Europe",
+    "latitude": 53,
+    "longitude": -8,
+    "neighbors": [
+      "GBR"
+    ],
+    "flagEmoji": "🇮🇪",
+    "population": 0,
+    "areaKm2": 70273
+  },
+  "IRN": {
+    "id": "IRN",
+    "name": "Iran",
+    "normalizedName": "iran",
+    "aliases": [
+      "Iran",
+      "IR",
+      "IRN",
+      "République islamique d'Iran"
+    ],
+    "capitalOrChefLieu": "Tehran",
+    "continentOrRegion": "Asia",
+    "latitude": 32,
+    "longitude": 53,
+    "neighbors": [
+      "AFG",
+      "ARM",
+      "AZE",
+      "IRQ",
+      "PAK",
+      "TUR",
+      "TKM"
+    ],
+    "flagEmoji": "🇮🇷",
+    "population": 0,
+    "areaKm2": 1648195
+  },
+  "IRQ": {
+    "id": "IRQ",
+    "name": "Irak",
+    "normalizedName": "irak",
+    "aliases": [
+      "Iraq",
+      "IQ",
+      "IRQ",
+      "République d'Irak"
+    ],
+    "capitalOrChefLieu": "Baghdad",
+    "continentOrRegion": "Asia",
+    "latitude": 33,
+    "longitude": 44,
+    "neighbors": [
+      "IRN",
+      "JOR",
+      "KWT",
+      "SAU",
+      "SYR",
+      "TUR"
+    ],
+    "flagEmoji": "🇮🇶",
+    "population": 0,
+    "areaKm2": 438317
+  },
+  "ISR": {
+    "id": "ISR",
+    "name": "Israël",
+    "normalizedName": "israel",
+    "aliases": [
+      "Israel",
+      "IL",
+      "ISR",
+      "État d'Israël"
+    ],
+    "capitalOrChefLieu": "Jerusalem",
+    "continentOrRegion": "Asia",
+    "latitude": 31.47,
+    "longitude": 35.13,
+    "neighbors": [
+      "EGY",
+      "JOR",
+      "LBN",
+      "PSE",
+      "SYR"
+    ],
+    "flagEmoji": "🇮🇱",
+    "population": 0,
+    "areaKm2": 20770
+  },
+  "ITA": {
+    "id": "ITA",
+    "name": "Italie",
+    "normalizedName": "italie",
+    "aliases": [
+      "Italy",
+      "IT",
+      "ITA",
+      "République italienne"
+    ],
+    "capitalOrChefLieu": "Rome",
+    "continentOrRegion": "Europe",
+    "latitude": 42.83333333,
+    "longitude": 12.83333333,
+    "neighbors": [
+      "AUT",
+      "FRA",
+      "SMR",
+      "SVN",
+      "CHE",
+      "VAT"
+    ],
+    "flagEmoji": "🇮🇹",
+    "population": 0,
+    "areaKm2": 301336
+  },
+  "JOR": {
+    "id": "JOR",
+    "name": "Jordanie",
+    "normalizedName": "jordanie",
+    "aliases": [
+      "Jordan",
+      "JO",
+      "JOR",
+      "Royaume hachémite de Jordanie"
+    ],
+    "capitalOrChefLieu": "Amman",
+    "continentOrRegion": "Asia",
+    "latitude": 31,
+    "longitude": 36,
+    "neighbors": [
+      "IRQ",
+      "ISR",
+      "PSE",
+      "SAU",
+      "SYR"
+    ],
+    "flagEmoji": "🇯🇴",
+    "population": 0,
+    "areaKm2": 89342
+  },
+  "KAZ": {
+    "id": "KAZ",
+    "name": "Kazakhstan",
+    "normalizedName": "kazakhstan",
+    "aliases": [
+      "Kazakhstan",
+      "KZ",
+      "KAZ",
+      "République du Kazakhstan"
+    ],
+    "capitalOrChefLieu": "Astana",
+    "continentOrRegion": "Asia",
+    "latitude": 48,
+    "longitude": 68,
+    "neighbors": [
+      "CHN",
+      "KGZ",
+      "RUS",
+      "TKM",
+      "UZB"
+    ],
+    "flagEmoji": "🇰🇿",
+    "population": 0,
+    "areaKm2": 2724900
+  },
+  "KEN": {
+    "id": "KEN",
+    "name": "Kenya",
+    "normalizedName": "kenya",
+    "aliases": [
+      "Kenya",
+      "KE",
+      "KEN",
+      "République du Kenya"
+    ],
+    "capitalOrChefLieu": "Nairobi",
+    "continentOrRegion": "Africa",
+    "latitude": 1,
+    "longitude": 38,
+    "neighbors": [
+      "ETH",
+      "SOM",
+      "SSD",
+      "TZA",
+      "UGA"
+    ],
+    "flagEmoji": "🇰🇪",
+    "population": 0,
+    "areaKm2": 580367
+  },
+  "KGZ": {
+    "id": "KGZ",
+    "name": "Kirghizistan",
+    "normalizedName": "kirghizistan",
+    "aliases": [
+      "Kyrgyzstan",
+      "KG",
+      "KGZ",
+      "République kirghize"
+    ],
+    "capitalOrChefLieu": "Bishkek",
+    "continentOrRegion": "Asia",
+    "latitude": 41,
+    "longitude": 75,
+    "neighbors": [
+      "CHN",
+      "KAZ",
+      "TJK",
+      "UZB"
+    ],
+    "flagEmoji": "🇰🇬",
+    "population": 0,
+    "areaKm2": 199951
+  },
+  "KHM": {
+    "id": "KHM",
+    "name": "Cambodge",
+    "normalizedName": "cambodge",
+    "aliases": [
+      "Cambodia",
+      "KH",
+      "KHM",
+      "Royaume du Cambodge"
+    ],
+    "capitalOrChefLieu": "Phnom Penh",
+    "continentOrRegion": "Asia",
+    "latitude": 13,
+    "longitude": 105,
+    "neighbors": [
+      "LAO",
+      "THA",
+      "VNM"
+    ],
+    "flagEmoji": "🇰🇭",
+    "population": 0,
+    "areaKm2": 181035
+  },
+  "KOR": {
+    "id": "KOR",
+    "name": "Corée du Sud",
+    "normalizedName": "coree du sud",
+    "aliases": [
+      "South Korea",
+      "KR",
+      "KOR",
+      "République de Corée"
+    ],
+    "capitalOrChefLieu": "Seoul",
+    "continentOrRegion": "Asia",
+    "latitude": 37,
+    "longitude": 127.5,
+    "neighbors": [
+      "PRK"
+    ],
+    "flagEmoji": "🇰🇷",
+    "population": 0,
+    "areaKm2": 100210
+  },
+  "UNK": {
+    "id": "UNK",
+    "name": "Kosovo",
+    "normalizedName": "kosovo",
+    "aliases": [
+      "Kosovo",
+      "XK",
+      "UNK",
+      "République du Kosovo"
+    ],
+    "capitalOrChefLieu": "Pristina",
+    "continentOrRegion": "Europe",
+    "latitude": 42.666667,
+    "longitude": 21.166667,
+    "neighbors": [
+      "ALB",
+      "MKD",
+      "MNE",
+      "SRB"
+    ],
+    "flagEmoji": "🇽🇰",
+    "population": 0,
+    "areaKm2": 10908
+  },
+  "KWT": {
+    "id": "KWT",
+    "name": "Koweït",
+    "normalizedName": "koweit",
+    "aliases": [
+      "Kuwait",
+      "KW",
+      "KWT",
+      "État du Koweït"
+    ],
+    "capitalOrChefLieu": "Kuwait City",
+    "continentOrRegion": "Asia",
+    "latitude": 29.5,
+    "longitude": 45.75,
+    "neighbors": [
+      "IRQ",
+      "SAU"
+    ],
+    "flagEmoji": "🇰🇼",
+    "population": 0,
+    "areaKm2": 17818
+  },
+  "LAO": {
+    "id": "LAO",
+    "name": "Laos",
+    "normalizedName": "laos",
+    "aliases": [
+      "Laos",
+      "LA",
+      "LAO",
+      "République démocratique populaire lao"
+    ],
+    "capitalOrChefLieu": "Vientiane",
+    "continentOrRegion": "Asia",
+    "latitude": 18,
+    "longitude": 105,
+    "neighbors": [
+      "MMR",
+      "KHM",
+      "CHN",
+      "THA",
+      "VNM"
+    ],
+    "flagEmoji": "🇱🇦",
+    "population": 0,
+    "areaKm2": 236800
+  },
+  "LBN": {
+    "id": "LBN",
+    "name": "Liban",
+    "normalizedName": "liban",
+    "aliases": [
+      "Lebanon",
+      "LB",
+      "LBN",
+      "République libanaise"
+    ],
+    "capitalOrChefLieu": "Beirut",
+    "continentOrRegion": "Asia",
+    "latitude": 33.83333333,
+    "longitude": 35.83333333,
+    "neighbors": [
+      "ISR",
+      "SYR"
+    ],
+    "flagEmoji": "🇱🇧",
+    "population": 0,
+    "areaKm2": 10452
+  },
+  "LBR": {
+    "id": "LBR",
+    "name": "Liberia",
+    "normalizedName": "liberia",
+    "aliases": [
+      "Liberia",
+      "LR",
+      "LBR",
+      "République du Libéria"
+    ],
+    "capitalOrChefLieu": "Monrovia",
+    "continentOrRegion": "Africa",
+    "latitude": 6.5,
+    "longitude": -9.5,
+    "neighbors": [
+      "GIN",
+      "CIV",
+      "SLE"
+    ],
+    "flagEmoji": "🇱🇷",
+    "population": 0,
+    "areaKm2": 111369
+  },
+  "LBY": {
+    "id": "LBY",
+    "name": "Libye",
+    "normalizedName": "libye",
+    "aliases": [
+      "Libya",
+      "LY",
+      "LBY",
+      "Grande République arabe libyenne populaire et socialiste"
+    ],
+    "capitalOrChefLieu": "Tripoli",
+    "continentOrRegion": "Africa",
+    "latitude": 25,
+    "longitude": 17,
+    "neighbors": [
+      "DZA",
+      "TCD",
+      "EGY",
+      "NER",
+      "SDN",
+      "TUN"
+    ],
+    "flagEmoji": "🇱🇾",
+    "population": 0,
+    "areaKm2": 1759540
+  },
+  "LIE": {
+    "id": "LIE",
+    "name": "Liechtenstein",
+    "normalizedName": "liechtenstein",
+    "aliases": [
+      "Liechtenstein",
+      "LI",
+      "LIE",
+      "Principauté du Liechtenstein"
+    ],
+    "capitalOrChefLieu": "Vaduz",
+    "continentOrRegion": "Europe",
+    "latitude": 47.26666666,
+    "longitude": 9.53333333,
+    "neighbors": [
+      "AUT",
+      "CHE"
+    ],
+    "flagEmoji": "🇱🇮",
+    "population": 0,
+    "areaKm2": 160
+  },
+  "LKA": {
+    "id": "LKA",
+    "name": "Sri Lanka",
+    "normalizedName": "sri lanka",
+    "aliases": [
+      "Sri Lanka",
+      "LK",
+      "LKA",
+      "République démocratique socialiste du Sri Lanka"
+    ],
+    "capitalOrChefLieu": "Colombo",
+    "continentOrRegion": "Asia",
+    "latitude": 7,
+    "longitude": 81,
+    "neighbors": [
+      "IND"
+    ],
+    "flagEmoji": "🇱🇰",
+    "population": 0,
+    "areaKm2": 65610
+  },
+  "LSO": {
+    "id": "LSO",
+    "name": "Lesotho",
+    "normalizedName": "lesotho",
+    "aliases": [
+      "Lesotho",
+      "LS",
+      "LSO",
+      "Royaume du Lesotho"
+    ],
+    "capitalOrChefLieu": "Maseru",
+    "continentOrRegion": "Africa",
+    "latitude": -29.5,
+    "longitude": 28.5,
+    "neighbors": [
+      "ZAF"
+    ],
+    "flagEmoji": "🇱🇸",
+    "population": 0,
+    "areaKm2": 30355
+  },
+  "LTU": {
+    "id": "LTU",
+    "name": "Lituanie",
+    "normalizedName": "lituanie",
+    "aliases": [
+      "Lithuania",
+      "LT",
+      "LTU",
+      "République de Lituanie"
+    ],
+    "capitalOrChefLieu": "Vilnius",
+    "continentOrRegion": "Europe",
+    "latitude": 56,
+    "longitude": 24,
+    "neighbors": [
+      "BLR",
+      "LVA",
+      "POL",
+      "RUS"
+    ],
+    "flagEmoji": "🇱🇹",
+    "population": 0,
+    "areaKm2": 65300
+  },
+  "LUX": {
+    "id": "LUX",
+    "name": "Luxembourg",
+    "normalizedName": "luxembourg",
+    "aliases": [
+      "Luxembourg",
+      "LU",
+      "LUX",
+      "Grand-Duché de Luxembourg"
+    ],
+    "capitalOrChefLieu": "Luxembourg",
+    "continentOrRegion": "Europe",
+    "latitude": 49.75,
+    "longitude": 6.16666666,
+    "neighbors": [
+      "BEL",
+      "FRA",
+      "DEU"
+    ],
+    "flagEmoji": "🇱🇺",
+    "population": 0,
+    "areaKm2": 2586
+  },
+  "LVA": {
+    "id": "LVA",
+    "name": "Lettonie",
+    "normalizedName": "lettonie",
+    "aliases": [
+      "Latvia",
+      "LV",
+      "LVA",
+      "République de Lettonie"
+    ],
+    "capitalOrChefLieu": "Riga",
+    "continentOrRegion": "Europe",
+    "latitude": 57,
+    "longitude": 25,
+    "neighbors": [
+      "BLR",
+      "EST",
+      "LTU",
+      "RUS"
+    ],
+    "flagEmoji": "🇱🇻",
+    "population": 0,
+    "areaKm2": 64559
+  },
+  "MAC": {
+    "id": "MAC",
+    "name": "Macao",
+    "normalizedName": "macao",
+    "aliases": [
+      "Macau",
+      "MO",
+      "MAC",
+      "Région administrative spéciale de Macao de la République populaire de Chine"
+    ],
+    "capitalOrChefLieu": "",
+    "continentOrRegion": "Asia",
+    "latitude": 22.16666666,
+    "longitude": 113.55,
+    "neighbors": [
+      "CHN"
+    ],
+    "flagEmoji": "🇲🇴",
+    "population": 0,
+    "areaKm2": 30
+  },
+  "MAF": {
+    "id": "MAF",
+    "name": "Saint-Martin",
+    "normalizedName": "saint-martin",
+    "aliases": [
+      "Saint Martin",
+      "MF",
+      "MAF",
+      "Saint-Martin"
+    ],
+    "capitalOrChefLieu": "Marigot",
+    "continentOrRegion": "Americas",
+    "latitude": 18.08333333,
+    "longitude": -63.95,
+    "neighbors": [
+      "SXM"
+    ],
+    "flagEmoji": "🇲🇫",
+    "population": 0,
+    "areaKm2": 53
+  },
+  "MAR": {
+    "id": "MAR",
+    "name": "Maroc",
+    "normalizedName": "maroc",
+    "aliases": [
+      "Morocco",
+      "MA",
+      "MAR",
+      "Royaume du Maroc"
+    ],
+    "capitalOrChefLieu": "Rabat",
+    "continentOrRegion": "Africa",
+    "latitude": 32,
+    "longitude": -5,
+    "neighbors": [
+      "DZA",
+      "ESH",
+      "ESP"
+    ],
+    "flagEmoji": "🇲🇦",
+    "population": 0,
+    "areaKm2": 446550
+  },
+  "MCO": {
+    "id": "MCO",
+    "name": "Monaco",
+    "normalizedName": "monaco",
+    "aliases": [
+      "Monaco",
+      "MC",
+      "MCO",
+      "Principauté de Monaco"
+    ],
+    "capitalOrChefLieu": "Monaco",
+    "continentOrRegion": "Europe",
+    "latitude": 43.73333333,
+    "longitude": 7.4,
+    "neighbors": [
+      "FRA"
+    ],
+    "flagEmoji": "🇲🇨",
+    "population": 0,
+    "areaKm2": 2.02
+  },
+  "MDA": {
+    "id": "MDA",
+    "name": "Moldavie",
+    "normalizedName": "moldavie",
+    "aliases": [
+      "Moldova",
+      "MD",
+      "MDA",
+      "République de Moldavie"
+    ],
+    "capitalOrChefLieu": "Chișinău",
+    "continentOrRegion": "Europe",
+    "latitude": 47,
+    "longitude": 29,
+    "neighbors": [
+      "ROU",
+      "UKR"
+    ],
+    "flagEmoji": "🇲🇩",
+    "population": 0,
+    "areaKm2": 33846
+  },
+  "MEX": {
+    "id": "MEX",
+    "name": "Mexique",
+    "normalizedName": "mexique",
+    "aliases": [
+      "Mexico",
+      "MX",
+      "MEX",
+      "États-Unis du Mexique"
+    ],
+    "capitalOrChefLieu": "Mexico City",
+    "continentOrRegion": "Americas",
+    "latitude": 23,
+    "longitude": -102,
+    "neighbors": [
+      "BLZ",
+      "GTM",
+      "USA"
+    ],
+    "flagEmoji": "🇲🇽",
+    "population": 0,
+    "areaKm2": 1964375
+  },
+  "MKD": {
+    "id": "MKD",
+    "name": "Macédoine du Nord",
+    "normalizedName": "macedoine du nord",
+    "aliases": [
+      "North Macedonia",
+      "MK",
+      "MKD",
+      "République de Macédoine du Nord"
+    ],
+    "capitalOrChefLieu": "Skopje",
+    "continentOrRegion": "Europe",
+    "latitude": 41.83333333,
+    "longitude": 22,
+    "neighbors": [
+      "ALB",
+      "BGR",
+      "GRC",
+      "UNK",
+      "SRB"
+    ],
+    "flagEmoji": "🇲🇰",
+    "population": 0,
+    "areaKm2": 25713
+  },
+  "MLI": {
+    "id": "MLI",
+    "name": "Mali",
+    "normalizedName": "mali",
+    "aliases": [
+      "Mali",
+      "ML",
+      "MLI",
+      "République du Mali"
+    ],
+    "capitalOrChefLieu": "Bamako",
+    "continentOrRegion": "Africa",
+    "latitude": 17,
+    "longitude": -4,
+    "neighbors": [
+      "DZA",
+      "BFA",
+      "GIN",
+      "CIV",
+      "MRT",
+      "NER",
+      "SEN"
+    ],
+    "flagEmoji": "🇲🇱",
+    "population": 0,
+    "areaKm2": 1240192
+  },
+  "MMR": {
+    "id": "MMR",
+    "name": "Birmanie",
+    "normalizedName": "birmanie",
+    "aliases": [
+      "Myanmar",
+      "MM",
+      "MMR",
+      "République de l'Union du Myanmar"
+    ],
+    "capitalOrChefLieu": "Naypyidaw",
+    "continentOrRegion": "Asia",
+    "latitude": 22,
+    "longitude": 98,
+    "neighbors": [
+      "BGD",
+      "CHN",
+      "IND",
+      "LAO",
+      "THA"
+    ],
+    "flagEmoji": "🇲🇲",
+    "population": 0,
+    "areaKm2": 676578
+  },
+  "MNE": {
+    "id": "MNE",
+    "name": "Monténégro",
+    "normalizedName": "montenegro",
+    "aliases": [
+      "Montenegro",
+      "ME",
+      "MNE",
+      "Monténégro"
+    ],
+    "capitalOrChefLieu": "Podgorica",
+    "continentOrRegion": "Europe",
+    "latitude": 42.5,
+    "longitude": 19.3,
+    "neighbors": [
+      "ALB",
+      "BIH",
+      "HRV",
+      "UNK",
+      "SRB"
+    ],
+    "flagEmoji": "🇲🇪",
+    "population": 0,
+    "areaKm2": 13812
+  },
+  "MNG": {
+    "id": "MNG",
+    "name": "Mongolie",
+    "normalizedName": "mongolie",
+    "aliases": [
+      "Mongolia",
+      "MN",
+      "MNG",
+      "Mongolie"
+    ],
+    "capitalOrChefLieu": "Ulan Bator",
+    "continentOrRegion": "Asia",
+    "latitude": 46,
+    "longitude": 105,
+    "neighbors": [
+      "CHN",
+      "RUS"
+    ],
+    "flagEmoji": "🇲🇳",
+    "population": 0,
+    "areaKm2": 1564110
+  },
+  "MOZ": {
+    "id": "MOZ",
+    "name": "Mozambique",
+    "normalizedName": "mozambique",
+    "aliases": [
+      "Mozambique",
+      "MZ",
+      "MOZ",
+      "République du Mozambique"
+    ],
+    "capitalOrChefLieu": "Maputo",
+    "continentOrRegion": "Africa",
+    "latitude": -18.25,
+    "longitude": 35,
+    "neighbors": [
+      "MWI",
+      "ZAF",
+      "SWZ",
+      "TZA",
+      "ZMB",
+      "ZWE"
+    ],
+    "flagEmoji": "🇲🇿",
+    "population": 0,
+    "areaKm2": 801590
+  },
+  "MRT": {
+    "id": "MRT",
+    "name": "Mauritanie",
+    "normalizedName": "mauritanie",
+    "aliases": [
+      "Mauritania",
+      "MR",
+      "MRT",
+      "République islamique de Mauritanie"
+    ],
+    "capitalOrChefLieu": "Nouakchott",
+    "continentOrRegion": "Africa",
+    "latitude": 20,
+    "longitude": -12,
+    "neighbors": [
+      "DZA",
+      "MLI",
+      "SEN",
+      "ESH"
+    ],
+    "flagEmoji": "🇲🇷",
+    "population": 0,
+    "areaKm2": 1030700
+  },
+  "MWI": {
+    "id": "MWI",
+    "name": "Malawi",
+    "normalizedName": "malawi",
+    "aliases": [
+      "Malawi",
+      "MW",
+      "MWI",
+      "République du Malawi"
+    ],
+    "capitalOrChefLieu": "Lilongwe",
+    "continentOrRegion": "Africa",
+    "latitude": -13.5,
+    "longitude": 34,
+    "neighbors": [
+      "MOZ",
+      "TZA",
+      "ZMB"
+    ],
+    "flagEmoji": "🇲🇼",
+    "population": 0,
+    "areaKm2": 118484
+  },
+  "MYS": {
+    "id": "MYS",
+    "name": "Malaisie",
+    "normalizedName": "malaisie",
+    "aliases": [
+      "Malaysia",
+      "MY",
+      "MYS",
+      "Fédération de Malaisie"
+    ],
+    "capitalOrChefLieu": "Kuala Lumpur",
+    "continentOrRegion": "Asia",
+    "latitude": 2.5,
+    "longitude": 112.5,
+    "neighbors": [
+      "BRN",
+      "IDN",
+      "THA",
+      "SGP"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "SGP",
+        "label": "Chaussée Johor-Singapour",
+        "type": "causeway"
+      }
+    ],
+    "flagEmoji": "🇲🇾",
+    "population": 0,
+    "areaKm2": 330803
+  },
+  "NAM": {
+    "id": "NAM",
+    "name": "Namibie",
+    "normalizedName": "namibie",
+    "aliases": [
+      "Namibia",
+      "NA",
+      "NAM",
+      "République de Namibie"
+    ],
+    "capitalOrChefLieu": "Windhoek",
+    "continentOrRegion": "Africa",
+    "latitude": -22,
+    "longitude": 17,
+    "neighbors": [
+      "AGO",
+      "BWA",
+      "ZAF",
+      "ZMB"
+    ],
+    "flagEmoji": "🇳🇦",
+    "population": 0,
+    "areaKm2": 825615
+  },
+  "NER": {
+    "id": "NER",
+    "name": "Niger",
+    "normalizedName": "niger",
+    "aliases": [
+      "Niger",
+      "NE",
+      "NER",
+      "République du Niger"
+    ],
+    "capitalOrChefLieu": "Niamey",
+    "continentOrRegion": "Africa",
+    "latitude": 16,
+    "longitude": 8,
+    "neighbors": [
+      "DZA",
+      "BEN",
+      "BFA",
+      "TCD",
+      "LBY",
+      "MLI",
+      "NGA"
+    ],
+    "flagEmoji": "🇳🇪",
+    "population": 0,
+    "areaKm2": 1267000
+  },
+  "NGA": {
+    "id": "NGA",
+    "name": "Nigéria",
+    "normalizedName": "nigeria",
+    "aliases": [
+      "Nigeria",
+      "NG",
+      "NGA",
+      "République fédérale du Nigeria"
+    ],
+    "capitalOrChefLieu": "Abuja",
+    "continentOrRegion": "Africa",
+    "latitude": 10,
+    "longitude": 8,
+    "neighbors": [
+      "BEN",
+      "CMR",
+      "TCD",
+      "NER"
+    ],
+    "flagEmoji": "🇳🇬",
+    "population": 0,
+    "areaKm2": 923768
+  },
+  "NIC": {
+    "id": "NIC",
+    "name": "Nicaragua",
+    "normalizedName": "nicaragua",
+    "aliases": [
+      "Nicaragua",
+      "NI",
+      "NIC",
+      "République du Nicaragua"
+    ],
+    "capitalOrChefLieu": "Managua",
+    "continentOrRegion": "Americas",
+    "latitude": 13,
+    "longitude": -85,
+    "neighbors": [
+      "CRI",
+      "HND"
+    ],
+    "flagEmoji": "🇳🇮",
+    "population": 0,
+    "areaKm2": 130373
+  },
+  "NLD": {
+    "id": "NLD",
+    "name": "Pays-Bas",
+    "normalizedName": "pays-bas",
+    "aliases": [
+      "Netherlands",
+      "NL",
+      "NLD",
+      "Pays-Bas"
+    ],
+    "capitalOrChefLieu": "Amsterdam",
+    "continentOrRegion": "Europe",
+    "latitude": 52.5,
+    "longitude": 5.75,
+    "neighbors": [
+      "BEL",
+      "DEU"
+    ],
+    "flagEmoji": "🇳🇱",
+    "population": 0,
+    "areaKm2": 41850
+  },
+  "NOR": {
+    "id": "NOR",
+    "name": "Norvège",
+    "normalizedName": "norvege",
+    "aliases": [
+      "Norway",
+      "NO",
+      "NOR",
+      "Royaume de Norvège"
+    ],
+    "capitalOrChefLieu": "Oslo",
+    "continentOrRegion": "Europe",
+    "latitude": 62,
+    "longitude": 10,
+    "neighbors": [
+      "FIN",
+      "SWE",
+      "RUS"
+    ],
+    "flagEmoji": "🇳🇴",
+    "population": 0,
+    "areaKm2": 323802
+  },
+  "NPL": {
+    "id": "NPL",
+    "name": "Népal",
+    "normalizedName": "nepal",
+    "aliases": [
+      "Nepal",
+      "NP",
+      "NPL",
+      "République du Népal"
+    ],
+    "capitalOrChefLieu": "Kathmandu",
+    "continentOrRegion": "Asia",
+    "latitude": 28,
+    "longitude": 84,
+    "neighbors": [
+      "CHN",
+      "IND"
+    ],
+    "flagEmoji": "🇳🇵",
+    "population": 0,
+    "areaKm2": 147181
+  },
+  "OMN": {
+    "id": "OMN",
+    "name": "Oman",
+    "normalizedName": "oman",
+    "aliases": [
+      "Oman",
+      "OM",
+      "OMN",
+      "Sultanat d'Oman"
+    ],
+    "capitalOrChefLieu": "Muscat",
+    "continentOrRegion": "Asia",
+    "latitude": 21,
+    "longitude": 57,
+    "neighbors": [
+      "SAU",
+      "ARE",
+      "YEM"
+    ],
+    "flagEmoji": "🇴🇲",
+    "population": 0,
+    "areaKm2": 309500
+  },
+  "PAK": {
+    "id": "PAK",
+    "name": "Pakistan",
+    "normalizedName": "pakistan",
+    "aliases": [
+      "Pakistan",
+      "PK",
+      "PAK",
+      "République islamique du Pakistan"
+    ],
+    "capitalOrChefLieu": "Islamabad",
+    "continentOrRegion": "Asia",
+    "latitude": 30,
+    "longitude": 70,
+    "neighbors": [
+      "AFG",
+      "CHN",
+      "IND",
+      "IRN"
+    ],
+    "flagEmoji": "🇵🇰",
+    "population": 0,
+    "areaKm2": 881912
+  },
+  "PAN": {
+    "id": "PAN",
+    "name": "Panama",
+    "normalizedName": "panama",
+    "aliases": [
+      "Panama",
+      "PA",
+      "PAN",
+      "République du Panama"
+    ],
+    "capitalOrChefLieu": "Panama City",
+    "continentOrRegion": "Americas",
+    "latitude": 9,
+    "longitude": -80,
+    "neighbors": [
+      "COL",
+      "CRI"
+    ],
+    "flagEmoji": "🇵🇦",
+    "population": 0,
+    "areaKm2": 75417
+  },
+  "PER": {
+    "id": "PER",
+    "name": "Pérou",
+    "normalizedName": "perou",
+    "aliases": [
+      "Peru",
+      "PE",
+      "PER",
+      "République du Pérou"
+    ],
+    "capitalOrChefLieu": "Lima",
+    "continentOrRegion": "Americas",
+    "latitude": -10,
+    "longitude": -76,
+    "neighbors": [
+      "BOL",
+      "BRA",
+      "CHL",
+      "COL",
+      "ECU"
+    ],
+    "flagEmoji": "🇵🇪",
+    "population": 0,
+    "areaKm2": 1285216
+  },
+  "PNG": {
+    "id": "PNG",
+    "name": "Papouasie-Nouvelle-Guinée",
+    "normalizedName": "papouasie-nouvelle-guinee",
+    "aliases": [
+      "Papua New Guinea",
+      "PG",
+      "PNG",
+      "État indépendant de Papouasie-Nouvelle-Guinée"
+    ],
+    "capitalOrChefLieu": "Port Moresby",
+    "continentOrRegion": "Oceania",
+    "latitude": -6,
+    "longitude": 147,
+    "neighbors": [
+      "IDN"
+    ],
+    "flagEmoji": "🇵🇬",
+    "population": 0,
+    "areaKm2": 462840
+  },
+  "POL": {
+    "id": "POL",
+    "name": "Pologne",
+    "normalizedName": "pologne",
+    "aliases": [
+      "Poland",
+      "PL",
+      "POL",
+      "République de Pologne"
+    ],
+    "capitalOrChefLieu": "Warsaw",
+    "continentOrRegion": "Europe",
+    "latitude": 52,
+    "longitude": 20,
+    "neighbors": [
+      "BLR",
+      "CZE",
+      "DEU",
+      "LTU",
+      "RUS",
+      "SVK",
+      "UKR"
+    ],
+    "flagEmoji": "🇵🇱",
+    "population": 0,
+    "areaKm2": 312679
+  },
+  "PRK": {
+    "id": "PRK",
+    "name": "Corée du Nord",
+    "normalizedName": "coree du nord",
+    "aliases": [
+      "North Korea",
+      "KP",
+      "PRK",
+      "République populaire démocratique de Corée"
+    ],
+    "capitalOrChefLieu": "Pyongyang",
+    "continentOrRegion": "Asia",
+    "latitude": 40,
+    "longitude": 127,
+    "neighbors": [
+      "CHN",
+      "KOR",
+      "RUS"
+    ],
+    "flagEmoji": "🇰🇵",
+    "population": 0,
+    "areaKm2": 120538
+  },
+  "PRT": {
+    "id": "PRT",
+    "name": "Portugal",
+    "normalizedName": "portugal",
+    "aliases": [
+      "Portugal",
+      "PT",
+      "PRT",
+      "République portugaise"
+    ],
+    "capitalOrChefLieu": "Lisbon",
+    "continentOrRegion": "Europe",
+    "latitude": 39.5,
+    "longitude": -8,
+    "neighbors": [
+      "ESP"
+    ],
+    "flagEmoji": "🇵🇹",
+    "population": 0,
+    "areaKm2": 92090
+  },
+  "PRY": {
+    "id": "PRY",
+    "name": "Paraguay",
+    "normalizedName": "paraguay",
+    "aliases": [
+      "Paraguay",
+      "PY",
+      "PRY",
+      "République du Paraguay"
+    ],
+    "capitalOrChefLieu": "Asunción",
+    "continentOrRegion": "Americas",
+    "latitude": -23,
+    "longitude": -58,
+    "neighbors": [
+      "ARG",
+      "BOL",
+      "BRA"
+    ],
+    "flagEmoji": "🇵🇾",
+    "population": 0,
+    "areaKm2": 406752
+  },
+  "PSE": {
+    "id": "PSE",
+    "name": "Palestine",
+    "normalizedName": "palestine",
+    "aliases": [
+      "Palestine",
+      "PS",
+      "PSE",
+      "État de Palestine"
+    ],
+    "capitalOrChefLieu": "Ramallah",
+    "continentOrRegion": "Asia",
+    "latitude": 31.9,
+    "longitude": 35.2,
+    "neighbors": [
+      "ISR",
+      "EGY",
+      "JOR"
+    ],
+    "flagEmoji": "🇵🇸",
+    "population": 0,
+    "areaKm2": 6220
+  },
+  "QAT": {
+    "id": "QAT",
+    "name": "Qatar",
+    "normalizedName": "qatar",
+    "aliases": [
+      "Qatar",
+      "QA",
+      "QAT",
+      "État du Qatar"
+    ],
+    "capitalOrChefLieu": "Doha",
+    "continentOrRegion": "Asia",
+    "latitude": 25.5,
+    "longitude": 51.25,
+    "neighbors": [
+      "SAU"
+    ],
+    "flagEmoji": "🇶🇦",
+    "population": 0,
+    "areaKm2": 11586
+  },
+  "ROU": {
+    "id": "ROU",
+    "name": "Roumanie",
+    "normalizedName": "roumanie",
+    "aliases": [
+      "Romania",
+      "RO",
+      "ROU",
+      "Roumanie"
+    ],
+    "capitalOrChefLieu": "Bucharest",
+    "continentOrRegion": "Europe",
+    "latitude": 46,
+    "longitude": 25,
+    "neighbors": [
+      "BGR",
+      "HUN",
+      "MDA",
+      "SRB",
+      "UKR"
+    ],
+    "flagEmoji": "🇷🇴",
+    "population": 0,
+    "areaKm2": 238391
+  },
+  "RUS": {
+    "id": "RUS",
+    "name": "Russie",
+    "normalizedName": "russie",
+    "aliases": [
+      "Russia",
+      "RU",
+      "RUS",
+      "Fédération de Russie"
+    ],
+    "capitalOrChefLieu": "Moscow",
+    "continentOrRegion": "Europe",
+    "latitude": 60,
+    "longitude": 100,
+    "neighbors": [
+      "AZE",
+      "BLR",
+      "CHN",
+      "EST",
+      "FIN",
+      "GEO",
+      "KAZ",
+      "PRK",
+      "LVA",
+      "LTU",
+      "MNG",
+      "NOR",
+      "POL",
+      "UKR"
+    ],
+    "flagEmoji": "🇷🇺",
+    "population": 0,
+    "areaKm2": 17098242
+  },
+  "RWA": {
+    "id": "RWA",
+    "name": "Rwanda",
+    "normalizedName": "rwanda",
+    "aliases": [
+      "Rwanda",
+      "RW",
+      "RWA",
+      "République rwandaise"
+    ],
+    "capitalOrChefLieu": "Kigali",
+    "continentOrRegion": "Africa",
+    "latitude": -2,
+    "longitude": 30,
+    "neighbors": [
+      "BDI",
+      "COD",
+      "TZA",
+      "UGA"
+    ],
+    "flagEmoji": "🇷🇼",
+    "population": 0,
+    "areaKm2": 26338
+  },
+  "SAU": {
+    "id": "SAU",
+    "name": "Arabie Saoudite",
+    "normalizedName": "arabie saoudite",
+    "aliases": [
+      "Saudi Arabia",
+      "SA",
+      "SAU",
+      "Royaume d'Arabie Saoudite"
+    ],
+    "capitalOrChefLieu": "Riyadh",
+    "continentOrRegion": "Asia",
+    "latitude": 25,
+    "longitude": 45,
+    "neighbors": [
+      "IRQ",
+      "JOR",
+      "KWT",
+      "OMN",
+      "QAT",
+      "ARE",
+      "YEM",
+      "BHR"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "BHR",
+        "label": "Chaussée du Roi Fahd",
+        "type": "causeway"
+      }
+    ],
+    "flagEmoji": "🇸🇦",
+    "population": 0,
+    "areaKm2": 2149690
+  },
+  "SDN": {
+    "id": "SDN",
+    "name": "Soudan",
+    "normalizedName": "soudan",
+    "aliases": [
+      "Sudan",
+      "SD",
+      "SDN",
+      "République du Soudan"
+    ],
+    "capitalOrChefLieu": "Khartoum",
+    "continentOrRegion": "Africa",
+    "latitude": 15,
+    "longitude": 30,
+    "neighbors": [
+      "CAF",
+      "TCD",
+      "EGY",
+      "ERI",
+      "ETH",
+      "LBY",
+      "SSD"
+    ],
+    "flagEmoji": "🇸🇩",
+    "population": 0,
+    "areaKm2": 1886068
+  },
+  "SEN": {
+    "id": "SEN",
+    "name": "Sénégal",
+    "normalizedName": "senegal",
+    "aliases": [
+      "Senegal",
+      "SN",
+      "SEN",
+      "République du Sénégal"
+    ],
+    "capitalOrChefLieu": "Dakar",
+    "continentOrRegion": "Africa",
+    "latitude": 14,
+    "longitude": -14,
+    "neighbors": [
+      "GMB",
+      "GIN",
+      "GNB",
+      "MLI",
+      "MRT"
+    ],
+    "flagEmoji": "🇸🇳",
+    "population": 0,
+    "areaKm2": 196722
+  },
+  "SGP": {
+    "id": "SGP",
+    "name": "Singapour",
+    "normalizedName": "singapour",
+    "aliases": [
+      "Singapore",
+      "SG",
+      "SGP",
+      "République de Singapour"
+    ],
+    "capitalOrChefLieu": "Singapore",
+    "continentOrRegion": "Asia",
+    "latitude": 1.36666666,
+    "longitude": 103.8,
+    "neighbors": [
+      "MYS"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "MYS",
+        "label": "Chaussée Johor-Singapour",
+        "type": "causeway"
+      }
+    ],
+    "flagEmoji": "🇸🇬",
+    "population": 0,
+    "areaKm2": 710
+  },
+  "SLE": {
+    "id": "SLE",
+    "name": "Sierra Leone",
+    "normalizedName": "sierra leone",
+    "aliases": [
+      "Sierra Leone",
+      "SL",
+      "SLE",
+      "République de Sierra Leone"
+    ],
+    "capitalOrChefLieu": "Freetown",
+    "continentOrRegion": "Africa",
+    "latitude": 8.5,
+    "longitude": -11.5,
+    "neighbors": [
+      "GIN",
+      "LBR"
+    ],
+    "flagEmoji": "🇸🇱",
+    "population": 0,
+    "areaKm2": 71740
+  },
+  "SLV": {
+    "id": "SLV",
+    "name": "Salvador",
+    "normalizedName": "salvador",
+    "aliases": [
+      "El Salvador",
+      "SV",
+      "SLV",
+      "République du Salvador"
+    ],
+    "capitalOrChefLieu": "San Salvador",
+    "continentOrRegion": "Americas",
+    "latitude": 13.83333333,
+    "longitude": -88.91666666,
+    "neighbors": [
+      "GTM",
+      "HND"
+    ],
+    "flagEmoji": "🇸🇻",
+    "population": 0,
+    "areaKm2": 21041
+  },
+  "SMR": {
+    "id": "SMR",
+    "name": "Saint-Marin",
+    "normalizedName": "saint-marin",
+    "aliases": [
+      "San Marino",
+      "SM",
+      "SMR",
+      "République de Saint-Marin"
+    ],
+    "capitalOrChefLieu": "City of San Marino",
+    "continentOrRegion": "Europe",
+    "latitude": 43.76666666,
+    "longitude": 12.41666666,
+    "neighbors": [
+      "ITA"
+    ],
+    "flagEmoji": "🇸🇲",
+    "population": 0,
+    "areaKm2": 61
+  },
+  "SOM": {
+    "id": "SOM",
+    "name": "Somalie",
+    "normalizedName": "somalie",
+    "aliases": [
+      "Somalia",
+      "SO",
+      "SOM",
+      "République fédérale de Somalie"
+    ],
+    "capitalOrChefLieu": "Mogadishu",
+    "continentOrRegion": "Africa",
+    "latitude": 10,
+    "longitude": 49,
+    "neighbors": [
+      "DJI",
+      "ETH",
+      "KEN"
+    ],
+    "flagEmoji": "🇸🇴",
+    "population": 0,
+    "areaKm2": 637657
+  },
+  "SRB": {
+    "id": "SRB",
+    "name": "Serbie",
+    "normalizedName": "serbie",
+    "aliases": [
+      "Serbia",
+      "RS",
+      "SRB",
+      "République de Serbie"
+    ],
+    "capitalOrChefLieu": "Belgrade",
+    "continentOrRegion": "Europe",
+    "latitude": 44,
+    "longitude": 21,
+    "neighbors": [
+      "BIH",
+      "BGR",
+      "HRV",
+      "HUN",
+      "UNK",
+      "MKD",
+      "MNE",
+      "ROU"
+    ],
+    "flagEmoji": "🇷🇸",
+    "population": 0,
+    "areaKm2": 88361
+  },
+  "SSD": {
+    "id": "SSD",
+    "name": "Soudan du Sud",
+    "normalizedName": "soudan du sud",
+    "aliases": [
+      "South Sudan",
+      "SS",
+      "SSD",
+      "République du Soudan du Sud"
+    ],
+    "capitalOrChefLieu": "Juba",
+    "continentOrRegion": "Africa",
+    "latitude": 7,
+    "longitude": 30,
+    "neighbors": [
+      "CAF",
+      "COD",
+      "ETH",
+      "KEN",
+      "SDN",
+      "UGA"
+    ],
+    "flagEmoji": "🇸🇸",
+    "population": 0,
+    "areaKm2": 619745
+  },
+  "SUR": {
+    "id": "SUR",
+    "name": "Surinam",
+    "normalizedName": "surinam",
+    "aliases": [
+      "Suriname",
+      "SR",
+      "SUR",
+      "République du Suriname"
+    ],
+    "capitalOrChefLieu": "Paramaribo",
+    "continentOrRegion": "Americas",
+    "latitude": 4,
+    "longitude": -56,
+    "neighbors": [
+      "BRA",
+      "GUF",
+      "GUY"
+    ],
+    "flagEmoji": "🇸🇷",
+    "population": 0,
+    "areaKm2": 163820
+  },
+  "SVK": {
+    "id": "SVK",
+    "name": "Slovaquie",
+    "normalizedName": "slovaquie",
+    "aliases": [
+      "Slovakia",
+      "SK",
+      "SVK",
+      "République slovaque"
+    ],
+    "capitalOrChefLieu": "Bratislava",
+    "continentOrRegion": "Europe",
+    "latitude": 48.66666666,
+    "longitude": 19.5,
+    "neighbors": [
+      "AUT",
+      "CZE",
+      "HUN",
+      "POL",
+      "UKR"
+    ],
+    "flagEmoji": "🇸🇰",
+    "population": 0,
+    "areaKm2": 49037
+  },
+  "SVN": {
+    "id": "SVN",
+    "name": "Slovénie",
+    "normalizedName": "slovenie",
+    "aliases": [
+      "Slovenia",
+      "SI",
+      "SVN",
+      "République de Slovénie"
+    ],
+    "capitalOrChefLieu": "Ljubljana",
+    "continentOrRegion": "Europe",
+    "latitude": 46.11666666,
+    "longitude": 14.81666666,
+    "neighbors": [
+      "AUT",
+      "HRV",
+      "ITA",
+      "HUN"
+    ],
+    "flagEmoji": "🇸🇮",
+    "population": 0,
+    "areaKm2": 20273
+  },
+  "SWE": {
+    "id": "SWE",
+    "name": "Suède",
+    "normalizedName": "suede",
+    "aliases": [
+      "Sweden",
+      "SE",
+      "SWE",
+      "Royaume de Suède"
+    ],
+    "capitalOrChefLieu": "Stockholm",
+    "continentOrRegion": "Europe",
+    "latitude": 62,
+    "longitude": 15,
+    "neighbors": [
+      "FIN",
+      "NOR",
+      "DNK"
+    ],
+    "fixedLinks": [
+      {
+        "targetId": "DNK",
+        "label": "Pont de l'Øresund",
+        "type": "bridge"
+      }
+    ],
+    "flagEmoji": "🇸🇪",
+    "population": 0,
+    "areaKm2": 450295
+  },
+  "SWZ": {
+    "id": "SWZ",
+    "name": "Eswatini",
+    "normalizedName": "eswatini",
+    "aliases": [
+      "Eswatini",
+      "SZ",
+      "SWZ",
+      "Royaume d’Eswatini"
+    ],
+    "capitalOrChefLieu": "Lobamba",
+    "continentOrRegion": "Africa",
+    "latitude": -26.5,
+    "longitude": 31.5,
+    "neighbors": [
+      "MOZ",
+      "ZAF"
+    ],
+    "flagEmoji": "🇸🇿",
+    "population": 0,
+    "areaKm2": 17364
+  },
+  "SXM": {
+    "id": "SXM",
+    "name": "Saint-Martin",
+    "normalizedName": "saint-martin",
+    "aliases": [
+      "Sint Maarten",
+      "SX",
+      "SXM",
+      "Sint Maarten"
+    ],
+    "capitalOrChefLieu": "Philipsburg",
+    "continentOrRegion": "Americas",
+    "latitude": 18.033333,
+    "longitude": -63.05,
+    "neighbors": [
+      "MAF"
+    ],
+    "flagEmoji": "🇸🇽",
+    "population": 0,
+    "areaKm2": 34
+  },
+  "SYR": {
+    "id": "SYR",
+    "name": "Syrie",
+    "normalizedName": "syrie",
+    "aliases": [
+      "Syria",
+      "SY",
+      "SYR",
+      "République arabe syrienne"
+    ],
+    "capitalOrChefLieu": "Damascus",
+    "continentOrRegion": "Asia",
+    "latitude": 35,
+    "longitude": 38,
+    "neighbors": [
+      "IRQ",
+      "ISR",
+      "JOR",
+      "LBN",
+      "TUR"
+    ],
+    "flagEmoji": "🇸🇾",
+    "population": 0,
+    "areaKm2": 185180
+  },
+  "TCD": {
+    "id": "TCD",
+    "name": "Tchad",
+    "normalizedName": "tchad",
+    "aliases": [
+      "Chad",
+      "TD",
+      "TCD",
+      "République du Tchad"
+    ],
+    "capitalOrChefLieu": "N'Djamena",
+    "continentOrRegion": "Africa",
+    "latitude": 15,
+    "longitude": 19,
+    "neighbors": [
+      "CMR",
+      "CAF",
+      "LBY",
+      "NER",
+      "NGA",
+      "SDN"
+    ],
+    "flagEmoji": "🇹🇩",
+    "population": 0,
+    "areaKm2": 1284000
+  },
+  "TGO": {
+    "id": "TGO",
+    "name": "Togo",
+    "normalizedName": "togo",
+    "aliases": [
+      "Togo",
+      "TG",
+      "TGO",
+      "République togolaise"
+    ],
+    "capitalOrChefLieu": "Lomé",
+    "continentOrRegion": "Africa",
+    "latitude": 8,
+    "longitude": 1.16666666,
+    "neighbors": [
+      "BEN",
+      "BFA",
+      "GHA"
+    ],
+    "flagEmoji": "🇹🇬",
+    "population": 0,
+    "areaKm2": 56785
+  },
+  "THA": {
+    "id": "THA",
+    "name": "Thaïlande",
+    "normalizedName": "thailande",
+    "aliases": [
+      "Thailand",
+      "TH",
+      "THA",
+      "Royaume de Thaïlande"
+    ],
+    "capitalOrChefLieu": "Bangkok",
+    "continentOrRegion": "Asia",
+    "latitude": 15,
+    "longitude": 100,
+    "neighbors": [
+      "MMR",
+      "KHM",
+      "LAO",
+      "MYS"
+    ],
+    "flagEmoji": "🇹🇭",
+    "population": 0,
+    "areaKm2": 513120
+  },
+  "TJK": {
+    "id": "TJK",
+    "name": "Tadjikistan",
+    "normalizedName": "tadjikistan",
+    "aliases": [
+      "Tajikistan",
+      "TJ",
+      "TJK",
+      "République du Tadjikistan"
+    ],
+    "capitalOrChefLieu": "Dushanbe",
+    "continentOrRegion": "Asia",
+    "latitude": 39,
+    "longitude": 71,
+    "neighbors": [
+      "AFG",
+      "CHN",
+      "KGZ",
+      "UZB"
+    ],
+    "flagEmoji": "🇹🇯",
+    "population": 0,
+    "areaKm2": 143100
+  },
+  "TKM": {
+    "id": "TKM",
+    "name": "Turkménistan",
+    "normalizedName": "turkmenistan",
+    "aliases": [
+      "Turkmenistan",
+      "TM",
+      "TKM",
+      "Turkménistan"
+    ],
+    "capitalOrChefLieu": "Ashgabat",
+    "continentOrRegion": "Asia",
+    "latitude": 40,
+    "longitude": 60,
+    "neighbors": [
+      "AFG",
+      "IRN",
+      "KAZ",
+      "UZB"
+    ],
+    "flagEmoji": "🇹🇲",
+    "population": 0,
+    "areaKm2": 488100
+  },
+  "TLS": {
+    "id": "TLS",
+    "name": "Timor oriental",
+    "normalizedName": "timor oriental",
+    "aliases": [
+      "Timor-Leste",
+      "TL",
+      "TLS",
+      "République démocratique du Timor oriental"
+    ],
+    "capitalOrChefLieu": "Dili",
+    "continentOrRegion": "Asia",
+    "latitude": -8.83333333,
+    "longitude": 125.91666666,
+    "neighbors": [
+      "IDN"
+    ],
+    "flagEmoji": "🇹🇱",
+    "population": 0,
+    "areaKm2": 14874
+  },
+  "TUN": {
+    "id": "TUN",
+    "name": "Tunisie",
+    "normalizedName": "tunisie",
+    "aliases": [
+      "Tunisia",
+      "TN",
+      "TUN",
+      "République tunisienne"
+    ],
+    "capitalOrChefLieu": "Tunis",
+    "continentOrRegion": "Africa",
+    "latitude": 34,
+    "longitude": 9,
+    "neighbors": [
+      "DZA",
+      "LBY"
+    ],
+    "flagEmoji": "🇹🇳",
+    "population": 0,
+    "areaKm2": 163610
+  },
+  "TUR": {
+    "id": "TUR",
+    "name": "Turquie",
+    "normalizedName": "turquie",
+    "aliases": [
+      "Türkiye",
+      "TR",
+      "TUR",
+      "République de Turquie"
+    ],
+    "capitalOrChefLieu": "Ankara",
+    "continentOrRegion": "Asia",
+    "latitude": 39,
+    "longitude": 35,
+    "neighbors": [
+      "ARM",
+      "AZE",
+      "BGR",
+      "GEO",
+      "GRC",
+      "IRN",
+      "IRQ",
+      "SYR"
+    ],
+    "flagEmoji": "🇹🇷",
+    "population": 0,
+    "areaKm2": 783562
+  },
+  "TZA": {
+    "id": "TZA",
+    "name": "Tanzanie",
+    "normalizedName": "tanzanie",
+    "aliases": [
+      "Tanzania",
+      "TZ",
+      "TZA",
+      "République unie de Tanzanie"
+    ],
+    "capitalOrChefLieu": "Dodoma",
+    "continentOrRegion": "Africa",
+    "latitude": -6,
+    "longitude": 35,
+    "neighbors": [
+      "BDI",
+      "COD",
+      "KEN",
+      "MWI",
+      "MOZ",
+      "RWA",
+      "UGA",
+      "ZMB"
+    ],
+    "flagEmoji": "🇹🇿",
+    "population": 0,
+    "areaKm2": 945087
+  },
+  "UGA": {
+    "id": "UGA",
+    "name": "Ouganda",
+    "normalizedName": "ouganda",
+    "aliases": [
+      "Uganda",
+      "UG",
+      "UGA",
+      "République de l'Ouganda"
+    ],
+    "capitalOrChefLieu": "Kampala",
+    "continentOrRegion": "Africa",
+    "latitude": 1,
+    "longitude": 32,
+    "neighbors": [
+      "COD",
+      "KEN",
+      "RWA",
+      "SSD",
+      "TZA"
+    ],
+    "flagEmoji": "🇺🇬",
+    "population": 0,
+    "areaKm2": 241550
+  },
+  "UKR": {
+    "id": "UKR",
+    "name": "Ukraine",
+    "normalizedName": "ukraine",
+    "aliases": [
+      "Ukraine",
+      "UA",
+      "UKR",
+      "Ukraine"
+    ],
+    "capitalOrChefLieu": "Kyiv",
+    "continentOrRegion": "Europe",
+    "latitude": 49,
+    "longitude": 32,
+    "neighbors": [
+      "BLR",
+      "HUN",
+      "MDA",
+      "POL",
+      "ROU",
+      "RUS",
+      "SVK"
+    ],
+    "flagEmoji": "🇺🇦",
+    "population": 0,
+    "areaKm2": 603500
+  },
+  "URY": {
+    "id": "URY",
+    "name": "Uruguay",
+    "normalizedName": "uruguay",
+    "aliases": [
+      "Uruguay",
+      "UY",
+      "URY",
+      "République orientale de l'Uruguay"
+    ],
+    "capitalOrChefLieu": "Montevideo",
+    "continentOrRegion": "Americas",
+    "latitude": -33,
+    "longitude": -56,
+    "neighbors": [
+      "ARG",
+      "BRA"
+    ],
+    "flagEmoji": "🇺🇾",
+    "population": 0,
+    "areaKm2": 181034
+  },
+  "USA": {
+    "id": "USA",
+    "name": "États-Unis",
+    "normalizedName": "etats-unis",
+    "aliases": [
+      "United States",
+      "US",
+      "USA",
+      "Les états-unis d'Amérique"
+    ],
+    "capitalOrChefLieu": "Washington D.C.",
+    "continentOrRegion": "Americas",
+    "latitude": 38,
+    "longitude": -97,
+    "neighbors": [
+      "CAN",
+      "MEX"
+    ],
+    "flagEmoji": "🇺🇸",
+    "population": 0,
+    "areaKm2": 9372610
+  },
+  "UZB": {
+    "id": "UZB",
+    "name": "Ouzbékistan",
+    "normalizedName": "ouzbekistan",
+    "aliases": [
+      "Uzbekistan",
+      "UZ",
+      "UZB",
+      "République d'Ouzbékistan"
+    ],
+    "capitalOrChefLieu": "Tashkent",
+    "continentOrRegion": "Asia",
+    "latitude": 41,
+    "longitude": 64,
+    "neighbors": [
+      "AFG",
+      "KAZ",
+      "KGZ",
+      "TJK",
+      "TKM"
+    ],
+    "flagEmoji": "🇺🇿",
+    "population": 0,
+    "areaKm2": 447400
+  },
+  "VAT": {
+    "id": "VAT",
+    "name": "Cité du Vatican",
+    "normalizedName": "cite du vatican",
+    "aliases": [
+      "Vatican City",
+      "VA",
+      "VAT",
+      "Cité du Vatican"
+    ],
+    "capitalOrChefLieu": "Vatican City",
+    "continentOrRegion": "Europe",
+    "latitude": 41.9,
+    "longitude": 12.45,
+    "neighbors": [
+      "ITA"
+    ],
+    "flagEmoji": "🇻🇦",
+    "population": 0,
+    "areaKm2": 0.44
+  },
+  "VEN": {
+    "id": "VEN",
+    "name": "Venezuela",
+    "normalizedName": "venezuela",
+    "aliases": [
+      "Venezuela",
+      "VE",
+      "VEN",
+      "République bolivarienne du Venezuela"
+    ],
+    "capitalOrChefLieu": "Caracas",
+    "continentOrRegion": "Americas",
+    "latitude": 8,
+    "longitude": -66,
+    "neighbors": [
+      "BRA",
+      "COL",
+      "GUY"
+    ],
+    "flagEmoji": "🇻🇪",
+    "population": 0,
+    "areaKm2": 916445
+  },
+  "VNM": {
+    "id": "VNM",
+    "name": "Viêt Nam",
+    "normalizedName": "viet nam",
+    "aliases": [
+      "Vietnam",
+      "VN",
+      "VNM",
+      "République socialiste du Viêt Nam"
+    ],
+    "capitalOrChefLieu": "Hanoi",
+    "continentOrRegion": "Asia",
+    "latitude": 16.16666666,
+    "longitude": 107.83333333,
+    "neighbors": [
+      "KHM",
+      "CHN",
+      "LAO"
+    ],
+    "flagEmoji": "🇻🇳",
+    "population": 0,
+    "areaKm2": 331212
+  },
+  "YEM": {
+    "id": "YEM",
+    "name": "Yémen",
+    "normalizedName": "yemen",
+    "aliases": [
+      "Yemen",
+      "YE",
+      "YEM",
+      "République du Yémen"
+    ],
+    "capitalOrChefLieu": "Sana'a",
+    "continentOrRegion": "Asia",
+    "latitude": 15,
+    "longitude": 48,
+    "neighbors": [
+      "OMN",
+      "SAU"
+    ],
+    "flagEmoji": "🇾🇪",
+    "population": 0,
+    "areaKm2": 527968
+  },
+  "ZAF": {
+    "id": "ZAF",
+    "name": "Afrique du Sud",
+    "normalizedName": "afrique du sud",
+    "aliases": [
+      "South Africa",
+      "ZA",
+      "ZAF",
+      "République d'Afrique du Sud"
+    ],
+    "capitalOrChefLieu": "Pretoria",
+    "continentOrRegion": "Africa",
+    "latitude": -29,
+    "longitude": 24,
+    "neighbors": [
+      "BWA",
+      "LSO",
+      "MOZ",
+      "NAM",
+      "SWZ",
+      "ZWE"
+    ],
+    "flagEmoji": "🇿🇦",
+    "population": 0,
+    "areaKm2": 1221037
+  },
+  "ZMB": {
+    "id": "ZMB",
+    "name": "Zambie",
+    "normalizedName": "zambie",
+    "aliases": [
+      "Zambia",
+      "ZM",
+      "ZMB",
+      "République de Zambie"
+    ],
+    "capitalOrChefLieu": "Lusaka",
+    "continentOrRegion": "Africa",
+    "latitude": -15,
+    "longitude": 30,
+    "neighbors": [
+      "AGO",
+      "BWA",
+      "COD",
+      "MWI",
+      "MOZ",
+      "NAM",
+      "TZA",
+      "ZWE"
+    ],
+    "flagEmoji": "🇿🇲",
+    "population": 0,
+    "areaKm2": 752612
+  },
+  "ZWE": {
+    "id": "ZWE",
+    "name": "Zimbabwe",
+    "normalizedName": "zimbabwe",
+    "aliases": [
+      "Zimbabwe",
+      "ZW",
+      "ZWE",
+      "République du Zimbabwe"
+    ],
+    "capitalOrChefLieu": "Harare",
+    "continentOrRegion": "Africa",
+    "latitude": -20,
+    "longitude": 30,
+    "neighbors": [
+      "BWA",
+      "MOZ",
+      "ZAF",
+      "ZMB"
+    ],
+    "flagEmoji": "🇿🇼",
+    "population": 0,
+    "areaKm2": 390757
+  }
+}
