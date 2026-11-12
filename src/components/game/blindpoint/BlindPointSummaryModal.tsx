@@ -137,7 +137,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   };
 
   const isMultiPack = mode === "custom" && packs && packs.length > 1;
-  const isLieuxPack = !isMultiPack && (pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde");
+  const isLieuxPack = !isMultiPack && (pack.startsWith("lieux_") || pack === "metro_paris" || pack === "chateaux_france" || pack === "monuments_monde");
   
   const multiPackNames = isMultiPack
     ? packs.map((p) => packShortLabels[p] || packLabels[p] || p).join(" + ")
@@ -230,7 +230,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
               : "Partie Terminée !"}
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            {packName} • {isLieuxPack ? "Lieux Culturels" : `Niveau ${diffName}`}
+            {packName} • {pack === "metro_paris" ? "Réseau RATP" : isLieuxPack ? "Lieux Culturels" : `Niveau ${diffName}`}
           </p>
 
           <div className="mt-4 flex items-center justify-center gap-3 sm:gap-6 p-3 rounded-2xl bg-slate-950/60 border border-slate-800">

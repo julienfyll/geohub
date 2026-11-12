@@ -203,26 +203,28 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
 
         {/* Center: Mode Indicator & Pack Switcher (Visual Segmented Pills) */}
         <div className="flex items-center gap-2">
-          {/* Mode Switcher : Daily vs Libre */}
+          {/* Mode Switcher : Daily vs Libre / Rapide vs Custom */}
           <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
-            <button
-              type="button"
-              onClick={() => {
-                if (onChangeMode) {
-                  onChangeMode(pack, difficulty, "daily");
-                } else {
-                  router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=daily&play=1`);
-                }
-              }}
-              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
-                mode === "daily"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-              title="Défi officiel du jour (tirage identique pour tous)"
-            >
-              <span>📅 Du Jour</span>
-            </button>
+            {pack !== "metro_paris" && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (onChangeMode) {
+                    onChangeMode(pack, difficulty, "daily");
+                  } else {
+                    router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=daily&play=1`);
+                  }
+                }}
+                className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                  mode === "daily"
+                    ? "bg-blue-600 text-white font-semibold shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+                title="Défi officiel du jour (tirage identique pour tous)"
+              >
+                <span>📅 Du Jour</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -238,10 +240,10 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              title="Partie libre illimitée avec tirage aléatoire"
+              title={pack === "metro_paris" ? "Partie rapide illimitée avec tirage aléatoire" : "Partie libre illimitée avec tirage aléatoire"}
             >
-              <Zap className="w-3 h-3" />
-              <span>Libre</span>
+              <Zap className="w-3 h-3 text-amber-400" />
+              <span>{pack === "metro_paris" ? "Partie rapide" : "Libre"}</span>
             </button>
 
             <button
