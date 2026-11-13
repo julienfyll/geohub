@@ -36,6 +36,40 @@ export const BASEMAP_STYLES: Record<BorderPathMapTheme, string | StyleSpecificat
   satellite: SATELLITE_STYLE,
 };
 
+export const PACK_CENTERS: Record<
+  BorderPathPack,
+  { center: [number, number]; zoom: number; maxZoom: number }
+> = {
+  france_departements: { center: [2.2137, 46.2276], zoom: 5.4, maxZoom: 8.5 },
+  europe: { center: [14.0, 50.0], zoom: 3.6, maxZoom: 6.5 },
+  ameriques: { center: [-75.0, 10.0], zoom: 2.5, maxZoom: 5.5 },
+  afrique: { center: [18.0, 2.0], zoom: 3.0, maxZoom: 5.5 },
+  monde: { center: [20.0, 25.0], zoom: 2.2, maxZoom: 5.5 },
+};
+
+export const PACK_BOUNDS: Record<BorderPathPack, [[number, number], [number, number]]> = {
+  france_departements: [
+    [-5.2, 41.3],
+    [9.6, 51.2],
+  ],
+  europe: [
+    [-11.0, 34.5],
+    [35.0, 71.0],
+  ],
+  ameriques: [
+    [-130.0, -56.0],
+    [-34.0, 55.0],
+  ],
+  afrique: [
+    [-18.0, -35.0],
+    [52.0, 38.0],
+  ],
+  monde: [
+    [-130.0, -50.0],
+    [150.0, 70.0],
+  ],
+};
+
 // Global in-memory cache for parsed GeoJSON data
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const geojsonCache = new Map<string, any>();
@@ -173,13 +207,28 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     const map = mapRef.current;
     if (!map || !startEntity || !targetEntity) return;
 
-    const coords: [number, number][] = [
+    const rawCoords: [number, number][] = [
+      [startEntity.longitude, startEntity.latitude],
+      [targetEntity.longitude, targetEntity.latitude],
       ...branchAEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
       ...branchBEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
     ];
 
-    if (coords.length < 2) {
-      coords.push([targetEntity.longitude, targetEntity.latitude]);
+    const coords: [number, number][] = rawCoords.filter(
+      ([lng, lat]) =>
+        typeof lng === "number" &&
+        typeof lat === "number" &&
+        !isNaN(lng) &&
+        !isNaN(lat)
+    );
+
+    if (coords.length === 0) {
+      const defaultBounds = PACK_BOUNDS[pack] || PACK_BOUNDS.monde;
+      map.fitBounds(defaultBounds, {
+        padding: { top: 90, bottom: 130, left: 70, right: 70 },
+        duration: 1000,
+      });
+      return;
     }
 
     const bounds = coords.reduce(
@@ -187,12 +236,14 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       new maplibregl.LngLatBounds(coords[0], coords[0])
     );
 
+    const packConfig = PACK_CENTERS[pack] || PACK_CENTERS.monde;
+
     map.fitBounds(bounds, {
       padding: { top: 90, bottom: 130, left: 70, right: 70 },
-      maxZoom: isFrance ? 8.5 : 5.5,
+      maxZoom: packConfig.maxZoom,
       duration: 1000,
     });
-  }, [startEntity, targetEntity, branchAEntities, branchBEntities, isFrance]);
+  }, [startEntity, targetEntity, branchAEntities, branchBEntities, pack]);
 
   // Setup polygon & corridor layers
   const setupLayers = useCallback(
@@ -302,64 +353,84 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
         applyFeatureStates(map);
       };
 
-      // 1. Add GeoJSON source
-      if (!map.getSource("entities-geojson")) {
-        const cachedData = geojsonCache.get(geojsonUrl);
-        if (cachedData) {
+      const onDataLoaded = () => {
+        addPolygonLayers();
+        applyFeatureStates(map);
+        updateMarkers(map);
+        fitToCorridor();
+      };
+
+      // 1. Add or update GeoJSON source
+      const existingSource = map.getSource("entities-geojson") as
+        | maplibregl.GeoJSONSource
+        | undefined;
+      const cachedData = geojsonCache.get(geojsonUrl);
+
+      if (cachedData) {
+        if (existingSource) {
+          existingSource.setData(cachedData);
+          onDataLoaded();
+        } else {
           map.addSource("entities-geojson", {
             type: "geojson",
             data: cachedData,
             generateId: false,
             promoteId: "id",
           });
-          addPolygonLayers();
-        } else {
-          fetch(geojsonUrl)
-            .then((r) => r.json())
-            .then((data) => {
-              geojsonCache.set(geojsonUrl, data);
-              if (mapRef.current && !mapRef.current.getSource("entities-geojson")) {
-                mapRef.current.addSource("entities-geojson", {
-                  type: "geojson",
-                  data,
-                  generateId: false,
-                  promoteId: "id",
-                });
-                addPolygonLayers();
-              }
-            })
-            .catch(() => {
-              if (mapRef.current && !mapRef.current.getSource("entities-geojson")) {
-                mapRef.current.addSource("entities-geojson", {
-                  type: "geojson",
-                  data: geojsonUrl,
-                  generateId: false,
-                  promoteId: "id",
-                });
-                addPolygonLayers();
-              }
-            });
+          onDataLoaded();
         }
       } else {
-        addPolygonLayers();
+        fetch(geojsonUrl)
+          .then((r) => r.json())
+          .then((data) => {
+            geojsonCache.set(geojsonUrl, data);
+            if (!mapRef.current) return;
+            const src = mapRef.current.getSource("entities-geojson") as
+              | maplibregl.GeoJSONSource
+              | undefined;
+            if (src) {
+              src.setData(data);
+            } else {
+              mapRef.current.addSource("entities-geojson", {
+                type: "geojson",
+                data,
+                generateId: false,
+                promoteId: "id",
+              });
+            }
+            onDataLoaded();
+          })
+          .catch(() => {
+            if (!mapRef.current) return;
+            const src = mapRef.current.getSource("entities-geojson") as
+              | maplibregl.GeoJSONSource
+              | undefined;
+            if (!src) {
+              mapRef.current.addSource("entities-geojson", {
+                type: "geojson",
+                data: geojsonUrl,
+                generateId: false,
+                promoteId: "id",
+              });
+            }
+            onDataLoaded();
+          });
       }
     },
-    [geojsonUrl, theme, hideBorders, applyFeatureStates]
+    [geojsonUrl, theme, hideBorders, applyFeatureStates, fitToCorridor]
   );
 
   // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    const initialCenter: [number, number] = isFrance
-      ? [2.2137, 46.2276]
-      : [startEntity ? (startEntity.longitude + targetEntity.longitude) / 2 : 20, 30];
+    const packConfig = PACK_CENTERS[pack] || PACK_CENTERS.monde;
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
       style: BASEMAP_STYLES[theme],
-      center: initialCenter,
-      zoom: isFrance ? 5.5 : 2.5,
+      center: packConfig.center,
+      zoom: packConfig.zoom,
       attributionControl: false,
     });
 
@@ -376,6 +447,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     map.on("load", () => {
       isLoadedRef.current = true;
       setupLayers(map);
+      updateMarkers(map);
       fitToCorridor();
       applyFeatureStates(map);
 
@@ -402,7 +474,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       mapRef.current = null;
       isLoadedRef.current = false;
     };
-  }, [theme, isFrance]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [theme, pack]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Dynamically update entity borders and basemap boundaries when hideBorders or theme changes
   useEffect(() => {
@@ -492,18 +564,21 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     applyFeatureStates(map);
   }, [startEntity.id, targetEntity.id, applyFeatureStates]);
 
-  // Update feature states and lines whenever state changes
+  // Update feature states, markers, and camera whenever state changes
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !isLoadedRef.current || !map.getSource("entities-geojson")) return;
+    if (!map || !isLoadedRef.current) return;
 
-    applyFeatureStates(map);
-
-    // Update HTML Markers
+    // Update HTML Markers immediately (does not require GeoJSON source)
     updateMarkers(map);
 
-    // Auto-fit camera when steps change
+    // Auto-fit camera when steps change (does not require GeoJSON source)
     fitToCorridor();
+
+    // Apply feature states if GeoJSON source is ready
+    if (map.getSource("entities-geojson")) {
+      applyFeatureStates(map);
+    }
   }, [
     startEntity,
     targetEntity,
