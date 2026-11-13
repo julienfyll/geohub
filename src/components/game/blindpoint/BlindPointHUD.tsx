@@ -21,6 +21,7 @@ import {
   Trophy,
   Sliders,
   Zap,
+  RotateCcw,
 } from "lucide-react";
 import {
   BlindPointClientTarget,
@@ -52,6 +53,7 @@ interface BlindPointHUDProps {
   onValidateGuess: () => void;
   onOpenSettings: () => void;
   onOpenSummary?: () => void;
+  onRestart?: () => void;
   onBackToLobby?: () => void;
   onOpenCustomModal?: () => void;
   onChangeMode?: (pack: BlindPointPack, difficulty: BlindPointDifficulty | "all", mode: BlindPointMode) => void;
@@ -78,6 +80,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   onValidateGuess,
   onOpenSettings,
   onOpenSummary,
+  onRestart,
   onBackToLobby,
   onOpenCustomModal,
   onChangeMode,
@@ -178,18 +181,30 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
     <>
       {/* Top Fixed Navigation Header */}
       <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        {/* Left: Quick Menu Drawer & Hub link */}
-        <div className="flex items-center gap-2">
+        {/* Left: Quick Menu Drawer & Lobby link */}
+        <div className="flex items-center gap-2 shrink-0">
           <QuickMenuDrawer />
 
-          <Link
-            href="/"
-            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
-            title="Retour au Hub d'accueil"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Hub</span>
-          </Link>
+          {onBackToLobby ? (
+            <button
+              type="button"
+              onClick={onBackToLobby}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap cursor-pointer"
+              title="Retour au Lobby de sélection BlindPoint"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Lobby</span>
+            </button>
+          ) : (
+            <Link
+              href="/play/blindpoint"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
+              title="Retour au Lobby de sélection BlindPoint"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Lobby</span>
+            </Link>
+          )}
 
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
@@ -462,6 +477,19 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             >
               <Trophy className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Bilan</span>
+            </button>
+          )}
+
+          {/* Restart button - Non disponible en Défi du Jour */}
+          {mode !== "daily" && onRestart && (
+            <button
+              type="button"
+              onClick={onRestart}
+              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs"
+              title="Recommencer la partie"
+              aria-label="Recommencer la partie"
+            >
+              <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
             </button>
           )}
 

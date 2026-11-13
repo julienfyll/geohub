@@ -36,6 +36,7 @@ import { BlindPointLearningCard } from "@/components/game/blindpoint/BlindPointL
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
 import { BlindPointCustomModal } from "@/components/game/blindpoint/BlindPointCustomModal";
+import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import { BlindPointRetraceGame } from "@/components/game/blindpoint/BlindPointRetraceGame";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
@@ -244,6 +245,7 @@ function BlindPointGame() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [showRestartModal, setShowRestartModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Timer State
@@ -288,7 +290,7 @@ function BlindPointGame() {
         if (targetContinent) url += `&continent=${targetContinent}`;
         if (targetSeed) url += `&seed=${targetSeed}`;
 
-        const res = await fetch(url);
+        const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error("Erreur de chargement de session");
         const data: BlindPointSessionInitResponse = await res.json();
 
@@ -518,22 +520,18 @@ function BlindPointGame() {
     const p = session?.pack || pack;
     const d = session?.difficulty || difficulty;
     const m = session?.mode || mode;
+    const s = session?.seed || userSeed || (typeof window !== "undefined" ? searchParams.get("seed") : null) || undefined;
 
-    if (m === "free" || m === "custom") {
-      const freeSeed = `&seed=${Date.now()}`;
-      let url = `/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}`;
-      if (rawPacks) url += `&packs=${encodeURIComponent(rawPacks)}`;
-      if (rawRounds) url += `&rounds=${rawRounds}`;
-      if (rawTimer) url += `&timer=${rawTimer}`;
-      if (rawTheme) url += `&theme=${rawTheme}`;
-      if (rawBorders) url += `&borders=${rawBorders}`;
-      if (rawRoads) url += `&roads=${rawRoads}`;
-      if (rawContinent) url += `&continent=${rawContinent}`;
-      url += `&play=1`;
-      router.push(url);
-    } else {
-      loadGameSession(p, d, m, undefined);
-    }
+    loadGameSession(
+      p,
+      d,
+      m,
+      s,
+      session?.packs ? session.packs.join(",") : rawPacks || undefined,
+      rawRounds || undefined,
+      rawTimer || undefined,
+      rawContinent || undefined
+    );
   };
 
   const getCustomShareUrl = () => {
@@ -1079,11 +1077,15 @@ function BlindPointGame() {
     const linesParam = searchParams.get("lines");
     const activeLines = linesParam ? linesParam.split(",") : ["1", "4", "6"];
     const activeTolerance = searchParams.get("tolerance") || "300";
+    const rawOrder = searchParams.get("order");
+    const activeOrder: "random" | "sequential" = rawOrder === "sequential" ? "sequential" : "random";
 
     return (
       <>
         <BlindPointRetraceGame
+          key={`retrace-${searchParams.toString()}`}
           initialTolerance={activeTolerance}
+          initialOrderMode={activeOrder}
           selectedLines={activeLines}
           onBackToLobby={() => router.push("/play/blindpoint?pack=metro_paris&mode=free")}
           onOpenCustomModal={() => setShowCustomModal(true)}
@@ -1170,6 +1172,7 @@ function BlindPointGame() {
           onValidateGuess={handleValidateGuess}
           onOpenSettings={() => setShowSettingsModal(true)}
           onOpenSummary={() => setShowSummaryModal(true)}
+          onRestart={() => setShowRestartModal(true)}
           onBackToLobby={handleBackToLobby}
           onOpenCustomModal={() => setShowCustomModal(true)}
           onChangeMode={handleChangeGameConfig}
@@ -1236,6 +1239,13 @@ function BlindPointGame() {
         settings={settings}
         onUpdateSetting={handleUpdateSetting}
         onResetDefaults={handleResetSettings}
+      />
+
+      {/* Restart Confirmation Modal */}
+      <RestartConfirmModal
+        isOpen={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+        onConfirm={handleRestartCurrentGame}
       />
     </div>
   );
