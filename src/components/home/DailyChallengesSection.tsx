@@ -101,7 +101,7 @@ export const DailyChallengesSection: React.FC = () => {
               {/* 1. France Population */}
               <div className="p-3.5 rounded-2xl bg-slate-950/80 border-2 border-blue-500/50 hover:border-blue-400 transition-all flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-2xl shrink-0">👥</span>
+                  <span className="text-2xl shrink-0">🇫🇷</span>
                   <div className="min-w-0">
                     <h4 className="text-xs sm:text-sm font-bold text-white truncate">France — Population</h4>
                     <p className="text-[11px] text-slate-400 truncate">Centre du jour fixe • 5 anneaux concentriques</p>

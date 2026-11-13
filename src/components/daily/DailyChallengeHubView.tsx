@@ -41,10 +41,10 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_population_fr",
     game: "georings",
-    title: "France — Villes",
+    title: "France",
     subtitle: "Centre du jour fixe • 5 anneaux",
     badge: "Population",
-    icon: "👥",
+    icon: "🇫🇷",
     linkUrl: "/play/georings?metric=population&scale=fr&mode=daily",
     isGeoRings: true,
     theme: "blue",
@@ -52,7 +52,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_population_eu",
     game: "georings",
-    title: "Europe — Villes",
+    title: "Europe",
     subtitle: "5 anneaux à travers les capitales",
     badge: "Population",
     icon: "🇪🇺",
@@ -63,7 +63,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_population_world",
     game: "georings",
-    title: "Monde — Villes",
+    title: "Monde",
     subtitle: "Échelle planétaire (Tokyo, NYC...)",
     badge: "Population",
     icon: "🌍",
@@ -74,7 +74,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_airports_fr",
     game: "georings",
-    title: "France — Aéroports",
+    title: "France",
     subtitle: "Trafic annuel passagers (DGAC)",
     badge: "Aéroports",
     icon: "✈️",
@@ -85,7 +85,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_airports_world",
     game: "georings",
-    title: "Monde — Aéroports",
+    title: "Monde",
     subtitle: "Grands hubs mondiaux",
     badge: "Aéroports",
     icon: "🛫",
@@ -346,11 +346,11 @@ export const DailyChallengeHubView: React.FC = () => {
           <span className="text-xl shrink-0 select-none">{item.icon}</span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 min-w-0">
-              <h4 className="text-xs sm:text-sm font-bold text-white truncate">
+              <h4 className="text-xs sm:text-sm font-bold text-white shrink-0">
                 {item.title}
               </h4>
               {item.badge && (
-                <span className="text-[10px] text-slate-400 font-mono shrink-0">
+                <span className="text-[10px] text-slate-400 font-mono truncate min-w-0">
                   • {item.badge}
                 </span>
               )}

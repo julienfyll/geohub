@@ -117,7 +117,7 @@ function GeoRingsLobby() {
               )}
             >
               <div>
-                <span className="text-xs font-bold text-white block group-hover:text-blue-300">👥 France</span>
+                <span className="text-xs font-bold text-white block group-hover:text-blue-300">🇫🇷 France</span>
                 <span className="text-[10px] text-slate-400 font-medium">Population</span>
               </div>
               {statusMap["georings_population_fr"]?.completed ? (
