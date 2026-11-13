@@ -13,7 +13,7 @@ import {
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
-import { DailyChallengesSection } from "@/components/home/DailyChallengesSection";
+import { DailyChallengeHeroButton } from "@/components/home/DailyChallengeHeroButton";
 
 export default function Home() {
   const todayDate = new Intl.DateTimeFormat("fr-FR", {
@@ -77,14 +77,14 @@ export default function Home() {
           <p className="text-slate-400 text-sm sm:text-base max-w-2xl leading-relaxed">
             Relevez vos défis du jour officiels (tirages équitables identiques pour tous) ou perfectionnez votre intuition territoriale en partie rapide.
           </p>
+
+          {/* Bouton Épuré vers le Hub Défi du Jour */}
+          <DailyChallengeHeroButton />
         </div>
       </section>
 
-      {/* Section 1 : Les Défis du Jour Officiels (Dynamiques avec scores) */}
-      <DailyChallengesSection />
-
-      {/* Section 2 : Catalogue des Mini-Jeux (Présentation Claire & Accès Dédié) */}
-      <section className="max-w-6xl mx-auto px-6 py-12 flex-1 w-full space-y-6 border-t border-slate-800/80">
+      {/* Section : Catalogue des Mini-Jeux (Remonté directement en vue haute) */}
+      <section className="max-w-6xl mx-auto px-6 py-12 flex-1 w-full space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
             <h2 className="text-2xl font-extrabold tracking-tight text-white">

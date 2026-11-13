@@ -117,6 +117,20 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
 
                 <button
                   type="button"
+                  onClick={() => handleNav("/play/daily-challenge")}
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-amber-500/5 hover:from-amber-500/25 hover:to-orange-500/20 text-amber-200 font-bold text-xs border border-amber-500/40 transition-all group shadow-sm"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Trophy className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+                    <span>Défis du Jour</span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono font-bold">
+                    10 défis
+                  </span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => {
                     setIsOpen(false);
                     setShowLeaderboard(true);
