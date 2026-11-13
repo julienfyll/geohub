@@ -16,6 +16,11 @@ const ALL_DAILY_KEYS = [
   "blindpoint_villes_monde",
   "blindpoint_lieux_paris",
   "blindpoint_lieux_monde",
+  "borderpath_monde",
+  "borderpath_europe",
+  "borderpath_france_departements",
+  "borderpath_ameriques",
+  "borderpath_afrique",
 ];
 
 export const DailyChallengeHeroButton: React.FC = () => {
@@ -80,7 +85,7 @@ export const DailyChallengeHeroButton: React.FC = () => {
           ) : isAllDone ? (
             <>
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-950 stroke-[3]" />
-              <span>10/10 Fait</span>
+              <span>{totalCount}/{totalCount} Fait</span>
             </>
           ) : (
             <span>

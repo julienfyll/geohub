@@ -125,7 +125,7 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                     <span>Défis du Jour</span>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono font-bold">
-                    10 défis
+                    15 défis
                   </span>
                 </button>
 

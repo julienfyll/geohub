@@ -7,7 +7,9 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const game = searchParams.get("game") || "georings";
-  const variant = searchParams.get("variant") || (game === "georings" ? "cities" : "villes_france");
+  const variant =
+    searchParams.get("variant") ||
+    (game === "georings" ? "cities" : game === "borderpath" ? "monde" : "villes_france");
   const difficulty = searchParams.get("difficulty") || (game === "georings" ? "fr" : "moyen");
   const scope = searchParams.get("scope") || "daily";
   const dateParam = searchParams.get("date");
@@ -176,6 +178,23 @@ export async function GET(request: Request) {
 
       // 3. Earliest finish
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    } else if (game === "borderpath") {
+      // BorderPath:
+      // 1. Score DESC (won/completed games first)
+      if (b.score !== a.score) return b.score - a.score;
+
+      // 2. Total attempts ASC (fewer attempts = better)
+      const attemptsA = a.summary_data?.totalAttempts ?? 999;
+      const attemptsB = b.summary_data?.totalAttempts ?? 999;
+      if (attemptsA !== attemptsB) return attemptsA - attemptsB;
+
+      // 3. Errors ASC
+      const errorsA = a.summary_data?.errorCount ?? 999;
+      const errorsB = b.summary_data?.errorCount ?? 999;
+      if (errorsA !== errorsB) return errorsA - errorsB;
+
+      // 4. Earliest finish
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     } else {
       // Blind Point:
       // 1. Score DESC (out of 25000)
@@ -200,6 +219,17 @@ export async function GET(request: Request) {
       const total = session.total_rings ?? 5;
       const tries = session.summary_data?.totalTriesUsed;
       detail = tries ? `${rings}/${total} anneaux (${tries} coups)` : `${rings}/${total} anneaux`;
+    } else if (game === "borderpath") {
+      const attempts = session.summary_data?.totalAttempts;
+      const corridor = session.summary_data?.corridorCount;
+      const errors = session.summary_data?.errorCount;
+      if (session.score === 0) {
+        detail = "Abandon";
+      } else if (attempts) {
+        detail = `${attempts} coups${corridor ? ` • ${corridor} étapes` : ""}${errors > 0 ? ` (${errors} err.)` : ""}`;
+      } else {
+        detail = `${session.score} pts`;
+      }
     } else {
       const distKm = session.distance_km;
       detail = distKm !== null && distKm !== undefined
@@ -213,7 +243,7 @@ export async function GET(request: Request) {
       username: prof?.username || "Joueur",
       avatarUrl: prof?.avatar_url || null,
       score: session.score,
-      maxScore: session.max_score ?? (game === "georings" ? 5 : 25000),
+      maxScore: session.max_score ?? (game === "georings" ? 5 : game === "borderpath" ? 10000 : 25000),
       detailText: detail,
       accuracyPercent: session.accuracy_percent ? Number(session.accuracy_percent) : undefined,
       createdAt: session.created_at,

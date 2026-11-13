@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   BorderPathEntity,
   BorderPathPack,
   BorderPathMode,
 } from "@/lib/games/borderpath/types";
+import { recordGameSession } from "@/lib/stats/statsService";
+import { useAuth } from "@/lib/auth/AuthContext";
 import {
   Trophy,
   Sparkles,
@@ -52,8 +54,8 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   onChangePack,
 }) => {
   const [copied, setCopied] = useState(false);
-
-  if (!isOpen) return null;
+  const hasSavedRef = useRef(false);
+  const { user } = useAuth();
 
   const optimalCountries = minOptimalSteps + 1;
   const corridorCount = fullConnectedPath.length;
@@ -63,6 +65,68 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   const totalAttempts = totalCountriesPlaced + errorCount;
   const delta = totalAttempts - optimalCountries;
   const isPerfect = !gaveUp && delta === 0 && errorCount === 0;
+
+  // Score calculation:
+  // Perfect = 10 000 pts
+  // Otherwise scaled by optimalCountries / totalAttempts, capped between 100 and 10000, 0 if gaveUp
+  const calculatedScore = gaveUp
+    ? 0
+    : Math.max(
+        100,
+        Math.round(10000 * (optimalCountries / Math.max(optimalCountries, totalAttempts)))
+      );
+
+  // Record session automatically once when modal opens
+  useEffect(() => {
+    if (!isOpen) {
+      hasSavedRef.current = false;
+      return;
+    }
+
+    if (isOpen && !hasSavedRef.current && !gaveUp) {
+      hasSavedRef.current = true;
+      recordGameSession(
+        {
+          game_mode: "borderpath",
+          variant: pack,
+          difficulty: pack,
+          score: calculatedScore,
+          max_score: 10000,
+          accuracy_percent: Math.round(
+            (optimalCountries / Math.max(optimalCountries, totalAttempts)) * 100
+          ),
+          summary_data: {
+            mode,
+            seed: pack,
+            totalAttempts,
+            optimalCountries,
+            errorCount,
+            corridorCount,
+            isPerfect,
+            startName: startEntity.name,
+            targetName: targetEntity.name,
+          },
+        },
+        user?.id
+      );
+    }
+  }, [
+    isOpen,
+    gaveUp,
+    pack,
+    calculatedScore,
+    optimalCountries,
+    totalAttempts,
+    mode,
+    errorCount,
+    corridorCount,
+    isPerfect,
+    startEntity.name,
+    targetEntity.name,
+    user?.id,
+  ]);
+
+  if (!isOpen) return null;
 
   // Generate shareable text
   const handleShare = () => {

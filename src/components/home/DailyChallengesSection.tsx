@@ -12,7 +12,7 @@ export const DailyChallengesSection: React.FC = () => {
     key: string,
     isGeoRings: boolean,
     linkUrl: string,
-    buttonTheme: "blue" | "sky" | "emerald"
+    buttonTheme: "blue" | "sky" | "emerald" | "indigo"
   ) => {
     const status = statusMap[key];
     const isCompleted = status?.completed;
@@ -28,6 +28,8 @@ export const DailyChallengesSection: React.FC = () => {
             <span className="text-[11px] font-black text-emerald-300 font-mono mt-0.5">
               {isGeoRings
                 ? `${status.ringsCompleted}/${status.totalRings} anneaux`
+                : status.attempts
+                ? `${status.attempts} coups`
                 : `${status.score?.toLocaleString("fr-FR")} pts`}
             </span>
           </div>
@@ -46,6 +48,8 @@ export const DailyChallengesSection: React.FC = () => {
         ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sky-500/30"
         : buttonTheme === "emerald"
         ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-emerald-500/30"
+        : buttonTheme === "indigo"
+        ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-indigo-500/30"
         : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-blue-500/30";
 
     const buttonClasses =
@@ -53,6 +57,8 @@ export const DailyChallengesSection: React.FC = () => {
         ? "bg-sky-600 hover:bg-sky-500 text-white shadow-sky-600/30"
         : buttonTheme === "emerald"
         ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25"
+        : buttonTheme === "indigo"
+        ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30"
         : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30";
 
     return (
@@ -94,8 +100,8 @@ export const DailyChallengesSection: React.FC = () => {
         </div>
       </div>
 
-      {/* 2 GRANDS ENCADRÉS MAJEURS CÔTE À CÔTE */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* 3 GRANDS ENCADRÉS MAJEURS */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* ENCADRÉ 1 : GEORINGS (5 DÉFIS QUOTIDIENS) */}
         <div className="bg-slate-900/90 border-2 border-blue-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
@@ -343,6 +349,138 @@ export const DailyChallengesSection: React.FC = () => {
             <span className="text-slate-400">Entraînement libre ou custom ?</span>
             <Link href="/play/blindpoint" className="text-emerald-400 hover:underline font-bold flex items-center gap-1">
               <span>Page Dédiée Blind Point</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* ENCADRÉ 3 : BORDERPATH (5 DÉFIS QUOTIDIENS) */}
+        <div className="bg-slate-900/90 border-2 border-indigo-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute -right-16 -top-16 w-36 h-36 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none" />
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center font-bold text-lg">
+                  🗺️
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white leading-tight">BorderPath — Le Maillon Frontalier</h3>
+                  <span className="text-xs text-slate-400">5 corridors quotidiens • Voisinage contigu</span>
+                </div>
+              </div>
+              <span className="text-[11px] font-mono text-indigo-400 bg-indigo-950/80 border border-indigo-500/40 px-2.5 py-1 rounded-lg font-bold">
+                5 déclinaisons
+              </span>
+            </div>
+
+            <div className="space-y-2.5">
+              {/* 1. Monde */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/60 transition-all flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-2xl shrink-0">🌍</span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Monde Continental</h4>
+                      <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 167 pays</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 truncate">Reliez deux pays à travers les frontières terrestres</p>
+                  </div>
+                </div>
+                {renderDailyStatus(
+                  "borderpath_monde",
+                  false,
+                  "/play/borderpath?pack=monde&mode=daily&play=1",
+                  "indigo"
+                )}
+              </div>
+
+              {/* 2. Europe */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/60 transition-all flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-2xl shrink-0">🇪🇺</span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Europe</h4>
+                      <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 46 pays</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 truncate">Traversez le continent d'un bout à l'autre</p>
+                  </div>
+                </div>
+                {renderDailyStatus(
+                  "borderpath_europe",
+                  false,
+                  "/play/borderpath?pack=europe&mode=daily&play=1",
+                  "indigo"
+                )}
+              </div>
+
+              {/* 3. France 96 Dépts */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/60 transition-all flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-2xl shrink-0">🇫🇷</span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">France — 96 Dépts</h4>
+                      <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 96 départements</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 truncate">Corridor contigu de préfecture en préfecture</p>
+                  </div>
+                </div>
+                {renderDailyStatus(
+                  "borderpath_france_departements",
+                  false,
+                  "/play/borderpath?pack=france_departements&mode=daily&play=1",
+                  "indigo"
+                )}
+              </div>
+
+              {/* 4. Amériques */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/60 transition-all flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-2xl shrink-0">🌎</span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Amériques</h4>
+                      <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 35 pays</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 truncate">Corridor panaméricain du Nord au Sud</p>
+                  </div>
+                </div>
+                {renderDailyStatus(
+                  "borderpath_ameriques",
+                  false,
+                  "/play/borderpath?pack=ameriques&mode=daily&play=1",
+                  "indigo"
+                )}
+              </div>
+
+              {/* 5. Afrique */}
+              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/60 transition-all flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-2xl shrink-0">🌍</span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Afrique</h4>
+                      <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 54 pays</span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 truncate">Traversez le Sahara, le Sahel et le Rift</p>
+                  </div>
+                </div>
+                {renderDailyStatus(
+                  "borderpath_afrique",
+                  false,
+                  "/play/borderpath?pack=afrique&mode=daily&play=1",
+                  "indigo"
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span className="text-slate-400">Entraînement libre ou custom ?</span>
+            <Link href="/play/borderpath" className="text-indigo-400 hover:underline font-bold flex items-center gap-1">
+              <span>Page Dédiée BorderPath</span>
               <span>→</span>
             </Link>
           </div>
