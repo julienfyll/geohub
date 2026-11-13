@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSeedCities, getSeedAirports, getDefaultRadii, getCityById, getAirportById } from "@/lib/db/sqlite";
 import { GameScale, GameMetric, GeoRingsInitResponse, Airport, City } from "@/lib/games/types";
+import { getDayIndex, getCycleSlice } from "@/lib/games/blindpoint/targets";
+
+export const dynamic = "force-dynamic";
 
 function simpleHash(str: string): number {
   let hash = 0;
@@ -52,9 +55,15 @@ export async function GET(request: NextRequest) {
         let seedIndex = 0;
         let seedValue = userSeed || "";
         if (mode === "daily") {
-          const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          let today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          if (userSeed) {
+            const match = userSeed.match(/(\d{4}-\d{2}-\d{2})/);
+            if (match) today = match[1];
+          }
+          const dayIndex = getDayIndex(today);
+          const pickedAirports = getCycleSlice(seedAirports, `georings-${scale}-airports`, dayIndex, 1);
+          seedAirport = pickedAirports[0] || seedAirports[0];
           seedValue = `${today}-${scale}-airports`;
-          seedIndex = simpleHash(seedValue) % seedAirports.length;
         } else {
           if (userSeed) {
             seedIndex = simpleHash(userSeed) % seedAirports.length;
@@ -63,8 +72,8 @@ export async function GET(request: NextRequest) {
             seedValue = randSeed;
             seedIndex = simpleHash(randSeed) % seedAirports.length;
           }
+          seedAirport = seedAirports[seedIndex];
         }
-        seedAirport = seedAirports[seedIndex];
       }
 
       seedData = {
@@ -95,9 +104,15 @@ export async function GET(request: NextRequest) {
         let seedIndex = 0;
         let seedValue = userSeed || "";
         if (mode === "daily") {
-          const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          let today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          if (userSeed) {
+            const match = userSeed.match(/(\d{4}-\d{2}-\d{2})/);
+            if (match) today = match[1];
+          }
+          const dayIndex = getDayIndex(today);
+          const pickedCities = getCycleSlice(seedCities, `georings-${scale}-population`, dayIndex, 1);
+          seedCity = pickedCities[0] || seedCities[0];
           seedValue = `${today}-${scale}-population`;
-          seedIndex = simpleHash(seedValue) % seedCities.length;
         } else {
           if (userSeed) {
             seedIndex = simpleHash(userSeed) % seedCities.length;
@@ -106,8 +121,8 @@ export async function GET(request: NextRequest) {
             seedValue = randSeed;
             seedIndex = simpleHash(randSeed) % seedCities.length;
           }
+          seedCity = seedCities[seedIndex];
         }
-        seedCity = seedCities[seedIndex];
       }
 
       seedData = {
@@ -165,7 +180,13 @@ export async function GET(request: NextRequest) {
       rings,
     };
 
-    return NextResponse.json(response);
+    return NextResponse.json(response, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+      },
+    });
   } catch (error) {
     console.error("Session init error:", error);
     return NextResponse.json({ error: "Failed to initialize game session" }, { status: 500 });

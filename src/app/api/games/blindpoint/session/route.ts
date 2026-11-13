@@ -7,6 +7,8 @@ import {
 } from "@/lib/games/blindpoint/types";
 import { getSessionTargets, toClientTarget, hashString } from "@/lib/games/blindpoint/targets";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const rawPack = searchParams.get("pack") || "villes_france";
@@ -21,9 +23,11 @@ export async function GET(request: NextRequest) {
   const validPacks: BlindPointPack[] = [
     "villes_france",
     "villes_monde",
+    "villes_europe",
     "lieux_france",
     "lieux_monde",
     "lieux_paris",
+    "metro_paris",
     "monuments_monde",
     "chateaux_france",
   ];
@@ -42,7 +46,14 @@ export async function GET(request: NextRequest) {
   }
 
   const primaryPack = packsToUse[0];
-  const mode: BlindPointMode = rawMode === "custom" ? "custom" : rawMode === "free" ? "free" : "daily";
+  const mode: BlindPointMode =
+    primaryPack === "metro_paris" && rawMode === "daily"
+      ? "free"
+      : rawMode === "custom"
+      ? "custom"
+      : rawMode === "free"
+      ? "free"
+      : "daily";
 
   const difficulty: BlindPointDifficulty | "all" =
     rawDiff === "all" ? "all" : ["facile", "moyen", "difficile"].includes(rawDiff)
@@ -73,7 +84,7 @@ export async function GET(request: NextRequest) {
   const currentTarget = toClientTarget(targets[0], 0, actualTotalRounds);
 
   const response: BlindPointSessionInitResponse = {
-    sessionId: `bp_${mode}_${packsToUse.join("_")}_${difficulty}_${hashString(seed)}`,
+    sessionId: `bp_${mode}_${packsToUse.join("_")}_${mode === "daily" ? "standard" : difficulty}_${hashString(seed)}`,
     pack: primaryPack,
     packs: packsToUse,
     mode,
@@ -85,5 +96,11 @@ export async function GET(request: NextRequest) {
     currentTarget,
   };
 
-  return NextResponse.json(response);
+  return NextResponse.json(response, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
+    },
+  });
 }

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refonte Modulaire du Créateur Custom | GeoHub Prototypes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { height: 5px; width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased select-none">
+
+  <!-- Top Control Bar -->
+  <header class="sticky top-0 z-50 bg-slate-900/90 border-b border-slate-800 backdrop-blur-md px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-bold flex items-center gap-1.5">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Hub Prototypes</span>
+      </a>
+      <div class="h-4 w-px bg-slate-800"></div>
+      <div>
+        <h1 class="text-sm font-black text-white tracking-tight flex items-center gap-2">
+          <span>Créateur Custom — Rendu Final Demandé</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold uppercase">
+            V3 Aérée
+          </span>
+        </h1>
+        <p class="text-[11px] text-slate-400">16 Lignes avec slider horizontal • Bouton Tout sélectionner • Tolérance aérée sur toute la largeur</p>
+      </div>
+    </div>
+
+    <!-- Live indicator badge -->
+    <div class="flex items-center gap-2 bg-slate-950/80 px-3 py-1.5 rounded-2xl border border-slate-800 text-xs">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="text-slate-300 font-medium">Banc d'essai Haute-Fidélité</span>
+    </div>
+  </header>
+
+  <!-- Main Showcase Container -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+
+    <!-- Brief of adjustments implemented -->
+    <div class="p-4 rounded-2xl bg-purple-950/20 border border-purple-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-300">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-400 flex items-center justify-center shrink-0">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <strong class="text-white font-bold">Modifications intégrées selon tes retours :</strong>
+          <span class="text-slate-300 block text-[11px] mt-0.5">
+            1. Intégration des <strong>16 lignes officielles du métro</strong> dans un slider horizontal fluide.
+            • 2. Bouton dynamique <strong>Tout sélectionner / Tout désélectionner</strong>.
+            • 3. <strong>Suppression totale du bloc Sauvegarde/Reprise</strong>.
+            • 4. <strong>Tolérance d'ancrage aérée et valorisée</strong> sur toute la largeur avec descriptions.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE MODAL WRAPPER -->
+    <div class="relative w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col gap-5 select-none">
+
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-md">
+            <i data-lucide="sliders" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+              <span>Créateur de Défi Personnalisé</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold uppercase">
+                Custom
+              </span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Combinez vos thèmes, réglez le chrono et imposez vos règles pour défier vos amis.
+            </p>
+          </div>
+        </div>
+
+        <button type="button" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Top Segmented Control (Tabs) -->
+      <div class="grid grid-cols-2 p-1 rounded-2xl bg-slate-950 border border-slate-800">
+        <button 
+          id="tab-btn-classic" 
+          onclick="setTabMode('classic')"
+          class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-900/60">
+          <span>🎯</span>
+          <span>Points Aveugles (Standard)</span>
+        </button>
+
+        <button 
+          id="tab-btn-retrace" 
+          onclick="setTabMode('retrace')"
+          class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black transition-all bg-purple-600 text-white shadow-md shadow-purple-600/30">
+          <span>🚇</span>
+          <span>Retrace le Réseau (Mini Metro)</span>
+          <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase ml-1">
+            Nouveau
+          </span>
+        </button>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- TAB 2 (ACTIVE): RETRACE LE RÉSEAU WITH REFINED LAYOUT    -->
+      <!-- ======================================================== -->
+      <div id="view-retrace" class="flex flex-col gap-5">
+        
+        <!-- Hero Banner Compact -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-950/40 via-slate-900 to-indigo-950/40 border border-purple-500/30 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-xl shadow-inner shrink-0">
+              🚇
+            </div>
+            <div>
+              <h3 class="text-sm font-black text-white">Retrace le Réseau — Métro de Paris</h3>
+              <p class="text-[11px] text-slate-300 mt-0.5">
+                Placez les stations sur le plan aveugle : dès que deux arrêts se connectent, les rails s'illuminent en double voie officielle RATP.
+              </p>
+            </div>
+          </div>
+          <span class="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-black uppercase shrink-0">
+            Mode Illimité
+          </span>
+        </div>
+
+        <!-- Section 1: LIGNES DU RÉSEAU (SLIDER DÉFILANT VERTICAL + BOUTON TOUT SÉLECTIONNER) -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <i data-lucide="git-branch" class="w-3.5 h-3.5 text-purple-400"></i>
+                <span>1. Lignes du Réseau à Retracer</span>
+              </label>
+              <span id="lines-counter-badge" class="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-extrabold font-mono">
+                16/16 actives
+              </span>
+            </div>
+
+            <!-- Quick Action: Tout sélectionner / Tout désélectionner -->
+            <button 
+              id="btn-toggle-all-lines"
+              onclick="toggleAllLines()"
+              type="button"
+              class="text-[11px] font-bold px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-300 hover:text-white border border-slate-700 transition-all flex items-center gap-1.5 shadow-sm cursor-pointer active:scale-95">
+              <i id="toggle-all-icon" data-lucide="check-square" class="w-3.5 h-3.5"></i>
+              <span id="toggle-all-text">Tout désélectionner</span>
+            </button>
+          </div>
+
+          <!-- Vertical Scroll Track Container (2 Columns Grid with sleek scrollbar) -->
+          <div class="rounded-2xl bg-slate-950/40 border border-slate-800/80 p-2 shadow-inner">
+            <div 
+              id="lines-vertical-track" 
+              class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[175px] overflow-y-auto pr-1.5"
+              style="scrollbar-width: thin;">
+              <!-- Generated dynamically via JS -->
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1 px-1">
+            <span>Faites défiler verticalement pour parcourir les 16 lignes</span>
+            <span class="font-mono">16 lignes RATP disponibles</span>
+          </div>
+        </div>
+
+        <!-- Section 2: TOLÉRANCE D'ANCRAGE AÉRÉE (PLEINE LARGEUR, SANS BLOC SAUVEGARDE) -->
+        <div class="pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="target" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>2. Tolérance d'Ancrage au Clic</span>
+            </label>
+            <span id="tolerance-summary-badge" class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-black">
+              300 m — Standard (Recommandé)
+            </span>
+          </div>
+
+          <!-- 5 Big Spacious Cards across full width -->
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+            <!-- Card 1: Chill -->
+            <button 
+              onclick="setTolerance('chill')" 
+              id="tol-card-chill" 
+              type="button"
+              class="tol-card p-3 rounded-2xl border text-left transition-all bg-slate-950/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white flex flex-col justify-between gap-2">
+              <div class="flex items-center justify-between">
+                <span class="text-base">🧘</span>
+                <span class="tol-pill text-[9px] px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 font-bold uppercase">Libre</span>
+              </div>
+              <div>
+                <span class="text-xs font-black block text-slate-200">Chill</span>
+                <span class="text-[10px] text-slate-400 block leading-tight mt-0.5">Toujours validé sans seuil</span>
+              </div>
+            </button>
+
+            <!-- Card 2: 500m -->
+            <button 
+              onclick="setTolerance('500')" 
+              id="tol-card-500" 
+              type="button"
+              class="tol-card p-3 rounded-2xl border text-left transition-all bg-slate-950/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white flex flex-col justify-between gap-2">
+              <div class="flex items-center justify-between">
+                <span class="text-base">🚶</span>
+                <span class="tol-pill text-[9px] px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 font-bold uppercase">Initié</span>
+              </div>
+              <div>
+                <span class="text-xs font-black block text-slate-200">500 m</span>
+                <span class="text-[10px] text-slate-400 block leading-tight mt-0.5">Échelle de quartier large</span>
+              </div>
+            </button>
+
+            <!-- Card 3: 300m (Standard Recommandé) -->
+            <button 
+              onclick="setTolerance('300')" 
+              id="tol-card-300" 
+              type="button"
+              class="tol-card p-3 rounded-2xl border text-left transition-all bg-amber-500/10 border-amber-500 text-white shadow-md shadow-amber-500/10 flex flex-col justify-between gap-2 ring-1 ring-amber-500/40">
+              <div class="flex items-center justify-between">
+                <span class="text-base">🎯</span>
+                <span class="tol-pill text-[9px] px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 font-black uppercase">Standard</span>
+              </div>
+              <div>
+                <span class="text-xs font-black block text-amber-300">300 m</span>
+                <span class="text-[10px] text-slate-300 block leading-tight mt-0.5">Recommandé & équilibré</span>
+              </div>
+            </button>
+
+            <!-- Card 4: 150m -->
+            <button 
+              onclick="setTolerance('150')" 
+              id="tol-card-150" 
+              type="button"
+              class="tol-card p-3 rounded-2xl border text-left transition-all bg-slate-950/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white flex flex-col justify-between gap-2">
+              <div class="flex items-center justify-between">
+                <span class="text-base">⚡</span>
+                <span class="tol-pill text-[9px] px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 font-bold uppercase">Expert</span>
+              </div>
+              <div>
+                <span class="text-xs font-black block text-slate-200">150 m</span>
+                <span class="text-[10px] text-slate-400 block leading-tight mt-0.5">Au carrefour précis de rue</span>
+              </div>
+            </button>
+
+            <!-- Card 5: 75m -->
+            <button 
+              onclick="setTolerance('75')" 
+              id="tol-card-75" 
+              type="button"
+              class="tol-card p-3 rounded-2xl border text-left transition-all bg-slate-950/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white flex flex-col justify-between gap-2">
+              <div class="flex items-center justify-between">
+                <span class="text-base">🔬</span>
+                <span class="tol-pill text-[9px] px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 font-bold uppercase">Puriste</span>
+              </div>
+              <div>
+                <span class="text-xs font-black block text-slate-200">75 m</span>
+                <span class="text-[10px] text-slate-400 block leading-tight mt-0.5">Bouche de métro exacte</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- TAB 1 (CLASSIC SCORED QUIZ)                              -->
+      <!-- ======================================================== -->
+      <div id="view-classic" class="hidden flex-col gap-5 animate-in fade-in duration-150">
+        <p class="text-xs text-slate-400">Configuration classique à manches multiples pour les autres packs.</p>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- MODAL FOOTER                                             -->
+      <!-- ======================================================== -->
+      <div class="border-t border-slate-800/90 pt-4 flex flex-col gap-3">
+        <!-- URL Preview -->
+        <div class="flex items-center gap-2 p-2.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <div id="url-preview" class="flex-1 min-w-0 px-2 font-mono text-[11px] text-slate-400 truncate">
+            http://localhost:3000/play/blindpoint?pack=metro_paris&mode=custom&customType=retrace&tolerance=300&play=1
+          </div>
+          <button onclick="copyGeneratedUrl()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all shrink-0">
+            <i data-lucide="copy" class="w-3.5 h-3.5 text-purple-400"></i>
+            <span id="copy-btn-text">Copier le lien</span>
+          </button>
+        </div>
+
+        <!-- Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <button type="button" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs transition-all">
+            <i data-lucide="share-2" class="w-4 h-4 text-purple-400"></i>
+            <span>Défier des amis (Partager)</span>
+          </button>
+
+          <a id="launch-cta-btn" href="/play/blindpoint?pack=metro_paris&mode=custom&customType=retrace&play=1" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:via-indigo-500 hover:to-blue-500 text-white font-extrabold text-sm shadow-xl shadow-purple-600/25 border border-purple-400/40 transition-all hover:scale-[1.01] active:scale-[0.99]">
+            <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+            <span id="launch-cta-text">🚇 Lancer Retrace le Réseau</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // All 16 Official Paris Metro Lines with RATP Palette
+    const ALL_METRO_LINES = [
+      { id: "1", num: "1", bg: "#FFCD00", text: "#111827", name: "Ligne 1", route: "La Défense ↔ Vincennes" },
+      { id: "2", num: "2", bg: "#0064B0", text: "#FFFFFF", name: "Ligne 2", route: "Porte Dauphine ↔ Nation" },
+      { id: "3", num: "3", bg: "#9F9825", text: "#FFFFFF", name: "Ligne 3", route: "Pont de Levallois ↔ Gallieni" },
+      { id: "3bis", num: "3b", bg: "#98D4E2", text: "#111827", name: "Ligne 3bis", route: "Porte des Lilas ↔ Gambetta" },
+      { id: "4", num: "4", bg: "#CF009E", text: "#FFFFFF", name: "Ligne 4", route: "Clignancourt ↔ Bagneux" },
+      { id: "5", num: "5", bg: "#FF7E2E", text: "#FFFFFF", name: "Ligne 5", route: "Bobigny ↔ Place d'Italie" },
+      { id: "6", num: "6", bg: "#169B62", text: "#FFFFFF", name: "Ligne 6", route: "Étoile ↔ Nation" },
+      { id: "7", num: "7", bg: "#FA9ABA", text: "#111827", name: "Ligne 7", route: "La Courneuve ↔ Villejuif / Ivry" },
+      { id: "7bis", num: "7b", bg: "#6ECA97", text: "#111827", name: "Ligne 7bis", route: "Louis Blanc ↔ Pré-St-Gervais" },
+      { id: "8", num: "8", bg: "#CEADD2", text: "#111827", name: "Ligne 8", route: "Balard ↔ Créteil" },
+      { id: "9", num: "9", bg: "#B6BD00", text: "#111827", name: "Ligne 9", route: "Pont de Sèvres ↔ Montreuil" },
+      { id: "10", num: "10", bg: "#C9910D", text: "#FFFFFF", name: "Ligne 10", route: "Boulogne ↔ Austerlitz" },
+      { id: "11", num: "11", bg: "#704B1C", text: "#FFFFFF", name: "Ligne 11", route: "Châtelet ↔ Rosny" },
+      { id: "12", num: "12", bg: "#007852", text: "#FFFFFF", name: "Ligne 12", route: "Aubervilliers ↔ Mairie d'Issy" },
+      { id: "13", num: "13", bg: "#6EC4E8", text: "#111827", name: "Ligne 13", route: "Asnières / St-Denis ↔ Châtillon" },
+      { id: "14", num: "14", bg: "#62259D", text: "#FFFFFF", name: "Ligne 14", route: "St-Denis Pleyel ↔ Orly" }
+    ];
+
+    // State
+    let selectedLines = new Set(ALL_METRO_LINES.map(l => l.id)); // Default: All 16 selected
+    let selectedTolerance = '300';
+    let activeTab = 'retrace';
+
+    // Render vertical lines slider
+    function renderLinesSlider() {
+      const track = document.getElementById('lines-vertical-track');
+      if (!track) return;
+      track.innerHTML = '';
+
+      ALL_METRO_LINES.forEach(line => {
+        const isSelected = selectedLines.has(line.id);
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.id = `line-capsule-${line.id}`;
+        card.onclick = () => toggleSingleLine(line.id);
+
+        if (isSelected) {
+          card.className = "flex items-center justify-between p-2.5 rounded-xl border text-left transition-all bg-slate-900 border-purple-500 shadow-sm shadow-purple-500/10 cursor-pointer hover:border-purple-400";
+        } else {
+          card.className = "flex items-center justify-between p-2.5 rounded-xl border text-left transition-all bg-slate-950/60 border-slate-800/80 text-slate-500 opacity-60 hover:opacity-100 hover:border-slate-700 cursor-pointer";
+        }
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span style="background-color: ${line.bg}; color: ${line.text};" class="w-6 h-6 rounded-full flex items-center justify-center font-black text-xs shadow-sm shrink-0">
+              ${line.num}
+            </span>
+            <div class="min-w-0 truncate">
+              <span class="text-xs font-bold text-white block truncate leading-tight">${line.name}</span>
+              <span class="text-[10px] text-slate-400 block truncate leading-tight mt-0.5">${line.route}</span>
+            </div>
+          </div>
+          <div class="w-4 h-4 rounded-md flex items-center justify-center shrink-0 ${isSelected ? 'text-purple-400' : 'text-transparent'}">
+            <i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>
+          </div>
+        `;
+        track.appendChild(card);
+      });
+
+      updateToggleAllButton();
+      lucide.createIcons();
+    }
+
+    // Toggle single line
+    function toggleSingleLine(lineId) {
+      if (selectedLines.has(lineId)) {
+        if (selectedLines.size === 1) return; // Keep at least 1 line
+        selectedLines.delete(lineId);
+      } else {
+        selectedLines.add(lineId);
+      }
+      renderLinesSlider();
+      updateUrlAndCta();
+    }
+
+    // Toggle ALL lines: Tout sélectionner vs Tout désélectionner
+    function toggleAllLines() {
+      if (selectedLines.size === ALL_METRO_LINES.length) {
+        // Was all selected ➔ Keep only line 1 by default
+        selectedLines = new Set(['1']);
+      } else {
+        // Was partial ➔ Select all 16
+        selectedLines = new Set(ALL_METRO_LINES.map(l => l.id));
+      }
+      renderLinesSlider();
+      updateUrlAndCta();
+    }
+
+    // Update the Toggle All button appearance and text
+    function updateToggleAllButton() {
+      const btn = document.getElementById('btn-toggle-all-lines');
+      const text = document.getElementById('toggle-all-text');
+      const counter = document.getElementById('lines-counter-badge');
+      const isAll = selectedLines.size === ALL_METRO_LINES.length;
+
+      counter.textContent = `${selectedLines.size}/${ALL_METRO_LINES.length} active${selectedLines.size > 1 ? 's' : ''}`;
+
+      if (isAll) {
+        text.textContent = "Tout désélectionner";
+        btn.className = "text-[11px] font-bold px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-300 hover:text-white border border-slate-700 transition-all flex items-center gap-1.5 shadow-sm cursor-pointer";
+      } else {
+        text.textContent = "Tout sélectionner";
+        btn.className = "text-[11px] font-bold px-3 py-1 rounded-xl bg-purple-600 hover:bg-purple-500 text-white border border-purple-500 transition-all flex items-center gap-1.5 shadow-md shadow-purple-600/20 cursor-pointer";
+      }
+    }
+
+    // Set Tolerance
+    function setTolerance(tol) {
+      selectedTolerance = tol;
+      const labelMap = {
+        'chill': 'Chill — Libre (Toujours validé)',
+        '500': '500 m — Initié (Quartier large)',
+        '300': '300 m — Standard (Recommandé)',
+        '150': '150 m — Expert (Carrefour précis)',
+        '75': '75 m — Puriste (Bouche exacte)'
+      };
+      document.getElementById('tolerance-summary-badge').textContent = labelMap[tol] || tol;
+
+      ['chill', '500', '300', '150', '75'].forEach(t => {
+        const card = document.getElementById(`tol-card-${t}`);
+        const pill = card.querySelector('.tol-pill');
+        const title = card.querySelector('div > span:first-child');
+
+        if (t === tol) {
+          card.className = "tol-card p-3 rounded-2xl border text-left transition-all bg-amber-500/10 border-amber-500 text-white shadow-md shadow-amber-500/10 flex flex-col justify-between gap-2 ring-1 ring-amber-500/40";
+          pill.className = "tol-pill text-[9px] px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 font-black uppercase";
+          title.className = "text-xs font-black block text-amber-300";
+        } else {
+          card.className = "tol-card p-3 rounded-2xl border text-left transition-all bg-slate-950/40 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white flex flex-col justify-between gap-2";
+          pill.className = "tol-pill text-[9px] px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-400 font-bold uppercase";
+          title.className = "text-xs font-black block text-slate-200";
+        }
+      });
+      updateUrlAndCta();
+    }
+
+    // Tab mode switch
+    function setTabMode(mode) {
+      activeTab = mode;
+      const btnClassic = document.getElementById('tab-btn-classic');
+      const btnRetrace = document.getElementById('tab-btn-retrace');
+      const viewClassic = document.getElementById('view-classic');
+      const viewRetrace = document.getElementById('view-retrace');
+
+      if (mode === 'classic') {
+        btnClassic.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black transition-all bg-purple-600 text-white shadow-md shadow-purple-600/30";
+        btnRetrace.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-900/60";
+        viewClassic.classList.remove('hidden');
+        viewRetrace.classList.add('hidden');
+      } else {
+        btnRetrace.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-black transition-all bg-purple-600 text-white shadow-md shadow-purple-600/30";
+        btnClassic.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-900/60";
+        viewClassic.classList.add('hidden');
+        viewRetrace.classList.remove('hidden');
+      }
+      updateUrlAndCta();
+    }
+
+    // Update dynamic URL and CTA button
+    function updateUrlAndCta() {
+      const urlPreview = document.getElementById('url-preview');
+      const ctaBtn = document.getElementById('launch-cta-btn');
+      const linesStr = Array.from(selectedLines).join(',');
+      const isAllLines = selectedLines.size === ALL_METRO_LINES.length;
+
+      let targetUrl = `http://localhost:3000/play/blindpoint?pack=metro_paris&mode=custom&customType=retrace&tolerance=${selectedTolerance}`;
+      if (!isAllLines) {
+        targetUrl += `&lines=${linesStr}`;
+      }
+      targetUrl += `&play=1`;
+
+      urlPreview.textContent = targetUrl;
+      ctaBtn.href = targetUrl;
+    }
+
+    function copyGeneratedUrl() {
+      const url = document.getElementById('url-preview').textContent;
+      navigator.clipboard.writeText(url).then(() => {
+        const textEl = document.getElementById('copy-btn-text');
+        textEl.textContent = "Copié !";
+        setTimeout(() => textEl.textContent = "Copier le lien", 2000);
+      });
+    }
+
+    // Init
+    renderLinesSlider();
+    updateUrlAndCta();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

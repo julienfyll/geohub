@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratoire UX — Refonte Page d'Accueil & Hub Dédié /play/daily-challenge | GeoHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom glow & pulse */
+    .glow-amber {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    }
+    .glow-blue {
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+    }
+    @keyframes subtle-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.03); opacity: 0.9; }
+    }
+    .animate-subtle-pulse {
+      animation: subtle-pulse 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- ========================================================================= -->
+  <!-- TOP CONTROL BAR : NAVIGATION & SIMULATEUR DE PROTOTYPE -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-slate-800 bg-slate-900/95 backdrop-blur-xl sticky top-0 z-50 px-4 sm:px-6 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- Titre Lab -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors">
+          ← Galerie Prototypes
+        </a>
+        <div class="h-4 w-px bg-slate-700 hidden sm:block"></div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-md">
+              PROTOTYPE INTERACTIF
+            </span>
+            <span class="text-xs font-extrabold text-white">Refonte Accueil & Page /play/daily-challenge</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sélecteur de Vue (Accueil vs /play/daily-challenge) -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center p-1 rounded-2xl bg-slate-950 border border-slate-800 text-xs font-bold">
+          <button onclick="setView('home')" id="btn-view-home" class="px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 transition-all flex items-center gap-1.5">
+            <span>🏠 1. Accueil Épuré</span>
+          </button>
+          <button onclick="setView('daily')" id="btn-view-daily" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+            <span>🏆 2. Hub /play/daily-challenge</span>
+            <span id="badge-top-uncompleted" class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">6 à faire</span>
+          </button>
+        </div>
+
+        <!-- Switcher de variante sur la page d'accueil -->
+        <div id="home-variant-selector" class="flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700 text-[11px]">
+          <span class="text-slate-400 font-semibold px-2">Format bouton Accueil :</span>
+          <button onclick="setHomeVariant('banner')" id="btn-var-banner" class="px-2 py-1 rounded-lg bg-slate-700 text-white font-bold transition-all">
+            A. Bannière Hero
+          </button>
+          <button onclick="setHomeVariant('button')" id="btn-var-button" class="px-2 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all">
+            B. Bouton Épuré
+          </button>
+          <button onclick="setHomeVariant('split')" id="btn-var-split" class="px-2 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all">
+            C. Duo Cartes
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- VUE 1 : LA PAGE D'ACCUEIL ÉPURÉE (HOME) -->
+  <!-- ========================================================================= -->
+  <main id="view-home" class="flex-1 flex flex-col">
+    
+    <!-- GeoHub Nav Header Standard -->
+    <nav class="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl sticky top-12 z-40">
+      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400">
+            🧭
+          </div>
+          <div>
+            <span class="text-base font-bold tracking-tight text-white block leading-none">
+              GeoHub
+            </span>
+            <span class="text-[10px] font-medium text-slate-400 tracking-wider uppercase">
+              Arcade Géographique
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Bouton direct vers le Hub Défi du Jour dans la Navbar -->
+          <button onclick="setView('daily')" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-600/10 hover:from-amber-500/30 hover:to-amber-600/20 border border-amber-500/40 text-amber-300 text-xs font-bold transition-all shadow-sm group">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>Défis du Jour</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-amber-500/30 text-amber-200" id="nav-counter">4/10</span>
+          </button>
+
+          <span class="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+            Classement
+          </span>
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-xs font-bold text-white border border-white/20">
+            JF
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="relative overflow-hidden py-10 px-6 border-b border-slate-800/50">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+      <div class="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
+        
+        <!-- Badge Date & Statut du Jour -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 mb-5">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold">
+            <span>✨</span>
+            <span id="home-today-date">Défis officiels disponibles — Vendredi 13 Novembre</span>
+          </div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>Reset à 00:00 UTC</span>
+          </div>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+          L'Arcade Ultime pour les <br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">
+            Passionnés de Géographie
+          </span>
+        </h1>
+
+        <p class="text-slate-400 text-sm sm:text-base max-w-2xl leading-relaxed mb-6">
+          Affrontez les tirages officiels quotidiens identiques pour tous ou perfectionnez votre intuition territoriale à travers nos modes arcade libres et personnalisés.
+        </p>
+
+        <!-- ========================================================================= -->
+        <!-- VARIANTE B (Bouton Épuré dans le Hero Banner) -->
+        <!-- ========================================================================= -->
+        <div id="variant-button-container" class="hidden flex flex-col sm:flex-row items-center gap-3">
+          <button onclick="setView('daily')" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/25 transition-all flex items-center gap-3 hover:scale-105">
+            <span class="text-lg">🏆</span>
+            <span>Accéder aux Défis du Jour</span>
+            <span class="px-2 py-0.5 rounded-lg bg-slate-950/20 text-slate-950 font-mono text-xs font-black" id="var-b-counter">4 / 10 faits</span>
+            <span>→</span>
+          </button>
+          <span class="text-xs text-slate-400 font-medium">⏳ Reset dans <span class="font-mono text-amber-300" id="var-b-timer">14h 41m</span></span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION CENTRALE : LE NOUVEAU BLOC DÉFI DU JOUR SUR LA PAGE D'ACCUEIL -->
+    <!-- (Remplace l'ancien bloc immense de 10 lignes par un appel net et synthétique) -->
+    <!-- ========================================================================= -->
+    <section class="max-w-6xl mx-auto px-6 py-6 w-full">
+
+      <!-- ========================================================================= -->
+      <!-- VARIANTE A (RECOMMANDÉE) : LA BANNIÈRE DASHBOARD HERO DU JOUR -->
+      <!-- ========================================================================= -->
+      <div id="variant-banner-container" class="relative group rounded-3xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-blue-950/40 border-2 border-amber-500/40 hover:border-amber-400/80 p-6 sm:p-7 shadow-2xl transition-all overflow-hidden glow-amber">
+        <div class="absolute -right-16 -top-16 w-48 h-48 bg-amber-500/10 blur-3xl rounded-full pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-blue-500/10 blur-3xl rounded-full pointer-events-none"></div>
+
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+          
+          <!-- Infos & Jauge de progression du jour -->
+          <div class="space-y-3.5 max-w-xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+                <span>★</span>
+                <span>Rendez-vous Quotidien Officiel</span>
+              </span>
+              <span class="text-xs text-slate-400 font-mono flex items-center gap-1 bg-slate-950/80 px-2.5 py-1 rounded-xl border border-slate-800">
+                <span>⏳ Reset dans</span>
+                <strong class="text-amber-400 font-bold" id="banner-timer">14h 41m 20s</strong>
+              </span>
+            </div>
+
+            <div>
+              <h2 class="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
+                <span>Hub des Défis du Jour</span>
+                <span class="text-slate-400 font-normal text-sm hidden sm:inline">• 10 tirages officiels</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+                Une tentative unique par jour enregistrée pour le classement mondial. Mesurez vos compétences sur GeoRings (5 défis) et Blind Point (5 défis).
+              </p>
+            </div>
+
+            <!-- Jauge d'avancement globale du jour -->
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800/90 space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold">
+                <span class="text-slate-300 flex items-center gap-2">
+                  <span>🎯 Votre Progression Quotidienne</span>
+                  <span class="text-[11px] font-mono font-normal text-slate-400">(Série : 🔥 6 jours)</span>
+                </span>
+                <span class="font-mono text-amber-400 font-black text-sm" id="banner-progress-text">4 / 10 Défis Relevés (40%)</span>
+              </div>
+
+              <!-- Barre bicolore dynamique -->
+              <div class="w-full h-3 rounded-full bg-slate-800 overflow-hidden flex p-0.5 gap-0.5">
+                <div id="banner-bar-georings" class="h-full rounded-l-full bg-blue-500 transition-all duration-500" style="width: 20%;" title="GeoRings : 2/5 terminés"></div>
+                <div id="banner-bar-blindpoint" class="h-full rounded-r-full bg-emerald-500 transition-all duration-500" style="width: 20%;" title="Blind Point : 2/5 terminés"></div>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span> 🧭 GeoRings : <b class="text-blue-300 font-mono" id="banner-gr-count">2/5</b></span>
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> 🎯 Blind Point : <b class="text-emerald-300 font-mono" id="banner-bp-count">2/5</b></span>
+                <span class="font-mono text-amber-300 font-bold" id="banner-remaining-count">6 restants</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton CTA Principal vers la page dédiée -->
+          <div class="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center gap-3 w-full lg:w-auto shrink-0">
+            <button onclick="setView('daily')" class="px-7 py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/25 transition-all flex items-center justify-center gap-3 hover:scale-[1.02] cursor-pointer">
+              <span>🏆 Accéder aux 10 Défis du Jour</span>
+              <span class="text-base font-bold">→</span>
+            </button>
+            <p class="text-[11px] text-center text-slate-400">
+              Ouvre la page dédiée <code class="text-amber-400/80 bg-slate-950 px-1.5 py-0.5 rounded font-mono">/play/daily-challenge</code>
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- VARIANTE C : SPLIT CARDS COMPACTES (GeoRings & Blind Point côte à côte) -->
+      <!-- ========================================================================= -->
+      <div id="variant-split-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Carte GeoRings Compacte -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border-2 border-blue-500/40 hover:border-blue-400 transition-all flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center text-xl shrink-0">
+              🧭
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-white">GeoRings Quotidien</h3>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-bold">5 déclinaisons</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">Population & Aéroports • <span class="text-blue-300 font-bold" id="var-c-gr-stat">2/5 complétés</span></p>
+            </div>
+          </div>
+          <button onclick="setView('daily')" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shrink-0 shadow-md shadow-blue-600/30">
+            Voir les 5 →
+          </button>
+        </div>
+
+        <!-- Carte Blind Point Compacte -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border-2 border-emerald-500/40 hover:border-emerald-400 transition-all flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-xl shrink-0">
+              🎯
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-white">Blind Point Quotidien</h3>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">5 déclinaisons</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">France, Monde, Monuments... • <span class="text-emerald-300 font-bold" id="var-c-bp-stat">2/5 complétés</span></p>
+            </div>
+          </div>
+          <button onclick="setView('daily')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shrink-0 shadow-md shadow-emerald-600/30">
+            Voir les 5 →
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2 : LE CATALOGUE DES MINI-JEUX REMONTE IMMÉDIATEMENT ! -->
+    <!-- (Gain majeur de visibilité : plus besoin de scroller après 10 lignes) -->
+    <!-- ========================================================================= -->
+    <section class="max-w-6xl mx-auto px-6 py-6 flex-1 w-full space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-800 pb-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-400">ARCADE LIBRE & ENTRAÎNEMENT</span>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
+              ✓ Remonté directement en vue haute
+            </span>
+          </div>
+          <h2 class="text-2xl font-extrabold tracking-tight text-white mt-1">
+            Catalogue des Jeux de la Plateforme
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
+            Choisissez votre jeu pour lancer des sessions libres, parties rapides ou créer vos défis personnalisés.
+          </p>
+        </div>
+        <span class="text-xs text-slate-500">Configuration libre & paramètres avancés</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Game 1 : GeoRings -->
+        <div class="relative group bg-slate-900/90 border-2 border-blue-500/50 hover:border-blue-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+          <div class="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+            <span class="text-8xl">🧭</span>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span>★ Jeu Phare • 2 Critères</span>
+              </span>
+              <span class="text-xs text-slate-400 font-mono">5 Anneaux • 3 Vies</span>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
+              GeoRings — Cercles Concentriques
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              À partir d'un centre géographique, 5 anneaux concentriques s'étendent. Débusquez la cible maximale à chaque niveau en fonction du critère choisi (population des métropoles ou trafic aéroportuaire).
+            </p>
+
+            <div class="grid grid-cols-2 gap-2.5 mb-6">
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">👥 Critère Population</span>
+                <span class="text-[11px] text-slate-400">1 904 France • 21 324 Monde</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">✈️ Critère Aéroports</span>
+                <span class="text-[11px] text-slate-400">55 France • 3 282 Monde</span>
+              </div>
+            </div>
+          </div>
+
+          <a href="/play/georings" class="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-600/25">
+            <span>Configurer & Jouer à GeoRings</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <!-- Game 2 : Blind Point -->
+        <div class="relative group bg-slate-900/90 border-2 border-emerald-500/50 hover:border-emerald-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+          <div class="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+            <span class="text-8xl">🎯</span>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-bold uppercase tracking-wider">
+                ★ Précision & Distance
+              </span>
+              <span class="text-xs text-slate-400 font-mono">5 Manches • 25 000 pts</span>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+              Blind Point — Précision Aveugle
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Une cible géographique vous est imposée sur une carte muette. Visez au plus près pour maximiser votre score exponentiel et décrochez le <i>Bullseye</i> parfait !
+            </p>
+
+            <div class="grid grid-cols-2 gap-2.5 mb-6">
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">🏙️ Villes & Packs</span>
+                <span class="text-[11px] text-slate-400">139 FR • 42 Europe • 167 Monde</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">🚇 Retrace le Réseau</span>
+                <span class="text-[11px] text-slate-400">16 Lignes Métro Paris • Mini Metro</span>
+              </div>
+            </div>
+          </div>
+
+          <a href="/play/blindpoint" class="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-all shadow-lg shadow-emerald-600/25">
+            <span>Configurer & Jouer à Blind Point</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <!-- Game 3 : BorderPath -->
+        <a href="/play/borderpath" class="relative group bg-slate-900/90 border-2 border-indigo-500/50 hover:border-indigo-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden cursor-pointer hover:shadow-indigo-500/10 hover:scale-[1.01]">
+          <div class="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+            <span class="text-8xl">🌐</span>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span>★ Connexion & Voisinage</span>
+              </span>
+              <span class="text-xs text-slate-400 font-mono">100% Clavier • BFS Optimal</span>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">
+              BorderPath — Le Maillon Frontalier
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Reliez deux pays éloignés (ex: Portugal à la Chine) ou deux départements français en nommant au clavier la séquence minimale de territoires limitrophes contigus.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2.5 mb-6">
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">🌍 Monde & Europe</span>
+                <span class="text-[11px] text-slate-400 leading-tight">
+                  167 pays Monde • 46 pays Europe
+                </span>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">🇫🇷 France Métropolitaine</span>
+                <span class="text-[11px] text-slate-400 leading-tight">
+                  96 départements contigus
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-indigo-600 group-hover:bg-indigo-500 text-white font-semibold text-sm transition-all shadow-lg shadow-indigo-600/25">
+            <span>Configurer & Jouer à BorderPath</span>
+            <span>→</span>
+          </div>
+        </a>
+
+        <!-- Game 4 : Capital Blitz -->
+        <div class="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-7 flex flex-col justify-between opacity-75">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-medium uppercase tracking-wider">
+                Sprint 3 • Bientôt
+              </span>
+              <span class="text-slate-500 text-xs font-mono">Contre-la-montre</span>
+            </div>
+
+            <h3 class="text-2xl font-bold text-slate-300 mb-2">
+              Capital Blitz — Sprint 60s
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Identifiez un maximum de capitales, drapeaux et silhouettes nationales avec combos multiplicateurs.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2.5 mb-6">
+              <div class="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-400">⚡ Sprint 60s</span>
+                <span class="text-[11px] text-slate-500 leading-tight">
+                  Multiplicateurs & combos
+                </span>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-400">🏁 Capitales & Drapeaux</span>
+                <span class="text-[11px] text-slate-500 leading-tight">
+                  195 nations reconnues
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-slate-800/60 text-slate-500 font-semibold text-sm border border-slate-700/50 cursor-not-allowed">
+            <span>En cours de développement</span>
+            <span>⏳</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-6 text-center text-xs text-slate-500 mt-12">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>© 2026 GeoHub — Plateforme d'Arcade Géographique.</p>
+        <p>Données géographiques ouvertes : INSEE, GeoNames & OurAirports.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- VUE 2 : LA NOUVELLE PAGE DÉDIÉE /play/daily-challenge -->
+  <!-- ========================================================================= -->
+  <main id="view-daily" class="hidden flex-1 flex flex-col">
+    
+    <!-- Top Bar Navigation Spécifique -->
+    <div class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl sticky top-12 z-40">
+      <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="setView('home')" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors">
+            <span>←</span>
+            <span>Retour Accueil GeoHub</span>
+          </button>
+          <span class="text-slate-600">/</span>
+          <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+            <span>🏆</span>
+            <span>Hub Quotidien Officiel</span>
+          </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 text-xs font-mono text-slate-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Reset dans : <strong class="text-amber-400" id="daily-page-countdown">14:41:20</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Header Dédié aux Défis du Jour -->
+    <section class="relative overflow-hidden py-10 px-6 border-b border-slate-800/60 bg-gradient-to-b from-slate-900/60 to-slate-950">
+      <div class="max-w-6xl mx-auto space-y-6 relative z-10">
+        
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-400 mb-1">
+              <span>★ TOUS LES DÉFIS OFFICIELS EN UN SEUL LIEU</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center gap-3">
+              <span>Les Défis du Jour</span>
+              <span class="text-sm font-normal text-slate-400 font-mono px-3 py-1 rounded-xl bg-slate-900 border border-slate-800">
+                13 Novembre 2026
+              </span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 mt-2 max-w-3xl leading-relaxed">
+              Tirages officiels uniques avec graines quotidiennes déterministes. Une seule tentative enregistrée par jour pour le classement mondial. Rejouable à volonté ensuite pour l'entraînement.
+            </p>
+          </div>
+
+          <!-- Bouton de partage / Leaderboard -->
+          <div class="flex items-center gap-2.5 shrink-0">
+            <button onclick="alert('Lien de votre bilan du jour copié dans le presse-papier !')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all flex items-center gap-2 shadow-sm">
+              <span>📤</span>
+              <span>Partager mes résultats</span>
+            </button>
+            <button class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-all flex items-center gap-1.5 shadow-lg shadow-amber-500/20">
+              <span>🥇</span>
+              <span>Classement Général</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- DASHBOARD SYNTHÉTIQUE DU JOUEUR (KPIs Quotidien) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-2">
+          
+          <!-- KPI 1 : Complétion -->
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Complétés Aujourd'hui</span>
+            <div class="flex items-baseline gap-2 mt-2">
+              <span class="text-2xl font-black text-white font-mono" id="kpi-completed">4</span>
+              <span class="text-xs text-slate-400 font-mono">/ 10 défis</span>
+            </div>
+            <span class="text-[10px] text-amber-400 font-semibold mt-1" id="kpi-percent">40% accomplis</span>
+          </div>
+
+          <!-- KPI 2 : Restants à faire -->
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Restants à Relever</span>
+            <div class="flex items-baseline gap-2 mt-2">
+              <span class="text-2xl font-black text-amber-400 font-mono" id="kpi-remaining">6</span>
+              <span class="text-xs text-slate-400">à jouer</span>
+            </div>
+            <span class="text-[10px] text-slate-400 mt-1">Reset à 00:00 UTC</span>
+          </div>
+
+          <!-- KPI 3 : Score cumulé du jour -->
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Score Cumulé du Jour</span>
+            <div class="flex items-baseline gap-1 mt-2">
+              <span class="text-2xl font-black text-emerald-400 font-mono" id="kpi-score">46 820</span>
+              <span class="text-[11px] text-slate-400">pts</span>
+            </div>
+            <span class="text-[10px] text-emerald-300 font-semibold mt-1">2 Bullseyes parfaits</span>
+          </div>
+
+          <!-- KPI 4 : Série active (Streak) -->
+          <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col justify-between">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Série Quotidienne</span>
+            <div class="flex items-baseline gap-1.5 mt-2">
+              <span class="text-2xl font-black text-orange-400 font-mono">🔥 6</span>
+              <span class="text-xs text-slate-400">jours</span>
+            </div>
+            <span class="text-[10px] text-orange-300 font-semibold mt-1">Record perso : 14 jours</span>
+          </div>
+
+        </div>
+
+        <!-- BARRE DE PROGRESSION VISUELLE TOTALE -->
+        <div class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <span class="font-bold text-slate-200">
+              Progression générale du jour : <strong class="text-amber-400 font-mono" id="progress-summary">4 / 10 Défis Relevés</strong>
+            </span>
+            <span class="text-slate-400 text-[11px]">
+              Cliquez sur les pastilles de défi ci-dessous pour filtrer ou voir les détails
+            </span>
+          </div>
+
+          <!-- 10 Pastilles d'état interactives -->
+          <div class="grid grid-cols-5 sm:grid-cols-10 gap-1.5">
+            
+            <!-- GR 1 -->
+            <button onclick="filterByGame('georings')" class="p-2 rounded-xl border text-center transition-all bg-emerald-950/40 border-emerald-500/60 text-emerald-300" id="pill-gr-1" title="GeoRings FR Pop : Relevé (5/5 anneaux)">
+              <span class="text-xs block">👥</span>
+              <span class="text-[9px] font-bold font-mono">Fait</span>
+            </button>
+            <!-- GR 2 -->
+            <button onclick="filterByGame('georings')" class="p-2 rounded-xl border text-center transition-all bg-emerald-950/40 border-emerald-500/60 text-emerald-300" id="pill-gr-2" title="GeoRings EU Pop : Relevé (4/5 anneaux)">
+              <span class="text-xs block">🇪🇺</span>
+              <span class="text-[9px] font-bold font-mono">Fait</span>
+            </button>
+            <!-- GR 3 -->
+            <button onclick="filterByGame('georings')" class="p-2 rounded-xl border text-center transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" id="pill-gr-3" title="GeoRings World Pop : À faire">
+              <span class="text-xs block">🌍</span>
+              <span class="text-[9px] font-bold font-mono text-amber-400">À faire</span>
+            </button>
+            <!-- GR 4 -->
+            <button onclick="filterByGame('georings')" class="p-2 rounded-xl border text-center transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" id="pill-gr-4" title="GeoRings FR Aéroports : À faire">
+              <span class="text-xs block">✈️</span>
+              <span class="text-[9px] font-bold font-mono text-amber-400">À faire</span>
+            </button>
+            <!-- GR 5 -->
+            <button onclick="filterByGame('georings')" class="p-2 rounded-xl border text-center transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" id="pill-gr-5" title="GeoRings World Aéroports : À faire">
+              <span class="text-xs block">🛫</span>
+              <span class="text-[9px] font-bold font-mono text-amber-400">À faire</span>
+            </button>
+
+            <!-- BP 1 -->
+            <button onclick="filterByGame('blindpoint')" class="p-2 rounded-xl border text-center transition-all bg-emerald-950/40 border-emerald-500/60 text-emerald-300" id="pill-bp-1" title="Blind Point FR Villes : Relevé (24 150 pts)">
+              <span class="text-xs block">🇫🇷</span>
+              <span class="text-[9px] font-bold font-mono">Fait</span>
+            </button>
+            <!-- BP 2 -->
+            <button onclick="filterByGame('blindpoint')" class="p-2 rounded-xl border text-center transition-all bg-emerald-950/40 border-emerald-500/60 text-emerald-300" id="pill-bp-2" title="Blind Point EU Villes : Relevé (22 670 pts)">
+              <span class="text-xs block">🇪🇺</span>
+              <span class="text-[9px] font-bold font-mono">Fait</span>
+            </button>
+            <!-- BP 3 -->
+            <button onclick="filterByGame('blindpoint')" class="p-2 rounded-xl border text-center transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" id="pill-bp-3" title="Blind Point World Villes : À faire">
+              <span class="text-xs block">🌍</span>
+              <span class="text-[9px] font-bold font-mono text-amber-400">À faire</span>
+            </button>
+            <!-- BP 4 -->
+            <button onclick="filterByGame('blindpoint')" class="p-2 rounded-xl border text-center transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" id="pill-bp-4" title="Blind Point Paris Monuments : À faire">
+              <span class="text-xs block">🗼</span>
+              <span class="text-[9px] font-bold font-mono text-amber-400">À faire</span>
+            </button>
+            <!-- BP 5 -->
+            <button onclick="filterByGame('blindpoint')" class="p-2 rounded-xl border text-center transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" id="pill-bp-5" title="Blind Point Merveilles : À faire">
+              <span class="text-xs block">🏛️</span>
+              <span class="text-[9px] font-bold font-mono text-amber-400">À faire</span>
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BARRE DE FILTRES DES DÉFIS -->
+    <section class="max-w-6xl mx-auto px-6 pt-6 pb-2 w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      
+      <!-- Filtres par statut (Tous / À relever / Terminés) -->
+      <div class="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-bold">
+        <button onclick="setStatusFilter('all')" id="flt-all" class="px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md transition-all">
+          Tous les défis (10)
+        </button>
+        <button onclick="setStatusFilter('todo')" id="flt-todo" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>À relever (<span id="flt-todo-count">6</span>)</span>
+        </button>
+        <button onclick="setStatusFilter('done')" id="flt-done" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Relevés (<span id="flt-done-count">4</span>)</span>
+        </button>
+      </div>
+
+      <!-- Filtres par Jeu (Tous / GeoRings / Blind Point) -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-400 font-semibold hidden sm:inline">Jeu :</span>
+        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+          <button onclick="filterByGame('all')" id="game-flt-all" class="px-2.5 py-1 rounded-lg bg-slate-800 text-white font-bold transition-all">
+            Tous (10)
+          </button>
+          <button onclick="filterByGame('georings')" id="game-flt-gr" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all">
+            🧭 GeoRings (5)
+          </button>
+          <button onclick="filterByGame('blindpoint')" id="game-flt-bp" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all">
+            🎯 Blind Point (5)
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- LES 2 ENCADRÉS MAJEURS : GEORINGS & BLIND POINT (5 + 5 DÉFIS) -->
+    <!-- ========================================================================= -->
+    <section class="max-w-6xl mx-auto px-6 py-4 w-full space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- ===================================================================== -->
+        <!-- SECTION 1 : GEORINGS (5 DÉFIS DU JOUR) -->
+        <!-- ===================================================================== -->
+        <div id="section-georings" class="bg-slate-900/90 border-2 border-blue-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-16 -top-16 w-36 h-36 bg-blue-500/10 blur-3xl rounded-full pointer-events-none"></div>
+
+          <div class="space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3.5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-lg">
+                  🧭
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold text-white leading-tight">GeoRings — Cercles Concentriques</h3>
+                  <span class="text-xs text-slate-400">5 anneaux quotidiens • 3 vies</span>
+                </div>
+              </div>
+              <span class="text-[11px] font-mono text-blue-400 bg-blue-950/80 border border-blue-500/40 px-2.5 py-1 rounded-lg font-bold" id="badge-gr-status">
+                2 faits • 3 à faire
+              </span>
+            </div>
+
+            <!-- Liste des 5 déclinaisons GeoRings -->
+            <div class="space-y-2.5">
+
+              <!-- GR 1 : France Population (Fait) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border-2 border-emerald-500/40 transition-all flex items-center justify-between gap-3 shadow-md" data-game="georings" data-status="done" id="item-gr-pop-fr">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">👥</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">France — Population</h4>
+                      <span class="text-[10px] text-blue-400 font-mono font-bold">• Quotidien #1</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Centre du jour fixe • 5 anneaux concentriques</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <div class="flex flex-col items-end">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
+                      <span>✓ Fait</span>
+                    </span>
+                    <span class="text-[11px] font-black text-emerald-300 font-mono mt-0.5">5/5 anneaux</span>
+                  </div>
+                  <a href="/play/georings?metric=population&scale=fr&mode=daily" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm">
+                    Rejouer
+                  </a>
+                  <button onclick="toggleChallengeState('item-gr-pop-fr')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- GR 2 : Europe Population (Fait) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border-2 border-emerald-500/40 transition-all flex items-center justify-between gap-3 shadow-md" data-game="georings" data-status="done" id="item-gr-pop-eu">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🇪🇺</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Europe — Population</h4>
+                      <span class="text-[10px] text-blue-400 font-mono font-bold">• Quotidien #2</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">5 anneaux à travers les capitales européennes</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <div class="flex flex-col items-end">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
+                      <span>✓ Fait</span>
+                    </span>
+                    <span class="text-[11px] font-black text-emerald-300 font-mono mt-0.5">4/5 anneaux</span>
+                  </div>
+                  <a href="/play/georings?metric=population&scale=eu&mode=daily" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm">
+                    Rejouer
+                  </a>
+                  <button onclick="toggleChallengeState('item-gr-pop-eu')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- GR 3 : Monde Population (À faire) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-blue-500/60 transition-all flex items-center justify-between gap-3" data-game="georings" data-status="todo" id="item-gr-pop-world">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🌍</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Monde — Population</h4>
+                      <span class="text-[10px] text-slate-400 font-mono">• Quotidien #3</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Échelle planétaire (Tokyo, NYC, São Paulo...)</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-blue-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                    <span>À relever</span>
+                  </span>
+                  <a href="/play/georings?metric=population&scale=world&mode=daily" class="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30">
+                    Jouer →
+                  </a>
+                  <button onclick="toggleChallengeState('item-gr-pop-world')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- GR 4 : France Aéroports (À faire) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-sky-500/60 transition-all flex items-center justify-between gap-3" data-game="georings" data-status="todo" id="item-gr-air-fr">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">✈️</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">France — Aéroports</h4>
+                      <span class="text-[10px] text-sky-400 font-mono">• DGAC</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Critère : Trafic passagers annuel</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sky-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                    <span>À relever</span>
+                  </span>
+                  <a href="/play/georings?metric=airports&scale=fr&mode=daily" class="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-sky-600 hover:bg-sky-500 text-white shadow-sky-600/30">
+                    Jouer →
+                  </a>
+                  <button onclick="toggleChallengeState('item-gr-air-fr')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- GR 5 : Monde Aéroports (À faire) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-sky-500/60 transition-all flex items-center justify-between gap-3" data-game="georings" data-status="todo" id="item-gr-air-world">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🛫</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Monde — Aéroports</h4>
+                      <span class="text-[10px] text-sky-400 font-mono">• Grands Hubs</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Grands hubs mondiaux (Atlanta, Dubaï, Heathrow...)</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sky-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                    <span>À relever</span>
+                  </span>
+                  <a href="/play/georings?metric=airports&scale=world&mode=daily" class="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-sky-600 hover:bg-sky-500 text-white shadow-sky-600/30">
+                    Jouer →
+                  </a>
+                  <button onclick="toggleChallengeState('item-gr-air-world')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400">Envie d'entraîner un anneau ou un centre libre ?</span>
+            <a href="/play/georings" class="text-blue-400 hover:underline font-bold flex items-center gap-1">
+              <span>Mode Libre GeoRings</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION 2 : BLIND POINT (5 DÉFIS DU JOUR) -->
+        <!-- ===================================================================== -->
+        <div id="section-blindpoint" class="bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-16 -top-16 w-36 h-36 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none"></div>
+
+          <div class="space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3.5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-lg">
+                  🎯
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold text-white leading-tight">Blind Point — Précision Aveugle</h3>
+                  <span class="text-xs text-slate-400">5 manches quotidiennes • Carte muette</span>
+                </div>
+              </div>
+              <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-1 rounded-lg font-bold" id="badge-bp-status">
+                2 faits • 3 à faire
+              </span>
+            </div>
+
+            <!-- Liste des 5 déclinaisons Blind Point -->
+            <div class="space-y-2.5">
+
+              <!-- BP 1 : Villes de France (Fait) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border-2 border-emerald-500/40 transition-all flex items-center justify-between gap-3 shadow-md" data-game="blindpoint" data-status="done" id="item-bp-cities-fr">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🇫🇷</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Villes de France</h4>
+                      <span class="text-[10px] text-slate-400 font-mono shrink-0">• 139 villes</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Calibré : 2 faciles • 2 moyennes • 1 terroir</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <div class="flex flex-col items-end">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
+                      <span>✓ Fait</span>
+                    </span>
+                    <span class="text-[11px] font-black text-emerald-300 font-mono mt-0.5">24 150 pts</span>
+                  </div>
+                  <a href="/play/blindpoint?pack=villes_france&mode=daily&play=1" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm">
+                    Rejouer
+                  </a>
+                  <button onclick="toggleChallengeState('item-bp-cities-fr')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- BP 2 : Villes d'Europe (Fait) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border-2 border-emerald-500/40 transition-all flex items-center justify-between gap-3 shadow-md" data-game="blindpoint" data-status="done" id="item-bp-cities-eu">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🇪🇺</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Villes d'Europe</h4>
+                      <span class="text-[10px] text-slate-400 font-mono shrink-0">• 42 métropoles</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Calibré : 2 faciles • 2 moyennes • 1 perle</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <div class="flex flex-col items-end">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
+                      <span>✓ Fait</span>
+                    </span>
+                    <span class="text-[11px] font-black text-emerald-300 font-mono mt-0.5">22 670 pts</span>
+                  </div>
+                  <a href="/play/blindpoint?pack=villes_europe&mode=daily&play=1" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm">
+                    Rejouer
+                  </a>
+                  <button onclick="toggleChallengeState('item-bp-cities-eu')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- BP 3 : Villes du Monde (À faire) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 transition-all flex items-center justify-between gap-3" data-game="blindpoint" data-status="todo" id="item-bp-cities-world">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🌍</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Villes du Monde</h4>
+                      <span class="text-[10px] text-slate-400 font-mono shrink-0">• 167 mégapoles</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Équilibrage continental progressif (5 continents)</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-emerald-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span>
+                    <span>À relever</span>
+                  </span>
+                  <a href="/play/blindpoint?pack=villes_monde&mode=daily&play=1" class="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25">
+                    Jouer →
+                  </a>
+                  <button onclick="toggleChallengeState('item-bp-cities-world')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- BP 4 : Monuments de Paris (À faire) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 transition-all flex items-center justify-between gap-3" data-game="blindpoint" data-status="todo" id="item-bp-monuments-paris">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🗼</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Monuments de Paris</h4>
+                      <span class="text-[10px] text-slate-400 font-mono shrink-0">• 105 trésors</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Micro-carte Paris Intra • Tolérance 1,5 km</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-emerald-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span>
+                    <span>À relever</span>
+                  </span>
+                  <a href="/play/blindpoint?pack=lieux_paris&mode=daily&play=1" class="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25">
+                    Jouer →
+                  </a>
+                  <button onclick="toggleChallengeState('item-bp-monuments-paris')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+              <!-- BP 5 : Merveilles du Monde (À faire) -->
+              <div class="card-challenge p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 transition-all flex items-center justify-between gap-3" data-game="blindpoint" data-status="todo" id="item-bp-wonders-world">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-2xl shrink-0">🏛️</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <h4 class="text-xs font-bold text-white whitespace-nowrap">Merveilles du Monde</h4>
+                      <span class="text-[10px] text-slate-400 font-mono shrink-0">• 50 sites</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 truncate">Pétra, Taj Mahal, Colisée, Machu Picchu...</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-emerald-500/30">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span>
+                    <span>À relever</span>
+                  </span>
+                  <a href="/play/blindpoint?pack=lieux_monde&mode=daily&play=1" class="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25">
+                    Jouer →
+                  </a>
+                  <button onclick="toggleChallengeState('item-bp-wonders-world')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+                    ⚙️
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400">Envie d'une partie Custom ou Retrace le Réseau ?</span>
+            <a href="/play/blindpoint" class="text-emerald-400 hover:underline font-bold flex items-center gap-1">
+              <span>Mode Custom Blind Point</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer Dédié -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-6 text-center text-xs text-slate-500 mt-12">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>© 2026 GeoHub — Défis Quotidiens Officiels.</p>
+        <button onclick="setView('home')" class="text-slate-400 hover:text-white underline">
+          Retourner au catalogue des mini-jeux
+        </button>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT : INTERACTIVITÉ, TIMERS & GESTION DES ÉTATS DU PROTOTYPE -->
+  <!-- ========================================================================= -->
+  <script>
+    // State
+    let currentView = 'home';
+    let currentHomeVariant = 'banner';
+    let currentStatusFilter = 'all';
+    let currentGameFilter = 'all';
+
+    // Countdown Timer (UTC 00:00)
+    function updateCountdown() {
+      const now = new Date();
+      const tomorrowUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+      const diffMs = tomorrowUtc - now;
+
+      const hours = Math.floor(diffMs / (1000 * 60 * 60));
+      const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+      const strFull = `${hours}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
+      const strHms = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      const strShort = `${hours}h ${mins}m`;
+
+      const elBanner = document.getElementById('banner-timer');
+      if (elBanner) elBanner.innerText = strFull;
+
+      const elDaily = document.getElementById('daily-page-countdown');
+      if (elDaily) elDaily.innerText = strHms;
+
+      const elVarB = document.getElementById('var-b-timer');
+      if (elVarB) elVarB.innerText = strShort;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // View Navigation
+    function setView(viewName) {
+      currentView = viewName;
+      const vHome = document.getElementById('view-home');
+      const vDaily = document.getElementById('view-daily');
+      const btnHome = document.getElementById('btn-view-home');
+      const btnDaily = document.getElementById('btn-view-daily');
+      const varSelector = document.getElementById('home-variant-selector');
+
+      if (viewName === 'home') {
+        vHome.classList.remove('hidden');
+        vDaily.classList.add('hidden');
+        btnHome.className = "px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 transition-all flex items-center gap-1.5";
+        btnDaily.className = "px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+        if (varSelector) varSelector.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        vHome.classList.add('hidden');
+        vDaily.classList.remove('hidden');
+        btnDaily.className = "px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 transition-all flex items-center gap-1.5";
+        btnHome.className = "px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+        if (varSelector) varSelector.classList.add('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Home Variant Switcher
+    function setHomeVariant(variant) {
+      currentHomeVariant = variant;
+      const varBanner = document.getElementById('variant-banner-container');
+      const varButton = document.getElementById('variant-button-container');
+      const varSplit = document.getElementById('variant-split-container');
+
+      const btnA = document.getElementById('btn-var-banner');
+      const btnB = document.getElementById('btn-var-button');
+      const btnC = document.getElementById('btn-var-split');
+
+      // Reset buttons
+      [btnA, btnB, btnC].forEach(b => {
+        b.className = "px-2 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all";
+      });
+
+      varBanner.classList.add('hidden');
+      varButton.classList.add('hidden');
+      varSplit.classList.add('hidden');
+
+      if (variant === 'banner') {
+        varBanner.classList.remove('hidden');
+        btnA.className = "px-2 py-1 rounded-lg bg-amber-500 text-slate-950 font-black transition-all";
+      } else if (variant === 'button') {
+        varButton.classList.remove('hidden');
+        btnB.className = "px-2 py-1 rounded-lg bg-amber-500 text-slate-950 font-black transition-all";
+      } else if (variant === 'split') {
+        varSplit.classList.remove('hidden');
+        btnC.className = "px-2 py-1 rounded-lg bg-amber-500 text-slate-950 font-black transition-all";
+      }
+    }
+
+    // Filters on /play/daily-challenge
+    function setStatusFilter(status) {
+      currentStatusFilter = status;
+      const btnAll = document.getElementById('flt-all');
+      const btnTodo = document.getElementById('flt-todo');
+      const btnDone = document.getElementById('flt-done');
+
+      [btnAll, btnTodo, btnDone].forEach(b => {
+        b.className = "px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition-all";
+      });
+
+      if (status === 'all') {
+        btnAll.className = "px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md transition-all";
+      } else if (status === 'todo') {
+        btnTodo.className = "px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black shadow-md transition-all flex items-center gap-1.5";
+      } else if (status === 'done') {
+        btnDone.className = "px-3.5 py-1.5 rounded-xl bg-emerald-500 text-slate-950 font-black shadow-md transition-all flex items-center gap-1.5";
+      }
+
+      applyFilters();
+    }
+
+    function filterByGame(game) {
+      currentGameFilter = game;
+      const btnAll = document.getElementById('game-flt-all');
+      const btnGr = document.getElementById('game-flt-gr');
+      const btnBp = document.getElementById('game-flt-bp');
+
+      [btnAll, btnGr, btnBp].forEach(b => {
+        b.className = "px-2.5 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition-all";
+      });
+
+      if (game === 'all') {
+        btnAll.className = "px-2.5 py-1 rounded-lg bg-slate-800 text-white font-bold transition-all";
+      } else if (game === 'georings') {
+        btnGr.className = "px-2.5 py-1 rounded-lg bg-blue-600 text-white font-bold transition-all";
+      } else if (game === 'blindpoint') {
+        btnBp.className = "px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold transition-all";
+      }
+
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const cards = document.querySelectorAll('.card-challenge');
+      const secGr = document.getElementById('section-georings');
+      const secBp = document.getElementById('section-blindpoint');
+
+      let visibleGr = 0;
+      let visibleBp = 0;
+
+      cards.forEach(card => {
+        const cGame = card.getAttribute('data-game');
+        const cStatus = card.getAttribute('data-status');
+
+        const matchStatus = currentStatusFilter === 'all' || cStatus === currentStatusFilter;
+        const matchGame = currentGameFilter === 'all' || cGame === currentGameFilter;
+
+        if (matchStatus && matchGame) {
+          card.classList.remove('hidden');
+          if (cGame === 'georings') visibleGr++;
+          if (cGame === 'blindpoint') visibleBp++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Show/hide sections if no cards match
+      if (currentGameFilter === 'blindpoint') {
+        secGr.classList.add('hidden');
+        secBp.classList.remove('hidden');
+      } else if (currentGameFilter === 'georings') {
+        secBp.classList.add('hidden');
+        secGr.classList.remove('hidden');
+      } else {
+        secGr.classList.toggle('hidden', visibleGr === 0);
+        secBp.classList.toggle('hidden', visibleBp === 0);
+      }
+    }
+
+    // Toggle challenge state for interactive simulation
+    function toggleChallengeState(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+
+      const currentStatus = card.getAttribute('data-status');
+      const isNowDone = currentStatus === 'todo';
+      card.setAttribute('data-status', isNowDone ? 'done' : 'todo');
+
+      // Update styling
+      if (isNowDone) {
+        card.classList.remove('border-slate-800');
+        card.classList.add('border-2', 'border-emerald-500/40', 'shadow-md');
+        const actionArea = card.querySelector('.shrink-0');
+        actionArea.innerHTML = `
+          <div class="flex flex-col items-end">
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
+              <span>✓ Fait</span>
+            </span>
+            <span class="text-[11px] font-black text-emerald-300 font-mono mt-0.5">Complet</span>
+          </div>
+          <button class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm">
+            Rejouer
+          </button>
+          <button onclick="toggleChallengeState('${cardId}')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+            ⚙️
+          </button>
+        `;
+      } else {
+        card.classList.remove('border-2', 'border-emerald-500/40', 'shadow-md');
+        card.classList.add('border', 'border-slate-800');
+        const actionArea = card.querySelector('.shrink-0');
+        const isGr = card.getAttribute('data-game') === 'georings';
+        actionArea.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md ${isGr ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-blue-500/30' : 'bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-emerald-500/30'}">
+            <span class="w-1.5 h-1.5 rounded-full ${isGr ? 'bg-white' : 'bg-slate-950'} animate-ping"></span>
+            <span>À relever</span>
+          </span>
+          <button class="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all ${isGr ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25'}">
+            Jouer →
+          </button>
+          <button onclick="toggleChallengeState('${cardId}')" class="p-1 rounded text-[10px] text-slate-500 hover:text-slate-300" title="Démo : basculer l'état">
+            ⚙️
+          </button>
+        `;
+      }
+
+      recalculateTotals();
+      applyFilters();
+    }
+
+    function recalculateTotals() {
+      const cards = document.querySelectorAll('.card-challenge');
+      let done = 0;
+      let todo = 0;
+      let grDone = 0;
+      let bpDone = 0;
+
+      cards.forEach(c => {
+        const s = c.getAttribute('data-status');
+        const g = c.getAttribute('data-game');
+        if (s === 'done') {
+          done++;
+          if (g === 'georings') grDone++;
+          if (g === 'blindpoint') bpDone++;
+        } else {
+          todo++;
+        }
+      });
+
+      const total = done + todo;
+      const pct = Math.round((done / total) * 100);
+
+      // Top badge
+      const elTopBadge = document.getElementById('badge-top-uncompleted');
+      if (elTopBadge) elTopBadge.innerText = `${todo} à faire`;
+
+      // Nav counter
+      const elNav = document.getElementById('nav-counter');
+      if (elNav) elNav.innerText = `${done}/${total}`;
+
+      // Variant B
+      const elVarBCounter = document.getElementById('var-b-counter');
+      if (elVarBCounter) elVarBCounter.innerText = `${done} / ${total} faits`;
+
+      // Variant C
+      const elVarCGr = document.getElementById('var-c-gr-stat');
+      if (elVarCGr) elVarCGr.innerText = `${grDone}/5 complétés`;
+      const elVarCBp = document.getElementById('var-c-bp-stat');
+      if (elVarCBp) elVarCBp.innerText = `${bpDone}/5 complétés`;
+
+      // Banner Variant A
+      const elProgressText = document.getElementById('banner-progress-text');
+      if (elProgressText) elProgressText.innerText = `${done} / ${total} Défis Relevés (${pct}%)`;
+
+      const elBarGr = document.getElementById('banner-bar-georings');
+      if (elBarGr) elBarGr.style.width = `${(grDone / total) * 100}%`;
+
+      const elBarBp = document.getElementById('banner-bar-blindpoint');
+      if (elBarBp) elBarBp.style.width = `${(bpDone / total) * 100}%`;
+
+      const elGrCount = document.getElementById('banner-gr-count');
+      if (elGrCount) elGrCount.innerText = `${grDone}/5`;
+
+      const elBpCount = document.getElementById('banner-bp-count');
+      if (elBpCount) elBpCount.innerText = `${bpDone}/5`;
+
+      const elRem = document.getElementById('banner-remaining-count');
+      if (elRem) elRem.innerText = `${todo} restants`;
+
+      // KPIs on /play/daily-challenge
+      const elKpiDone = document.getElementById('kpi-completed');
+      if (elKpiDone) elKpiDone.innerText = done;
+
+      const elKpiPct = document.getElementById('kpi-percent');
+      if (elKpiPct) elKpiPct.innerText = `${pct}% accomplis`;
+
+      const elKpiRem = document.getElementById('kpi-remaining');
+      if (elKpiRem) elKpiRem.innerText = todo;
+
+      const elFltTodoCount = document.getElementById('flt-todo-count');
+      if (elFltTodoCount) elFltTodoCount.innerText = todo;
+
+      const elFltDoneCount = document.getElementById('flt-done-count');
+      if (elFltDoneCount) elFltDoneCount.innerText = done;
+
+      const elSummary = document.getElementById('progress-summary');
+      if (elSummary) elSummary.innerText = `${done} / ${total} Défis Relevés`;
+
+      // Section Badges
+      const elBadgeGr = document.getElementById('badge-gr-status');
+      if (elBadgeGr) elBadgeGr.innerText = `${grDone} faits • ${5 - grDone} à faire`;
+
+      const elBadgeBp = document.getElementById('badge-bp-status');
+      if (elBadgeBp) elBadgeBp.innerText = `${bpDone} faits • ${5 - bpDone} à faire`;
+    }
+
+    // Set initial active variant
+    setHomeVariant('banner');
+  </script>
+</body>
+</html>

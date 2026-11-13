@@ -4,6 +4,18 @@ export const dynamic = "force-dynamic";
 
 import React, { useState, useEffect, useCallback, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Sparkles,
+  Layers,
+  Settings,
+  HelpCircle,
+  Zap,
+  Play,
+  CheckCircle2,
+} from "lucide-react";
 import {
   BorderPathEntity,
   BorderPathGraph,
@@ -28,6 +40,397 @@ import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathS
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
 import { BorderPathSettingsModal } from "@/components/game/borderpath/BorderPathSettingsModal";
+import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
+import { UserNav } from "@/components/navigation/UserNav";
+import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
+
+const BORDERPATH_PACKS: {
+  id: BorderPathPack;
+  name: string;
+  badge: string;
+  icon: string;
+  countLabel: string;
+  description: string;
+}[] = [
+  {
+    id: "monde",
+    name: "Monde Continental",
+    badge: "167 pays",
+    icon: "🌍",
+    countLabel: "167 pays & frontières",
+    description: "Le grand défi planétaire reliant l'Eurasie, l'Afrique et les Amériques.",
+  },
+  {
+    id: "france_departements",
+    name: "France Métropolitaine",
+    badge: "96 départements",
+    icon: "🇫🇷",
+    countLabel: "96 départements contigus",
+    description: "Traversez l'Hexagone d'un département à l'autre sans sauter de frontière.",
+  },
+  {
+    id: "europe",
+    name: "Europe Continentale",
+    badge: "46 pays",
+    icon: "🇪🇺",
+    countLabel: "46 pays continentaux",
+    description: "Naviguez à travers l'enchevêtrement des frontières d'Europe centrale et occidentale.",
+  },
+  {
+    id: "ameriques",
+    name: "Amériques (Nord & Sud)",
+    badge: "35 pays",
+    icon: "🌎",
+    countLabel: "35 nations américaines",
+    description: "De l'Alaska à la Terre de Feu en passant par l'isthme d'Amérique Centrale.",
+  },
+  {
+    id: "afrique",
+    name: "Afrique Continentale",
+    badge: "54 pays",
+    icon: "🌍",
+    countLabel: "54 pays africains",
+    description: "Traversez le Sahara, le Sahel et l'Afrique australe de frontière en frontière.",
+  },
+];
+
+// =========================================================================
+// 1. LOBBY BORDERPATH (Cockpit de Sélection & Lancement)
+// =========================================================================
+interface BorderPathLobbyProps {
+  initialPack: BorderPathPack;
+  initialMode: BorderPathMode;
+  onStartGame: (pack: BorderPathPack, mode: BorderPathMode, seed?: string) => void;
+  onOpenRules: () => void;
+  onOpenSettings: () => void;
+}
+
+function BorderPathLobby({
+  initialPack,
+  initialMode,
+  onStartGame,
+  onOpenRules,
+  onOpenSettings,
+}: BorderPathLobbyProps) {
+  const [selectedPack, setSelectedPack] = useState<BorderPathPack>(initialPack);
+  const [selectedMode, setSelectedMode] = useState<BorderPathMode>(initialMode);
+
+  const selectedPackMeta = useMemo(() => {
+    return BORDERPATH_PACKS.find((p) => p.id === selectedPack) || BORDERPATH_PACKS[0];
+  }, [selectedPack]);
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+      {/* Lobby Navigation Bar */}
+      <nav className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl sticky top-0 z-40">
+        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <QuickMenuDrawer />
+            <Link
+              href="/"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors text-xs font-semibold"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Hub</span>
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/40 text-indigo-400">
+              <Layers className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-sm tracking-tight text-white hidden sm:inline">
+              BorderPath
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <LeaderboardTriggerButton
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all shadow-sm cursor-pointer"
+              label="Classement"
+            />
+            <button
+              type="button"
+              onClick={onOpenRules}
+              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+              title="Règles du jeu"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={onOpenSettings}
+              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+              title="Paramètres de carte"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+            <UserNav />
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Cockpit / Selection Screen */}
+      <main className="max-w-4xl mx-auto px-6 py-8 flex-1 w-full space-y-10">
+        {/* 1. RAPPEL DES RENDEZ-VOUS DU JOUR BORDERPATH (FLASHY) */}
+        <section className="p-6 rounded-3xl bg-slate-900/90 border-2 border-indigo-500/40 space-y-4 shadow-xl relative overflow-hidden">
+          <div className="absolute -right-20 -top-20 w-44 h-44 bg-indigo-500/10 blur-3xl pointer-events-none rounded-full" />
+
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Rendez-vous Quotidien (BorderPath)</span>
+            </span>
+            <span className="text-[11px] text-slate-400 font-mono">Tirages uniques du jour</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+            {/* Monde */}
+            <button
+              type="button"
+              onClick={() => onStartGame("monde", "daily")}
+              className="p-3.5 rounded-2xl bg-slate-950/80 border-2 border-indigo-500/50 hover:border-indigo-400 transition-all group flex flex-col justify-between shadow-[0_0_15px_rgba(99,102,241,0.15)] text-left cursor-pointer"
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-indigo-300">
+                  🌍 Monde Continental
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  167 pays • Frontières terrestres
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                  <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                  <span>À relever</span>
+                </span>
+                <span className="text-xs font-bold text-indigo-400 group-hover:translate-x-0.5 transition-transform">
+                  Jouer →
+                </span>
+              </div>
+            </button>
+
+            {/* France */}
+            <button
+              type="button"
+              onClick={() => onStartGame("france_departements", "daily")}
+              className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/60 transition-all group flex flex-col justify-between text-left cursor-pointer"
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-indigo-300">
+                  🇫🇷 France Métropolitaine
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  96 départements contigus
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                  <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                  <span>À relever</span>
+                </span>
+                <span className="text-xs font-bold text-indigo-400 group-hover:translate-x-0.5 transition-transform">
+                  Jouer →
+                </span>
+              </div>
+            </button>
+
+            {/* Europe */}
+            <button
+              type="button"
+              onClick={() => onStartGame("europe", "daily")}
+              className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-indigo-500/60 transition-all group flex flex-col justify-between text-left cursor-pointer"
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-indigo-300">
+                  🇪🇺 Europe
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  46 pays continentaux
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                  <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                  <span>À relever</span>
+                </span>
+                <span className="text-xs font-bold text-indigo-400 group-hover:translate-x-0.5 transition-transform">
+                  Jouer →
+                </span>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        {/* 2. ESPACE LANCEMENT DE PARTIE RAPIDE (COCKPIT) */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-slate-900 border-2 border-slate-800 space-y-6 shadow-2xl">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div>
+              <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
+                <Zap className="w-5 h-5 text-amber-400" />
+                <span>Lancement de Partie Rapide & Entraînement Libre</span>
+              </h2>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Entraînement illimité. Choisissez votre terrain et votre mode pour jouer immédiatement.
+              </p>
+            </div>
+            <span className="text-xs text-slate-400 font-mono">100% Clavier • BFS Optimal</span>
+          </div>
+
+          {/* Étape 1 : Choix du Terrain / Pack */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+              1. Déclinaison / Terrain
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+              {BORDERPATH_PACKS.map((p) => {
+                const isSelected = selectedPack === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setSelectedPack(p.id)}
+                    className={`p-3 rounded-2xl border-2 text-center transition-all cursor-pointer ${
+                      isSelected
+                        ? "border-indigo-500 bg-indigo-950/30 text-white font-bold shadow-md shadow-indigo-500/10"
+                        : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
+                    }`}
+                  >
+                    <span className="text-lg block mb-1">{p.icon}</span>
+                    <span className="text-xs block">{p.name}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{p.badge}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Étape 2 : Mode de Jeu */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+              2. Mode de Jeu
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setSelectedMode("free")}
+                className={`p-4 rounded-2xl border-2 text-left transition-all flex items-start gap-3 cursor-pointer ${
+                  selectedMode === "free"
+                    ? "border-indigo-500 bg-indigo-950/20 text-white shadow-md shadow-indigo-500/10"
+                    : "border-slate-800 bg-slate-950/40 hover:border-slate-700 text-slate-300"
+                }`}
+              >
+                <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400 shrink-0 mt-0.5">
+                  <Zap className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-white block">
+                    Partie Libre / Défi Aléatoire
+                  </span>
+                  <span className="text-[11px] text-slate-400">
+                    Tirage aléatoire de 2 territoires avec distance optimale calculée par BFS.
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedMode("daily")}
+                className={`p-4 rounded-2xl border-2 text-left transition-all flex items-start gap-3 cursor-pointer ${
+                  selectedMode === "daily"
+                    ? "border-indigo-500 bg-indigo-950/20 text-white shadow-md shadow-indigo-500/10"
+                    : "border-slate-800 bg-slate-950/40 hover:border-slate-700 text-slate-300"
+                }`}
+              >
+                <div className="p-2 rounded-xl bg-blue-500/20 text-blue-400 shrink-0 mt-0.5">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-white block">Défi Officiel du Jour</span>
+                  <span className="text-[11px] text-slate-400">
+                    Graine quotidienne déterministe identique pour tous les joueurs.
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Étape 3 : Cartouche descriptif & Règle d'or */}
+          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-slate-200">
+                {selectedPackMeta.icon} {selectedPackMeta.name} — {selectedPackMeta.countLabel}
+              </span>
+              <span className="text-[11px] text-indigo-400 font-mono">BFS Bidirectionnel</span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              {selectedPackMeta.description}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-300">
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span>⌨️</span>
+                <span>Saisie clavier intuitive</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span>🔄</span>
+                <span>Double front Départ/Cible</span>
+              </div>
+              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-slate-800/80">
+                <span>📏</span>
+                <span>Mesure du chemin minimal</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Boutons d'Action Majeurs */}
+          <div className="space-y-3 pt-2">
+            <button
+              type="button"
+              onClick={() => onStartGame(selectedPack, selectedMode)}
+              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-black text-sm sm:text-base shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all flex items-center justify-between cursor-pointer hover:scale-[1.01]"
+            >
+              <span className="flex items-center gap-2">
+                <Play className="w-5 h-5 fill-white" />
+                <span>Lancer la Partie BorderPath ({selectedPackMeta.name})</span>
+              </span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => onStartGame(selectedPack, "free", String(Date.now()))}
+                className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>🎲 Tirage Express Aléatoire</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={onOpenRules}
+                className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              >
+                <HelpCircle className="w-4 h-4 text-indigo-400" />
+                <span>📖 Consulter les Règles du Jeu</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800/80 bg-slate-950 py-8 px-6 text-center text-xs text-slate-500 mt-12">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p>© {new Date().getFullYear()} GeoHub — BorderPath.</p>
+          <Link href="/" className="text-slate-400 hover:text-white underline">
+            Retourner au hub principal
+          </Link>
+        </div>
+      </footer>
+    </div>
+  );
+}
 
 function BorderPathGame() {
   const searchParams = useSearchParams();
@@ -35,6 +438,7 @@ function BorderPathGame() {
 
   const rawPack = searchParams.get("pack") as BorderPathPack | null;
   const rawMode = searchParams.get("mode") as BorderPathMode | null;
+  const rawPlay = searchParams.get("play") === "1";
 
   const validPacks: BorderPathPack[] = [
     "monde",
@@ -292,13 +696,47 @@ function BorderPathGame() {
   // Handle pack & mode selection from PackModal
   const handleSelectPackMode = (newPack: BorderPathPack, newMode: BorderPathMode) => {
     setShowPackModal(false);
-    router.push(`/play/borderpath?pack=${newPack}&mode=${newMode}`);
+    router.push(`/play/borderpath?pack=${newPack}&mode=${newMode}&play=1`);
   };
 
   const visitedIds = [
     ...branchAEntities.map((e) => e.id),
     ...branchBEntities.map((e) => e.id),
   ];
+
+  if (!rawPlay) {
+    return (
+      <>
+        <BorderPathLobby
+          initialPack={pack}
+          initialMode={mode}
+          onStartGame={(p, m, seed) => {
+            let url = `/play/borderpath?pack=${p}&mode=${m}&play=1`;
+            if (seed) url += `&seed=${seed}`;
+            router.push(url);
+          }}
+          onOpenRules={() => setShowRulesModal(true)}
+          onOpenSettings={() => setShowSettingsModal(true)}
+        />
+
+        {/* Rules Modal */}
+        <BorderPathRulesModal
+          isOpen={showRulesModal}
+          onClose={() => setShowRulesModal(false)}
+        />
+
+        {/* Settings Modal */}
+        <BorderPathSettingsModal
+          isOpen={showSettingsModal}
+          onClose={() => setShowSettingsModal(false)}
+          theme={theme}
+          onChangeTheme={setTheme}
+          hideBorders={hideBorders}
+          onToggleHideBorders={handleToggleHideBorders}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-slate-950 select-none">
@@ -326,7 +764,7 @@ function BorderPathGame() {
         onOpenSettings={() => setShowSettingsModal(true)}
         onOpenPackModal={() => setShowPackModal(true)}
         onChangeMode={(newMode) => {
-          router.push(`/play/borderpath?pack=${pack}&mode=${newMode}`);
+          router.push(`/play/borderpath?pack=${pack}&mode=${newMode}&play=1`);
         }}
         onGiveUp={handleGiveUp}
         onRestart={handleReplaySameChallenge}
