@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import Link from "next/link";
 import maplibregl from "maplibre-gl";
 import {
   ArrowLeft,
@@ -16,7 +17,12 @@ import {
   MapPin,
   Check,
   Zap,
+  ChevronDown,
+  X,
 } from "lucide-react";
+import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
+import { UserNav } from "@/components/navigation/UserNav";
+import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import {
   METRO_TOPOLOGY_STATIONS,
   METRO_LINE_TOPOLOGY,
@@ -81,6 +87,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
   } | null>(null);
   const [isCompletedModalOpen, setIsCompletedModalOpen] = useState(false);
   const [showConfirmReset, setShowConfirmReset] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   // Save discovered stations to localStorage
   const saveProgress = useCallback((nextDiscovered: Set<string>) => {
@@ -227,14 +234,14 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       }
 
       const el = document.createElement("div");
-      el.className = "group relative cursor-pointer select-none";
+      el.className = "group relative cursor-pointer select-none w-fit h-fit";
 
       const dotsHtml = station.lines
         .map(
           (line) => `
           <span style="background-color: ${METRO_LINE_COLORS[line]?.bg || "#fff"}; color: ${
             METRO_LINE_COLORS[line]?.text || "#000"
-          };" class="w-4 h-4 rounded-full flex items-center justify-center font-black text-[9px] shadow-sm">
+          };" class="w-4 h-4 rounded-full flex items-center justify-center font-black text-[9px] shadow-sm shrink-0">
             ${line}
           </span>
         `
@@ -242,7 +249,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
         .join("");
 
       el.innerHTML = `
-        <div class="flex items-center -space-x-1.5 p-1 rounded-full bg-slate-950/90 border-2 border-white shadow-xl transition-transform hover:scale-125">
+        <div class="inline-flex items-center w-fit -space-x-1.5 p-1 rounded-full bg-slate-950/90 border-2 border-white shadow-xl transition-transform hover:scale-125">
           ${dotsHtml}
         </div>
         <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[11px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
@@ -464,65 +471,78 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       {/* Map Container */}
       <div ref={mapContainerRef} className="absolute inset-0 w-full h-full" />
 
-      {/* Top Floating Control Bar */}
-      <header className="absolute top-4 left-4 right-4 z-30 pointer-events-none flex items-center justify-between gap-3">
-        {/* Left: Back & Game Badge */}
-        <div className="pointer-events-auto flex items-center gap-2">
+      {/* Top Standardized Header Bar */}
+      <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
+        {/* Left: QuickMenuDrawer + Back to Lobby + Hub Link + Game Branding */}
+        <div className="flex items-center gap-2 shrink-0">
+          <QuickMenuDrawer />
+
           <button
             type="button"
             onClick={onBackToLobby}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 shadow-xl backdrop-blur-md text-xs font-bold transition-all"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
+            title="Retour au lobby de sélection"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Quitter</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Lobby</span>
           </button>
 
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-purple-500/30 text-white shadow-xl backdrop-blur-md">
-            <span className="text-base">🚇</span>
-            <div className="leading-tight">
-              <span className="text-xs font-black tracking-tight text-white block">
-                Retrace le Réseau
-              </span>
-              <span className="text-[10px] text-purple-400 font-semibold">
-                Mini Metro • Paris RATP
-              </span>
-            </div>
-          </div>
-        </div>
+          <Link
+            href="/"
+            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
+            title="Retour au Hub d'accueil"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Hub</span>
+          </Link>
 
-        {/* Center: Live Progress Counter */}
-        <div className="pointer-events-auto hidden md:flex items-center gap-4 px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md text-xs">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-400">Progression :</span>
-            <span className="font-black text-amber-400 text-sm">
-              {progressPercent}%
-            </span>
-          </div>
-          <div className="h-4 w-px bg-slate-800" />
-          <div className="flex items-center gap-1.5 text-slate-300">
-            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-            <span>
-              <strong>{discoveredIds.size}</strong> / {activeStations.length} stations
-            </span>
-          </div>
-          <div className="h-4 w-px bg-slate-800" />
-          <div className="flex items-center gap-1.5 text-slate-300">
-            <Layers className="w-3.5 h-3.5 text-blue-400" />
-            <span>
-              <strong>{connectedSegmentsCount}</strong> / {TOTAL_METRO_SEGMENTS} tronçons
-            </span>
+            <div className="flex items-center justify-center w-6 h-6 rounded-md bg-purple-500/15 border border-purple-500/30 text-purple-400 shrink-0">
+              <span className="text-xs">🚇</span>
+            </div>
+            <h1 className="text-sm font-bold tracking-tight text-white hidden sm:block whitespace-nowrap">
+              Retrace le Réseau
+            </h1>
           </div>
         </div>
 
-        {/* Right: Tolerance Selector & Actions */}
-        <div className="pointer-events-auto flex items-center gap-2">
-          {/* Tolerance Badge */}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-slate-900/90 border border-slate-700/80 shadow-xl backdrop-blur-md text-xs">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase">Tolérance :</span>
+        {/* Center: Mode Indicator (Custom) + Lines Selector + Tolerance Selector + Live Metric Corridor */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Mode Switcher */}
+          <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium shrink-0">
+            <button
+              type="button"
+              onClick={onOpenCustomModal}
+              className="px-2.5 py-1 rounded-lg flex items-center gap-1 bg-purple-600 text-white font-semibold shadow-sm whitespace-nowrap"
+              title="Mode Défi Custom actif"
+            >
+              <Sliders className="w-3 h-3 text-purple-200" />
+              <span>Custom</span>
+            </button>
+          </div>
+
+          {/* Territory / Lines Selector */}
+          <button
+            type="button"
+            onClick={onOpenCustomModal}
+            className="group flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer shrink-0"
+            title="Modifier les lignes sélectionnées"
+          >
+            <span className="text-sm shrink-0">🚇</span>
+            <span className="font-bold text-white group-hover:text-purple-300 transition-colors hidden sm:inline whitespace-nowrap">
+              {selectedLines.length === 16 ? "Tout le Réseau (16L)" : `${selectedLines.length} Lignes`}
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform shrink-0" />
+          </button>
+
+          {/* Tolerance Selector Pill */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-sm text-xs shrink-0">
+            <span className="text-[10px] text-slate-400 font-semibold uppercase hidden md:inline">Tolérance :</span>
             <select
               value={tolerance}
               onChange={(e) => setTolerance(e.target.value)}
-              className="bg-transparent text-amber-300 font-extrabold text-xs focus:outline-none cursor-pointer"
+              className="bg-transparent text-amber-300 font-bold text-xs focus:outline-none cursor-pointer"
+              title="Ajuster le seuil de distance de validation"
             >
               <option value="chill" className="bg-slate-900 text-white">Chill (Libre)</option>
               <option value="500" className="bg-slate-900 text-white">500 m</option>
@@ -532,25 +552,66 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
             </select>
           </div>
 
-          {/* Reset Progress Button */}
+          {/* Mission Progress Corridor (Desktop) */}
+          <div className="hidden xl:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-inner whitespace-nowrap shrink-0">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Progression :</span>
+            <span className="font-extrabold text-amber-400">{progressPercent}%</span>
+            <span className="text-slate-600">•</span>
+            <div className="flex items-center gap-1 text-slate-300">
+              <MapPin className="w-3 h-3 text-emerald-400" />
+              <span><strong>{discoveredIds.size}</strong>/{activeStations.length} st.</span>
+            </div>
+            <span className="text-slate-600">•</span>
+            <div className="flex items-center gap-1 text-slate-300">
+              <Layers className="w-3 h-3 text-blue-400" />
+              <span><strong>{connectedSegmentsCount}</strong>/{TOTAL_METRO_SEGMENTS} tr.</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Actions, Help & UserNav */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Compact Progress Badge (< xl) */}
+          <div className="flex xl:hidden items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-slate-700/80 text-xs font-bold text-amber-400 shrink-0">
+            <span>{progressPercent}%</span>
+            <span className="text-slate-500 font-normal hidden sm:inline">({discoveredIds.size}/{activeStations.length})</span>
+          </div>
+
+          {/* Reset Button */}
           <button
             type="button"
             onClick={() => setShowConfirmReset(true)}
-            className="p-2 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700/80 shadow-xl backdrop-blur-md transition-all"
-            title="Réinitialiser le réseau"
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs shrink-0"
+            title="Réinitialiser le réseau découvert"
+            aria-label="Réinitialiser le réseau découvert"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
           </button>
 
-          {/* Custom Settings Modal Trigger */}
+          {/* Lines & Settings Modal Trigger */}
           <button
             type="button"
             onClick={onOpenCustomModal}
-            className="p-2 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-purple-400 hover:text-purple-300 border border-purple-500/40 shadow-xl backdrop-blur-md transition-all"
-            title="Options Custom"
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-purple-400 hover:text-purple-300 border border-purple-500/40 transition-all text-xs shrink-0"
+            title="Configurer les lignes & options"
+            aria-label="Configurer les lignes & options"
           >
             <Sliders className="w-4 h-4" />
           </button>
+
+          {/* Rules / Help Trigger */}
+          <button
+            type="button"
+            onClick={() => setShowHelp(true)}
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs shrink-0"
+            title="Règles du jeu"
+            aria-label="Règles du jeu"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </button>
+
+          {/* User Profile */}
+          <UserNav compact />
         </div>
       </header>
 
@@ -652,34 +713,76 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       </footer>
 
       {/* Confirmation Reset Modal */}
-      {showConfirmReset && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-4 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-rose-600/20 border border-rose-500/40 text-rose-400 mx-auto flex items-center justify-center">
-              <RotateCcw className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-white">Réinitialiser le Réseau ?</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Toutes vos stations découvertes et tronçons illuminés seront effacés.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-2 pt-2">
+      <RestartConfirmModal
+        isOpen={showConfirmReset}
+        onClose={() => setShowConfirmReset(false)}
+        onConfirm={handleResetNetwork}
+        title="Réinitialiser le réseau ?"
+        message="Êtes-vous sûr de vouloir recommencer ? Toutes vos stations découvertes et tronçons illuminés sur ce réseau seront effacés."
+        confirmLabel="Recommencer"
+        cancelLabel="Annuler"
+      />
+
+      {/* Rules / Help Modal */}
+      {showHelp && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-4 text-left">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                  <span className="text-sm">🚇</span>
+                </div>
+                <h3 className="text-base font-black text-white">Règles — Retrace le Réseau</h3>
+              </div>
               <button
                 type="button"
-                onClick={() => setShowConfirmReset(false)}
-                className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs"
+                onClick={() => setShowHelp(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                aria-label="Fermer"
               >
-                Annuler
-              </button>
-              <button
-                type="button"
-                onClick={handleResetNetwork}
-                className="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30"
-              >
-                Confirmer l'effacement
+                <X className="w-4 h-4" />
               </button>
             </div>
+
+            <div className="space-y-3 text-xs text-slate-300">
+              <div className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+                <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                  1. Ancrer chaque station
+                </span>
+                <p className="text-slate-400 leading-relaxed">
+                  Une station vous est désignée. Cliquez sur son emplacement sur la carte muette de Paris, puis validez votre ancrage.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+                <span className="font-bold text-purple-300 flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5 text-blue-400" />
+                  2. Illuminer les tronçons (Mini Metro)
+                </span>
+                <p className="text-slate-400 leading-relaxed">
+                  Dès que deux stations adjacentes d'une même ligne sont ancrées, les rails s'illuminent avec les couleurs officielles RATP. Les tronçons partagés tracent des voies parallèles distinctes.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+                <span className="font-bold text-emerald-300 flex items-center gap-1.5">
+                  <Sliders className="w-3.5 h-3.5 text-amber-400" />
+                  3. Tolérance & Sauvegarde
+                </span>
+                <p className="text-slate-400 leading-relaxed">
+                  Ajustez la tolérance selon votre niveau (Chill à Puriste 75 m). Votre avancée est sauvegardée automatiquement dans votre navigateur.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowHelp(false)}
+              className="w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors shadow-lg shadow-purple-600/30 mt-1"
+            >
+              Compris, continuer à jouer
+            </button>
           </div>
         </div>
       )}
