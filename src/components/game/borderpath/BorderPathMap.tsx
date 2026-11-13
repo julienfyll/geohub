@@ -72,6 +72,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const isLoadedRef = useRef(false);
   const prevInvalidIdRef = useRef<string | null>(null);
+  const prevActiveIdsRef = useRef<Set<string>>(new Set());
 
   const isFrance = pack === "france_departements";
   const geojsonUrl = isFrance
@@ -99,19 +100,37 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       const lastInvalid = prevInvalidIdRef.current;
       prevInvalidIdRef.current = invalidFlashId || null;
 
-      const allRelevantIds = Array.from(
-        new Set([
+      const currentIds = new Set(
+        [
           startEntity.id,
           targetEntity.id,
           ...branchAEntities.map((e) => e.id),
           ...branchBEntities.map((e) => e.id),
           ...(fullConnectedPathEntities?.map((e) => e.id) || []),
           invalidFlashId,
-          lastInvalid,
-        ].filter(Boolean) as string[])
+        ].filter(Boolean) as string[]
       );
 
-      for (const id of allRelevantIds) {
+      // Clean up feature states for any country that is no longer active
+      for (const oldId of prevActiveIdsRef.current) {
+        if (!currentIds.has(oldId)) {
+          try {
+            map.removeFeatureState({ source: "entities-geojson", id: oldId });
+          } catch {
+            // Ignore
+          }
+        }
+      }
+      if (lastInvalid && !currentIds.has(lastInvalid)) {
+        try {
+          map.removeFeatureState({ source: "entities-geojson", id: lastInvalid });
+        } catch {
+          // Ignore
+        }
+      }
+      prevActiveIdsRef.current = currentIds;
+
+      for (const id of currentIds) {
         const isConn = isComplete && fullSet.has(id);
         const inA = !isConn && setA.has(id);
         const inB = !isConn && setB.has(id);
@@ -137,8 +156,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       }
     },
     [
-      startEntity,
-      targetEntity,
+      startEntity.id,
+      targetEntity.id,
       branchAEntities,
       branchBEntities,
       fullConnectedPathEntities,
@@ -458,6 +477,20 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       });
     }
   }, [hideBorders, theme]);
+
+  // When challenge changes (different start or target entity), wipe all feature states completely
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current || !map.getSource("entities-geojson")) return;
+
+    try {
+      map.removeFeatureState({ source: "entities-geojson" });
+    } catch {
+      // Ignore
+    }
+    prevActiveIdsRef.current.clear();
+    applyFeatureStates(map);
+  }, [startEntity.id, targetEntity.id, applyFeatureStates]);
 
   // Update feature states and lines whenever state changes
   useEffect(() => {
