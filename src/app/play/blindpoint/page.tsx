@@ -1077,11 +1077,15 @@ function BlindPointGame() {
     const linesParam = searchParams.get("lines");
     const activeLines = linesParam ? linesParam.split(",") : ["1", "4", "6"];
     const activeTolerance = searchParams.get("tolerance") || "300";
+    const rawOrder = searchParams.get("order");
+    const activeOrder: "random" | "sequential" = rawOrder === "sequential" ? "sequential" : "random";
 
     return (
       <>
         <BlindPointRetraceGame
+          key={`retrace-${searchParams.toString()}`}
           initialTolerance={activeTolerance}
+          initialOrderMode={activeOrder}
           selectedLines={activeLines}
           onBackToLobby={() => router.push("/play/blindpoint?pack=metro_paris&mode=free")}
           onOpenCustomModal={() => setShowCustomModal(true)}

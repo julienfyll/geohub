@@ -16,7 +16,7 @@ export interface UserStreak {
 export interface GameSessionRecord {
   id?: string;
   user_id?: string;
-  game_mode: "georings" | "blindpoint";
+  game_mode: "georings" | "blindpoint" | "borderpath";
   variant: string; // 'cities', 'airports', 'prefectures', etc.
   difficulty: string; // 'fr', 'eu', 'world', 'easy', etc.
   score: number;
@@ -34,6 +34,7 @@ export interface UserSummaryStats {
   totalGames: number;
   georingsGames: number;
   blindpointGames: number;
+  borderpathGames?: number;
   perfectGames: number;
   averageScore: number;
   currentStreak: number;

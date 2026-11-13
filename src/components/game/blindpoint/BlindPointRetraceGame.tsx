@@ -34,8 +34,6 @@ import {
   getLineSegmentOffset,
 } from "@/lib/games/blindpoint/data/metro_topology";
 
-const STORAGE_KEY = "geohub_retrace_metro_discovered";
-
 export interface BlindPointRetraceGameProps {
   initialTolerance?: string; // "chill", "500", "300", "150", "75"
   initialOrderMode?: "random" | "sequential";
@@ -63,22 +61,28 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     );
   }, [selectedLines]);
 
-  // Game state
+  // Game state (Zéro persistance cross-session : chaque nouvelle partie démarre vierge)
   const [tolerance, setTolerance] = useState<string>(initialTolerance);
   const [orderMode, setOrderMode] = useState<"random" | "sequential">(initialOrderMode);
-  const [discoveredIds, setDiscoveredIds] = useState<Set<string>>(() => {
-    if (typeof window === "undefined") return new Set();
+  const [discoveredIds, setDiscoveredIds] = useState<Set<string>>(() => new Set());
+
+  // Proactive cleanup : purge toute ancienne session stockée dans le navigateur
+  useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const arr = JSON.parse(saved);
-        if (Array.isArray(arr)) return new Set(arr);
-      }
-    } catch (e) {
+      localStorage.removeItem("geohub_retrace_metro_discovered");
+    } catch {
       // ignore
     }
-    return new Set();
-  });
+  }, []);
+
+  // Synchronise les états locaux en cas de changement de props
+  useEffect(() => {
+    setTolerance(initialTolerance);
+  }, [initialTolerance]);
+
+  useEffect(() => {
+    setOrderMode(initialOrderMode);
+  }, [initialOrderMode]);
 
   const [currentTarget, setCurrentTarget] = useState<MetroStationTopology | null>(null);
   const [pendingGuess, setPendingGuess] = useState<[number, number] | null>(null);
@@ -90,15 +94,6 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
   const [isCompletedModalOpen, setIsCompletedModalOpen] = useState(false);
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-
-  // Save discovered stations to localStorage
-  const saveProgress = useCallback((nextDiscovered: Set<string>) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(nextDiscovered)));
-    } catch (e) {
-      console.error("Failed to save progress to localStorage", e);
-    }
-  }, []);
 
   // Pick next station to place
   const pickNextStation = useCallback(
@@ -475,7 +470,6 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     const nextDiscovered = new Set(discoveredIds);
     nextDiscovered.add(currentTarget.id);
     setDiscoveredIds(nextDiscovered);
-    saveProgress(nextDiscovered);
 
     setPendingGuess(null);
 
@@ -531,7 +525,11 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
    * Resets entire discovered network
    */
   const handleResetNetwork = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+      localStorage.removeItem("geohub_retrace_metro_discovered");
+    } catch {
+      // ignore
+    }
     setDiscoveredIds(new Set());
 
     // Clear all markers
@@ -857,10 +855,10 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
               <div className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
                 <span className="font-bold text-emerald-300 flex items-center gap-1.5">
                   <Sliders className="w-3.5 h-3.5 text-amber-400" />
-                  3. Tolérance & Sauvegarde
+                  3. Tolérance & Réglages
                 </span>
                 <p className="text-slate-400 leading-relaxed">
-                  Ajustez la tolérance selon votre niveau (Chill à Puriste 75 m). Votre avancée est sauvegardée automatiquement dans votre navigateur.
+                  Ajustez la tolérance selon votre niveau (Chill à Puriste 75 m) et testez vos connaissances en direct.
                 </p>
               </div>
             </div>
@@ -909,7 +907,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
                 onClick={onBackToLobby}
                 className="py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold text-xs shadow-lg"
               >
-                Retour au Hub des Jeux
+                Retour au Lobby
               </button>
               <button
                 type="button"

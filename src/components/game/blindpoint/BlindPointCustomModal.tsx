@@ -205,7 +205,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
       if (selectedLines.length > 0 && selectedLines.length < ALL_METRO_LINES.length) {
         url += `&lines=${selectedLines.join(",")}`;
       }
-      url += `&play=1`;
+      url += `&seed=${seed}&play=1`;
       return url;
     }
 

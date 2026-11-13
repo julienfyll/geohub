@@ -11,6 +11,10 @@ export interface DailyChallengeStatus {
   date?: string;
   accuracyPercent?: number;
   distanceKm?: number;
+  attempts?: number;
+  optimalSteps?: number;
+  errorCount?: number;
+  corridorCount?: number;
 }
 
 export type DailyStatusMap = Record<string, DailyChallengeStatus>;
@@ -67,6 +71,15 @@ export function getChallengeKeyForSession(session: GameSessionRecord): string | 
     }
   }
 
+  if (session.game_mode === "borderpath") {
+    const pack = session.variant;
+    if (pack === "monde") return "borderpath_monde";
+    if (pack === "europe") return "borderpath_europe";
+    if (pack === "france_departements") return "borderpath_france_departements";
+    if (pack === "ameriques") return "borderpath_ameriques";
+    if (pack === "afrique") return "borderpath_afrique";
+  }
+
   return null;
 }
 
@@ -120,7 +133,11 @@ export async function getDailyChallengesStatus(
     const score = s.score ?? 0;
     const maxScore =
       s.max_score ??
-      (s.game_mode === "blindpoint" ? 25000 : s.rings_completed ?? 5);
+      (s.game_mode === "blindpoint"
+        ? 25000
+        : s.game_mode === "borderpath"
+        ? 10000
+        : s.rings_completed ?? 5);
 
     // If first entry or better score, record it
     if (!current || score > (current.score ?? 0)) {
@@ -132,6 +149,10 @@ export async function getDailyChallengesStatus(
         totalRings: s.total_rings ?? 5,
         accuracyPercent: s.accuracy_percent ?? undefined,
         distanceKm: s.distance_km ?? undefined,
+        attempts: s.summary_data?.totalAttempts,
+        optimalSteps: s.summary_data?.optimalCountries,
+        errorCount: s.summary_data?.errorCount,
+        corridorCount: s.summary_data?.corridorCount,
         date: s.created_at,
       };
     }
