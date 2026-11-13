@@ -9,6 +9,7 @@ export interface BorderPathTargetCardProps {
   uniquePlacedCount: number;
   errorCount?: number;
   remainingSteps: number;
+  entityLabel?: string;
 }
 
 export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
@@ -17,8 +18,10 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
   uniquePlacedCount,
   errorCount = 0,
   remainingSteps,
+  entityLabel = "pays",
 }) => {
   const delta = totalAttempts - optimalCountries;
+  const isDepartements = entityLabel === "départements";
 
   return (
     <div className="absolute bottom-8 left-4 sm:left-6 z-20 pointer-events-auto">
@@ -40,7 +43,7 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
               {optimalCountries}
             </span>
             <span className="text-[11px] font-medium text-emerald-300/80 mt-0.5">
-              pays minimum
+              {entityLabel} minimum
             </span>
           </div>
 
@@ -53,7 +56,7 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
               {totalAttempts}
             </span>
             <span className="text-[11px] font-medium text-slate-400 mt-0.5">
-              pays + erreurs
+              {entityLabel} + erreurs
             </span>
           </div>
         </div>
@@ -63,7 +66,9 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-slate-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-              <span className="text-xs">Pays validés sur la carte :</span>
+              <span className="text-xs">
+                {isDepartements ? "Départements validés sur la carte :" : "Pays validés sur la carte :"}
+              </span>
             </div>
             <span className="font-mono font-bold text-emerald-400 text-xs">
               {uniquePlacedCount}
