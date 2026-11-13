@@ -473,28 +473,19 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
       {/* Top Standardized Header Bar */}
       <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        {/* Left: QuickMenuDrawer + Back to Lobby + Hub Link + Game Branding */}
+        {/* Left: QuickMenuDrawer + Back to Lobby + Game Branding */}
         <div className="flex items-center gap-2 shrink-0">
           <QuickMenuDrawer />
 
           <button
             type="button"
             onClick={onBackToLobby}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap cursor-pointer"
             title="Retour au lobby de sélection"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Lobby</span>
           </button>
-
-          <Link
-            href="/"
-            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
-            title="Retour au Hub d'accueil"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Hub</span>
-          </Link>
 
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-6 h-6 rounded-md bg-purple-500/15 border border-purple-500/30 text-purple-400 shrink-0">
