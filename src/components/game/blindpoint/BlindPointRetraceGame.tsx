@@ -1,27 +1,24 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import Link from "next/link";
 import maplibregl from "maplibre-gl";
 import {
   ArrowLeft,
   RotateCcw,
   Sliders,
-  Sparkles,
   Trophy,
   CheckCircle2,
   AlertCircle,
   HelpCircle,
-  Eye,
-  Layers,
   MapPin,
   Check,
-  Zap,
-  ChevronDown,
   X,
   ArrowRight,
+  Settings,
 } from "lucide-react";
 import { useSettings } from "@/lib/settings/useSettings";
+import { BASEMAP_STYLES } from "@/components/map/BlindPointMap";
+import { BlindPointMapTheme } from "@/lib/games/blindpoint/types";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
 import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
@@ -29,7 +26,6 @@ import {
   METRO_TOPOLOGY_STATIONS,
   METRO_LINE_TOPOLOGY,
   METRO_LINE_COLORS,
-  TOTAL_METRO_SEGMENTS,
   MetroStationTopology,
   getDistanceMeters,
   getCanonicalPairKey,
@@ -67,6 +63,13 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
   const [tolerance, setTolerance] = useState<string>(initialTolerance);
   const [orderMode, setOrderMode] = useState<"random" | "sequential">(initialOrderMode);
   const [discoveredIds, setDiscoveredIds] = useState<Set<string>>(() => new Set());
+
+  // Visual Map Theme (Sombre, Clair, Satellite)
+  const [mapTheme, setMapTheme] = useState<BlindPointMapTheme>("dark");
+  const currentThemeRef = useRef<BlindPointMapTheme>("dark");
+
+  // Settings modal visibility (Roue crantée ⚙️)
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Proactive cleanup : purge toute ancienne session stockée dans le navigateur
   useEffect(() => {
@@ -194,21 +197,6 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     pickNextStation(discoveredIds);
   }, [activeStations, pickNextStation]);
 
-  // Compute connected segments count
-  const connectedSegmentsCount = useMemo(() => {
-    let count = 0;
-    selectedLines.forEach((line) => {
-      const topo = METRO_LINE_TOPOLOGY[line];
-      if (!topo) return;
-      for (let i = 0; i < topo.length - 1; i++) {
-        if (discoveredIds.has(topo[i]) && discoveredIds.has(topo[i + 1])) {
-          count++;
-        }
-      }
-    });
-    return count;
-  }, [discoveredIds, selectedLines]);
-
   const progressPercent = useMemo(() => {
     if (activeStations.length === 0) return 0;
     return Math.round((discoveredIds.size / activeStations.length) * 100);
@@ -216,7 +204,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
   /**
    * Updates line track layers on MapLibre
-   * Incorporates parallel offset rendering for shared multi-line segments (Option 1 Mini Metro style)
+   * Incorporates parallel offset rendering for shared multi-line segments (Mini Metro style)
    */
   const updateMapNetworkLayers = useCallback(
     (currentDiscovered: Set<string>) => {
@@ -338,34 +326,12 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     []
   );
 
-  // Initialize MapLibre
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
-
-    const map = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
-      center: [2.3488, 48.8534], // Central Paris
-      zoom: 12.3,
-      minZoom: 10.5,
-      maxZoom: 16.5,
-      bearing: 0,
-      pitch: 0,
-      maxPitch: 0,
-      minPitch: 0,
-      dragRotate: false,
-      touchPitch: false,
-      pitchWithRotate: false,
-      attributionControl: false,
-    });
-
-    map.on("load", () => {
-      isLoadedRef.current = true;
-      mapRef.current = map;
-      map.resize();
-      map.getCanvas().style.cursor = "crosshair";
-
-      // Hardware-accelerated Guess Point (Identique au jeu BlindPoint classique)
+  /**
+   * Setup map sources and layers (guess point + metro tracks)
+   */
+  const setupHardwareLayers = useCallback(
+    (map: maplibregl.Map) => {
+      // Hardware-accelerated Guess Point
       if (!map.getSource("guess-source")) {
         map.addSource("guess-source", {
           type: "geojson",
@@ -396,7 +362,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
           },
         });
 
-        // Classic BlindPoint Blue (#2563eb)
+        // Classic BlindPoint Blue
         map.addLayer({
           id: "guess-inner",
           type: "circle",
@@ -444,6 +410,42 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
           });
         }
       });
+    },
+    [selectedLines]
+  );
+
+  // Initialize MapLibre
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    const rawStyle = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
+    const initialStyle =
+      typeof rawStyle === "object" ? JSON.parse(JSON.stringify(rawStyle)) : rawStyle;
+
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: initialStyle,
+      center: [2.3488, 48.8534], // Central Paris
+      zoom: 12.3,
+      minZoom: 10.5,
+      maxZoom: 16.5,
+      bearing: 0,
+      pitch: 0,
+      maxPitch: 0,
+      minPitch: 0,
+      dragRotate: false,
+      touchPitch: false,
+      pitchWithRotate: false,
+      attributionControl: false,
+    });
+
+    map.on("load", () => {
+      isLoadedRef.current = true;
+      mapRef.current = map;
+      map.resize();
+      map.getCanvas().style.cursor = "crosshair";
+
+      setupHardwareLayers(map);
 
       // Render already discovered stations
       discoveredIds.forEach((id) => {
@@ -463,7 +465,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       setPendingGuess(clickCoords);
     });
 
-    // ResizeObserver pour adapter la carte immédiatement à tout changement de taille/sidebar
+    // ResizeObserver pour adapter la carte immédiatement à tout changement de taille
     const resizeObserver = new ResizeObserver(() => {
       if (mapRef.current) {
         mapRef.current.resize();
@@ -480,6 +482,51 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       isLoadedRef.current = false;
     };
   }, []); // Run once on mount
+
+  // Basemap style switcher effect (Sombre, Clair, Satellite)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+    if (currentThemeRef.current === mapTheme) return;
+    currentThemeRef.current = mapTheme;
+
+    const rawStyle = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
+    const nextStyle =
+      typeof rawStyle === "object" ? JSON.parse(JSON.stringify(rawStyle)) : rawStyle;
+
+    let restored = false;
+    const restoreAllLayers = () => {
+      if (restored) return;
+      if (!map.isStyleLoaded()) return;
+      restored = true;
+      map.off("styledata", restoreAllLayers);
+      setupHardwareLayers(map);
+      updateMapNetworkLayers(discoveredIds);
+
+      // Restore pending guess point on new style
+      const source = map.getSource("guess-source") as maplibregl.GeoJSONSource | undefined;
+      if (source && pendingGuess) {
+        source.setData({
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [pendingGuess[0], pendingGuess[1]],
+              },
+              properties: {
+                type: "guess",
+              },
+            },
+          ],
+        });
+      }
+    };
+
+    map.on("styledata", restoreAllLayers);
+    map.setStyle(nextStyle, { diff: false });
+  }, [mapTheme, setupHardwareLayers, updateMapNetworkLayers, discoveredIds, pendingGuess]);
 
   // Synchronise le point d'estimation WebGL (identique à BlindPoint classique)
   useEffect(() => {
@@ -567,14 +614,9 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       }
     });
 
-    const unlockText =
-      newTracks.length > 0
-        ? ` • Tronçon débloqué : ${newTracks.join(", ")}`
-        : "";
-
     setFeedback({
       type: "success",
-      text: `Station ${currentTarget.name} ancrée à ${distMeters} m !${unlockText}`,
+      text: `Station ${currentTarget.name} ancrée à ${distMeters} m !`,
       distance: distMeters,
     });
 
@@ -587,7 +629,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       bearing: 0,
     });
 
-    // Enter review state (exactement comme pour GeoRings)
+    // Enter review state (identique à GeoRings)
     setReviewState({
       station: currentTarget,
       distMeters,
@@ -604,7 +646,8 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
         e.target instanceof HTMLTextAreaElement ||
         isCompletedModalOpen ||
         showConfirmReset ||
-        showHelp
+        showHelp ||
+        showSettingsModal
       ) {
         return;
       }
@@ -628,6 +671,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     isCompletedModalOpen,
     showConfirmReset,
     showHelp,
+    showSettingsModal,
   ]);
 
   /**
@@ -665,7 +709,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
       {/* Top Standardized Header Bar */}
       <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        {/* Left: QuickMenuDrawer + Back to Lobby + Game Branding */}
+        {/* Left: QuickMenuDrawer + Back to Lobby + Game Branding + Custom Modal Trigger */}
         <div className="flex items-center gap-2 shrink-0">
           <QuickMenuDrawer />
 
@@ -687,120 +731,63 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
               Retrace le Réseau
             </h1>
           </div>
-        </div>
 
-        {/* Center: Mode Indicator (Custom) + Lines Selector + Tolerance Selector + Live Metric Corridor */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Mode Switcher */}
-          <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium shrink-0">
+          {/* Mode Switcher : SEUL bouton ouvrant la modale de configuration des lignes */}
+          <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium shrink-0 ml-1">
             <button
               type="button"
               onClick={onOpenCustomModal}
-              className="px-2.5 py-1 rounded-lg flex items-center gap-1 bg-purple-600 text-white font-semibold shadow-sm whitespace-nowrap"
-              title="Mode Défi Custom actif"
+              className="px-2.5 py-1 rounded-lg flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold shadow-sm whitespace-nowrap cursor-pointer transition-colors"
+              title="Configurer les lignes du défi personnalisé"
             >
               <Sliders className="w-3 h-3 text-purple-200" />
               <span>Custom</span>
             </button>
           </div>
+        </div>
 
-          {/* Territory / Lines Selector */}
-          <button
-            type="button"
-            onClick={onOpenCustomModal}
-            className="group flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 hover:border-slate-600 text-xs transition-all shadow-sm cursor-pointer shrink-0"
-            title="Modifier les lignes sélectionnées"
+        {/* Center: Informative Non-clickable Configuration Badge */}
+        <div className="flex items-center justify-center shrink-0">
+          <div
+            className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 shadow-sm shrink-0 select-none"
+            title="Lignes sélectionnées dans ce défi"
           >
             <span className="text-sm shrink-0">🚇</span>
-            <span className="font-bold text-white group-hover:text-purple-300 transition-colors hidden sm:inline whitespace-nowrap">
+            <span className="font-bold text-white hidden sm:inline whitespace-nowrap">
               {selectedLines.length === 16 ? "Tout le Réseau (16L)" : `${selectedLines.length} Lignes`}
             </span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-transform shrink-0" />
-          </button>
-
-          {/* Tolerance Selector Pill */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-sm text-xs shrink-0">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase hidden md:inline">Tolérance :</span>
-            <select
-              value={tolerance}
-              onChange={(e) => setTolerance(e.target.value)}
-              className="bg-transparent text-amber-300 font-bold text-xs focus:outline-none cursor-pointer"
-              title="Ajuster le seuil de distance de validation"
-            >
-              <option value="chill" className="bg-slate-900 text-white">Chill (Libre)</option>
-              <option value="500" className="bg-slate-900 text-white">500 m</option>
-              <option value="300" className="bg-slate-900 text-white">300 m (Standard)</option>
-              <option value="150" className="bg-slate-900 text-white">150 m (Expert)</option>
-              <option value="75" className="bg-slate-900 text-white">75 m (Puriste)</option>
-            </select>
-          </div>
-
-          {/* Order Selector Pill */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-sm text-xs shrink-0">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase hidden md:inline">Ordre :</span>
-            <select
-              value={orderMode}
-              onChange={(e) => setOrderMode(e.target.value as "random" | "sequential")}
-              className="bg-transparent text-purple-300 font-bold text-xs focus:outline-none cursor-pointer"
-              title="Ordre d'apparition des stations"
-            >
-              <option value="random" className="bg-slate-900 text-white">🔀 Aléatoire</option>
-              <option value="sequential" className="bg-slate-900 text-white">📏 Séquentiel</option>
-            </select>
-          </div>
-
-          {/* Mission Progress Corridor (Desktop) */}
-          <div className="hidden xl:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-inner whitespace-nowrap shrink-0">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Progression :</span>
-            <span className="font-extrabold text-amber-400">{progressPercent}%</span>
-            <span className="text-slate-600">•</span>
-            <div className="flex items-center gap-1 text-slate-300">
-              <MapPin className="w-3 h-3 text-emerald-400" />
-              <span><strong>{discoveredIds.size}</strong>/{activeStations.length} st.</span>
-            </div>
-            <span className="text-slate-600">•</span>
-            <div className="flex items-center gap-1 text-slate-300">
-              <Layers className="w-3 h-3 text-blue-400" />
-              <span><strong>{connectedSegmentsCount}</strong>/{TOTAL_METRO_SEGMENTS} tr.</span>
-            </div>
           </div>
         </div>
 
-        {/* Right: Actions, Help & UserNav */}
+        {/* Right: Actions, Settings (⚙️), Help & UserNav */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Compact Progress Badge (< xl) */}
-          <div className="flex xl:hidden items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-slate-700/80 text-xs font-bold text-amber-400 shrink-0">
-            <span>{progressPercent}%</span>
-            <span className="text-slate-500 font-normal hidden sm:inline">({discoveredIds.size}/{activeStations.length})</span>
-          </div>
-
           {/* Reset Button */}
           <button
             type="button"
             onClick={() => setShowConfirmReset(true)}
-            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs shrink-0"
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs shrink-0 cursor-pointer"
             title="Réinitialiser le réseau découvert"
             aria-label="Réinitialiser le réseau découvert"
           >
             <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
           </button>
 
-          {/* Lines & Settings Modal Trigger */}
+          {/* Settings Modal Trigger (Roue Crantée ⚙️) */}
           <button
             type="button"
-            onClick={onOpenCustomModal}
-            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-purple-400 hover:text-purple-300 border border-purple-500/40 transition-all text-xs shrink-0"
-            title="Configurer les lignes & options"
-            aria-label="Configurer les lignes & options"
+            onClick={() => setShowSettingsModal(true)}
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs shrink-0 cursor-pointer"
+            title="Paramètres de la partie (Thème, Tolérance, Ordre)"
+            aria-label="Paramètres de la partie"
           >
-            <Sliders className="w-4 h-4" />
+            <Settings className="w-4 h-4 text-purple-400 hover:text-purple-300" />
           </button>
 
           {/* Rules / Help Trigger */}
           <button
             type="button"
             onClick={() => setShowHelp(true)}
-            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs shrink-0"
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs shrink-0 cursor-pointer"
             title="Règles du jeu"
             aria-label="Règles du jeu"
           >
@@ -811,6 +798,39 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
           <UserNav compact />
         </div>
       </header>
+
+      {/* Floating Progression Card (Sleek Glassmorphic Widget) */}
+      <div className="absolute top-16 sm:top-18 right-3 sm:right-5 z-20 pointer-events-auto">
+        <div className="bg-slate-900/90 hover:bg-slate-900/95 transition-colors border border-slate-800/80 backdrop-blur-xl rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-xl flex flex-col gap-1.5 min-w-[170px] sm:min-w-[190px]">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Progression
+            </span>
+            <span className="text-xs sm:text-sm font-extrabold text-amber-400">
+              {progressPercent}%
+            </span>
+          </div>
+
+          {/* Progress bar */}
+          <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-purple-500 to-amber-400 transition-all duration-300 rounded-full"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] text-slate-300 pt-0.5">
+            <span className="flex items-center gap-1 text-slate-400">
+              <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
+              <span>Stations</span>
+            </span>
+            <span className="font-bold text-white">
+              <span className="text-emerald-400">{discoveredIds.size}</span>
+              <span className="text-slate-500 font-normal"> / {activeStations.length}</span>
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Target Station Floating Action Card (Bottom Center) */}
       <footer className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4 pointer-events-none">
@@ -844,11 +864,6 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
                 </h2>
                 <p className="text-xs text-emerald-300 font-semibold mt-0.5">
                   Ancrée à {reviewState.distMeters} m du point réel
-                  {reviewState.newTracks.length > 0 && (
-                    <span className="text-purple-300 block sm:inline sm:ml-2">
-                      • Tronçon débloqué : {reviewState.newTracks.join(", ")}
-                    </span>
-                  )}
                 </p>
               </div>
 
@@ -980,7 +995,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
                 <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
                 <span>
                   {pendingGuess
-                    ? "Point placé. Cliquez sur 'Valider l'ancrage' pour vérifier."
+                    ? "Point placé. Cliquez sur 'Valider l'ancrage' ou appuyez sur Espace."
                     : "Cliquez sur la carte où vous pensez que se trouve la station."}
                 </span>
               </div>
@@ -991,12 +1006,12 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
             <Trophy className="w-8 h-8 text-amber-400 mx-auto mb-2 animate-bounce" />
             <h3 className="text-lg font-black text-white">Réseau 100% Retracé !</h3>
             <p className="text-xs text-slate-300 mt-1">
-              Vous avez relié l'intégralité des stations et des tronçons.
+              Vous avez positionné l'intégralité des stations du défi.
             </p>
             <button
               type="button"
               onClick={() => setShowConfirmReset(true)}
-              className="mt-3 py-2 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs"
+              className="mt-3 py-2 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs cursor-pointer"
             >
               Recommencer un nouveau tracé
             </button>
@@ -1004,13 +1019,171 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
         )}
       </footer>
 
+      {/* Settings Modal (Roue crantée ⚙️) */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-5 text-left text-slate-200">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                  <Settings className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-white">Réglages du Tracé</h3>
+                  <p className="text-[11px] text-slate-400">Options visuelles et mécaniques de jeu</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSettingsModal(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                aria-label="Fermer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              {/* Section 1: Thème de Carte */}
+              <div>
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">
+                  Calque Visuel de la Carte
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: "dark" as const, label: "Sombre", icon: "🌑", desc: "Nuit contrastée" },
+                    { id: "voyager" as const, label: "Clair", icon: "☀️", desc: "Ivoire naturel" },
+                    { id: "satellite" as const, label: "Satellite", icon: "🛰️", desc: "Photo HD" },
+                  ].map((theme) => {
+                    const isSelected = mapTheme === theme.id;
+                    return (
+                      <button
+                        key={theme.id}
+                        type="button"
+                        onClick={() => setMapTheme(theme.id)}
+                        className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-purple-600/25 border-purple-500 text-white ring-1 ring-purple-500/60 shadow-lg shadow-purple-500/20"
+                            : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/60"
+                        }`}
+                      >
+                        <span className="text-base mb-1">{theme.icon}</span>
+                        <span className="font-bold text-xs">{theme.label}</span>
+                        <span className="text-[10px] text-slate-400 mt-0.5">{theme.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Section 2: Tolérance de validation */}
+              <div>
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">
+                  Tolérance de Validation
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
+                  {[
+                    { id: "chill", label: "Chill", desc: "Libre" },
+                    { id: "500", label: "500 m", desc: "Large" },
+                    { id: "300", label: "300 m", desc: "Standard" },
+                    { id: "150", label: "150 m", desc: "Expert" },
+                    { id: "75", label: "75 m", desc: "Puriste" },
+                  ].map((t) => {
+                    const isSelected = tolerance === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => setTolerance(t.id)}
+                        className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-amber-500/20 border-amber-500 text-amber-300 ring-1 ring-amber-500/50"
+                            : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/60"
+                        }`}
+                      >
+                        <span className="font-bold text-xs">{t.label}</span>
+                        <span className="text-[9px] text-slate-400">{t.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Section 3: Ordre d'apparition */}
+              <div>
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">
+                  Ordre d'Apparition des Stations
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { id: "random" as const, label: "🔀 Aléatoire", desc: "Dans le désordre" },
+                    { id: "sequential" as const, label: "📏 Séquentiel", desc: "Station par station" },
+                  ].map((o) => {
+                    const isSelected = orderMode === o.id;
+                    return (
+                      <button
+                        key={o.id}
+                        type="button"
+                        onClick={() => setOrderMode(o.id)}
+                        className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-purple-600/25 border-purple-500 text-purple-200 ring-1 ring-purple-500/60"
+                            : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/60"
+                        }`}
+                      >
+                        <span className="font-bold text-xs">{o.label}</span>
+                        <span className="text-[10px] text-slate-400 mt-0.5">{o.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Section 4: Passage automatique */}
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-950/60 border border-slate-800">
+                <div>
+                  <span className="font-bold text-slate-200 block">Passage Automatique</span>
+                  <span className="text-[11px] text-slate-400">
+                    Enchaîner à la station suivante en 1.5s
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={autoAdvance}
+                  onClick={() => updateSetting("autoAdvance", !autoAdvance)}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none ${
+                    autoAdvance ? "bg-emerald-600" : "bg-slate-800"
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out mt-0.5 ${
+                      autoAdvance ? "translate-x-5 ml-0.5" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowSettingsModal(false)}
+              className="w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors shadow-lg shadow-purple-600/30 cursor-pointer"
+            >
+              Enregistrer et Fermer
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Confirmation Reset Modal */}
       <RestartConfirmModal
         isOpen={showConfirmReset}
         onClose={() => setShowConfirmReset(false)}
         onConfirm={handleResetNetwork}
         title="Réinitialiser le réseau ?"
-        message="Êtes-vous sûr de vouloir recommencer ? Toutes vos stations découvertes et tronçons illuminés sur ce réseau seront effacés."
+        message="Êtes-vous sûr de vouloir recommencer ? Toutes vos stations découvertes sur ce réseau seront effacées."
         confirmLabel="Recommencer"
         cancelLabel="Annuler"
       />
@@ -1029,7 +1202,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
               <button
                 type="button"
                 onClick={() => setShowHelp(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
                 aria-label="Fermer"
               >
                 <X className="w-4 h-4" />
@@ -1043,27 +1216,27 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
                   1. Ancrer chaque station
                 </span>
                 <p className="text-slate-400 leading-relaxed">
-                  Une station vous est désignée. Cliquez sur son emplacement sur la carte muette de Paris, puis validez votre ancrage.
+                  Une station vous est désignée. Cliquez sur son emplacement sur la carte muette de Paris, puis validez votre ancrage (ou appuyez sur Espace).
                 </p>
               </div>
 
               <div className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
                 <span className="font-bold text-purple-300 flex items-center gap-1.5">
-                  <Layers className="w-3.5 h-3.5 text-blue-400" />
-                  2. Illuminer les tronçons (Mini Metro)
+                  <span className="text-xs">🚇</span>
+                  2. Tracé des lignes
                 </span>
                 <p className="text-slate-400 leading-relaxed">
-                  Dès que deux stations adjacentes d'une même ligne sont ancrées, les rails s'illuminent avec les couleurs officielles RATP. Les tronçons partagés tracent des voies parallèles distinctes.
+                  Dès que deux stations adjacentes d'une même ligne sont ancrées, les rails s'illuminent avec les couleurs officielles RATP.
                 </p>
               </div>
 
               <div className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
                 <span className="font-bold text-emerald-300 flex items-center gap-1.5">
-                  <Sliders className="w-3.5 h-3.5 text-amber-400" />
+                  <Settings className="w-3.5 h-3.5 text-amber-400" />
                   3. Tolérance & Réglages
                 </span>
                 <p className="text-slate-400 leading-relaxed">
-                  Ajustez la tolérance selon votre niveau (Chill à Puriste 75 m) et testez vos connaissances en direct.
+                  Ajustez la vue de la carte (Sombre, Clair, Satellite), la tolérance de distance et l'ordre des stations via l'icône réglages ⚙️.
                 </p>
               </div>
             </div>
@@ -1071,7 +1244,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
             <button
               type="button"
               onClick={() => setShowHelp(false)}
-              className="w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors shadow-lg shadow-purple-600/30 mt-1"
+              className="w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs transition-colors shadow-lg shadow-purple-600/30 mt-1 cursor-pointer"
             >
               Compris, continuer à jouer
             </button>
@@ -1091,33 +1264,31 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
                 Chef de Réseau Émérite !
               </h2>
               <p className="text-xs text-slate-300 mt-1.5">
-                Vous avez retracé avec brio l'intégralité des stations et des tronçons du Métro de Paris.
+                Vous avez ancré avec succès l'intégralité des stations du défi.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 p-3 rounded-2xl bg-slate-950/60 border border-slate-800 text-xs">
-              <div>
-                <span className="text-slate-400 text-[10px] uppercase font-bold block">Stations</span>
-                <span className="text-white font-black text-base">{activeStations.length} / {activeStations.length}</span>
-              </div>
-              <div>
-                <span className="text-slate-400 text-[10px] uppercase font-bold block">Tronçons</span>
-                <span className="text-emerald-400 font-black text-base">{TOTAL_METRO_SEGMENTS}</span>
-              </div>
+            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center">
+              <span className="text-slate-400 text-xs uppercase font-bold block mb-1">
+                Stations Ancrées
+              </span>
+              <span className="text-emerald-400 font-black text-2xl">
+                {discoveredIds.size} / {activeStations.length}
+              </span>
             </div>
 
             <div className="flex flex-col gap-2 pt-2">
               <button
                 type="button"
                 onClick={onBackToLobby}
-                className="py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold text-xs shadow-lg"
+                className="py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold text-xs shadow-lg cursor-pointer"
               >
                 Retour au Lobby
               </button>
               <button
                 type="button"
                 onClick={handleResetNetwork}
-                className="py-2.5 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
+                className="py-2.5 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs cursor-pointer"
               >
                 Recommencer une partie à zéro
               </button>
