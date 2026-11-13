@@ -19,29 +19,14 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
   remainingSteps,
 }) => {
   const delta = totalAttempts - optimalCountries;
-  const isOptimal = delta <= 0 && errorCount === 0;
 
   return (
     <div className="absolute bottom-8 left-4 sm:left-6 z-20 pointer-events-auto">
       <div className="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 w-80 sm:w-88 transition-all">
-        {/* Header: Title + Explicit Optimal Status Badge */}
-        <div className="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-200 uppercase tracking-wider shrink-0">
-            <Target className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Objectif</span>
-          </div>
-
-          <div className="shrink-0">
-            {isOptimal ? (
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold font-mono whitespace-nowrap">
-                🎯 Optimal (0)
-              </span>
-            ) : (
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-bold font-mono whitespace-nowrap">
-                +{delta} {delta > 1 ? "coups" : "coup"}
-              </span>
-            )}
-          </div>
+        {/* Header: Clean Title */}
+        <div className="flex items-center gap-1.5 border-b border-slate-800/80 pb-2.5 text-xs font-bold text-slate-200 uppercase tracking-wider">
+          <Target className="w-4 h-4 text-emerald-400 shrink-0" />
+          <span>Objectif</span>
         </div>
 
         {/* Primary Metrics: Optimal Target vs Player Attempts (Stacked vertically, 100% immune to overflow) */}
