@@ -40,6 +40,7 @@ import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathS
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
 import { BorderPathSettingsModal } from "@/components/game/borderpath/BorderPathSettingsModal";
+import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
@@ -107,13 +108,11 @@ interface BorderPathLobbyProps {
 
 function BorderPathLobby({
   initialPack,
-  initialMode,
   onStartGame,
   onOpenRules,
   onOpenSettings,
 }: BorderPathLobbyProps) {
   const [selectedPack, setSelectedPack] = useState<BorderPathPack>(initialPack);
-  const [selectedMode, setSelectedMode] = useState<BorderPathMode>(initialMode);
 
   const selectedPackMeta = useMemo(() => {
     return BORDERPATH_PACKS.find((p) => p.id === selectedPack) || BORDERPATH_PACKS[0];
@@ -262,7 +261,7 @@ function BorderPathLobby({
           </div>
         </section>
 
-        {/* 2. ESPACE LANCEMENT DE PARTIE RAPIDE (COCKPIT) */}
+        {/* 2. ESPACE LANCEMENT DE PARTIE RAPIDE (COCKPIT ÉPURÉ) */}
         <section className="p-6 sm:p-8 rounded-3xl bg-slate-900 border-2 border-slate-800 space-y-6 shadow-2xl">
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
@@ -271,16 +270,16 @@ function BorderPathLobby({
                 <span>Lancement de Partie Rapide & Entraînement Libre</span>
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Entraînement illimité. Choisissez votre terrain et votre mode pour jouer immédiatement.
+                Entraînement illimité. Choisissez votre terrain pour jouer immédiatement.
               </p>
             </div>
             <span className="text-xs text-slate-400 font-mono">100% Clavier • BFS Optimal</span>
           </div>
 
-          {/* Étape 1 : Choix du Terrain / Pack */}
+          {/* Choix du Terrain / Pack */}
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-              1. Déclinaison / Terrain
+              Déclinaison / Terrain
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
               {BORDERPATH_PACKS.map((p) => {
@@ -290,14 +289,14 @@ function BorderPathLobby({
                     key={p.id}
                     type="button"
                     onClick={() => setSelectedPack(p.id)}
-                    className={`p-3 rounded-2xl border-2 text-center transition-all cursor-pointer ${
+                    className={`p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${
                       isSelected
                         ? "border-indigo-500 bg-indigo-950/30 text-white font-bold shadow-md shadow-indigo-500/10"
                         : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
                     }`}
                   >
-                    <span className="text-lg block mb-1">{p.icon}</span>
-                    <span className="text-xs block">{p.name}</span>
+                    <span className="text-xl block mb-1">{p.icon}</span>
+                    <span className="text-xs block font-bold">{p.name}</span>
                     <span className="text-[10px] text-slate-400 font-mono">{p.badge}</span>
                   </button>
                 );
@@ -305,114 +304,28 @@ function BorderPathLobby({
             </div>
           </div>
 
-          {/* Étape 2 : Mode de Jeu */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-              2. Mode de Jeu
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setSelectedMode("free")}
-                className={`p-4 rounded-2xl border-2 text-left transition-all flex items-start gap-3 cursor-pointer ${
-                  selectedMode === "free"
-                    ? "border-indigo-500 bg-indigo-950/20 text-white shadow-md shadow-indigo-500/10"
-                    : "border-slate-800 bg-slate-950/40 hover:border-slate-700 text-slate-300"
-                }`}
-              >
-                <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400 shrink-0 mt-0.5">
-                  <Zap className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs font-bold text-white block">
-                    Partie Libre / Défi Aléatoire
-                  </span>
-                  <span className="text-[11px] text-slate-400">
-                    Tirage aléatoire de 2 territoires avec distance optimale calculée par BFS.
-                  </span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedMode("daily")}
-                className={`p-4 rounded-2xl border-2 text-left transition-all flex items-start gap-3 cursor-pointer ${
-                  selectedMode === "daily"
-                    ? "border-indigo-500 bg-indigo-950/20 text-white shadow-md shadow-indigo-500/10"
-                    : "border-slate-800 bg-slate-950/40 hover:border-slate-700 text-slate-300"
-                }`}
-              >
-                <div className="p-2 rounded-xl bg-blue-500/20 text-blue-400 shrink-0 mt-0.5">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs font-bold text-white block">Défi Officiel du Jour</span>
-                  <span className="text-[11px] text-slate-400">
-                    Graine quotidienne déterministe identique pour tous les joueurs.
-                  </span>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Étape 3 : Cartouche descriptif & Règle d'or */}
-          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2">
-            <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-slate-200">
-                {selectedPackMeta.icon} {selectedPackMeta.name} — {selectedPackMeta.countLabel}
-              </span>
-              <span className="text-[11px] text-indigo-400 font-mono">BFS Bidirectionnel</span>
-            </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              {selectedPackMeta.description}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-300">
-              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-slate-800/80">
-                <span>⌨️</span>
-                <span>Saisie clavier intuitive</span>
-              </div>
-              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-slate-800/80">
-                <span>🔄</span>
-                <span>Double front Départ/Cible</span>
-              </div>
-              <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-slate-800/80">
-                <span>📏</span>
-                <span>Mesure du chemin minimal</span>
-              </div>
-            </div>
-          </div>
-
           {/* Boutons d'Action Majeurs */}
           <div className="space-y-3 pt-2">
             <button
               type="button"
-              onClick={() => onStartGame(selectedPack, selectedMode)}
+              onClick={() => onStartGame(selectedPack, "free")}
               className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-black text-sm sm:text-base shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all flex items-center justify-between cursor-pointer hover:scale-[1.01]"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2.5">
                 <Play className="w-5 h-5 fill-white" />
                 <span>Lancer la Partie BorderPath ({selectedPackMeta.name})</span>
               </span>
               <ArrowRight className="w-5 h-5" />
             </button>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => onStartGame(selectedPack, "free", String(Date.now()))}
-                className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-              >
-                <Zap className="w-4 h-4 text-amber-400" />
-                <span>🎲 Tirage Express Aléatoire</span>
-              </button>
-
+            <div className="flex justify-center pt-1">
               <button
                 type="button"
                 onClick={onOpenRules}
-                className="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                className="py-2.5 px-4 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-transparent hover:border-slate-700 font-semibold text-xs transition-all flex items-center gap-2 cursor-pointer"
               >
                 <HelpCircle className="w-4 h-4 text-indigo-400" />
-                <span>📖 Consulter les Règles du Jeu</span>
+                <span>Consulter les Règles du Jeu</span>
               </button>
             </div>
           </div>
@@ -459,6 +372,7 @@ function BorderPathGame() {
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [showPackModal, setShowPackModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showRestartModal, setShowRestartModal] = useState(false);
 
   // Active Game State - Initialized synchronously so UI renders immediately without blocking spinner
   const [session, setSession] = useState<BorderPathSessionInit>(() =>
@@ -767,7 +681,7 @@ function BorderPathGame() {
           router.push(`/play/borderpath?pack=${pack}&mode=${newMode}&play=1`);
         }}
         onGiveUp={handleGiveUp}
-        onRestart={handleReplaySameChallenge}
+        onRestart={() => setShowRestartModal(true)}
       />
 
       {/* Optimal Target Card (Bottom-Left) */}
@@ -838,6 +752,13 @@ function BorderPathGame() {
         onChangeTheme={setTheme}
         hideBorders={hideBorders}
         onToggleHideBorders={handleToggleHideBorders}
+      />
+
+      {/* Restart Confirmation Modal */}
+      <RestartConfirmModal
+        isOpen={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+        onConfirm={handleReplaySameChallenge}
       />
     </div>
   );

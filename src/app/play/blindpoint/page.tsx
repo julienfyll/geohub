@@ -36,6 +36,7 @@ import { BlindPointLearningCard } from "@/components/game/blindpoint/BlindPointL
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
 import { BlindPointCustomModal } from "@/components/game/blindpoint/BlindPointCustomModal";
+import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import { BlindPointRetraceGame } from "@/components/game/blindpoint/BlindPointRetraceGame";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
@@ -244,6 +245,7 @@ function BlindPointGame() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [showRestartModal, setShowRestartModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Timer State
@@ -1166,7 +1168,7 @@ function BlindPointGame() {
           onValidateGuess={handleValidateGuess}
           onOpenSettings={() => setShowSettingsModal(true)}
           onOpenSummary={() => setShowSummaryModal(true)}
-          onRestart={handleRestartCurrentGame}
+          onRestart={() => setShowRestartModal(true)}
           onBackToLobby={handleBackToLobby}
           onOpenCustomModal={() => setShowCustomModal(true)}
           onChangeMode={handleChangeGameConfig}
@@ -1233,6 +1235,13 @@ function BlindPointGame() {
         settings={settings}
         onUpdateSetting={handleUpdateSetting}
         onResetDefaults={handleResetSettings}
+      />
+
+      {/* Restart Confirmation Modal */}
+      <RestartConfirmModal
+        isOpen={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+        onConfirm={handleRestartCurrentGame}
       />
     </div>
   );

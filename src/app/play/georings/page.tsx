@@ -39,6 +39,7 @@ import { RingReviewCard, GuessRecord } from "@/components/game/RingReviewCard";
 import { GameOverModal } from "@/components/game/GameOverModal";
 import { SettingsModal } from "@/components/game/SettingsModal";
 import { CustomGameModal } from "@/components/game/CustomGameModal";
+import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
@@ -509,6 +510,7 @@ function GeoRingsGame() {
   const [showHelp, setShowHelp] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showCustomModal, setShowCustomModal] = useState(false);
+  const [showRestartModal, setShowRestartModal] = useState(false);
 
   // Dropdown states for Scale & Metric (Concept 2 - Switcher Hybride)
   const [isScaleMenuOpen, setIsScaleMenuOpen] = useState(false);
@@ -1290,7 +1292,7 @@ function GeoRingsGame() {
           {mode !== "daily" && (
             <button
               type="button"
-              onClick={handleRestartSameGame}
+              onClick={() => setShowRestartModal(true)}
               title="Recommencer la partie"
               aria-label="Recommencer la partie"
               className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all text-xs"
@@ -1683,6 +1685,13 @@ function GeoRingsGame() {
           onClose={() => setShowGameOverModal(false)}
         />
       )}
+
+      {/* Restart Confirmation Modal */}
+      <RestartConfirmModal
+        isOpen={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+        onConfirm={handleRestartSameGame}
+      />
     </div>
   );
 }
