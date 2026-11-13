@@ -21,6 +21,7 @@ import {
   Trophy,
   Sliders,
   Zap,
+  RotateCcw,
 } from "lucide-react";
 import {
   BlindPointClientTarget,
@@ -52,6 +53,7 @@ interface BlindPointHUDProps {
   onValidateGuess: () => void;
   onOpenSettings: () => void;
   onOpenSummary?: () => void;
+  onRestart?: () => void;
   onBackToLobby?: () => void;
   onOpenCustomModal?: () => void;
   onChangeMode?: (pack: BlindPointPack, difficulty: BlindPointDifficulty | "all", mode: BlindPointMode) => void;
@@ -78,6 +80,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   onValidateGuess,
   onOpenSettings,
   onOpenSummary,
+  onRestart,
   onBackToLobby,
   onOpenCustomModal,
   onChangeMode,
@@ -92,7 +95,14 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   const getShareUrl = () => {
     if (typeof window === "undefined") return "";
     const isLieux = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
-    let url = `${window.location.origin}/play/blindpoint?pack=${pack}${isLieux ? "" : `&difficulty=${difficulty}`}&mode=${mode}`;
+    let url = `${window.location.origin}/play/blindpoint?mode=${mode}`;
+    if (packs && packs.length > 0) {
+      url += `&packs=${packs.join(",")}`;
+    } else {
+      url += `&pack=${pack}`;
+    }
+    if (!isLieux && difficulty) url += `&difficulty=${difficulty}`;
+    if (totalRounds && totalRounds !== 5) url += `&rounds=${totalRounds}`;
     if (seed) url += `&seed=${seed}`;
     url += `&play=1`;
     return url;
@@ -143,8 +153,10 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   const packLabels: Record<BlindPointPack, { name: string; shortName: string; icon: string }> = {
     villes_france: { name: "Villes de France", shortName: "Villes France", icon: "🇫🇷" },
     villes_monde: { name: "Villes du Monde", shortName: "Villes Monde", icon: "🌍" },
+    villes_europe: { name: "Villes d'Europe", shortName: "Villes Europe", icon: "🇪🇺" },
     lieux_france: { name: "Patrimoine de France", shortName: "Patrimoine", icon: "🏰" },
     lieux_paris: { name: "Monuments de Paris", shortName: "Paris", icon: "🗼" },
+    metro_paris: { name: "Métro de Paris", shortName: "Métro Paris", icon: "🚇" },
     lieux_monde: { name: "Merveilles du Monde", shortName: "Merveilles", icon: "🏛️" },
     monuments_monde: { name: "Monuments du Monde", shortName: "Monuments", icon: "🏛️" },
     chateaux_france: { name: "Châteaux de France", shortName: "Châteaux", icon: "🏰" },
@@ -194,26 +206,28 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
 
         {/* Center: Mode Indicator & Pack Switcher (Visual Segmented Pills) */}
         <div className="flex items-center gap-2">
-          {/* Mode Switcher : Daily vs Libre */}
+          {/* Mode Switcher : Daily vs Libre / Rapide vs Custom */}
           <div className="flex items-center gap-0.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs font-medium">
-            <button
-              type="button"
-              onClick={() => {
-                if (onChangeMode) {
-                  onChangeMode(pack, difficulty, "daily");
-                } else {
-                  router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=daily&play=1`);
-                }
-              }}
-              className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
-                mode === "daily"
-                  ? "bg-blue-600 text-white font-semibold shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-              title="Défi officiel du jour (tirage identique pour tous)"
-            >
-              <span>📅 Du Jour</span>
-            </button>
+            {pack !== "metro_paris" && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (onChangeMode) {
+                    onChangeMode(pack, difficulty, "daily");
+                  } else {
+                    router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=daily&play=1`);
+                  }
+                }}
+                className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all ${
+                  mode === "daily"
+                    ? "bg-blue-600 text-white font-semibold shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+                title="Défi officiel du jour (tirage identique pour tous)"
+              >
+                <span>📅 Du Jour</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -229,10 +243,10 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
                   ? "bg-blue-600 text-white font-semibold shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
-              title="Partie libre illimitée avec tirage aléatoire"
+              title={pack === "metro_paris" ? "Partie rapide illimitée avec tirage aléatoire" : "Partie libre illimitée avec tirage aléatoire"}
             >
-              <Zap className="w-3 h-3" />
-              <span>Libre</span>
+              <Zap className="w-3 h-3 text-amber-400" />
+              <span>{pack === "metro_paris" ? "Partie rapide" : "Libre"}</span>
             </button>
 
             <button
@@ -325,6 +339,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
                       {[
                         { id: "lieux_france", name: "Patrimoine de France", icon: "🏰", desc: "58 châteaux de la Loire, citadelles & monuments" },
                         { id: "lieux_paris", name: "Monuments de Paris", icon: "🗼", desc: "105 trésors emblématiques des 20 arrondissements" },
+                        { id: "metro_paris", name: "Métro de Paris", icon: "🚇", desc: "Stations du réseau parisien RATP" },
                         { id: "lieux_monde", name: "Merveilles du Monde", icon: "🏛️", desc: "50 merveilles de l'humanité & sites UNESCO" },
                       ].map((p) => (
                         <button
@@ -450,6 +465,19 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             >
               <Trophy className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Bilan</span>
+            </button>
+          )}
+
+          {/* Restart button - Non disponible en Défi du Jour */}
+          {mode !== "daily" && onRestart && (
+            <button
+              type="button"
+              onClick={onRestart}
+              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs"
+              title="Recommencer la partie"
+              aria-label="Recommencer la partie"
+            >
+              <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
             </button>
           )}
 

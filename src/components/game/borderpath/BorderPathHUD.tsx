@@ -63,12 +63,12 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
         <QuickMenuDrawer />
 
         <Link
-          href="/"
+          href="/play/borderpath"
           className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
-          title="Retour au Hub d'accueil"
+          title="Retour au Lobby de sélection BorderPath"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Hub</span>
+          <span>Lobby</span>
         </Link>
 
         <div className="flex items-center gap-2">
@@ -142,16 +142,18 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
 
       {/* Right: Actions, Settings (Gear) & UserNav */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        {/* Restart Button */}
-        <button
-          type="button"
-          onClick={onRestart}
-          className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs"
-          title="Recommencer la partie"
-          aria-label="Recommencer la partie"
-        >
-          <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
-        </button>
+        {/* Restart Button - Non disponible pour les défis du jour */}
+        {mode !== "daily" && (
+          <button
+            type="button"
+            onClick={onRestart}
+            className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs"
+            title="Recommencer la partie"
+            aria-label="Recommencer la partie"
+          >
+            <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
+          </button>
+        )}
 
         {/* Give Up Button */}
         <button

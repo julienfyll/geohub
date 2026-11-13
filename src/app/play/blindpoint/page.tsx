@@ -8,6 +8,7 @@ import Link from "next/link";
 import {
   Compass,
   ArrowLeft,
+  ArrowRight,
   Settings,
   Sparkles,
   Trophy,
@@ -25,7 +26,9 @@ import {
   Landmark,
   Building2,
   Sliders,
+  CheckCircle2,
 } from "lucide-react";
+import { useDailyChallenges } from "@/lib/stats/useDailyChallenges";
 import { BlindPointMap } from "@/components/map/BlindPointMap";
 import { BlindPointHUD } from "@/components/game/blindpoint/BlindPointHUD";
 import { BlindPointResultModal } from "@/components/game/blindpoint/BlindPointResultModal";
@@ -33,6 +36,7 @@ import { BlindPointLearningCard } from "@/components/game/blindpoint/BlindPointL
 import { BlindPointSummaryModal } from "@/components/game/blindpoint/BlindPointSummaryModal";
 import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPointSettingsModal";
 import { BlindPointCustomModal } from "@/components/game/blindpoint/BlindPointCustomModal";
+import { BlindPointRetraceGame } from "@/components/game/blindpoint/BlindPointRetraceGame";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
@@ -52,6 +56,7 @@ import {
 function BlindPointGame() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { statusMap: dailyStatusMap } = useDailyChallenges();
 
   const rawPack = searchParams.get("pack") || "villes_france";
   const rawPacks = searchParams.get("packs") || "";
@@ -69,8 +74,10 @@ function BlindPointGame() {
   const validPacks: BlindPointPack[] = [
     "villes_france",
     "villes_monde",
+    "villes_europe",
     "lieux_france",
     "lieux_paris",
+    "metro_paris",
     "lieux_monde",
     "monuments_monde",
     "chateaux_france",
@@ -78,23 +85,31 @@ function BlindPointGame() {
   const pack: BlindPointPack = validPacks.includes(rawPack as BlindPointPack)
     ? (rawPack as BlindPointPack)
     : "villes_france";
-  const mode: BlindPointMode = rawMode === "custom" ? "custom" : rawMode === "free" ? "free" : "daily";
+  const mode: BlindPointMode =
+    pack === "metro_paris" && rawMode === "daily"
+      ? "free"
+      : rawMode === "custom"
+      ? "custom"
+      : rawMode === "free"
+      ? "free"
+      : "daily";
 
   const difficulty: BlindPointDifficulty | "all" =
     rawDiff === "all" ? "all" : ["facile", "moyen", "difficile"].includes(rawDiff)
       ? (rawDiff as BlindPointDifficulty)
-      : "moyen";
+      : "all";
 
-  const isLieuxInitial = pack.startsWith("lieux_") || pack === "chateaux_france" || pack === "monuments_monde";
+  const isLieuxInitial = pack.startsWith("lieux_") || pack === "metro_paris" || pack === "chateaux_france" || pack === "monuments_monde";
   const initialTerritory: "france" | "paris" | "monde" =
-    pack === "lieux_paris"
+    pack === "lieux_paris" || pack === "metro_paris"
       ? "paris"
-      : pack === "villes_monde" || pack === "lieux_monde" || pack === "monuments_monde"
+      : pack === "villes_monde" || pack === "lieux_monde" || pack === "monuments_monde" || pack === "villes_europe"
       ? "monde"
       : "france";
 
   // Lobby vs Active Game State
   const isPlaying = rawPlay;
+  const isRetraceCustomMode = isPlaying && searchParams.get("customType") === "retrace";
   const [selectedCategory, setSelectedCategory] = useState<BlindPointCategory>(
     isLieuxInitial ? "lieux_emblematiques" : "villes"
   );
@@ -102,8 +117,8 @@ function BlindPointGame() {
     initialTerritory
   );
   const [selectedPack, setSelectedPack] = useState<BlindPointPack>(pack);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<BlindPointDifficulty>(
-    difficulty === "all" ? "moyen" : difficulty
+  const [selectedDifficulty, setSelectedDifficulty] = useState<BlindPointDifficulty | "all">(
+    difficulty
   );
   const [selectedMode, setSelectedMode] = useState<BlindPointMode>(mode);
 
@@ -273,7 +288,7 @@ function BlindPointGame() {
         if (targetContinent) url += `&continent=${targetContinent}`;
         if (targetSeed) url += `&seed=${targetSeed}`;
 
-        const res = await fetch(url);
+        const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error("Erreur de chargement de session");
         const data: BlindPointSessionInitResponse = await res.json();
 
@@ -300,7 +315,7 @@ function BlindPointGame() {
 
   // Load game session whenever in active play mode (play=1) and parameters are defined
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && searchParams.get("customType") !== "retrace") {
       loadGameSession(
         pack,
         difficulty,
@@ -322,6 +337,7 @@ function BlindPointGame() {
     rawRounds,
     rawTimer,
     rawContinent,
+    searchParams,
     loadGameSession,
   ]);
 
@@ -473,9 +489,10 @@ function BlindPointGame() {
       ? "world"
       : "fr");
 
-  const handleStartGame = (p: BlindPointPack, d: BlindPointDifficulty, m: BlindPointMode) => {
+  const handleStartGame = (p: BlindPointPack, d: BlindPointDifficulty | "all", m: BlindPointMode) => {
     const freeSeed = m === "free" ? `&seed=${Date.now()}` : "";
-    router.push(`/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}&play=1`);
+    const diffParam = d === "all" ? "&difficulty=all" : `&difficulty=${d}`;
+    router.push(`/play/blindpoint?pack=${p}${diffParam}&mode=${m}${freeSeed}&play=1`);
   };
 
   const handleChangeGameConfig = (
@@ -501,22 +518,18 @@ function BlindPointGame() {
     const p = session?.pack || pack;
     const d = session?.difficulty || difficulty;
     const m = session?.mode || mode;
+    const s = session?.seed || userSeed || (typeof window !== "undefined" ? searchParams.get("seed") : null) || undefined;
 
-    if (m === "free" || m === "custom") {
-      const freeSeed = `&seed=${Date.now()}`;
-      let url = `/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}`;
-      if (rawPacks) url += `&packs=${encodeURIComponent(rawPacks)}`;
-      if (rawRounds) url += `&rounds=${rawRounds}`;
-      if (rawTimer) url += `&timer=${rawTimer}`;
-      if (rawTheme) url += `&theme=${rawTheme}`;
-      if (rawBorders) url += `&borders=${rawBorders}`;
-      if (rawRoads) url += `&roads=${rawRoads}`;
-      if (rawContinent) url += `&continent=${rawContinent}`;
-      url += `&play=1`;
-      router.push(url);
-    } else {
-      loadGameSession(p, d, m, undefined);
-    }
+    loadGameSession(
+      p,
+      d,
+      m,
+      s,
+      session?.packs ? session.packs.join(",") : rawPacks || undefined,
+      rawRounds || undefined,
+      rawTimer || undefined,
+      rawContinent || undefined
+    );
   };
 
   const getCustomShareUrl = () => {
@@ -577,15 +590,6 @@ function BlindPointGame() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => setShowCustomModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-purple-400 hover:text-purple-300 transition-all shadow-sm"
-                title="Créer un défi personnalisé"
-              >
-                <Sliders className="w-3.5 h-3.5 text-purple-400" />
-                <span className="hidden sm:inline">Partie Custom</span>
-              </button>
               <LeaderboardTriggerButton
                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all shadow-sm cursor-pointer"
                 label="Classement"
@@ -604,459 +608,446 @@ function BlindPointGame() {
           </div>
         </nav>
 
-        {/* Main Lobby Form */}
-        <main className="max-w-4xl mx-auto px-6 py-10 flex-1 flex flex-col justify-center w-full">
-          {/* Header Brief */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Précision Aveugle • 5 Manches</span>
-            </div>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3">
-              Configurez votre Défi
-            </h1>
-            <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
-              Choisissez votre type de cible, le territoire et votre mode de jeu pour tenter de décrocher le score parfait de 25 000 points.
-            </p>
-          </div>
+        {/* Main Cockpit / Selection Screen */}
+        <main className="max-w-4xl mx-auto px-6 py-8 flex-1 w-full space-y-10">
+          
+          {/* 1. RAPPEL DES DÉFIS DU JOUR BLIND POINT (FLASHY) */}
+          <section className="p-6 rounded-3xl bg-slate-900/90 border-2 border-emerald-500/40 space-y-4 shadow-xl relative overflow-hidden">
+            <div className="absolute -right-20 -top-20 w-44 h-44 bg-emerald-500/10 blur-3xl pointer-events-none rounded-full" />
 
-          <div className="space-y-8">
-            {/* Step 1: Category / Criteria Selection */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  1. Critère de recherche
-                </span>
-                <span className="text-xs text-slate-500">
-                  Thématique des cibles
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Villes & Agglomérations */}
-                <button
-                  type="button"
-                  onClick={() => handleSelectCategory("villes")}
-                  className={`relative p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between ${
-                    selectedCategory === "villes"
-                      ? "bg-blue-950/40 border-blue-500 shadow-xl shadow-blue-500/10"
-                      : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-lg">
-                        🏙️
-                      </div>
-                      <div>
-                        <h3 className="text-base font-bold text-white">Villes & Agglomérations</h3>
-                        <p className="text-[11px] text-blue-400 font-semibold">Métropoles, préfectures & capitales</p>
-                      </div>
-                    </div>
-                    {selectedCategory === "villes" && (
-                      <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center shrink-0">
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                    Localisez les centres urbains majeurs et secondaires avec 3 paliers de difficulté réglables.
-                  </p>
-                  <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-800/80 text-[11px] font-semibold text-blue-300 border border-slate-700/80 w-fit">
-                    139 villes FR • 167 villes Monde
-                  </span>
-                </button>
-
-                {/* Lieux emblématiques (Châteaux & Monuments) */}
-                <button
-                  type="button"
-                  onClick={() => handleSelectCategory("lieux_emblematiques")}
-                  className={`relative p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between ${
-                    selectedCategory === "lieux_emblematiques"
-                      ? "bg-purple-950/40 border-purple-500 shadow-xl shadow-purple-500/10"
-                      : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
-                  }`}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-lg">
-                        🏛️
-                      </div>
-                      <div>
-                        <h3 className="text-base font-bold text-white">Lieux emblématiques</h3>
-                        <p className="text-[11px] text-purple-400 font-semibold">Châteaux, monuments & merveilles</p>
-                      </div>
-                    </div>
-                    {selectedCategory === "lieux_emblematiques" && (
-                      <div className="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center shrink-0">
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                    Châteaux de la Loire, citadelles Vauban, arènes gallo-romaines et chefs-d'œuvre mondiaux de l'UNESCO.
-                  </p>
-                  <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-800/80 text-[11px] font-semibold text-purple-300 border border-slate-700/80 w-fit">
-                    58 trésors FR • 50 merveilles Monde
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {/* Step 2: Territory Selection */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  2. Territoire à cibler
-                </span>
-                <span className="text-xs text-slate-500">
-                  Échelle de la carte
-                </span>
-              </div>
-
-              {selectedCategory === "villes" ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* France Card */}
-                  <button
-                    type="button"
-                    onClick={() => handleSelectTerritory("france")}
-                    className={`relative p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedTerritory === "france"
-                        ? "bg-blue-950/40 border-blue-500 shadow-xl shadow-blue-500/10"
-                        : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="text-3xl">🇫🇷</div>
-                      {selectedTerritory === "france" && (
-                        <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-white mb-1">France métropolitaine</h3>
-                      <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                        Métropoles, préfectures et villes régionales du territoire métropolitain.
-                      </p>
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-800/80 text-[11px] font-semibold text-blue-300 border border-slate-700/80">
-                        Tolérance : 170 km (France)
-                      </span>
-                    </div>
-                  </button>
-
-                  {/* World Card */}
-                  <button
-                    type="button"
-                    onClick={() => handleSelectTerritory("monde")}
-                    className={`relative p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedTerritory === "monde"
-                        ? "bg-emerald-950/40 border-emerald-500 shadow-xl shadow-emerald-500/10"
-                        : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="text-3xl">🌍</div>
-                      {selectedTerritory === "monde" && (
-                        <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-white mb-1">Monde entier</h3>
-                      <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                        Mégapoles et capitales internationales avec équilibrage garanti sur les 6 continents.
-                      </p>
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-800/80 text-[11px] font-semibold text-emerald-300 border border-slate-700/80">
-                        Tolérance : 2 200 km (Monde)
-                      </span>
-                    </div>
-                  </button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                  {/* France Card */}
-                  <button
-                    type="button"
-                    onClick={() => handleSelectTerritory("france")}
-                    className={`relative p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedTerritory === "france"
-                        ? "bg-blue-950/40 border-blue-500 shadow-xl shadow-blue-500/10"
-                        : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="text-3xl">🏰</div>
-                      {selectedTerritory === "france" && (
-                        <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white mb-1">France Métropole</h3>
-                      <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                        58 châteaux de la Loire, citadelles Vauban & patrimoine national.
-                      </p>
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-800/80 text-[10px] font-semibold text-blue-300 border border-slate-700/80">
-                        Tolérance : 170 km
-                      </span>
-                    </div>
-                  </button>
-
-                  {/* Paris Card */}
-                  <button
-                    type="button"
-                    onClick={() => handleSelectTerritory("paris")}
-                    className={`relative p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedTerritory === "paris"
-                        ? "bg-purple-950/40 border-purple-500 shadow-xl shadow-purple-500/10"
-                        : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="text-3xl">🗼</div>
-                      {selectedTerritory === "paris" && (
-                        <div className="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white mb-1">Paris Intra-muros</h3>
-                      <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                        60 édifices phares de la capitale (Tour Eiffel, Panthéon, Notre-Dame...).
-                      </p>
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-800/80 text-[10px] font-semibold text-purple-300 border border-slate-700/80">
-                        Tolérance métrique : 1,5 km
-                      </span>
-                    </div>
-                  </button>
-
-                  {/* World Card */}
-                  <button
-                    type="button"
-                    onClick={() => handleSelectTerritory("monde")}
-                    className={`relative p-5 rounded-3xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedTerritory === "monde"
-                        ? "bg-emerald-950/40 border-emerald-500 shadow-xl shadow-emerald-500/10"
-                        : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="text-3xl">🌍</div>
-                      {selectedTerritory === "monde" && (
-                        <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white mb-1">Monde Entier</h3>
-                      <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                        50 merveilles de l'humanité & trésors UNESCO (Taj Mahal, Pétra...).
-                      </p>
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-800/80 text-[10px] font-semibold text-emerald-300 border border-slate-700/80">
-                        Tolérance : 2 200 km
-                      </span>
-                    </div>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Step 3: Difficulty Selection (for Villes) OR Curated heritage banner (for Lieux) */}
-            {selectedCategory === "villes" ? (
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
-                  3. Niveau de Difficulté
-                </span>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {/* Facile */}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDifficulty("facile")}
-                    className={`p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedDifficulty === "facile"
-                        ? "bg-emerald-950/30 border-emerald-500 shadow-lg shadow-emerald-500/10"
-                        : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-bold text-emerald-400 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        Facile
-                      </span>
-                      {selectedDifficulty === "facile" && (
-                        <Check className="w-4 h-4 text-emerald-400 stroke-[3]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      {selectedTerritory === "france"
-                        ? "Grandes métropoles (Paris, Marseille, Lyon, Toulouse, Nantes, Lille...)"
-                        : "Capitales et mégapoles iconiques (Tokyo, Londres, New York, Le Caire...)"}
-                    </p>
-                  </button>
-
-                  {/* Moyen */}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDifficulty("moyen")}
-                    className={`p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedDifficulty === "moyen"
-                        ? "bg-amber-950/30 border-amber-500 shadow-lg shadow-amber-500/10"
-                        : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-bold text-amber-400 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-amber-400" />
-                        Moyen
-                      </span>
-                      {selectedDifficulty === "moyen" && (
-                        <Check className="w-4 h-4 text-amber-400 stroke-[3]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      {selectedTerritory === "france"
-                        ? "Villes moyennes & sous-préfectures (Calais, Albi, Pau, Quimper, Bayonne...)"
-                        : "Capitales d'État & métropoles continentales (Varsovie, Bogota, Ottawa, Nairobi...)"}
-                    </p>
-                  </button>
-
-                  {/* Difficile */}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDifficulty("difficile")}
-                    className={`p-4 rounded-2xl border-2 text-left transition-all flex flex-col justify-between ${
-                      selectedDifficulty === "difficile"
-                        ? "bg-rose-950/30 border-rose-500 shadow-lg shadow-rose-500/10"
-                        : "bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-bold text-rose-400 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-rose-400" />
-                        Difficile
-                      </span>
-                      {selectedDifficulty === "difficile" && (
-                        <Check className="w-4 h-4 text-rose-400 stroke-[3]" />
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      {selectedTerritory === "france"
-                        ? "Préfectures discrètes & terroirs (Aurillac, Mende, Foix, Privas, Guéret, Digne...)"
-                        : "Capitales confidentielles & métropoles lointaines (Oulan-Bator, Windhoek, Suva...)"}
-                    </p>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
-                  3. Niveau de Difficulté
-                </span>
-                <div className="p-4 rounded-2xl bg-purple-950/20 border border-purple-500/30 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-300 shrink-0">
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-purple-200">Sélection Patrimoniale Curatée</h4>
-                    <p className="text-[11px] text-slate-400">
-                      Châteaux, citadelles Vauban et merveilles de l'humanité sont calibrés pour offrir une expérience équilibrée sans sélection de difficulté requise.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Step 4: Game Mode */}
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
-                4. Mode de Jeu
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Rendez-vous Officiels du Jour (Blind Point)</span>
               </span>
+              <span className="text-[11px] text-slate-400 font-mono">Tirages uniques du jour</span>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* Défi du Jour */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-1">
+              {/* France */}
+              <button
+                type="button"
+                onClick={() => handleStartGame("villes_france", "all", "daily")}
+                className={`p-3 rounded-2xl bg-slate-950/80 border-2 text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_villes_france"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-emerald-500/50 hover:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🇫🇷 France</span>
+                  <span className="text-[10px] text-slate-400 font-mono">139 villes</span>
+                </div>
+                {dailyStatusMap["blindpoint_villes_france"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_villes_france"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
+              </button>
+
+              {/* Europe */}
+              <button
+                type="button"
+                onClick={() => handleStartGame("villes_europe", "all", "daily")}
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_villes_europe"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🇪🇺 Europe</span>
+                  <span className="text-[10px] text-slate-400 font-mono">42 métropoles</span>
+                </div>
+                {dailyStatusMap["blindpoint_villes_europe"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_villes_europe"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
+              </button>
+
+              {/* Monde */}
+              <button
+                type="button"
+                onClick={() => handleStartGame("villes_monde", "all", "daily")}
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_villes_monde"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🌍 Monde</span>
+                  <span className="text-[10px] text-slate-400 font-mono">167 mégapoles</span>
+                </div>
+                {dailyStatusMap["blindpoint_villes_monde"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_villes_monde"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
+              </button>
+
+              {/* Paris */}
+              <button
+                type="button"
+                onClick={() => handleStartGame("lieux_paris", "all", "daily")}
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_lieux_paris"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🗼 Paris</span>
+                  <span className="text-[10px] text-slate-400 font-mono">105 trésors</span>
+                </div>
+                {dailyStatusMap["blindpoint_lieux_paris"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_lieux_paris"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
+              </button>
+
+              {/* Merveilles */}
+              <button
+                type="button"
+                onClick={() => handleStartGame("lieux_monde", "all", "daily")}
+                className={`p-3 rounded-2xl bg-slate-950/80 border text-left transition-all group flex flex-col justify-between ${
+                  dailyStatusMap["blindpoint_lieux_monde"]?.completed
+                    ? "border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                    : "border-slate-800 hover:border-emerald-500/60"
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-bold text-white block group-hover:text-emerald-300">🏛️ Merveilles</span>
+                  <span className="text-[10px] text-slate-400 font-mono">50 sites</span>
+                </div>
+                {dailyStatusMap["blindpoint_lieux_monde"]?.completed ? (
+                  <div className="mt-2.5 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-extrabold uppercase tracking-wider">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                      <span>Fait</span>
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-300 font-mono">
+                      {dailyStatusMap["blindpoint_lieux_monde"].score?.toLocaleString("fr-FR")} pts
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2.5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                      <span>À relever</span>
+                    </span>
+                  </div>
+                )}
+              </button>
+            </div>
+          </section>
+
+          {/* 2. ESPACE PARTIE RAPIDE (IMMÉDIAT & FLUIDE) */}
+          <section className="p-6 sm:p-8 rounded-3xl bg-slate-900 border-2 border-slate-800 space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-amber-400" />
+                  <span>Lancement de Partie Rapide</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Entraînement illimité. Choisissez votre terrain et votre niveau pour jouer immédiatement.
+                </p>
+              </div>
+              <span className="text-xs text-slate-400 font-mono">5 manches</span>
+            </div>
+
+            {/* Étape 1 : Choix du Terrain */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+                1. Déclinaison / Terrain
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                 <button
                   type="button"
-                  onClick={() => setSelectedMode("daily")}
-                  className={`p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between ${
-                    selectedMode === "daily"
-                      ? "bg-blue-950/40 border-blue-500 text-white shadow-lg shadow-blue-500/10"
-                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900"
+                  onClick={() => setSelectedPack("villes_france")}
+                  className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                    selectedPack === "villes_france"
+                      ? "border-emerald-500 bg-emerald-950/30 text-white font-bold shadow-md shadow-emerald-500/10"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
-                      <Calendar className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white">Défi du Jour</h4>
-                      <p className="text-xs text-slate-400">Tirage identique pour comparer vos scores</p>
-                    </div>
-                  </div>
-                  {selectedMode === "daily" && <Check className="w-5 h-5 text-blue-400 stroke-[3]" />}
+                  <span className="text-lg block mb-1">🇫🇷</span>
+                  <span className="text-xs block">France</span>
+                  <span className="text-[10px] text-slate-400 font-mono">139 villes</span>
                 </button>
 
-                {/* Partie Libre */}
                 <button
                   type="button"
-                  onClick={() => setSelectedMode("free")}
-                  className={`p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between ${
-                    selectedMode === "free"
-                      ? "bg-amber-950/40 border-amber-500 text-white shadow-lg shadow-amber-500/10"
-                      : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900"
+                  onClick={() => setSelectedPack("villes_europe")}
+                  className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                    selectedPack === "villes_europe"
+                      ? "border-emerald-500 bg-emerald-950/30 text-white font-bold shadow-md shadow-emerald-500/10"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-amber-600/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                      <Zap className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white">Entraînement Libre</h4>
-                      <p className="text-xs text-slate-400">Sessions illimitées tirées aléatoirement</p>
-                    </div>
-                  </div>
-                  {selectedMode === "free" && <Check className="w-5 h-5 text-amber-400 stroke-[3]" />}
+                  <span className="text-lg block mb-1">🇪🇺</span>
+                  <span className="text-xs block">Europe</span>
+                  <span className="text-[10px] text-slate-400 font-mono">42 villes</span>
                 </button>
 
-                {/* Partie Personnalisée */}
                 <button
                   type="button"
-                  onClick={() => setShowCustomModal(true)}
-                  className="p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between bg-slate-900/60 border-slate-800 text-slate-300 hover:border-purple-500/60 hover:bg-slate-900 group"
+                  onClick={() => setSelectedPack("villes_monde")}
+                  className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                    selectedPack === "villes_monde"
+                      ? "border-emerald-500 bg-emerald-950/30 text-white font-bold shadow-md shadow-emerald-500/10"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
+                  }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
-                      <Sliders className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white group-hover:text-purple-300 transition-colors">
-                        Partie Custom
-                      </h4>
-                      <p className="text-xs text-slate-400">Mix de packs, timer, manches & défi amis</p>
-                    </div>
-                  </div>
-                  <Sliders className="w-4 h-4 text-purple-400 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <span className="text-lg block mb-1">🌍</span>
+                  <span className="text-xs block">Monde</span>
+                  <span className="text-[10px] text-slate-400 font-mono">167 villes</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedPack("metro_paris")}
+                  className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                    selectedPack === "metro_paris"
+                      ? "border-emerald-500 bg-emerald-950/30 text-white font-bold shadow-md shadow-emerald-500/10"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
+                  }`}
+                >
+                  <span className="text-lg block mb-1">🚇</span>
+                  <span className="text-xs block">Métro Paris</span>
+                  <span className="text-[10px] text-slate-400 font-mono">60 stations</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedPack("lieux_paris")}
+                  className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                    selectedPack === "lieux_paris"
+                      ? "border-emerald-500 bg-emerald-950/30 text-white font-bold shadow-md shadow-emerald-500/10"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
+                  }`}
+                >
+                  <span className="text-lg block mb-1">🗼</span>
+                  <span className="text-xs block">Paris Intra</span>
+                  <span className="text-[10px] text-slate-400 font-mono">105 sites</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedPack("lieux_monde")}
+                  className={`p-3 rounded-2xl border-2 text-center transition-all ${
+                    selectedPack === "lieux_monde"
+                      ? "border-emerald-500 bg-emerald-950/30 text-white font-bold shadow-md shadow-emerald-500/10"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300 font-semibold"
+                  }`}
+                >
+                  <span className="text-lg block mb-1">🏛️</span>
+                  <span className="text-xs block">Merveilles</span>
+                  <span className="text-[10px] text-slate-400 font-mono">50 sites</span>
                 </button>
               </div>
+            </div>
+
+            {/* Étape 2 : Niveau de Difficulté ("Tout le pool" par défaut et à gauche !) */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+                  2. Niveau de Difficulté
+                </label>
+                <span className="text-[11px] text-emerald-400 font-bold">
+                  {selectedDifficulty === "all"
+                    ? "Recommandé : Tout le pool"
+                    : `Niveau sélectionné : ${selectedDifficulty.toUpperCase()}`}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2 p-1.5 rounded-2xl bg-slate-950 border border-slate-800 text-xs font-bold">
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty("all")}
+                  className={`py-2.5 rounded-xl transition-all text-center text-xs font-bold ${
+                    selectedDifficulty === "all"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-slate-400 hover:bg-slate-900"
+                  }`}
+                >
+                  🎲 Tout le pool
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty("facile")}
+                  className={`py-2.5 rounded-xl transition-all text-center text-xs font-bold ${
+                    selectedDifficulty === "facile"
+                      ? "bg-emerald-600 text-white shadow-sm"
+                      : "text-emerald-400 hover:bg-slate-900"
+                  }`}
+                >
+                  🟢 Facile
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty("moyen")}
+                  className={`py-2.5 rounded-xl transition-all text-center text-xs font-bold ${
+                    selectedDifficulty === "moyen"
+                      ? "bg-amber-600 text-white shadow-sm"
+                      : "text-amber-400 hover:bg-slate-900"
+                  }`}
+                >
+                  🟡 Moyen
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedDifficulty("difficile")}
+                  className={`py-2.5 rounded-xl transition-all text-center text-xs font-bold ${
+                    selectedDifficulty === "difficile"
+                      ? "bg-rose-600 text-white shadow-sm"
+                      : "text-rose-400 hover:bg-slate-900"
+                  }`}
+                >
+                  🔴 Difficile
+                </button>
+              </div>
+
+              <p className="text-xs text-slate-400 px-1 pt-1">
+                {selectedDifficulty === "all" &&
+                  "🎲 Tirage équilibré et varié sur l'ensemble des cibles du catalogue (recommandé)."}
+                {selectedDifficulty === "facile" &&
+                  "🟢 Grandes métropoles et sites emblématiques évidents."}
+                {selectedDifficulty === "moyen" &&
+                  "🟡 Villes moyennes, sous-préfectures et métropoles régionales."}
+                {selectedDifficulty === "difficile" &&
+                  "🔴 Terroirs secrets, préfectures discrètes et cibles pointues."}
+              </p>
             </div>
 
             {/* Launch CTA Button */}
-            <div className="pt-4">
+            <div className="pt-2">
               <button
                 type="button"
-                onClick={() => handleStartGame(selectedPack, selectedDifficulty, selectedMode)}
-                className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 hover:from-emerald-500 hover:via-teal-500 hover:to-blue-500 text-white font-extrabold text-base shadow-2xl shadow-emerald-600/25 border border-emerald-400/40 transition-all active:scale-[0.99] hover:shadow-emerald-600/40"
+                onClick={() => handleStartGame(selectedPack, selectedDifficulty, "free")}
+                className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 hover:from-emerald-500 hover:via-teal-500 hover:to-blue-500 text-white font-extrabold text-base shadow-2xl shadow-emerald-600/30 transition-all active:scale-[0.99]"
               >
-                <Play className="w-5 h-5 fill-white" />
-                <span>Lancer la Partie (5 Manches)</span>
+                <Zap className="w-5 h-5 text-amber-300" />
+                <span>⚡ Lancer la Partie Rapide (5 Manches)</span>
               </button>
             </div>
-          </div>
+          </section>
+
+          {/* 3. GRAND ENCADRÉ PREMIUM : DÉFI PERSONNALISÉ (CUSTOM CHALLENGE) BIEN VOYANT */}
+          <section className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-purple-950/50 via-slate-900 to-indigo-950/40 border-2 border-purple-500/50 hover:border-purple-400/80 transition-all shadow-2xl space-y-6 relative overflow-hidden group">
+            <div className="absolute -right-24 -bottom-24 w-60 h-60 bg-purple-600/15 blur-[90px] rounded-full pointer-events-none" />
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+              <div className="space-y-2 max-w-xl">
+                <div className="flex items-center gap-2.5">
+                  <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Sliders className="w-3.5 h-3.5 text-purple-400" />
+                    <span>Multijoueur & Règles Libres</span>
+                  </span>
+                  <span className="text-xs text-purple-400 font-semibold">• Personnalisation Complète</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                  Envie d'un Défi sur-mesure ou de Défier vos Amis ?
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  Créez votre propre salon de jeu : combinez plusieurs territoires, imposez un chrono serré et partagez le lien généré pour comparer vos scores.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowCustomModal(true)}
+                className="py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-purple-600/30 transition-all flex items-center justify-center gap-2 shrink-0 group-hover:scale-105"
+              >
+                <span>⚙️ Configurer un Défi Custom</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 relative z-10">
+              <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-purple-500/20 flex items-center gap-3">
+                <span className="text-xl">🎛️</span>
+                <div>
+                  <span className="text-xs font-bold text-white block">Mix de Packs</span>
+                  <span className="text-[11px] text-slate-400">France + Monde, Paris + Châteaux...</span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-purple-500/20 flex items-center gap-3">
+                <span className="text-xl">⏱️</span>
+                <div>
+                  <span className="text-xs font-bold text-white block">Chrono & Manches</span>
+                  <span className="text-[11px] text-slate-400">De 3 à 15 manches, timer réglable</span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-purple-500/20 flex items-center gap-3">
+                <span className="text-xl">🔗</span>
+                <div>
+                  <span className="text-xs font-bold text-white block">Lien de Défi Amis</span>
+                  <span className="text-[11px] text-slate-400">Exactement les mêmes cibles partagées</span>
+                </div>
+              </div>
+            </div>
+          </section>
         </main>
 
         {/* Settings Modal (available even in lobby) */}
@@ -1076,6 +1067,30 @@ function BlindPointGame() {
           initialDifficulty={selectedDifficulty}
         />
       </div>
+    );
+  }
+
+  // Retrace le Réseau Mode (Custom Metro game mode)
+  if (isRetraceCustomMode) {
+    const linesParam = searchParams.get("lines");
+    const activeLines = linesParam ? linesParam.split(",") : ["1", "4", "6"];
+    const activeTolerance = searchParams.get("tolerance") || "300";
+
+    return (
+      <>
+        <BlindPointRetraceGame
+          initialTolerance={activeTolerance}
+          selectedLines={activeLines}
+          onBackToLobby={() => router.push("/play/blindpoint?pack=metro_paris&mode=free")}
+          onOpenCustomModal={() => setShowCustomModal(true)}
+        />
+        <BlindPointCustomModal
+          isOpen={showCustomModal}
+          onClose={() => setShowCustomModal(false)}
+          initialPack="metro_paris"
+          initialDifficulty="all"
+        />
+      </>
     );
   }
 
@@ -1151,6 +1166,7 @@ function BlindPointGame() {
           onValidateGuess={handleValidateGuess}
           onOpenSettings={() => setShowSettingsModal(true)}
           onOpenSummary={() => setShowSummaryModal(true)}
+          onRestart={handleRestartCurrentGame}
           onBackToLobby={handleBackToLobby}
           onOpenCustomModal={() => setShowCustomModal(true)}
           onChangeMode={handleChangeGameConfig}
