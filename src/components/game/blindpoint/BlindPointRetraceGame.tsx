@@ -55,7 +55,6 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
   const mapRef = useRef<maplibregl.Map | null>(null);
   const isLoadedRef = useRef<boolean>(false);
   const markersMapRef = useRef<Map<string, maplibregl.Marker>>(new Map());
-  const pendingMarkerRef = useRef<maplibregl.Marker | null>(null);
 
   // Filter stations based on selected lines
   const activeStations = useMemo(() => {
@@ -120,10 +119,6 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       }
       setCurrentTarget(next);
       setPendingGuess(null);
-      if (pendingMarkerRef.current) {
-        pendingMarkerRef.current.remove();
-        pendingMarkerRef.current = null;
-      }
     },
     [activeStations, orderMode]
   );
@@ -301,6 +296,51 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     map.on("load", () => {
       isLoadedRef.current = true;
       mapRef.current = map;
+      map.resize();
+      map.getCanvas().style.cursor = "crosshair";
+
+      // Hardware-accelerated Guess Point (Identique au jeu BlindPoint classique)
+      if (!map.getSource("guess-source")) {
+        map.addSource("guess-source", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+
+        // Drop shadow
+        map.addLayer({
+          id: "guess-shadow",
+          type: "circle",
+          source: "guess-source",
+          paint: {
+            "circle-radius": 13,
+            "circle-color": "#020617",
+            "circle-opacity": 0.5,
+          },
+        });
+
+        // Contrasting white border ring
+        map.addLayer({
+          id: "guess-outer",
+          type: "circle",
+          source: "guess-source",
+          paint: {
+            "circle-radius": 10,
+            "circle-color": "#ffffff",
+            "circle-opacity": 0.98,
+          },
+        });
+
+        // Classic BlindPoint Blue (#2563eb)
+        map.addLayer({
+          id: "guess-inner",
+          type: "circle",
+          source: "guess-source",
+          paint: {
+            "circle-radius": 7.5,
+            "circle-color": "#2563eb",
+          },
+        });
+      }
 
       // Register layers for each line (glow layer + sharp core layer)
       selectedLines.forEach((line) => {
@@ -349,38 +389,61 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       updateMapNetworkLayers(discoveredIds);
     });
 
-    // Map click handler
+    // Map click handler (positionnement instantané au pixel près)
     map.on("click", (e) => {
       const wrapped = e.lngLat.wrap();
       const clickCoords: [number, number] = [wrapped.lng, wrapped.lat];
       setPendingGuess(clickCoords);
-
-      // Create or update pending guess marker
-      if (!pendingMarkerRef.current) {
-        const el = document.createElement("div");
-        el.className = "relative pointer-events-none select-none";
-        el.innerHTML = `
-          <div class="absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center z-30">
-            <div class="absolute inset-0 rounded-full bg-amber-400/40 animate-ping"></div>
-            <div class="relative w-4 h-4 rounded-full bg-amber-500 border-2 border-white shadow-xl flex items-center justify-center">
-              <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
-            </div>
-          </div>
-        `;
-        pendingMarkerRef.current = new maplibregl.Marker({ element: el, anchor: "center" })
-          .setLngLat(clickCoords)
-          .addTo(map);
-      } else {
-        pendingMarkerRef.current.setLngLat(clickCoords);
-      }
     });
 
+    // ResizeObserver pour adapter la carte immédiatement à tout changement de taille/sidebar
+    const resizeObserver = new ResizeObserver(() => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    });
+    if (mapContainerRef.current) {
+      resizeObserver.observe(mapContainerRef.current);
+    }
+
     return () => {
+      resizeObserver.disconnect();
       map.remove();
       mapRef.current = null;
       isLoadedRef.current = false;
     };
   }, []); // Run once on mount
+
+  // Synchronise le point d'estimation WebGL (identique à BlindPoint classique)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+    const source = map.getSource("guess-source") as maplibregl.GeoJSONSource | undefined;
+    if (!source) return;
+
+    if (!pendingGuess) {
+      source.setData({
+        type: "FeatureCollection",
+        features: [],
+      });
+    } else {
+      source.setData({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [pendingGuess[0], pendingGuess[1]],
+            },
+            properties: {
+              type: "guess",
+            },
+          },
+        ],
+      });
+    }
+  }, [pendingGuess]);
 
   /**
    * Validates the pending guess against current target station
@@ -414,11 +477,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     setDiscoveredIds(nextDiscovered);
     saveProgress(nextDiscovered);
 
-    // Remove pending marker
-    if (pendingMarkerRef.current) {
-      pendingMarkerRef.current.remove();
-      pendingMarkerRef.current = null;
-    }
+    setPendingGuess(null);
 
     // Render discovered station marker
     renderStationMarker(currentTarget);
@@ -479,10 +538,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     markersMapRef.current.forEach((marker) => marker.remove());
     markersMapRef.current.clear();
 
-    if (pendingMarkerRef.current) {
-      pendingMarkerRef.current.remove();
-      pendingMarkerRef.current = null;
-    }
+    setPendingGuess(null);
 
     // Clear lines
     updateMapNetworkLayers(new Set());
