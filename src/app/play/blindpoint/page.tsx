@@ -41,6 +41,7 @@ import { BlindPointRetraceGame } from "@/components/game/blindpoint/BlindPointRe
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
+import { useSettings } from "@/lib/settings/useSettings";
 import {
   BlindPointCategory,
   BlindPointPack,
@@ -165,6 +166,9 @@ function BlindPointGame() {
         : (terr === "paris" ? "lieux_paris" : terr === "france" ? "lieux_france" : "lieux_monde");
     setSelectedPack(newPack);
   };
+
+  // Global App Settings (Passage auto partagé avec GeoRings)
+  const { settings: appSettings, updateSetting } = useSettings();
 
   // Game Settings
   const [settings, setSettings] = useState<BlindPointSettings>(DEFAULT_BLINDPOINT_SETTINGS);
@@ -1186,6 +1190,8 @@ function BlindPointGame() {
         roundIndex={roundIndex}
         totalRounds={totalRounds}
         onNextRound={handleNextRound}
+        autoAdvance={appSettings.autoAdvance}
+        onToggleAutoAdvance={(val) => updateSetting("autoAdvance", val)}
       />
 
       {/* Dedicated Right-Side Learning Panel (Apprentissage & Culture) */}

@@ -19,7 +19,9 @@ import {
   Zap,
   ChevronDown,
   X,
+  ArrowRight,
 } from "lucide-react";
+import { useSettings } from "@/lib/settings/useSettings";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
 import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
@@ -84,6 +86,10 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     setOrderMode(initialOrderMode);
   }, [initialOrderMode]);
 
+  // User settings (Passage auto partagé avec GeoRings)
+  const { settings: appSettings, updateSetting } = useSettings();
+  const autoAdvance = appSettings.autoAdvance;
+
   const [currentTarget, setCurrentTarget] = useState<MetroStationTopology | null>(null);
   const [pendingGuess, setPendingGuess] = useState<[number, number] | null>(null);
   const [feedback, setFeedback] = useState<{
@@ -94,6 +100,21 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
   const [isCompletedModalOpen, setIsCompletedModalOpen] = useState(false);
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+
+  // Review state after successful station validation (identique à la mécanique GeoRings)
+  const [reviewState, setReviewState] = useState<{
+    station: MetroStationTopology;
+    distMeters: number;
+    newTracks: string[];
+    nextDiscovered: Set<string>;
+  } | null>(null);
+
+  const reviewStateRef = useRef<typeof reviewState>(null);
+  useEffect(() => {
+    reviewStateRef.current = reviewState;
+  }, [reviewState]);
+
+  const [reviewTimeLeftMs, setReviewTimeLeftMs] = useState(1500);
 
   // Pick next station to place
   const pickNextStation = useCallback(
@@ -117,6 +138,56 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     },
     [activeStations, orderMode]
   );
+
+  // Smoothly advances to the next target station & dezooms camera to Paris overview
+  const handleProceedNextStation = useCallback(() => {
+    if (!reviewStateRef.current) return;
+
+    const { nextDiscovered } = reviewStateRef.current;
+    setReviewState(null);
+    setFeedback(null);
+
+    // Dézoom fluide vers la vue globale de Paris
+    mapRef.current?.flyTo({
+      center: [2.3488, 48.8534],
+      zoom: 12.3,
+      duration: 600,
+      pitch: 0,
+      bearing: 0,
+    });
+
+    // Proposer la station suivante
+    pickNextStation(nextDiscovered);
+  }, [pickNextStation]);
+
+  // Auto-advance countdown timer (1.5s)
+  useEffect(() => {
+    if (!reviewState || !autoAdvance) {
+      setReviewTimeLeftMs(1500);
+      return;
+    }
+
+    setReviewTimeLeftMs(1500);
+    const intervalMs = 100;
+    const timer = setInterval(() => {
+      setReviewTimeLeftMs((prev) => {
+        if (prev <= intervalMs) {
+          clearInterval(timer);
+          handleProceedNextStation();
+          return 0;
+        }
+        return prev - intervalMs;
+      });
+    }, intervalMs);
+
+    return () => clearInterval(timer);
+  }, [reviewState, autoAdvance, handleProceedNextStation]);
+
+  const reviewProgressPercent = Math.max(
+    0,
+    Math.min(100, ((1500 - reviewTimeLeftMs) / 1500) * 100)
+  );
+  const reviewSecondsLeft = Math.ceil(reviewTimeLeftMs / 1000);
 
   // Initialize or resume next target
   useEffect(() => {
@@ -386,6 +457,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
     // Map click handler (positionnement instantané au pixel près)
     map.on("click", (e) => {
+      if (reviewStateRef.current) return;
       const wrapped = e.lngLat.wrap();
       const clickCoords: [number, number] = [wrapped.lng, wrapped.lat];
       setPendingGuess(clickCoords);
@@ -506,20 +578,57 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       distance: distMeters,
     });
 
-    // Animate camera softly towards target
+    // Animate camera softly towards target to reveal newly anchored station & tracks
     mapRef.current?.flyTo({
       center: currentTarget.coords,
-      zoom: 13.5,
-      duration: 600,
+      zoom: 13.2,
+      duration: 500,
       pitch: 0,
       bearing: 0,
     });
 
-    // Advance to next station
-    setTimeout(() => {
-      pickNextStation(nextDiscovered);
-    }, 900);
+    // Enter review state (exactement comme pour GeoRings)
+    setReviewState({
+      station: currentTarget,
+      distMeters,
+      newTracks,
+      nextDiscovered,
+    });
   };
+
+  // Global Keyboard listener: Space / Enter to validate placement OR advance to next station
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        isCompletedModalOpen ||
+        showConfirmReset ||
+        showHelp
+      ) {
+        return;
+      }
+
+      if (e.code === "Space" || e.key === "Enter") {
+        if (reviewStateRef.current) {
+          e.preventDefault();
+          handleProceedNextStation();
+        } else if (pendingGuess) {
+          e.preventDefault();
+          handleValidatePlacement();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    pendingGuess,
+    handleProceedNextStation,
+    isCompletedModalOpen,
+    showConfirmReset,
+    showHelp,
+  ]);
 
   /**
    * Resets entire discovered network
@@ -531,6 +640,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       // ignore
     }
     setDiscoveredIds(new Set());
+    setReviewState(null);
 
     // Clear all markers
     markersMapRef.current.forEach((marker) => marker.remove());
@@ -704,7 +814,97 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
       {/* Target Station Floating Action Card (Bottom Center) */}
       <footer className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4 pointer-events-none">
-        {currentTarget ? (
+        {reviewState ? (
+          <div className="pointer-events-auto bg-slate-900/95 border border-emerald-500/50 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              {/* Left: Validated Station Details */}
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black uppercase tracking-wider">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    Station Ancrée
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {reviewState.station.lines.map((l) => (
+                      <span
+                        key={l}
+                        style={{
+                          backgroundColor: METRO_LINE_COLORS[l]?.bg || "#FFCD00",
+                          color: METRO_LINE_COLORS[l]?.text || "#000",
+                        }}
+                        className="px-1.5 py-0.5 rounded-full font-black text-[10px] shadow-sm"
+                      >
+                        L{l}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <h2 className="text-lg sm:text-xl font-black text-white tracking-tight truncate">
+                  {reviewState.station.name}
+                </h2>
+                <p className="text-xs text-emerald-300 font-semibold mt-0.5">
+                  Ancrée à {reviewState.distMeters} m du point réel
+                  {reviewState.newTracks.length > 0 && (
+                    <span className="text-purple-300 block sm:inline sm:ml-2">
+                      • Tronçon débloqué : {reviewState.newTracks.join(", ")}
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              {/* Right: Proceed button + Auto-advance switch (identique GeoRings) */}
+              <div className="flex items-center gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+                {/* Next Station Button */}
+                <button
+                  type="button"
+                  onClick={handleProceedNextStation}
+                  className="relative overflow-hidden flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-purple-600/30 active:scale-95 transition-all cursor-pointer group"
+                >
+                  {autoAdvance && (
+                    <span
+                      className="absolute left-0 top-0 bottom-0 bg-white/25 transition-all pointer-events-none"
+                      style={{ width: `${reviewProgressPercent}%` }}
+                    />
+                  )}
+                  <span className="relative z-10">Station suivante</span>
+                  <kbd className="relative z-10 px-1.5 py-0.5 rounded bg-purple-900/80 border border-purple-400/40 font-mono text-[9px] text-purple-200">
+                    {autoAdvance ? `${reviewSecondsLeft}s` : "Espace"}
+                  </kbd>
+                  <ArrowRight className="relative z-10 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+
+                <div className="h-6 w-px bg-slate-800" />
+
+                {/* Auto-Advance Toggle Switch */}
+                <div className="flex items-center gap-2">
+                  <label
+                    htmlFor="retrace-auto-advance"
+                    className="text-xs text-slate-300 font-medium select-none cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>Auto</span>
+                  </label>
+                  <button
+                    type="button"
+                    id="retrace-auto-advance"
+                    role="switch"
+                    aria-checked={autoAdvance}
+                    onClick={() => updateSetting("autoAdvance", !autoAdvance)}
+                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none ${
+                      autoAdvance ? "bg-emerald-600" : "bg-slate-800"
+                    }`}
+                    title={autoAdvance ? "Passage automatique actif (1.5s)" : "Activer le passage automatique (1.5s)"}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out mt-0.5 ${
+                        autoAdvance ? "translate-x-4 ml-0.5" : "translate-x-0.5"
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : currentTarget ? (
           <div className="pointer-events-auto bg-slate-900/95 border border-slate-800 rounded-3xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl flex flex-col gap-3">
             {/* Header info */}
             <div className="flex items-start justify-between gap-3">
@@ -749,6 +949,11 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
               >
                 <Check className="w-4 h-4 stroke-[3]" />
                 <span>Valider l'ancrage</span>
+                {pendingGuess && (
+                  <kbd className="px-1.5 py-0.5 rounded bg-emerald-700/80 border border-emerald-400/40 font-mono text-[9px] text-emerald-100">
+                    Espace
+                  </kbd>
+                )}
               </button>
             </div>
 

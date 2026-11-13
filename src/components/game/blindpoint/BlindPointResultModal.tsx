@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowRight, Trophy, Sparkles, CheckCircle2 } from "lucide-react";
 import { BlindPointRoundResult } from "@/lib/games/blindpoint/types";
 import { formatDistance } from "@/lib/games/blindpoint/scoring";
@@ -11,6 +11,9 @@ interface BlindPointResultModalProps {
   roundIndex: number;
   totalRounds: number;
   onNextRound: () => void;
+  autoAdvance?: boolean;
+  onToggleAutoAdvance?: (val: boolean) => void;
+  autoAdvanceDelayMs?: number;
 }
 
 export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
@@ -19,7 +22,35 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
   roundIndex,
   totalRounds,
   onNextRound,
+  autoAdvance = false,
+  onToggleAutoAdvance,
+  autoAdvanceDelayMs = 1500,
 }) => {
+  const [timeLeftMs, setTimeLeftMs] = useState(autoAdvanceDelayMs);
+
+  // Auto-advance countdown timer (1.5s - identique GeoRings)
+  useEffect(() => {
+    if (!isOpen || !autoAdvance) {
+      setTimeLeftMs(autoAdvanceDelayMs);
+      return;
+    }
+
+    setTimeLeftMs(autoAdvanceDelayMs);
+    const intervalMs = 100;
+    const timer = setInterval(() => {
+      setTimeLeftMs((prev) => {
+        if (prev <= intervalMs) {
+          clearInterval(timer);
+          onNextRound();
+          return 0;
+        }
+        return prev - intervalMs;
+      });
+    }, intervalMs);
+
+    return () => clearInterval(timer);
+  }, [isOpen, autoAdvance, autoAdvanceDelayMs, onNextRound]);
+
   // Space / Enter advances to next round seamlessly
   useEffect(() => {
     if (!isOpen) return;
@@ -38,6 +69,11 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
 
   const isFinalRound = roundIndex >= totalRounds - 1;
   const isBullseye = roundResult.distanceKm <= 1.0;
+  const progressPercent = Math.max(
+    0,
+    Math.min(100, ((autoAdvanceDelayMs - timeLeftMs) / autoAdvanceDelayMs) * 100)
+  );
+  const secondsLeft = Math.ceil(timeLeftMs / 1000);
 
   return (
     <div className="fixed bottom-6 inset-x-0 z-30 pointer-events-none flex justify-center px-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -71,7 +107,7 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
           </div>
         </div>
 
-        {/* Right: Score Pill & Next Button */}
+        {/* Right: Score Pill & Next Button + Auto-advance switch */}
         <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
           {/* Score Badge */}
           <div className="px-3.5 py-1.5 rounded-xl bg-blue-950/40 border border-blue-500/40 text-center">
@@ -87,23 +123,51 @@ export const BlindPointResultModal: React.FC<BlindPointResultModalProps> = ({
           <button
             type="button"
             onClick={onNextRound}
-            className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-600/30 border border-blue-400 transition-all active:scale-95 whitespace-nowrap cursor-pointer"
+            className="relative overflow-hidden flex items-center gap-2 py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-600/30 border border-blue-400 transition-all active:scale-95 whitespace-nowrap cursor-pointer group"
           >
-            {isFinalRound ? (
-              <>
-                <Trophy className="w-4 h-4 text-amber-300" />
-                <span>Bilan Final</span>
-              </>
-            ) : (
-              <>
-                <span>Suivant</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
+            {autoAdvance && (
+              <span
+                className="absolute left-0 top-0 bottom-0 bg-blue-400/35 transition-all pointer-events-none"
+                style={{ width: `${progressPercent}%` }}
+              />
             )}
-            <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-blue-700/80 text-[10px] font-mono text-blue-200">
-              Espace
+            <span className="relative z-10">
+              {isFinalRound ? "Bilan Final" : "Suivant"}
             </span>
+            <span className="relative z-10 hidden sm:inline-block px-1.5 py-0.5 rounded bg-blue-700/80 text-[10px] font-mono text-blue-200">
+              {autoAdvance ? `${secondsLeft}s` : "Espace"}
+            </span>
+            <ArrowRight className="relative z-10 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </button>
+
+          {/* Auto-Advance Toggle Switch */}
+          {onToggleAutoAdvance && (
+            <div className="flex items-center gap-1.5 pl-1">
+              <label
+                htmlFor="blindpoint-auto-advance"
+                className="text-xs text-slate-400 font-medium select-none cursor-pointer hidden sm:inline"
+              >
+                Auto
+              </label>
+              <button
+                type="button"
+                id="blindpoint-auto-advance"
+                role="switch"
+                aria-checked={autoAdvance}
+                onClick={() => onToggleAutoAdvance(!autoAdvance)}
+                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-slate-700 transition-colors duration-200 ease-in-out focus:outline-none ${
+                  autoAdvance ? "bg-emerald-600" : "bg-slate-800"
+                }`}
+                title={autoAdvance ? "Passage automatique actif (1.5s)" : "Activer le passage automatique (1.5s)"}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out mt-0.5 ${
+                    autoAdvance ? "translate-x-4 ml-0.5" : "translate-x-0.5"
+                  }`}
+                />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
