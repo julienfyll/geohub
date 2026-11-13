@@ -23,6 +23,7 @@ import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
 import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import {
+  ALL_METRO_LINES,
   METRO_TOPOLOGY_STATIONS,
   METRO_LINE_TOPOLOGY,
   METRO_LINE_COLORS,
@@ -57,6 +58,17 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
     return METRO_TOPOLOGY_STATIONS.filter((s) =>
       s.lines.some((l) => selectedLines.includes(l))
     );
+  }, [selectedLines]);
+
+  // Sort selected lines according to official metro order (1, 2, ..., 14)
+  const sortedSelectedLines = useMemo(() => {
+    const lineOrder = ALL_METRO_LINES.map((l) => l.id);
+    return [...selectedLines].sort((a, b) => {
+      const idxA = lineOrder.indexOf(a);
+      const idxB = lineOrder.indexOf(b);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      return a.localeCompare(b, undefined, { numeric: true });
+    });
   }, [selectedLines]);
 
   // Game state (Zéro persistance cross-session : chaque nouvelle partie démarre vierge)
@@ -746,16 +758,32 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
           </div>
         </div>
 
-        {/* Center: Informative Non-clickable Configuration Badge */}
-        <div className="flex items-center justify-center shrink-0">
+        {/* Center: Informative Configuration Badge with all selected line pastilles */}
+        <div className="flex items-center justify-center shrink-0 min-w-0">
           <div
-            className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 shadow-sm shrink-0 select-none"
-            title="Lignes sélectionnées dans ce défi"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 shadow-sm shrink-0 select-none max-w-[48vw] overflow-x-auto no-scrollbar"
+            title={`Lignes sélectionnées : ${sortedSelectedLines.map((l) => `Ligne ${l}`).join(", ")}`}
           >
             <span className="text-sm shrink-0">🚇</span>
-            <span className="font-bold text-white hidden sm:inline whitespace-nowrap">
-              {selectedLines.length === 16 ? "Tout le Réseau (16L)" : `${selectedLines.length} Lignes`}
-            </span>
+            <div className="flex items-center gap-1 shrink-0">
+              {sortedSelectedLines.map((lineId) => {
+                const info = METRO_LINE_COLORS[lineId];
+                const bg = info?.bg || "#FFCD00";
+                const text = info?.text || "#000000";
+                const num = info?.num || lineId;
+
+                return (
+                  <span
+                    key={lineId}
+                    style={{ backgroundColor: bg, color: text }}
+                    className="w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] shadow-sm shrink-0 leading-none select-none"
+                    title={`Ligne ${lineId}`}
+                  >
+                    {num}
+                  </span>
+                );
+              })}
+            </div>
           </div>
         </div>
 
