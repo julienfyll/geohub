@@ -40,6 +40,7 @@ import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathS
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
 import { BorderPathSettingsModal } from "@/components/game/borderpath/BorderPathSettingsModal";
+import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
@@ -371,6 +372,7 @@ function BorderPathGame() {
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [showPackModal, setShowPackModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showRestartModal, setShowRestartModal] = useState(false);
 
   // Active Game State - Initialized synchronously so UI renders immediately without blocking spinner
   const [session, setSession] = useState<BorderPathSessionInit>(() =>
@@ -679,7 +681,7 @@ function BorderPathGame() {
           router.push(`/play/borderpath?pack=${pack}&mode=${newMode}&play=1`);
         }}
         onGiveUp={handleGiveUp}
-        onRestart={handleReplaySameChallenge}
+        onRestart={() => setShowRestartModal(true)}
       />
 
       {/* Optimal Target Card (Bottom-Left) */}
@@ -750,6 +752,13 @@ function BorderPathGame() {
         onChangeTheme={setTheme}
         hideBorders={hideBorders}
         onToggleHideBorders={handleToggleHideBorders}
+      />
+
+      {/* Restart Confirmation Modal */}
+      <RestartConfirmModal
+        isOpen={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+        onConfirm={handleReplaySameChallenge}
       />
     </div>
   );
