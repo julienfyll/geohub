@@ -299,6 +299,10 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
           id: "entity-outline",
           type: "line",
           source: "entities-geojson",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
           paint: {
             "line-color": [
               "case",

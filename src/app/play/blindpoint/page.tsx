@@ -1083,6 +1083,7 @@ function BlindPointGame() {
     return (
       <>
         <BlindPointRetraceGame
+          key={`retrace-${searchParams.toString()}`}
           initialTolerance={activeTolerance}
           initialOrderMode={activeOrder}
           selectedLines={activeLines}
