@@ -1,0 +1,1918 @@
+{
+  "10": {
+    "id": "10",
+    "name": "Aube",
+    "normalizedName": "aube",
+    "aliases": [
+      "10",
+      "Troyes",
+      "aube"
+    ],
+    "capitalOrChefLieu": "Troyes",
+    "latitude": 48.3022,
+    "longitude": 4.0751,
+    "neighbors": [
+      "21",
+      "51",
+      "52",
+      "77",
+      "89"
+    ]
+  },
+  "11": {
+    "id": "11",
+    "name": "Aude",
+    "normalizedName": "aude",
+    "aliases": [
+      "11",
+      "Carcassonne",
+      "aude"
+    ],
+    "capitalOrChefLieu": "Carcassonne",
+    "latitude": 43.1218,
+    "longitude": 2.3669,
+    "neighbors": [
+      "09",
+      "31",
+      "34",
+      "66",
+      "81"
+    ]
+  },
+  "12": {
+    "id": "12",
+    "name": "Aveyron",
+    "normalizedName": "aveyron",
+    "aliases": [
+      "12",
+      "Rodez",
+      "aveyron"
+    ],
+    "capitalOrChefLieu": "Rodez",
+    "latitude": 44.2917,
+    "longitude": 2.6627,
+    "neighbors": [
+      "15",
+      "30",
+      "34",
+      "46",
+      "48",
+      "81",
+      "82"
+    ]
+  },
+  "13": {
+    "id": "13",
+    "name": "Bouches-du-Rhône",
+    "normalizedName": "bouches-du-rhone",
+    "aliases": [
+      "13",
+      "Marseille",
+      "bouches du rhone"
+    ],
+    "capitalOrChefLieu": "Marseille",
+    "latitude": 43.5172,
+    "longitude": 5.1231,
+    "neighbors": [
+      "30",
+      "83",
+      "84"
+    ]
+  },
+  "14": {
+    "id": "14",
+    "name": "Calvados",
+    "normalizedName": "calvados",
+    "aliases": [
+      "14",
+      "Caen",
+      "calvados"
+    ],
+    "capitalOrChefLieu": "Caen",
+    "latitude": 49.0741,
+    "longitude": -0.3681,
+    "neighbors": [
+      "27",
+      "50",
+      "61"
+    ]
+  },
+  "15": {
+    "id": "15",
+    "name": "Cantal",
+    "normalizedName": "cantal",
+    "aliases": [
+      "15",
+      "Aurillac",
+      "cantal"
+    ],
+    "capitalOrChefLieu": "Aurillac",
+    "latitude": 45.0304,
+    "longitude": 2.7037,
+    "neighbors": [
+      "12",
+      "19",
+      "43",
+      "46",
+      "48",
+      "63"
+    ]
+  },
+  "16": {
+    "id": "16",
+    "name": "Charente",
+    "normalizedName": "charente",
+    "aliases": [
+      "16",
+      "Angoulême",
+      "charente"
+    ],
+    "capitalOrChefLieu": "Angoulême",
+    "latitude": 45.7264,
+    "longitude": 0.2021,
+    "neighbors": [
+      "17",
+      "24",
+      "79",
+      "86",
+      "87"
+    ]
+  },
+  "17": {
+    "id": "17",
+    "name": "Charente-Maritime",
+    "normalizedName": "charente-maritime",
+    "aliases": [
+      "17",
+      "La Rochelle",
+      "charente maritime"
+    ],
+    "capitalOrChefLieu": "La Rochelle",
+    "latitude": 45.8066,
+    "longitude": -0.731,
+    "neighbors": [
+      "16",
+      "24",
+      "33",
+      "79",
+      "85"
+    ]
+  },
+  "18": {
+    "id": "18",
+    "name": "Cher",
+    "normalizedName": "cher",
+    "aliases": [
+      "18",
+      "Bourges",
+      "cher"
+    ],
+    "capitalOrChefLieu": "Bourges",
+    "latitude": 47.0741,
+    "longitude": 2.3889,
+    "neighbors": [
+      "03",
+      "23",
+      "36",
+      "41",
+      "45",
+      "58"
+    ]
+  },
+  "19": {
+    "id": "19",
+    "name": "Corrèze",
+    "normalizedName": "correze",
+    "aliases": [
+      "19",
+      "Tulle",
+      "correze"
+    ],
+    "capitalOrChefLieu": "Tulle",
+    "latitude": 45.3672,
+    "longitude": 1.8736,
+    "neighbors": [
+      "15",
+      "23",
+      "24",
+      "46",
+      "63",
+      "87"
+    ]
+  },
+  "21": {
+    "id": "21",
+    "name": "Côte-d'Or",
+    "normalizedName": "cote-d'or",
+    "aliases": [
+      "21",
+      "Dijon",
+      "cote d'or"
+    ],
+    "capitalOrChefLieu": "Dijon",
+    "latitude": 47.4519,
+    "longitude": 4.7652,
+    "neighbors": [
+      "10",
+      "39",
+      "52",
+      "58",
+      "70",
+      "71",
+      "89"
+    ]
+  },
+  "22": {
+    "id": "22",
+    "name": "Côtes-d'Armor",
+    "normalizedName": "cotes-d'armor",
+    "aliases": [
+      "22",
+      "Saint-Brieuc",
+      "cotes d'armor"
+    ],
+    "capitalOrChefLieu": "Saint-Brieuc",
+    "latitude": 48.4448,
+    "longitude": -2.8206,
+    "neighbors": [
+      "29",
+      "35",
+      "56"
+    ]
+  },
+  "23": {
+    "id": "23",
+    "name": "Creuse",
+    "normalizedName": "creuse",
+    "aliases": [
+      "23",
+      "Guéret",
+      "creuse"
+    ],
+    "capitalOrChefLieu": "Guéret",
+    "latitude": 46.0712,
+    "longitude": 1.9892,
+    "neighbors": [
+      "03",
+      "18",
+      "19",
+      "36",
+      "63",
+      "87"
+    ]
+  },
+  "24": {
+    "id": "24",
+    "name": "Dordogne",
+    "normalizedName": "dordogne",
+    "aliases": [
+      "24",
+      "Périgueux",
+      "dordogne"
+    ],
+    "capitalOrChefLieu": "Périgueux",
+    "latitude": 45.1218,
+    "longitude": 0.756,
+    "neighbors": [
+      "16",
+      "17",
+      "19",
+      "33",
+      "46",
+      "47",
+      "87"
+    ]
+  },
+  "25": {
+    "id": "25",
+    "name": "Doubs",
+    "normalizedName": "doubs",
+    "aliases": [
+      "25",
+      "Besançon",
+      "doubs"
+    ],
+    "capitalOrChefLieu": "Besançon",
+    "latitude": 47.16,
+    "longitude": 6.3665,
+    "neighbors": [
+      "39",
+      "70",
+      "90"
+    ]
+  },
+  "26": {
+    "id": "26",
+    "name": "Drôme",
+    "normalizedName": "drome",
+    "aliases": [
+      "26",
+      "Valence",
+      "drome"
+    ],
+    "capitalOrChefLieu": "Valence",
+    "latitude": 44.6268,
+    "longitude": 5.2065,
+    "neighbors": [
+      "04",
+      "05",
+      "07",
+      "38",
+      "84"
+    ]
+  },
+  "27": {
+    "id": "27",
+    "name": "Eure",
+    "normalizedName": "eure",
+    "aliases": [
+      "27",
+      "Évreux",
+      "eure"
+    ],
+    "capitalOrChefLieu": "Évreux",
+    "latitude": 49.121,
+    "longitude": 0.9919,
+    "neighbors": [
+      "14",
+      "28",
+      "60",
+      "61",
+      "76",
+      "78",
+      "95"
+    ]
+  },
+  "28": {
+    "id": "28",
+    "name": "Eure-et-Loir",
+    "normalizedName": "eure-et-loir",
+    "aliases": [
+      "28",
+      "Chartres",
+      "eure et loir"
+    ],
+    "capitalOrChefLieu": "Chartres",
+    "latitude": 48.4149,
+    "longitude": 1.3495,
+    "neighbors": [
+      "27",
+      "41",
+      "45",
+      "61",
+      "72",
+      "78",
+      "91"
+    ]
+  },
+  "29": {
+    "id": "29",
+    "name": "Finistère",
+    "normalizedName": "finistere",
+    "aliases": [
+      "29",
+      "Quimper",
+      "finistere"
+    ],
+    "capitalOrChefLieu": "Quimper",
+    "latitude": 48.248,
+    "longitude": -4.1545,
+    "neighbors": [
+      "22",
+      "56"
+    ]
+  },
+  "30": {
+    "id": "30",
+    "name": "Gard",
+    "normalizedName": "gard",
+    "aliases": [
+      "30",
+      "Nîmes",
+      "gard"
+    ],
+    "capitalOrChefLieu": "Nîmes",
+    "latitude": 44.0206,
+    "longitude": 4.0707,
+    "neighbors": [
+      "07",
+      "12",
+      "13",
+      "34",
+      "48",
+      "84"
+    ]
+  },
+  "31": {
+    "id": "31",
+    "name": "Haute-Garonne",
+    "normalizedName": "haute-garonne",
+    "aliases": [
+      "31",
+      "Toulouse",
+      "haute garonne"
+    ],
+    "capitalOrChefLieu": "Toulouse",
+    "latitude": 43.3405,
+    "longitude": 1.1715,
+    "neighbors": [
+      "09",
+      "11",
+      "32",
+      "65",
+      "81",
+      "82"
+    ]
+  },
+  "32": {
+    "id": "32",
+    "name": "Gers",
+    "normalizedName": "gers",
+    "aliases": [
+      "32",
+      "Auch",
+      "gers"
+    ],
+    "capitalOrChefLieu": "Auch",
+    "latitude": 43.6987,
+    "longitude": 0.4448,
+    "neighbors": [
+      "31",
+      "40",
+      "47",
+      "64",
+      "65",
+      "82"
+    ]
+  },
+  "33": {
+    "id": "33",
+    "name": "Gironde",
+    "normalizedName": "gironde",
+    "aliases": [
+      "33",
+      "Bordeaux",
+      "gironde"
+    ],
+    "capitalOrChefLieu": "Bordeaux",
+    "latitude": 44.8078,
+    "longitude": -0.4783,
+    "neighbors": [
+      "17",
+      "24",
+      "40",
+      "47"
+    ]
+  },
+  "34": {
+    "id": "34",
+    "name": "Hérault",
+    "normalizedName": "herault",
+    "aliases": [
+      "34",
+      "Montpellier",
+      "herault"
+    ],
+    "capitalOrChefLieu": "Montpellier",
+    "latitude": 43.6,
+    "longitude": 3.3085,
+    "neighbors": [
+      "11",
+      "12",
+      "30",
+      "81"
+    ]
+  },
+  "35": {
+    "id": "35",
+    "name": "Ille-et-Vilaine",
+    "normalizedName": "ille-et-vilaine",
+    "aliases": [
+      "35",
+      "Rennes",
+      "ille et vilaine"
+    ],
+    "capitalOrChefLieu": "Rennes",
+    "latitude": 48.1811,
+    "longitude": -1.7586,
+    "neighbors": [
+      "22",
+      "44",
+      "49",
+      "50",
+      "53",
+      "56"
+    ]
+  },
+  "36": {
+    "id": "36",
+    "name": "Indre",
+    "normalizedName": "indre",
+    "aliases": [
+      "36",
+      "Châteauroux",
+      "indre"
+    ],
+    "capitalOrChefLieu": "Châteauroux",
+    "latitude": 46.7828,
+    "longitude": 1.5863,
+    "neighbors": [
+      "18",
+      "23",
+      "37",
+      "41",
+      "86",
+      "87"
+    ]
+  },
+  "37": {
+    "id": "37",
+    "name": "Indre-et-Loire",
+    "normalizedName": "indre-et-loire",
+    "aliases": [
+      "37",
+      "Tours",
+      "indre et loire"
+    ],
+    "capitalOrChefLieu": "Tours",
+    "latitude": 47.2596,
+    "longitude": 0.689,
+    "neighbors": [
+      "36",
+      "41",
+      "49",
+      "72",
+      "86"
+    ]
+  },
+  "38": {
+    "id": "38",
+    "name": "Isère",
+    "normalizedName": "isere",
+    "aliases": [
+      "38",
+      "Grenoble",
+      "isere"
+    ],
+    "capitalOrChefLieu": "Grenoble",
+    "latitude": 45.2883,
+    "longitude": 5.5676,
+    "neighbors": [
+      "01",
+      "05",
+      "07",
+      "26",
+      "42",
+      "69",
+      "73"
+    ]
+  },
+  "39": {
+    "id": "39",
+    "name": "Jura",
+    "normalizedName": "jura",
+    "aliases": [
+      "39",
+      "Lons-le-Saunier",
+      "jura"
+    ],
+    "capitalOrChefLieu": "Lons-le-Saunier",
+    "latitude": 46.7745,
+    "longitude": 5.6511,
+    "neighbors": [
+      "01",
+      "21",
+      "25",
+      "70",
+      "71"
+    ]
+  },
+  "40": {
+    "id": "40",
+    "name": "Landes",
+    "normalizedName": "landes",
+    "aliases": [
+      "40",
+      "Mont-de-Marsan",
+      "landes"
+    ],
+    "capitalOrChefLieu": "Mont-de-Marsan",
+    "latitude": 43.901,
+    "longitude": -0.596,
+    "neighbors": [
+      "32",
+      "33",
+      "47",
+      "64"
+    ]
+  },
+  "41": {
+    "id": "41",
+    "name": "Loir-et-Cher",
+    "normalizedName": "loir-et-cher",
+    "aliases": [
+      "41",
+      "Blois",
+      "loir et cher"
+    ],
+    "capitalOrChefLieu": "Blois",
+    "latitude": 47.64,
+    "longitude": 1.425,
+    "neighbors": [
+      "18",
+      "28",
+      "36",
+      "37",
+      "45",
+      "72"
+    ]
+  },
+  "42": {
+    "id": "42",
+    "name": "Loire",
+    "normalizedName": "loire",
+    "aliases": [
+      "42",
+      "Saint-Étienne",
+      "loire"
+    ],
+    "capitalOrChefLieu": "Saint-Étienne",
+    "latitude": 45.7521,
+    "longitude": 4.1925,
+    "neighbors": [
+      "03",
+      "07",
+      "38",
+      "43",
+      "63",
+      "69",
+      "71"
+    ]
+  },
+  "43": {
+    "id": "43",
+    "name": "Haute-Loire",
+    "normalizedName": "haute-loire",
+    "aliases": [
+      "43",
+      "Le Puy-en-Velay",
+      "haute loire"
+    ],
+    "capitalOrChefLieu": "Le Puy-en-Velay",
+    "latitude": 45.14,
+    "longitude": 3.816,
+    "neighbors": [
+      "07",
+      "15",
+      "42",
+      "48",
+      "63"
+    ]
+  },
+  "44": {
+    "id": "44",
+    "name": "Loire-Atlantique",
+    "normalizedName": "loire-atlantique",
+    "aliases": [
+      "44",
+      "Nantes",
+      "loire atlantique"
+    ],
+    "capitalOrChefLieu": "Nantes",
+    "latitude": 47.3287,
+    "longitude": -1.657,
+    "neighbors": [
+      "35",
+      "49",
+      "56",
+      "85"
+    ]
+  },
+  "45": {
+    "id": "45",
+    "name": "Loiret",
+    "normalizedName": "loiret",
+    "aliases": [
+      "45",
+      "Orléans",
+      "loiret"
+    ],
+    "capitalOrChefLieu": "Orléans",
+    "latitude": 47.8976,
+    "longitude": 2.3687,
+    "neighbors": [
+      "18",
+      "28",
+      "41",
+      "58",
+      "77",
+      "89",
+      "91"
+    ]
+  },
+  "46": {
+    "id": "46",
+    "name": "Lot",
+    "normalizedName": "lot",
+    "aliases": [
+      "46",
+      "Cahors",
+      "lot"
+    ],
+    "capitalOrChefLieu": "Cahors",
+    "latitude": 44.6064,
+    "longitude": 1.592,
+    "neighbors": [
+      "12",
+      "15",
+      "19",
+      "24",
+      "47",
+      "82"
+    ]
+  },
+  "47": {
+    "id": "47",
+    "name": "Lot-et-Garonne",
+    "normalizedName": "lot-et-garonne",
+    "aliases": [
+      "47",
+      "Agen",
+      "lot et garonne"
+    ],
+    "capitalOrChefLieu": "Agen",
+    "latitude": 44.3883,
+    "longitude": 0.4912,
+    "neighbors": [
+      "24",
+      "32",
+      "33",
+      "40",
+      "46",
+      "82"
+    ]
+  },
+  "48": {
+    "id": "48",
+    "name": "Lozère",
+    "normalizedName": "lozere",
+    "aliases": [
+      "48",
+      "Mende",
+      "lozere"
+    ],
+    "capitalOrChefLieu": "Mende",
+    "latitude": 44.5269,
+    "longitude": 3.4959,
+    "neighbors": [
+      "07",
+      "12",
+      "15",
+      "30",
+      "43"
+    ]
+  },
+  "49": {
+    "id": "49",
+    "name": "Maine-et-Loire",
+    "normalizedName": "maine-et-loire",
+    "aliases": [
+      "49",
+      "Angers",
+      "maine et loire"
+    ],
+    "capitalOrChefLieu": "Angers",
+    "latitude": 47.4106,
+    "longitude": -0.6301,
+    "neighbors": [
+      "35",
+      "37",
+      "44",
+      "53",
+      "72",
+      "79",
+      "85",
+      "86"
+    ]
+  },
+  "50": {
+    "id": "50",
+    "name": "Manche",
+    "normalizedName": "manche",
+    "aliases": [
+      "50",
+      "Saint-Lô",
+      "manche"
+    ],
+    "capitalOrChefLieu": "Saint-Lô",
+    "latitude": 49.0709,
+    "longitude": -1.3301,
+    "neighbors": [
+      "14",
+      "35",
+      "53",
+      "61"
+    ]
+  },
+  "51": {
+    "id": "51",
+    "name": "Marne",
+    "normalizedName": "marne",
+    "aliases": [
+      "51",
+      "Châlons-en-Champagne",
+      "marne"
+    ],
+    "capitalOrChefLieu": "Châlons-en-Champagne",
+    "latitude": 48.9379,
+    "longitude": 4.2099,
+    "neighbors": [
+      "02",
+      "08",
+      "10",
+      "52",
+      "55",
+      "77"
+    ]
+  },
+  "52": {
+    "id": "52",
+    "name": "Haute-Marne",
+    "normalizedName": "haute-marne",
+    "aliases": [
+      "52",
+      "Chaumont",
+      "haute marne"
+    ],
+    "capitalOrChefLieu": "Chaumont",
+    "latitude": 48.1239,
+    "longitude": 5.1973,
+    "neighbors": [
+      "10",
+      "21",
+      "51",
+      "55",
+      "70",
+      "88"
+    ]
+  },
+  "53": {
+    "id": "53",
+    "name": "Mayenne",
+    "normalizedName": "mayenne",
+    "aliases": [
+      "53",
+      "Laval",
+      "mayenne"
+    ],
+    "capitalOrChefLieu": "Laval",
+    "latitude": 48.1444,
+    "longitude": -0.6355,
+    "neighbors": [
+      "35",
+      "49",
+      "50",
+      "61",
+      "72"
+    ]
+  },
+  "54": {
+    "id": "54",
+    "name": "Meurthe-et-Moselle",
+    "normalizedName": "meurthe-et-moselle",
+    "aliases": [
+      "54",
+      "Nancy",
+      "meurthe et moselle"
+    ],
+    "capitalOrChefLieu": "Nancy",
+    "latitude": 48.9001,
+    "longitude": 6.0915,
+    "neighbors": [
+      "55",
+      "57",
+      "67",
+      "88"
+    ]
+  },
+  "55": {
+    "id": "55",
+    "name": "Meuse",
+    "normalizedName": "meuse",
+    "aliases": [
+      "55",
+      "Bar-le-Duc",
+      "meuse"
+    ],
+    "capitalOrChefLieu": "Bar-le-Duc",
+    "latitude": 49.0323,
+    "longitude": 5.391,
+    "neighbors": [
+      "08",
+      "51",
+      "52",
+      "54",
+      "88"
+    ]
+  },
+  "56": {
+    "id": "56",
+    "name": "Morbihan",
+    "normalizedName": "morbihan",
+    "aliases": [
+      "56",
+      "Vannes",
+      "morbihan"
+    ],
+    "capitalOrChefLieu": "Vannes",
+    "latitude": 47.7782,
+    "longitude": -2.8668,
+    "neighbors": [
+      "22",
+      "29",
+      "35",
+      "44"
+    ]
+  },
+  "57": {
+    "id": "57",
+    "name": "Moselle",
+    "normalizedName": "moselle",
+    "aliases": [
+      "57",
+      "Metz",
+      "moselle"
+    ],
+    "capitalOrChefLieu": "Metz",
+    "latitude": 49.0262,
+    "longitude": 6.7626,
+    "neighbors": [
+      "54",
+      "67"
+    ]
+  },
+  "58": {
+    "id": "58",
+    "name": "Nièvre",
+    "normalizedName": "nievre",
+    "aliases": [
+      "58",
+      "Nevers",
+      "nievre"
+    ],
+    "capitalOrChefLieu": "Nevers",
+    "latitude": 47.1322,
+    "longitude": 3.5572,
+    "neighbors": [
+      "03",
+      "18",
+      "21",
+      "45",
+      "71",
+      "89"
+    ]
+  },
+  "59": {
+    "id": "59",
+    "name": "Nord",
+    "normalizedName": "nord",
+    "aliases": [
+      "59",
+      "Lille",
+      "nord"
+    ],
+    "capitalOrChefLieu": "Lille",
+    "latitude": 50.4528,
+    "longitude": 3.1598,
+    "neighbors": [
+      "02",
+      "62",
+      "80"
+    ]
+  },
+  "60": {
+    "id": "60",
+    "name": "Oise",
+    "normalizedName": "oise",
+    "aliases": [
+      "60",
+      "Beauvais",
+      "oise"
+    ],
+    "capitalOrChefLieu": "Beauvais",
+    "latitude": 49.4178,
+    "longitude": 2.4345,
+    "neighbors": [
+      "02",
+      "27",
+      "76",
+      "77",
+      "80",
+      "95"
+    ]
+  },
+  "61": {
+    "id": "61",
+    "name": "Orne",
+    "normalizedName": "orne",
+    "aliases": [
+      "61",
+      "Alençon",
+      "orne"
+    ],
+    "capitalOrChefLieu": "Alençon",
+    "latitude": 48.6086,
+    "longitude": 0.0895,
+    "neighbors": [
+      "14",
+      "27",
+      "28",
+      "50",
+      "53",
+      "72"
+    ]
+  },
+  "62": {
+    "id": "62",
+    "name": "Pas-de-Calais",
+    "normalizedName": "pas-de-calais",
+    "aliases": [
+      "62",
+      "Arras",
+      "pas de calais"
+    ],
+    "capitalOrChefLieu": "Arras",
+    "latitude": 50.4133,
+    "longitude": 2.4599,
+    "neighbors": [
+      "59",
+      "80"
+    ]
+  },
+  "63": {
+    "id": "63",
+    "name": "Puy-de-Dôme",
+    "normalizedName": "puy-de-dome",
+    "aliases": [
+      "63",
+      "Clermont-Ferrand",
+      "puy de dome"
+    ],
+    "capitalOrChefLieu": "Clermont-Ferrand",
+    "latitude": 45.736,
+    "longitude": 3.1412,
+    "neighbors": [
+      "03",
+      "15",
+      "19",
+      "23",
+      "42",
+      "43"
+    ]
+  },
+  "64": {
+    "id": "64",
+    "name": "Pyrénées-Atlantiques",
+    "normalizedName": "pyrenees-atlantiques",
+    "aliases": [
+      "64",
+      "Pau",
+      "pyrenees atlantiques"
+    ],
+    "capitalOrChefLieu": "Pau",
+    "latitude": 43.2636,
+    "longitude": -0.7228,
+    "neighbors": [
+      "32",
+      "40",
+      "65"
+    ]
+  },
+  "65": {
+    "id": "65",
+    "name": "Hautes-Pyrénées",
+    "normalizedName": "hautes-pyrenees",
+    "aliases": [
+      "65",
+      "Tarbes",
+      "hautes pyrenees"
+    ],
+    "capitalOrChefLieu": "Tarbes",
+    "latitude": 43.1466,
+    "longitude": 0.157,
+    "neighbors": [
+      "31",
+      "32",
+      "64"
+    ]
+  },
+  "66": {
+    "id": "66",
+    "name": "Pyrénées-Orientales",
+    "normalizedName": "pyrenees-orientales",
+    "aliases": [
+      "66",
+      "Perpignan",
+      "pyrenees orientales"
+    ],
+    "capitalOrChefLieu": "Perpignan",
+    "latitude": 42.5683,
+    "longitude": 2.4485,
+    "neighbors": [
+      "09",
+      "11"
+    ]
+  },
+  "67": {
+    "id": "67",
+    "name": "Bas-Rhin",
+    "normalizedName": "bas-rhin",
+    "aliases": [
+      "67",
+      "Strasbourg",
+      "bas rhin"
+    ],
+    "capitalOrChefLieu": "Strasbourg",
+    "latitude": 48.7088,
+    "longitude": 7.4564,
+    "neighbors": [
+      "54",
+      "57",
+      "68",
+      "88"
+    ]
+  },
+  "68": {
+    "id": "68",
+    "name": "Haut-Rhin",
+    "normalizedName": "haut-rhin",
+    "aliases": [
+      "68",
+      "Colmar",
+      "haut rhin"
+    ],
+    "capitalOrChefLieu": "Colmar",
+    "latitude": 47.8426,
+    "longitude": 7.2676,
+    "neighbors": [
+      "67",
+      "88",
+      "90"
+    ]
+  },
+  "69": {
+    "id": "69",
+    "name": "Rhône",
+    "normalizedName": "rhone",
+    "aliases": [
+      "69",
+      "Lyon",
+      "rhone"
+    ],
+    "capitalOrChefLieu": "Lyon",
+    "latitude": 45.8765,
+    "longitude": 4.6708,
+    "neighbors": [
+      "01",
+      "38",
+      "42",
+      "71"
+    ]
+  },
+  "70": {
+    "id": "70",
+    "name": "Haute-Saône",
+    "normalizedName": "haute-saone",
+    "aliases": [
+      "70",
+      "Vesoul",
+      "haute saone"
+    ],
+    "capitalOrChefLieu": "Vesoul",
+    "latitude": 47.645,
+    "longitude": 6.0565,
+    "neighbors": [
+      "21",
+      "25",
+      "39",
+      "52",
+      "88",
+      "90"
+    ]
+  },
+  "71": {
+    "id": "71",
+    "name": "Saône-et-Loire",
+    "normalizedName": "saone-et-loire",
+    "aliases": [
+      "71",
+      "Mâcon",
+      "saone et loire"
+    ],
+    "capitalOrChefLieu": "Mâcon",
+    "latitude": 46.6418,
+    "longitude": 4.5373,
+    "neighbors": [
+      "01",
+      "03",
+      "21",
+      "39",
+      "42",
+      "58",
+      "69"
+    ]
+  },
+  "72": {
+    "id": "72",
+    "name": "Sarthe",
+    "normalizedName": "sarthe",
+    "aliases": [
+      "72",
+      "Le Mans",
+      "sarthe"
+    ],
+    "capitalOrChefLieu": "Le Mans",
+    "latitude": 47.9842,
+    "longitude": 0.2009,
+    "neighbors": [
+      "28",
+      "37",
+      "41",
+      "49",
+      "53",
+      "61"
+    ]
+  },
+  "73": {
+    "id": "73",
+    "name": "Savoie",
+    "normalizedName": "savoie",
+    "aliases": [
+      "73",
+      "Chambéry",
+      "savoie"
+    ],
+    "capitalOrChefLieu": "Chambéry",
+    "latitude": 45.4899,
+    "longitude": 6.3846,
+    "neighbors": [
+      "01",
+      "05",
+      "38",
+      "74"
+    ]
+  },
+  "74": {
+    "id": "74",
+    "name": "Haute-Savoie",
+    "normalizedName": "haute-savoie",
+    "aliases": [
+      "74",
+      "Annecy",
+      "haute savoie"
+    ],
+    "capitalOrChefLieu": "Annecy",
+    "latitude": 46.011,
+    "longitude": 6.4624,
+    "neighbors": [
+      "01",
+      "73"
+    ]
+  },
+  "75": {
+    "id": "75",
+    "name": "Paris",
+    "normalizedName": "paris",
+    "aliases": [
+      "75",
+      "Paris",
+      "paris"
+    ],
+    "capitalOrChefLieu": "Paris",
+    "latitude": 48.8517,
+    "longitude": 2.3552,
+    "neighbors": [
+      "92",
+      "93",
+      "94"
+    ]
+  },
+  "76": {
+    "id": "76",
+    "name": "Seine-Maritime",
+    "normalizedName": "seine-maritime",
+    "aliases": [
+      "76",
+      "Rouen",
+      "seine maritime"
+    ],
+    "capitalOrChefLieu": "Rouen",
+    "latitude": 49.6002,
+    "longitude": 1.0862,
+    "neighbors": [
+      "27",
+      "60",
+      "80"
+    ]
+  },
+  "77": {
+    "id": "77",
+    "name": "Seine-et-Marne",
+    "normalizedName": "seine-et-marne",
+    "aliases": [
+      "77",
+      "Melun",
+      "seine et marne"
+    ],
+    "capitalOrChefLieu": "Melun",
+    "latitude": 48.6102,
+    "longitude": 2.946,
+    "neighbors": [
+      "02",
+      "10",
+      "45",
+      "51",
+      "60",
+      "89",
+      "91",
+      "93",
+      "94",
+      "95"
+    ]
+  },
+  "78": {
+    "id": "78",
+    "name": "Yvelines",
+    "normalizedName": "yvelines",
+    "aliases": [
+      "78",
+      "Versailles",
+      "yvelines"
+    ],
+    "capitalOrChefLieu": "Versailles",
+    "latitude": 48.8091,
+    "longitude": 1.8503,
+    "neighbors": [
+      "27",
+      "28",
+      "91",
+      "92",
+      "95"
+    ]
+  },
+  "79": {
+    "id": "79",
+    "name": "Deux-Sèvres",
+    "normalizedName": "deux-sevres",
+    "aliases": [
+      "79",
+      "Niort",
+      "deux sevres"
+    ],
+    "capitalOrChefLieu": "Niort",
+    "latitude": 46.5388,
+    "longitude": -0.3083,
+    "neighbors": [
+      "16",
+      "17",
+      "49",
+      "85",
+      "86"
+    ]
+  },
+  "80": {
+    "id": "80",
+    "name": "Somme",
+    "normalizedName": "somme",
+    "aliases": [
+      "80",
+      "Amiens",
+      "somme"
+    ],
+    "capitalOrChefLieu": "Amiens",
+    "latitude": 49.9922,
+    "longitude": 2.3002,
+    "neighbors": [
+      "02",
+      "59",
+      "60",
+      "62",
+      "76"
+    ]
+  },
+  "81": {
+    "id": "81",
+    "name": "Tarn",
+    "normalizedName": "tarn",
+    "aliases": [
+      "81",
+      "Albi",
+      "tarn"
+    ],
+    "capitalOrChefLieu": "Albi",
+    "latitude": 43.7999,
+    "longitude": 2.1437,
+    "neighbors": [
+      "11",
+      "12",
+      "31",
+      "34",
+      "82"
+    ]
+  },
+  "82": {
+    "id": "82",
+    "name": "Tarn-et-Garonne",
+    "normalizedName": "tarn-et-garonne",
+    "aliases": [
+      "82",
+      "Montauban",
+      "tarn et garonne"
+    ],
+    "capitalOrChefLieu": "Montauban",
+    "latitude": 44.1076,
+    "longitude": 1.326,
+    "neighbors": [
+      "12",
+      "31",
+      "32",
+      "46",
+      "47",
+      "81"
+    ]
+  },
+  "83": {
+    "id": "83",
+    "name": "Var",
+    "normalizedName": "var",
+    "aliases": [
+      "83",
+      "Toulon",
+      "var"
+    ],
+    "capitalOrChefLieu": "Toulon",
+    "latitude": 43.3959,
+    "longitude": 6.2446,
+    "neighbors": [
+      "04",
+      "06",
+      "13",
+      "84"
+    ]
+  },
+  "84": {
+    "id": "84",
+    "name": "Vaucluse",
+    "normalizedName": "vaucluse",
+    "aliases": [
+      "84",
+      "Avignon",
+      "vaucluse"
+    ],
+    "capitalOrChefLieu": "Avignon",
+    "latitude": 44.0747,
+    "longitude": 5.1402,
+    "neighbors": [
+      "04",
+      "07",
+      "13",
+      "26",
+      "30",
+      "83"
+    ]
+  },
+  "85": {
+    "id": "85",
+    "name": "Vendée",
+    "normalizedName": "vendee",
+    "aliases": [
+      "85",
+      "La Roche-sur-Yon",
+      "vendee"
+    ],
+    "capitalOrChefLieu": "La Roche-sur-Yon",
+    "latitude": 46.7155,
+    "longitude": -1.3619,
+    "neighbors": [
+      "17",
+      "44",
+      "49",
+      "79"
+    ]
+  },
+  "86": {
+    "id": "86",
+    "name": "Vienne",
+    "normalizedName": "vienne",
+    "aliases": [
+      "86",
+      "Poitiers",
+      "vienne"
+    ],
+    "capitalOrChefLieu": "Poitiers",
+    "latitude": 46.5778,
+    "longitude": 0.4112,
+    "neighbors": [
+      "16",
+      "36",
+      "37",
+      "49",
+      "79",
+      "87"
+    ]
+  },
+  "87": {
+    "id": "87",
+    "name": "Haute-Vienne",
+    "normalizedName": "haute-vienne",
+    "aliases": [
+      "87",
+      "Limoges",
+      "haute vienne"
+    ],
+    "capitalOrChefLieu": "Limoges",
+    "latitude": 45.8813,
+    "longitude": 1.2215,
+    "neighbors": [
+      "16",
+      "19",
+      "23",
+      "24",
+      "36",
+      "86"
+    ]
+  },
+  "88": {
+    "id": "88",
+    "name": "Vosges",
+    "normalizedName": "vosges",
+    "aliases": [
+      "88",
+      "Épinal",
+      "vosges"
+    ],
+    "capitalOrChefLieu": "Épinal",
+    "latitude": 48.2196,
+    "longitude": 6.2582,
+    "neighbors": [
+      "52",
+      "54",
+      "55",
+      "67",
+      "68",
+      "70",
+      "90"
+    ]
+  },
+  "89": {
+    "id": "89",
+    "name": "Yonne",
+    "normalizedName": "yonne",
+    "aliases": [
+      "89",
+      "Auxerre",
+      "yonne"
+    ],
+    "capitalOrChefLieu": "Auxerre",
+    "latitude": 47.8485,
+    "longitude": 3.6032,
+    "neighbors": [
+      "10",
+      "21",
+      "45",
+      "58",
+      "77"
+    ]
+  },
+  "90": {
+    "id": "90",
+    "name": "Territoire de Belfort",
+    "normalizedName": "territoire de belfort",
+    "aliases": [
+      "90",
+      "Belfort",
+      "territoire de belfort"
+    ],
+    "capitalOrChefLieu": "Belfort",
+    "latitude": 47.621,
+    "longitude": 6.9266,
+    "neighbors": [
+      "25",
+      "68",
+      "70",
+      "88"
+    ]
+  },
+  "91": {
+    "id": "91",
+    "name": "Essonne",
+    "normalizedName": "essonne",
+    "aliases": [
+      "91",
+      "Évry-Courcouronnes",
+      "essonne"
+    ],
+    "capitalOrChefLieu": "Évry-Courcouronnes",
+    "latitude": 48.5314,
+    "longitude": 2.2278,
+    "neighbors": [
+      "28",
+      "45",
+      "77",
+      "78",
+      "92",
+      "94"
+    ]
+  },
+  "92": {
+    "id": "92",
+    "name": "Hauts-de-Seine",
+    "normalizedName": "hauts-de-seine",
+    "aliases": [
+      "92",
+      "Nanterre",
+      "hauts de seine"
+    ],
+    "capitalOrChefLieu": "Nanterre",
+    "latitude": 48.8455,
+    "longitude": 2.2569,
+    "neighbors": [
+      "75",
+      "78",
+      "91",
+      "93",
+      "94",
+      "95"
+    ]
+  },
+  "93": {
+    "id": "93",
+    "name": "Seine-Saint-Denis",
+    "normalizedName": "seine-saint-denis",
+    "aliases": [
+      "93",
+      "Bobigny",
+      "seine saint denis"
+    ],
+    "capitalOrChefLieu": "Bobigny",
+    "latitude": 48.9293,
+    "longitude": 2.4602,
+    "neighbors": [
+      "75",
+      "77",
+      "92",
+      "94",
+      "95"
+    ]
+  },
+  "94": {
+    "id": "94",
+    "name": "Val-de-Marne",
+    "normalizedName": "val-de-marne",
+    "aliases": [
+      "94",
+      "Créteil",
+      "val de marne"
+    ],
+    "capitalOrChefLieu": "Créteil",
+    "latitude": 48.7711,
+    "longitude": 2.4538,
+    "neighbors": [
+      "75",
+      "77",
+      "91",
+      "92",
+      "93"
+    ]
+  },
+  "95": {
+    "id": "95",
+    "name": "Val-d'Oise",
+    "normalizedName": "val-d'oise",
+    "aliases": [
+      "95",
+      "Cergy",
+      "val d'oise"
+    ],
+    "capitalOrChefLieu": "Cergy",
+    "latitude": 49.0785,
+    "longitude": 2.1017,
+    "neighbors": [
+      "27",
+      "60",
+      "77",
+      "78",
+      "92",
+      "93"
+    ]
+  },
+  "01": {
+    "id": "01",
+    "name": "Ain",
+    "normalizedName": "ain",
+    "aliases": [
+      "01",
+      "Bourg-en-Bresse",
+      "ain"
+    ],
+    "capitalOrChefLieu": "Bourg-en-Bresse",
+    "latitude": 46.1037,
+    "longitude": 5.4167,
+    "neighbors": [
+      "38",
+      "39",
+      "69",
+      "71",
+      "73",
+      "74"
+    ]
+  },
+  "02": {
+    "id": "02",
+    "name": "Aisne",
+    "normalizedName": "aisne",
+    "aliases": [
+      "02",
+      "Laon",
+      "aisne"
+    ],
+    "capitalOrChefLieu": "Laon",
+    "latitude": 49.4812,
+    "longitude": 3.5548,
+    "neighbors": [
+      "08",
+      "51",
+      "59",
+      "60",
+      "77",
+      "80"
+    ]
+  },
+  "03": {
+    "id": "03",
+    "name": "Allier",
+    "normalizedName": "allier",
+    "aliases": [
+      "03",
+      "Moulins",
+      "allier"
+    ],
+    "capitalOrChefLieu": "Moulins",
+    "latitude": 46.3821,
+    "longitude": 3.203,
+    "neighbors": [
+      "18",
+      "23",
+      "42",
+      "58",
+      "63",
+      "71"
+    ]
+  },
+  "04": {
+    "id": "04",
+    "name": "Alpes-de-Haute-Provence",
+    "normalizedName": "alpes-de-haute-provence",
+    "aliases": [
+      "04",
+      "Digne-les-Bains",
+      "alpes de haute provence"
+    ],
+    "capitalOrChefLieu": "Digne-les-Bains",
+    "latitude": 44.14,
+    "longitude": 6.2612,
+    "neighbors": [
+      "05",
+      "06",
+      "26",
+      "83",
+      "84"
+    ]
+  },
+  "05": {
+    "id": "05",
+    "name": "Hautes-Alpes",
+    "normalizedName": "hautes-alpes",
+    "aliases": [
+      "05",
+      "Gap",
+      "hautes alpes"
+    ],
+    "capitalOrChefLieu": "Gap",
+    "latitude": 44.6492,
+    "longitude": 6.2007,
+    "neighbors": [
+      "04",
+      "26",
+      "38",
+      "73"
+    ]
+  },
+  "06": {
+    "id": "06",
+    "name": "Alpes-Maritimes",
+    "normalizedName": "alpes-maritimes",
+    "aliases": [
+      "06",
+      "Nice",
+      "alpes maritimes"
+    ],
+    "capitalOrChefLieu": "Nice",
+    "latitude": 43.9242,
+    "longitude": 7.0922,
+    "neighbors": [
+      "04",
+      "83"
+    ]
+  },
+  "07": {
+    "id": "07",
+    "name": "Ardèche",
+    "normalizedName": "ardeche",
+    "aliases": [
+      "07",
+      "Privas",
+      "ardeche"
+    ],
+    "capitalOrChefLieu": "Privas",
+    "latitude": 44.7722,
+    "longitude": 4.4446,
+    "neighbors": [
+      "26",
+      "30",
+      "38",
+      "42",
+      "43",
+      "48",
+      "84"
+    ]
+  },
+  "08": {
+    "id": "08",
+    "name": "Ardennes",
+    "normalizedName": "ardennes",
+    "aliases": [
+      "08",
+      "Charleville-Mézières",
+      "ardennes"
+    ],
+    "capitalOrChefLieu": "Charleville-Mézières",
+    "latitude": 49.6491,
+    "longitude": 4.6841,
+    "neighbors": [
+      "02",
+      "51",
+      "55"
+    ]
+  },
+  "09": {
+    "id": "09",
+    "name": "Ariège",
+    "normalizedName": "ariege",
+    "aliases": [
+      "09",
+      "Foix",
+      "ariege"
+    ],
+    "capitalOrChefLieu": "Foix",
+    "latitude": 42.9447,
+    "longitude": 1.509,
+    "neighbors": [
+      "11",
+      "31",
+      "66"
+    ]
+  },
+  "2A": {
+    "id": "2A",
+    "name": "Corse-du-Sud",
+    "normalizedName": "corse-du-sud",
+    "aliases": [
+      "2A",
+      "Ajaccio",
+      "corse du sud"
+    ],
+    "capitalOrChefLieu": "Ajaccio",
+    "latitude": 41.8872,
+    "longitude": 8.9332,
+    "neighbors": [
+      "2B"
+    ]
+  },
+  "2B": {
+    "id": "2B",
+    "name": "Haute-Corse",
+    "normalizedName": "haute-corse",
+    "aliases": [
+      "2B",
+      "Bastia",
+      "haute corse"
+    ],
+    "capitalOrChefLieu": "Bastia",
+    "latitude": 42.3961,
+    "longitude": 9.1414,
+    "neighbors": [
+      "2A"
+    ]
+  }
+}
