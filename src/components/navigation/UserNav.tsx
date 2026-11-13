@@ -140,7 +140,7 @@ export const UserNav: React.FC<UserNavProps> = ({ compact = false }) => {
             {/* Menu Items */}
             <div className="space-y-1 text-xs">
               
-              {/* Choice 1: Statistiques & Maîtrise */}
+              {/* Choice 1: Statistiques */}
               <button
                 onClick={() => openModalWithTab("stats")}
                 className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800 text-slate-200 hover:text-white transition-colors cursor-pointer group text-left"
@@ -150,13 +150,10 @@ export const UserNav: React.FC<UserNavProps> = ({ compact = false }) => {
                     <BarChart3 className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className="font-bold block text-white">Statistiques & Atlas</span>
+                    <span className="font-bold block text-white">Statistiques</span>
                     <span className="text-[10px] text-slate-400 block">Performances & bilan</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400">
-                  Atlas
-                </span>
               </button>
 
               {/* Choice 2: Carte Atlas & Heatmap (Direct Fullscreen Access) */}

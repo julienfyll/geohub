@@ -160,7 +160,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             }`}
           >
             <BarChart3 className="w-3.5 h-3.5" />
-            <span>Statistiques & Atlas</span>
+            <span>Statistiques</span>
           </button>
 
           <button
