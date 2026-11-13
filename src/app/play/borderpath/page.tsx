@@ -27,6 +27,7 @@ import { BorderPathTargetCard } from "@/components/game/borderpath/BorderPathTar
 import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathSummaryModal";
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
+import { BorderPathSettingsModal } from "@/components/game/borderpath/BorderPathSettingsModal";
 
 function BorderPathGame() {
   const searchParams = useSearchParams();
@@ -53,6 +54,7 @@ function BorderPathGame() {
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [showPackModal, setShowPackModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Active Game State - Initialized synchronously so UI renders immediately without blocking spinner
   const [session, setSession] = useState<BorderPathSessionInit>(() =>
@@ -320,11 +322,8 @@ function BorderPathGame() {
         mode={mode}
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
-        theme={theme}
-        hideBorders={hideBorders}
-        onToggleTheme={handleToggleTheme}
-        onToggleHideBorders={handleToggleHideBorders}
         onOpenRules={() => setShowRulesModal(true)}
+        onOpenSettings={() => setShowSettingsModal(true)}
         onOpenPackModal={() => setShowPackModal(true)}
         onChangeMode={(newMode) => {
           router.push(`/play/borderpath?pack=${pack}&mode=${newMode}`);
@@ -391,6 +390,16 @@ function BorderPathGame() {
         currentPack={pack}
         currentMode={mode}
         onSelect={handleSelectPackMode}
+      />
+
+      {/* Game Settings Modal (Roue crantée standard GeoHub) */}
+      <BorderPathSettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+        theme={theme}
+        onChangeTheme={setTheme}
+        hideBorders={hideBorders}
+        onToggleHideBorders={handleToggleHideBorders}
       />
     </div>
   );

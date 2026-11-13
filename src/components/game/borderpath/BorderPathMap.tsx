@@ -244,7 +244,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               "#38bdf8",
               ["boolean", ["feature-state", "inBranchB"], false],
               "#fcd34d",
-              hideBorders ? "transparent" : theme === "voyager" ? "#cbd5e1" : "#334155",
+              hideBorders ? "rgba(0,0,0,0)" : theme === "voyager" ? "#cbd5e1" : "#334155",
             ],
             "line-width": [
               "case",
@@ -260,7 +260,22 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               1.8,
               hideBorders ? 0 : 0.8,
             ],
-            "line-opacity": hideBorders ? 0.3 : 0.85,
+            "line-opacity": [
+              "case",
+              ["boolean", ["feature-state", "isInvalid"], false],
+              1,
+              ["boolean", ["feature-state", "isComplete"], false],
+              1,
+              ["boolean", ["feature-state", "isHeadA"], false],
+              1,
+              ["boolean", ["feature-state", "isHeadB"], false],
+              1,
+              ["boolean", ["feature-state", "inBranchA"], false],
+              1,
+              ["boolean", ["feature-state", "inBranchB"], false],
+              1,
+              hideBorders ? 0 : 0.85,
+            ],
           },
         });
 
@@ -344,6 +359,22 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       setupLayers(map);
       fitToCorridor();
       applyFeatureStates(map);
+
+      // Apply initial basemap boundary visibility
+      const style = map.getStyle();
+      if (style && style.layers) {
+        style.layers.forEach((layer) => {
+          if (
+            layer.id.includes("boundary") ||
+            layer.id.includes("admin") ||
+            layer.id.startsWith("boundary_")
+          ) {
+            if (map.getLayer(layer.id)) {
+              map.setLayoutProperty(layer.id, "visibility", hideBorders ? "none" : "visible");
+            }
+          }
+        });
+      }
     });
 
     return () => {
@@ -353,6 +384,80 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       isLoadedRef.current = false;
     };
   }, [theme, isFrance]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Dynamically update entity borders and basemap boundaries when hideBorders or theme changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isLoadedRef.current) return;
+
+    // 1. Update entity-outline paint properties
+    if (map.getLayer("entity-outline")) {
+      map.setPaintProperty("entity-outline", "line-color", [
+        "case",
+        ["boolean", ["feature-state", "isInvalid"], false],
+        "#ef4444",
+        ["boolean", ["feature-state", "isComplete"], false],
+        "#34d399",
+        ["boolean", ["feature-state", "isHeadA"], false],
+        "#22d3ee",
+        ["boolean", ["feature-state", "isHeadB"], false],
+        "#fbbf24",
+        ["boolean", ["feature-state", "inBranchA"], false],
+        "#38bdf8",
+        ["boolean", ["feature-state", "inBranchB"], false],
+        "#fcd34d",
+        hideBorders ? "rgba(0,0,0,0)" : theme === "voyager" ? "#cbd5e1" : "#334155",
+      ]);
+
+      map.setPaintProperty("entity-outline", "line-width", [
+        "case",
+        ["boolean", ["feature-state", "isComplete"], false],
+        2.5,
+        ["boolean", ["feature-state", "isHeadA"], false],
+        2.5,
+        ["boolean", ["feature-state", "isHeadB"], false],
+        2.5,
+        ["boolean", ["feature-state", "inBranchA"], false],
+        1.8,
+        ["boolean", ["feature-state", "inBranchB"], false],
+        1.8,
+        hideBorders ? 0 : 0.8,
+      ]);
+
+      map.setPaintProperty("entity-outline", "line-opacity", [
+        "case",
+        ["boolean", ["feature-state", "isInvalid"], false],
+        1,
+        ["boolean", ["feature-state", "isComplete"], false],
+        1,
+        ["boolean", ["feature-state", "isHeadA"], false],
+        1,
+        ["boolean", ["feature-state", "isHeadB"], false],
+        1,
+        ["boolean", ["feature-state", "inBranchA"], false],
+        1,
+        ["boolean", ["feature-state", "inBranchB"], false],
+        1,
+        hideBorders ? 0 : 0.85,
+      ]);
+    }
+
+    // 2. Hide or show basemap boundaries (Carto vector boundary lines)
+    const style = map.getStyle();
+    if (style && style.layers) {
+      style.layers.forEach((layer) => {
+        if (
+          layer.id.includes("boundary") ||
+          layer.id.includes("admin") ||
+          layer.id.startsWith("boundary_")
+        ) {
+          if (map.getLayer(layer.id)) {
+            map.setLayoutProperty(layer.id, "visibility", hideBorders ? "none" : "visible");
+          }
+        }
+      });
+    }
+  }, [hideBorders, theme]);
 
   // Update feature states and lines whenever state changes
   useEffect(() => {
