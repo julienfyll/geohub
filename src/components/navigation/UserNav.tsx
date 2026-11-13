@@ -18,9 +18,13 @@ import { ProfileModal } from "@/components/profile/ProfileModal";
 
 interface UserNavProps {
   compact?: boolean;
+  showStreak?: boolean;
 }
 
-export const UserNav: React.FC<UserNavProps> = ({ compact = false }) => {
+export const UserNav: React.FC<UserNavProps> = ({
+  compact = false,
+  showStreak = !compact,
+}) => {
   const { user, profile, streak, loading, signInWithGoogle, signOut } = useAuth();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [modalTab, setModalTab] = useState<"stats" | "history" | "account">("stats");
@@ -53,17 +57,21 @@ export const UserNav: React.FC<UserNavProps> = ({ compact = false }) => {
     <>
       <div className="relative flex items-center gap-2 sm:gap-3" ref={dropdownRef}>
         
-        {/* Streak Badge Button -> Direct to Stats */}
-        <button
-          onClick={() => openModalWithTab("stats")}
-          className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 hover:border-amber-500/40 text-xs font-semibold text-amber-400 transition-colors shadow-sm cursor-pointer ${
-            compact ? "hidden lg:flex" : ""
-          }`}
-          title="Voir vos statistiques et séries"
-        >
-          <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-          <span>Série : {streak.current_streak || 0} {streak.current_streak > 1 ? "jours" : "jour"}</span>
-        </button>
+        {/* Streak Badge Button -> Direct to Stats (visible uniquement sur les menus hors jeu) */}
+        {showStreak && !compact && (
+          <button
+            type="button"
+            onClick={() => openModalWithTab("stats")}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 hover:border-amber-500/40 text-xs font-semibold text-amber-400 transition-colors shadow-sm cursor-pointer"
+            title="Voir vos statistiques et séries"
+          >
+            <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+            <span>
+              Série : {streak.current_streak || 0}{" "}
+              {streak.current_streak > 1 ? "jours" : "jour"}
+            </span>
+          </button>
+        )}
 
         {/* User Account / Avatar Button -> Toggles Dropdown Menu */}
         {loading ? (
