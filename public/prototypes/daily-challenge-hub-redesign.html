@@ -396,30 +396,51 @@
         </div>
 
         <!-- Game 3 : BorderPath -->
-        <div class="relative group bg-slate-900/90 border-2 border-indigo-500/50 hover:border-indigo-400 rounded-3xl p-6 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+        <a href="/play/borderpath" class="relative group bg-slate-900/90 border-2 border-indigo-500/50 hover:border-indigo-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden cursor-pointer hover:shadow-indigo-500/10 hover:scale-[1.01]">
+          <div class="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+            <span class="text-8xl">🌐</span>
+          </div>
+
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 text-xs font-bold uppercase tracking-wider">
-                ★ Jouable
+              <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span>★ Connexion & Voisinage</span>
               </span>
               <span class="text-xs text-slate-400 font-mono">100% Clavier • BFS Optimal</span>
             </div>
 
-            <h3 class="text-2xl font-bold text-white mb-2">
+            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">
               BorderPath — Le Maillon Frontalier
             </h3>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Reliez deux pays éloignés ou départements français en nommant au clavier la séquence minimale de territoires limitrophes contigus.
+              Reliez deux pays éloignés (ex: Portugal à la Chine) ou deux départements français en nommant au clavier la séquence minimale de territoires limitrophes contigus.
             </p>
+
+            <div class="grid grid-cols-2 gap-2.5 mb-6">
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">🌍 Monde & Europe</span>
+                <span class="text-[11px] text-slate-400 leading-tight">
+                  167 pays Monde • 46 pays Europe
+                </span>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-200">🇫🇷 France Métropolitaine</span>
+                <span class="text-[11px] text-slate-400 leading-tight">
+                  96 départements contigus
+                </span>
+              </div>
+            </div>
           </div>
 
-          <a href="/play/borderpath?pack=monde&mode=daily" class="py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm transition-all text-center">
-            Jouer à BorderPath →
-          </a>
-        </div>
+          <div class="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-indigo-600 group-hover:bg-indigo-500 text-white font-semibold text-sm transition-all shadow-lg shadow-indigo-600/25">
+            <span>Configurer & Jouer à BorderPath</span>
+            <span>→</span>
+          </div>
+        </a>
 
         <!-- Game 4 : Capital Blitz -->
-        <div class="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between opacity-75">
+        <div class="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-7 flex flex-col justify-between opacity-75">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-medium uppercase tracking-wider">
@@ -428,17 +449,34 @@
               <span class="text-slate-500 text-xs font-mono">Contre-la-montre</span>
             </div>
 
-            <h3 class="text-xl font-bold text-slate-300 mb-2">
+            <h3 class="text-2xl font-bold text-slate-300 mb-2">
               Capital Blitz — Sprint 60s
             </h3>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
               Identifiez un maximum de capitales, drapeaux et silhouettes nationales avec combos multiplicateurs.
             </p>
+
+            <div class="grid grid-cols-2 gap-2.5 mb-6">
+              <div class="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-400">⚡ Sprint 60s</span>
+                <span class="text-[11px] text-slate-500 leading-tight">
+                  Multiplicateurs & combos
+                </span>
+              </div>
+
+              <div class="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
+                <span class="text-xs font-bold text-slate-400">🏁 Capitales & Drapeaux</span>
+                <span class="text-[11px] text-slate-500 leading-tight">
+                  195 nations reconnues
+                </span>
+              </div>
+            </div>
           </div>
 
-          <button disabled class="w-full py-3 px-4 rounded-xl bg-slate-800/60 text-slate-500 font-semibold text-xs border border-slate-700/50 cursor-not-allowed">
-            En cours de développement
-          </button>
+          <div class="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-slate-800/60 text-slate-500 font-semibold text-sm border border-slate-700/50 cursor-not-allowed">
+            <span>En cours de développement</span>
+            <span>⏳</span>
+          </div>
         </div>
 
       </div>
