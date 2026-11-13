@@ -41,9 +41,9 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_population_fr",
     game: "georings",
-    title: "France — Population",
-    subtitle: "Centre du jour fixe • 5 anneaux concentriques",
-    badge: "Quotidien #1",
+    title: "France — Villes",
+    subtitle: "Centre du jour fixe • 5 anneaux",
+    badge: "Population",
     icon: "👥",
     linkUrl: "/play/georings?metric=population&scale=fr&mode=daily",
     isGeoRings: true,
@@ -52,9 +52,9 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_population_eu",
     game: "georings",
-    title: "Europe — Population",
-    subtitle: "5 anneaux à travers les capitales européennes",
-    badge: "Quotidien #2",
+    title: "Europe — Villes",
+    subtitle: "5 anneaux à travers les capitales",
+    badge: "Population",
     icon: "🇪🇺",
     linkUrl: "/play/georings?metric=population&scale=eu&mode=daily",
     isGeoRings: true,
@@ -63,9 +63,9 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "georings_population_world",
     game: "georings",
-    title: "Monde — Population",
-    subtitle: "Échelle planétaire (Tokyo, NYC, São Paulo...)",
-    badge: "Quotidien #3",
+    title: "Monde — Villes",
+    subtitle: "Échelle planétaire (Tokyo, NYC...)",
+    badge: "Population",
     icon: "🌍",
     linkUrl: "/play/georings?metric=population&scale=world&mode=daily",
     isGeoRings: true,
@@ -75,8 +75,8 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "georings_airports_fr",
     game: "georings",
     title: "France — Aéroports",
-    subtitle: "Critère : Trafic passagers annuel (DGAC)",
-    badge: "DGAC",
+    subtitle: "Trafic annuel passagers (DGAC)",
+    badge: "Aéroports",
     icon: "✈️",
     linkUrl: "/play/georings?metric=airports&scale=fr&mode=daily",
     isGeoRings: true,
@@ -86,8 +86,8 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "georings_airports_world",
     game: "georings",
     title: "Monde — Aéroports",
-    subtitle: "Grands hubs mondiaux (Atlanta, Dubaï, Heathrow...)",
-    badge: "Grands Hubs",
+    subtitle: "Grands hubs mondiaux",
+    badge: "Aéroports",
     icon: "🛫",
     linkUrl: "/play/georings?metric=airports&scale=world&mode=daily",
     isGeoRings: true,
@@ -99,7 +99,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "blindpoint_villes_france",
     game: "blindpoint",
     title: "Villes de France",
-    subtitle: "Calibré : 2 faciles • 2 moyennes • 1 terroir",
+    subtitle: "5 cibles équilibrées",
     badge: "139 villes",
     icon: "🇫🇷",
     linkUrl: "/play/blindpoint?pack=villes_france&mode=daily&play=1",
@@ -110,8 +110,8 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "blindpoint_villes_europe",
     game: "blindpoint",
     title: "Villes d'Europe",
-    subtitle: "Calibré : 2 faciles • 2 moyennes • 1 perle",
-    badge: "42 métropoles",
+    subtitle: "Capitales & métropoles",
+    badge: "42 villes",
     icon: "🇪🇺",
     linkUrl: "/play/blindpoint?pack=villes_europe&mode=daily&play=1",
     isGeoRings: false,
@@ -121,8 +121,8 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "blindpoint_villes_monde",
     game: "blindpoint",
     title: "Villes du Monde",
-    subtitle: "Équilibrage continental progressif (5 continents)",
-    badge: "167 mégapoles",
+    subtitle: "Équilibrage continental",
+    badge: "167 villes",
     icon: "🌍",
     linkUrl: "/play/blindpoint?pack=villes_monde&mode=daily&play=1",
     isGeoRings: false,
@@ -132,7 +132,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "blindpoint_lieux_paris",
     game: "blindpoint",
     title: "Monuments de Paris",
-    subtitle: "Micro-carte Paris Intra • Tolérance 1,5 km",
+    subtitle: "Tolérance micro-carte 1,5 km",
     badge: "105 trésors",
     icon: "🗼",
     linkUrl: "/play/blindpoint?pack=lieux_paris&mode=daily&play=1",
@@ -143,8 +143,8 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "blindpoint_lieux_monde",
     game: "blindpoint",
     title: "Merveilles du Monde",
-    subtitle: "Pétra, Taj Mahal, Colisée, Machu Picchu...",
-    badge: "50 merveilles",
+    subtitle: "Pétra, Taj Mahal, Colisée...",
+    badge: "50 sites",
     icon: "🏛️",
     linkUrl: "/play/blindpoint?pack=lieux_monde&mode=daily&play=1",
     isGeoRings: false,
@@ -156,7 +156,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "borderpath_monde",
     game: "borderpath",
     title: "Monde Continental",
-    subtitle: "Reliez deux pays à travers les frontières terrestres",
+    subtitle: "Frontières terrestres reliées",
     badge: "167 pays",
     icon: "🌍",
     linkUrl: "/play/borderpath?pack=monde&mode=daily&play=1",
@@ -167,7 +167,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "borderpath_europe",
     game: "borderpath",
     title: "Europe",
-    subtitle: "Traversez le continent d'un bout à l'autre",
+    subtitle: "Du Portugal à l'Oural",
     badge: "46 pays",
     icon: "🇪🇺",
     linkUrl: "/play/borderpath?pack=europe&mode=daily&play=1",
@@ -177,9 +177,9 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
   {
     id: "borderpath_france_departements",
     game: "borderpath",
-    title: "France — 96 Départements",
-    subtitle: "Corridor contigu de préfecture en préfecture",
-    badge: "96 départements",
+    title: "France — 96 Dépts",
+    subtitle: "Voisinage contigu métropolitain",
+    badge: "96 dépts",
     icon: "🇫🇷",
     linkUrl: "/play/borderpath?pack=france_departements&mode=daily&play=1",
     isGeoRings: false,
@@ -189,7 +189,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "borderpath_ameriques",
     game: "borderpath",
     title: "Amériques",
-    subtitle: "Corridor panaméricain du Nord au Sud",
+    subtitle: "Corridor panaméricain Nord/Sud",
     badge: "35 pays",
     icon: "🌎",
     linkUrl: "/play/borderpath?pack=ameriques&mode=daily&play=1",
@@ -200,7 +200,7 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     id: "borderpath_afrique",
     game: "borderpath",
     title: "Afrique",
-    subtitle: "Traversez le Sahara, le Sahel et le Rift",
+    subtitle: "Traversée Sahara, Sahel et Rift",
     badge: "54 pays",
     icon: "🌍",
     linkUrl: "/play/borderpath?pack=afrique&mode=daily&play=1",
@@ -311,6 +311,80 @@ export const DailyChallengeHubView: React.FC = () => {
     navigator.clipboard.writeText(text);
     setCopiedShare(true);
     setTimeout(() => setCopiedShare(false), 2500);
+  };
+
+  const renderChallengeItem = (item: ChallengeDef) => {
+    const status = statusMap[item.id];
+    const isDone = !!status?.completed;
+
+    const playBtnClass =
+      item.theme === "emerald"
+        ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20"
+        : item.theme === "indigo"
+        ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/25"
+        : item.theme === "sky"
+        ? "bg-sky-600 hover:bg-sky-500 text-white shadow-sky-600/25"
+        : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/25";
+
+    const scoreDisplay =
+      status?.ringsCompleted !== undefined && item.game === "georings"
+        ? `${status.ringsCompleted}/${status.totalRings || 5} ann.`
+        : status?.attempts !== undefined && item.game === "borderpath"
+        ? `${status.attempts} coups`
+        : `${status?.score?.toLocaleString("fr-FR")} pts`;
+
+    return (
+      <div
+        key={item.id}
+        className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-2.5 ${
+          isDone
+            ? "bg-slate-950/70 border-emerald-500/40 shadow-sm"
+            : "bg-slate-950/70 border-slate-800/80 hover:border-slate-700"
+        }`}
+      >
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <span className="text-xl shrink-0 select-none">{item.icon}</span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <h4 className="text-xs sm:text-sm font-bold text-white truncate">
+                {item.title}
+              </h4>
+              {item.badge && (
+                <span className="text-[10px] text-slate-400 font-mono shrink-0">
+                  • {item.badge}
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-slate-400 truncate mt-0.5">
+              {item.subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Action Button Area */}
+        {isDone ? (
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-2 py-0.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[11px] font-black font-mono">
+              {scoreDisplay}
+            </span>
+            <Link
+              href={item.linkUrl}
+              className="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-colors shadow-sm"
+            >
+              Rejouer
+            </Link>
+          </div>
+        ) : (
+          <Link
+            href={item.linkUrl}
+            className={`px-3 py-1.5 rounded-xl font-bold text-xs shadow-md transition-all shrink-0 hover:scale-[1.02] flex items-center gap-1 ${playBtnClass}`}
+          >
+            <span>Jouer</span>
+            <span>→</span>
+          </Link>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -533,98 +607,95 @@ export const DailyChallengeHubView: React.FC = () => {
       </section>
 
       {/* Filter Bar */}
-      <section className="max-w-6xl mx-auto px-6 pt-6 pb-2 w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <section className="max-w-7xl mx-auto px-6 pt-6 pb-2 w-full flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Status Filter */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-bold">
+        <div className="flex items-center gap-1 p-1 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-semibold overflow-x-auto">
           <button
             type="button"
             onClick={() => setStatusFilter("all")}
-            className={`px-3.5 py-1.5 rounded-xl transition-all ${
+            className={`px-3 py-1.5 rounded-xl transition-all whitespace-nowrap ${
               statusFilter === "all"
                 ? "bg-amber-500 text-slate-950 font-black shadow-md"
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            Tous les défis ({totalCount})
+            Tous ({totalCount})
           </button>
           <button
             type="button"
             onClick={() => setStatusFilter("todo")}
-            className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
               statusFilter === "todo"
                 ? "bg-amber-500 text-slate-950 font-black shadow-md"
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
             <span>À relever ({remainingCount})</span>
           </button>
           <button
             type="button"
             onClick={() => setStatusFilter("done")}
-            className={`px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 whitespace-nowrap ${
               statusFilter === "done"
                 ? "bg-emerald-500 text-slate-950 font-black shadow-md"
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             <span>Relevés ({completedCount})</span>
           </button>
         </div>
 
         {/* Game Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 font-semibold hidden sm:inline flex items-center gap-1">
-            <Filter className="w-3 h-3 text-slate-500" />
-            <span>Jeu :</span>
-          </span>
-          <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
-            <button
-              type="button"
-              onClick={() => setGameFilter("all")}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                gameFilter === "all"
-                  ? "bg-slate-800 text-white"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              Tous
-            </button>
-            <button
-              type="button"
-              onClick={() => setGameFilter("georings")}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                gameFilter === "georings"
-                  ? "bg-blue-600 text-white"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              🧭 GeoRings (5)
-            </button>
-            <button
-              type="button"
-              onClick={() => setGameFilter("blindpoint")}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                gameFilter === "blindpoint"
-                  ? "bg-emerald-600 text-white"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              🎯 Blind Point (5)
-            </button>
-            <button
-              type="button"
-              onClick={() => setGameFilter("borderpath")}
-              className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
-                gameFilter === "borderpath"
-                  ? "bg-indigo-600 text-white"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              🗺️ BorderPath (5)
-            </button>
-          </div>
+        <div className="flex items-center gap-1 p-1 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-semibold overflow-x-auto">
+          <button
+            type="button"
+            onClick={() => setGameFilter("all")}
+            className={`px-2.5 py-1.5 rounded-xl font-bold transition-all whitespace-nowrap ${
+              gameFilter === "all"
+                ? "bg-slate-800 text-white shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            Tous les jeux
+          </button>
+          <button
+            type="button"
+            onClick={() => setGameFilter("georings")}
+            className={`px-2.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1 whitespace-nowrap ${
+              gameFilter === "georings"
+                ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>🧭</span>
+            <span>GeoRings</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setGameFilter("blindpoint")}
+            className={`px-2.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1 whitespace-nowrap ${
+              gameFilter === "blindpoint"
+                ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>🎯</span>
+            <span>Blind Point</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setGameFilter("borderpath")}
+            className={`px-2.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1 whitespace-nowrap ${
+              gameFilter === "borderpath"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>🗺️</span>
+            <span>BorderPath</span>
+          </button>
         </div>
       </section>
 
@@ -633,113 +704,43 @@ export const DailyChallengeHubView: React.FC = () => {
         <div
           className={`grid gap-6 ${
             gameFilter === "all"
-              ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
-              : "grid-cols-1 max-w-2xl mx-auto"
+              ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+              : "grid-cols-1 max-w-xl mx-auto"
           }`}
         >
           {/* PANEL 1 : GEORINGS */}
           {georingsList.length > 0 && (
-            <div className="bg-slate-900/90 border-2 border-blue-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+            <div className="bg-slate-900/90 border-2 border-blue-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
               <div className="absolute -right-16 -top-16 w-36 h-36 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
 
-              <div className="space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-lg">
-                      🧭
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-white leading-tight">
-                        GeoRings — Cercles Concentriques
-                      </h3>
-                      <span className="text-xs text-slate-400">
-                        5 anneaux quotidiens • 3 vies
-                      </span>
-                    </div>
+              <div className="space-y-3.5">
+                <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-lg shrink-0">
+                    🧭
                   </div>
-                  <span className="text-[11px] font-mono text-blue-400 bg-blue-950/80 border border-blue-500/40 px-2.5 py-1 rounded-lg font-bold">
-                    5 déclinaisons
-                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-white leading-tight truncate">
+                      GeoRings
+                    </h3>
+                    <span className="text-xs text-slate-400 block truncate">
+                      5 anneaux concentriques • 3 vies
+                    </span>
+                  </div>
                 </div>
 
                 {/* List of GeoRings Challenges */}
-                <div className="space-y-2.5">
-                  {georingsList.map((item) => {
-                    const status = statusMap[item.id];
-                    const isDone = !!status?.completed;
-
-                    return (
-                      <div
-                        key={item.id}
-                        className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
-                          isDone
-                            ? "bg-slate-950/80 border-emerald-500/40 shadow-sm"
-                            : "bg-slate-950/80 border-slate-800 hover:border-blue-500/60"
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span className="text-2xl shrink-0">{item.icon}</span>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <h4 className="text-xs font-bold text-white whitespace-nowrap">
-                                {item.title}
-                              </h4>
-                              <span className="text-[10px] text-blue-400 font-mono font-bold">
-                                • {item.badge}
-                              </span>
-                            </div>
-                            <p className="text-[11px] text-slate-400 truncate">
-                              {item.subtitle}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Status Button Area */}
-                        {isDone ? (
-                          <div className="flex items-center gap-2.5 shrink-0">
-                            <div className="flex flex-col items-end">
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
-                                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                                <span>Fait</span>
-                              </span>
-                              <span className="text-[11px] font-black text-emerald-300 font-mono mt-0.5">
-                                {status.ringsCompleted}/{status.totalRings || 5} anneaux
-                              </span>
-                            </div>
-                            <Link
-                              href={item.linkUrl}
-                              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm"
-                            >
-                              Rejouer
-                            </Link>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2.5 shrink-0">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-blue-500/30">
-                              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                              <span>À relever</span>
-                            </span>
-                            <Link
-                              href={item.linkUrl}
-                              className="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30"
-                            >
-                              Jouer →
-                            </Link>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                <div className="space-y-2">
+                  {georingsList.map(renderChallengeItem)}
                 </div>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-400">Modifier le centre ou les anneaux ?</span>
+              <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span className="text-slate-500 text-[11px]">Entraînement libre</span>
                 <Link
                   href="/play/georings"
-                  className="text-blue-400 hover:underline font-bold flex items-center gap-1"
+                  className="text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 transition-colors"
                 >
-                  <span>Page Dédiée GeoRings</span>
+                  <span>Page Dédiée</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -748,107 +749,37 @@ export const DailyChallengeHubView: React.FC = () => {
 
           {/* PANEL 2 : BLIND POINT */}
           {blindpointList.length > 0 && (
-            <div className="bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+            <div className="bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
               <div className="absolute -right-16 -top-16 w-36 h-36 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none" />
 
-              <div className="space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-lg">
-                      🎯
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-white leading-tight">
-                        Blind Point — Précision Aveugle
-                      </h3>
-                      <span className="text-xs text-slate-400">
-                        5 manches quotidiennes • Carte muette
-                      </span>
-                    </div>
+              <div className="space-y-3.5">
+                <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-lg shrink-0">
+                    🎯
                   </div>
-                  <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-1 rounded-lg font-bold">
-                    5 déclinaisons
-                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-white leading-tight truncate">
+                      Blind Point
+                    </h3>
+                    <span className="text-xs text-slate-400 block truncate">
+                      5 manches quotidiennes • Carte muette
+                    </span>
+                  </div>
                 </div>
 
                 {/* List of Blind Point Challenges */}
-                <div className="space-y-2.5">
-                  {blindpointList.map((item) => {
-                    const status = statusMap[item.id];
-                    const isDone = !!status?.completed;
-
-                    return (
-                      <div
-                        key={item.id}
-                        className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
-                          isDone
-                            ? "bg-slate-950/80 border-emerald-500/40 shadow-sm"
-                            : "bg-slate-950/80 border-slate-800 hover:border-emerald-500/60"
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span className="text-2xl shrink-0">{item.icon}</span>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <h4 className="text-xs font-bold text-white whitespace-nowrap">
-                                {item.title}
-                              </h4>
-                              <span className="text-[10px] text-slate-400 font-mono">
-                                • {item.badge}
-                              </span>
-                            </div>
-                            <p className="text-[11px] text-slate-400 truncate">
-                              {item.subtitle}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Status Button Area */}
-                        {isDone ? (
-                          <div className="flex items-center gap-2.5 shrink-0">
-                            <div className="flex flex-col items-end">
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
-                                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                                <span>Fait</span>
-                              </span>
-                              <span className="text-[11px] font-black text-emerald-300 font-mono mt-0.5">
-                                {status.score?.toLocaleString("fr-FR")} pts
-                              </span>
-                            </div>
-                            <Link
-                              href={item.linkUrl}
-                              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm"
-                            >
-                              Rejouer
-                            </Link>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2.5 shrink-0">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-emerald-500/30">
-                              <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping" />
-                              <span>À relever</span>
-                            </span>
-                            <Link
-                              href={item.linkUrl}
-                              className="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25"
-                            >
-                              Jouer →
-                            </Link>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                <div className="space-y-2">
+                  {blindpointList.map(renderChallengeItem)}
                 </div>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-400">Entraînement libre ou custom ?</span>
+              <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span className="text-slate-500 text-[11px]">Entraînement libre</span>
                 <Link
                   href="/play/blindpoint"
-                  className="text-emerald-400 hover:underline font-bold flex items-center gap-1"
+                  className="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 transition-colors"
                 >
-                  <span>Page Dédiée Blind Point</span>
+                  <span>Page Dédiée</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -857,109 +788,37 @@ export const DailyChallengeHubView: React.FC = () => {
 
           {/* PANEL 3 : BORDERPATH */}
           {borderpathList.length > 0 && (
-            <div className="bg-slate-900/90 border-2 border-indigo-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+            <div className="bg-slate-900/90 border-2 border-indigo-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
               <div className="absolute -right-16 -top-16 w-36 h-36 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none" />
 
-              <div className="space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center font-bold text-lg">
-                      🗺️
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-white leading-tight">
-                        BorderPath — Le Maillon Frontalier
-                      </h3>
-                      <span className="text-xs text-slate-400">
-                        5 corridors quotidiens • Voisinage contigu
-                      </span>
-                    </div>
+              <div className="space-y-3.5">
+                <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+                  <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center font-bold text-lg shrink-0">
+                    🗺️
                   </div>
-                  <span className="text-[11px] font-mono text-indigo-400 bg-indigo-950/80 border border-indigo-500/40 px-2.5 py-1 rounded-lg font-bold">
-                    5 déclinaisons
-                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-white leading-tight truncate">
+                      BorderPath
+                    </h3>
+                    <span className="text-xs text-slate-400 block truncate">
+                      5 parcours quotidiens • Connexion contiguë
+                    </span>
+                  </div>
                 </div>
 
                 {/* List of BorderPath Challenges */}
-                <div className="space-y-2.5">
-                  {borderpathList.map((item) => {
-                    const status = statusMap[item.id];
-                    const isDone = !!status?.completed;
-
-                    return (
-                      <div
-                        key={item.id}
-                        className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
-                          isDone
-                            ? "bg-slate-950/80 border-emerald-500/40 shadow-sm"
-                            : "bg-slate-950/80 border-slate-800 hover:border-indigo-500/60"
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span className="text-2xl shrink-0">{item.icon}</span>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <h4 className="text-xs font-bold text-white whitespace-nowrap">
-                                {item.title}
-                              </h4>
-                              <span className="text-[10px] text-indigo-400 font-mono font-bold">
-                                • {item.badge}
-                              </span>
-                            </div>
-                            <p className="text-[11px] text-slate-400 truncate">
-                              {item.subtitle}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Status Button Area */}
-                        {isDone ? (
-                          <div className="flex items-center gap-2.5 shrink-0">
-                            <div className="flex flex-col items-end">
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
-                                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                                <span>Fait</span>
-                              </span>
-                              <span className="text-[11px] font-black text-emerald-300 font-mono mt-0.5">
-                                {status.attempts
-                                  ? `${status.attempts} coups`
-                                  : `${status.score?.toLocaleString("fr-FR")} pts`}
-                              </span>
-                            </div>
-                            <Link
-                              href={item.linkUrl}
-                              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm"
-                            >
-                              Rejouer
-                            </Link>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2.5 shrink-0">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-indigo-500/30">
-                              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                              <span>À relever</span>
-                            </span>
-                            <Link
-                              href={item.linkUrl}
-                              className="px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30"
-                            >
-                              Jouer →
-                            </Link>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                <div className="space-y-2">
+                  {borderpathList.map(renderChallengeItem)}
                 </div>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-400">Entraînement libre ou custom ?</span>
+              <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span className="text-slate-500 text-[11px]">Entraînement libre</span>
                 <Link
                   href="/play/borderpath"
-                  className="text-indigo-400 hover:underline font-bold flex items-center gap-1"
+                  className="text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1 transition-colors"
                 >
-                  <span>Page Dédiée BorderPath</span>
+                  <span>Page Dédiée</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>

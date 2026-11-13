@@ -19,23 +19,17 @@ export const DailyChallengesSection: React.FC = () => {
 
     if (isCompleted) {
       return (
-        <div className="flex items-center gap-2.5 shrink-0">
-          <div className="flex flex-col items-end">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider">
-              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-              <span>Fait</span>
-            </span>
-            <span className="text-[11px] font-black text-emerald-300 font-mono mt-0.5">
-              {isGeoRings
-                ? `${status.ringsCompleted}/${status.totalRings} anneaux`
-                : status.attempts
-                ? `${status.attempts} coups`
-                : `${status.score?.toLocaleString("fr-FR")} pts`}
-            </span>
-          </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="px-2 py-0.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[11px] font-black font-mono">
+            {isGeoRings
+              ? `${status.ringsCompleted}/${status.totalRings || 5} ann.`
+              : status.attempts
+              ? `${status.attempts} coups`
+              : `${status.score?.toLocaleString("fr-FR")} pts`}
+          </span>
           <Link
             href={linkUrl}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all shadow-sm"
+            className="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-colors shadow-sm"
           >
             Rejouer
           </Link>
@@ -43,39 +37,23 @@ export const DailyChallengesSection: React.FC = () => {
       );
     }
 
-    const badgeClasses =
-      buttonTheme === "sky"
-        ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-sky-500/30"
-        : buttonTheme === "emerald"
-        ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-emerald-500/30"
-        : buttonTheme === "indigo"
-        ? "bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-indigo-500/30"
-        : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-blue-500/30";
-
     const buttonClasses =
       buttonTheme === "sky"
-        ? "bg-sky-600 hover:bg-sky-500 text-white shadow-sky-600/30"
+        ? "bg-sky-600 hover:bg-sky-500 text-white shadow-sky-600/25"
         : buttonTheme === "emerald"
-        ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25"
+        ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20"
         : buttonTheme === "indigo"
-        ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30"
-        : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30";
+        ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/25"
+        : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/25";
 
     return (
-      <div className="flex items-center gap-2.5 shrink-0">
-        <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md ${badgeClasses}`}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-          <span>À relever</span>
-        </span>
-        <Link
-          href={linkUrl}
-          className={`px-3.5 py-1.5 rounded-xl font-black text-xs shadow-md transition-all ${buttonClasses}`}
-        >
-          Jouer →
-        </Link>
-      </div>
+      <Link
+        href={linkUrl}
+        className={`px-3 py-1.5 rounded-xl font-bold text-xs shadow-md transition-all shrink-0 hover:scale-[1.02] flex items-center gap-1 ${buttonClasses}`}
+      >
+        <span>Jouer</span>
+        <span>→</span>
+      </Link>
     );
   };
 
@@ -107,20 +85,15 @@ export const DailyChallengesSection: React.FC = () => {
         <div className="bg-slate-900/90 border-2 border-blue-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
           <div className="absolute -right-16 -top-16 w-36 h-36 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-lg">
-                  🧭
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white leading-tight">GeoRings — Cercles Concentriques</h3>
-                  <span className="text-xs text-slate-400">5 anneaux quotidiens • 3 vies</span>
-                </div>
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+              <div className="w-10 h-10 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-lg shrink-0">
+                🧭
               </div>
-              <span className="text-[11px] font-mono text-blue-400 bg-blue-950/80 border border-blue-500/40 px-2.5 py-1 rounded-lg font-bold">
-                5 déclinaisons
-              </span>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-white leading-tight truncate">GeoRings</h3>
+                <span className="text-xs text-slate-400 block truncate">5 anneaux concentriques • 3 vies</span>
+              </div>
             </div>
 
             {/* 5 Déclinaisons de GeoRings */}
@@ -130,7 +103,7 @@ export const DailyChallengesSection: React.FC = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">👥</span>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-white whitespace-nowrap">France — Population</h4>
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">France — Population</h4>
                     <p className="text-[11px] text-slate-400 truncate">Centre du jour fixe • 5 anneaux concentriques</p>
                   </div>
                 </div>
@@ -147,7 +120,7 @@ export const DailyChallengesSection: React.FC = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🇪🇺</span>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-white whitespace-nowrap">Europe — Population</h4>
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">Europe — Population</h4>
                     <p className="text-[11px] text-slate-400 truncate">5 anneaux à travers les capitales européennes</p>
                   </div>
                 </div>
@@ -164,7 +137,7 @@ export const DailyChallengesSection: React.FC = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🌍</span>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-white whitespace-nowrap">Monde — Population</h4>
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">Monde — Population</h4>
                     <p className="text-[11px] text-slate-400 truncate">Échelle planétaire (Tokyo, NYC, São Paulo...)</p>
                   </div>
                 </div>
@@ -181,7 +154,7 @@ export const DailyChallengesSection: React.FC = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">✈️</span>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-white whitespace-nowrap">France — Aéroports</h4>
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">France — Aéroports</h4>
                     <p className="text-[11px] text-slate-400 truncate">Critère : Trafic passagers annuel (DGAC)</p>
                   </div>
                 </div>
@@ -198,7 +171,7 @@ export const DailyChallengesSection: React.FC = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-2xl shrink-0">🛫</span>
                   <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-white whitespace-nowrap">Monde — Aéroports</h4>
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">Monde — Aéroports</h4>
                     <p className="text-[11px] text-slate-400 truncate">Grands hubs mondiaux (Atlanta, Dubaï, Heathrow...)</p>
                   </div>
                 </div>
@@ -212,10 +185,10 @@ export const DailyChallengesSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span className="text-slate-400">Modifier le centre ou les anneaux ?</span>
-            <Link href="/play/georings" className="text-blue-400 hover:underline font-bold flex items-center gap-1">
-              <span>Page Dédiée GeoRings</span>
+          <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span className="text-slate-500 text-[11px]">Entraînement libre</span>
+            <Link href="/play/georings" className="text-blue-400 hover:text-blue-300 font-bold flex items-center gap-1 transition-colors">
+              <span>Page Dédiée</span>
               <span>→</span>
             </Link>
           </div>
@@ -225,20 +198,15 @@ export const DailyChallengesSection: React.FC = () => {
         <div className="bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
           <div className="absolute -right-16 -top-16 w-36 h-36 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none" />
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-lg">
-                  🎯
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white leading-tight">Blind Point — Précision Aveugle</h3>
-                  <span className="text-xs text-slate-400">5 manches quotidiennes • Carte muette</span>
-                </div>
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-lg shrink-0">
+                🎯
               </div>
-              <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-1 rounded-lg font-bold">
-                5 déclinaisons
-              </span>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-white leading-tight truncate">Blind Point</h3>
+                <span className="text-xs text-slate-400 block truncate">5 manches quotidiennes • Carte muette</span>
+              </div>
             </div>
 
             {/* 5 Déclinaisons de Blind Point */}
@@ -249,7 +217,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🇫🇷</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Villes de France</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Villes de France</h4>
                       <span className="text-[10px] text-slate-400 font-mono shrink-0">• 139 villes</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Calibré : 2 faciles • 2 moyennes • 1 terroir</p>
@@ -269,7 +237,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🇪🇺</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Villes d'Europe</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Villes d'Europe</h4>
                       <span className="text-[10px] text-slate-400 font-mono shrink-0">• 42 métropoles</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Calibré : 2 faciles • 2 moyennes • 1 perle</p>
@@ -289,7 +257,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🌍</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Villes du Monde</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Villes du Monde</h4>
                       <span className="text-[10px] text-slate-400 font-mono shrink-0">• 167 mégapoles</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Équilibrage continental progressif (5 continents)</p>
@@ -309,7 +277,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🗼</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Monuments de Paris</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Monuments de Paris</h4>
                       <span className="text-[10px] text-slate-400 font-mono shrink-0">• 105 trésors</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Micro-carte Paris Intra • Tolérance 1,5 km</p>
@@ -329,7 +297,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🏛️</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Merveilles du Monde</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Merveilles du Monde</h4>
                       <span className="text-[10px] text-slate-400 font-mono shrink-0">• 50 sites</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Pétra, Taj Mahal, Colisée, Machu Picchu...</p>
@@ -345,10 +313,10 @@ export const DailyChallengesSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span className="text-slate-400">Entraînement libre ou custom ?</span>
-            <Link href="/play/blindpoint" className="text-emerald-400 hover:underline font-bold flex items-center gap-1">
-              <span>Page Dédiée Blind Point</span>
+          <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span className="text-slate-500 text-[11px]">Entraînement libre</span>
+            <Link href="/play/blindpoint" className="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 transition-colors">
+              <span>Page Dédiée</span>
               <span>→</span>
             </Link>
           </div>
@@ -358,20 +326,15 @@ export const DailyChallengesSection: React.FC = () => {
         <div className="bg-slate-900/90 border-2 border-indigo-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
           <div className="absolute -right-16 -top-16 w-36 h-36 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none" />
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center font-bold text-lg">
-                  🗺️
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white leading-tight">BorderPath — Le Maillon Frontalier</h3>
-                  <span className="text-xs text-slate-400">5 corridors quotidiens • Voisinage contigu</span>
-                </div>
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-3 border-b border-slate-800 pb-3">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center font-bold text-lg shrink-0">
+                🗺️
               </div>
-              <span className="text-[11px] font-mono text-indigo-400 bg-indigo-950/80 border border-indigo-500/40 px-2.5 py-1 rounded-lg font-bold">
-                5 déclinaisons
-              </span>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-white leading-tight truncate">BorderPath</h3>
+                <span className="text-xs text-slate-400 block truncate">5 parcours quotidiens • Connexion contiguë</span>
+              </div>
             </div>
 
             <div className="space-y-2.5">
@@ -381,7 +344,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🌍</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Monde Continental</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Monde Continental</h4>
                       <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 167 pays</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Reliez deux pays à travers les frontières terrestres</p>
@@ -401,7 +364,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🇪🇺</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Europe</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Europe</h4>
                       <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 46 pays</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Traversez le continent d'un bout à l'autre</p>
@@ -421,7 +384,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🇫🇷</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">France — 96 Dépts</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">France — 96 Dépts</h4>
                       <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 96 départements</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Corridor contigu de préfecture en préfecture</p>
@@ -441,7 +404,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🌎</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Amériques</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Amériques</h4>
                       <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 35 pays</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Corridor panaméricain du Nord au Sud</p>
@@ -461,7 +424,7 @@ export const DailyChallengesSection: React.FC = () => {
                   <span className="text-2xl shrink-0">🌍</span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white whitespace-nowrap">Afrique</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white truncate">Afrique</h4>
                       <span className="text-[10px] text-indigo-400 font-mono shrink-0">• 54 pays</span>
                     </div>
                     <p className="text-[11px] text-slate-400 truncate">Traversez le Sahara, le Sahel et le Rift</p>
@@ -477,10 +440,10 @@ export const DailyChallengesSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span className="text-slate-400">Entraînement libre ou custom ?</span>
-            <Link href="/play/borderpath" className="text-indigo-400 hover:underline font-bold flex items-center gap-1">
-              <span>Page Dédiée BorderPath</span>
+          <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span className="text-slate-500 text-[11px]">Entraînement libre</span>
+            <Link href="/play/borderpath" className="text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1 transition-colors">
+              <span>Page Dédiée</span>
               <span>→</span>
             </Link>
           </div>
