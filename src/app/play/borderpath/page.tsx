@@ -661,9 +661,9 @@ function BorderPathActiveGame({
         gaveUp={gaveUp}
         onReplaySame={handleReplaySameChallenge}
         onNewChallenge={handleNewChallenge}
-        onChangePack={() => {
+        onReturnHub={() => {
           setShowSummaryModal(false);
-          setShowPackModal(true);
+          router.push("/");
         }}
       />
 

@@ -17,7 +17,7 @@ import {
   ArrowRight,
   X,
   Flag,
-  Layers,
+  Home,
 } from "lucide-react";
 
 interface BorderPathSummaryModalProps {
@@ -34,7 +34,8 @@ interface BorderPathSummaryModalProps {
   gaveUp: boolean;
   onReplaySame: () => void;
   onNewChallenge: () => void;
-  onChangePack: () => void;
+  onReturnHub?: () => void;
+  onChangePack?: () => void;
 }
 
 export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
@@ -51,6 +52,7 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   gaveUp,
   onReplaySame,
   onNewChallenge,
+  onReturnHub,
   onChangePack,
 }) => {
   const [copied, setCopied] = useState(false);
@@ -389,12 +391,12 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
 
             <button
               type="button"
-              onClick={onChangePack}
+              onClick={onReturnHub ?? onChangePack}
               className="py-3 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
-              title="Choisir un autre pack géographique"
+              title="Retourner au Hub principal"
             >
-              <Layers className="w-4 h-4 shrink-0 text-indigo-400" />
-              <span>Changer pack</span>
+              <Home className="w-4 h-4 shrink-0 text-indigo-400" />
+              <span>Retour Hub</span>
             </button>
           </div>
         </div>
