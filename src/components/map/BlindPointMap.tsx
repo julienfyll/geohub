@@ -119,7 +119,6 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const guessMarkerRef = useRef<maplibregl.Marker | null>(null);
   const isLoadedRef = useRef<boolean>(false);
   const currentThemeRef = useRef<BlindPointMapTheme>(mapTheme);
   const hoverPopupRef = useRef<maplibregl.Popup | null>(null);
@@ -495,10 +494,6 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       if (hoverPopupRef.current) {
         hoverPopupRef.current.remove();
         hoverPopupRef.current = null;
-      }
-      if (guessMarkerRef.current) {
-        guessMarkerRef.current.remove();
-        guessMarkerRef.current = null;
       }
       map.remove();
       mapRef.current = null;
@@ -894,49 +889,6 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       features: [],
     });
   };
-
-  // Synchronize high-visibility animated DOM marker for active player guess
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    if (currentGuess && !isRevealing && !isGameOverReview) {
-      if (!guessMarkerRef.current) {
-        const el = document.createElement("div");
-        el.className = "relative flex flex-col items-center select-none pointer-events-none";
-        el.innerHTML = `
-          <!-- Pulsing Radar Ripple at exact coordinate -->
-          <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-10 h-10 rounded-full bg-blue-500/40 animate-ping"></div>
-          <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-blue-400 border-2 border-white shadow-lg"></div>
-
-          <!-- Floating 'Mon tir' Pill Badge -->
-          <div class="mb-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/95 border border-blue-400 text-blue-200 text-[11px] font-extrabold tracking-wide shadow-2xl whitespace-nowrap backdrop-blur-md">
-            🎯 Mon tir
-          </div>
-
-          <!-- High-Impact Pin Body & Pointer -->
-          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 via-blue-500 to-cyan-400 border-2 border-white shadow-[0_4px_16px_rgba(37,99,235,0.7)] flex items-center justify-center">
-            <div class="w-2.5 h-2.5 rounded-full bg-white shadow-sm"></div>
-          </div>
-          <div class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[8px] border-t-blue-600 -mt-0.5 drop-shadow-md"></div>
-        `;
-
-        guessMarkerRef.current = new maplibregl.Marker({
-          element: el,
-          anchor: "bottom",
-        })
-          .setLngLat([currentGuess.lon, currentGuess.lat])
-          .addTo(map);
-      } else {
-        guessMarkerRef.current.setLngLat([currentGuess.lon, currentGuess.lat]);
-      }
-    } else {
-      if (guessMarkerRef.current) {
-        guessMarkerRef.current.remove();
-        guessMarkerRef.current = null;
-      }
-    }
-  }, [currentGuess, isRevealing, isGameOverReview]);
 
   // Trigger data updates whenever props change
   useEffect(() => {

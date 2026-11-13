@@ -38,6 +38,7 @@ const STORAGE_KEY = "geohub_retrace_metro_discovered";
 
 export interface BlindPointRetraceGameProps {
   initialTolerance?: string; // "chill", "500", "300", "150", "75"
+  initialOrderMode?: "random" | "sequential";
   selectedLines?: string[];
   onBackToLobby: () => void;
   onOpenCustomModal: () => void;
@@ -45,6 +46,7 @@ export interface BlindPointRetraceGameProps {
 
 export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
   initialTolerance = "300",
+  initialOrderMode = "random",
   selectedLines = ["1", "4", "6"],
   onBackToLobby,
   onOpenCustomModal,
@@ -64,6 +66,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
   // Game state
   const [tolerance, setTolerance] = useState<string>(initialTolerance);
+  const [orderMode, setOrderMode] = useState<"random" | "sequential">(initialOrderMode);
   const [discoveredIds, setDiscoveredIds] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set();
     try {
@@ -107,8 +110,14 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
         setIsCompletedModalOpen(true);
         return;
       }
-      // Pick next in sequence or randomly
-      const next = undiscovered[0];
+      // Pick next in sequence or randomly according to orderMode
+      let next: MetroStationTopology;
+      if (orderMode === "sequential") {
+        next = undiscovered[0];
+      } else {
+        const randomIndex = Math.floor(Math.random() * undiscovered.length);
+        next = undiscovered[randomIndex];
+      }
       setCurrentTarget(next);
       setPendingGuess(null);
       if (pendingMarkerRef.current) {
@@ -116,7 +125,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
         pendingMarkerRef.current = null;
       }
     },
-    [activeStations]
+    [activeStations, orderMode]
   );
 
   // Initialize or resume next target
@@ -234,7 +243,9 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       }
 
       const el = document.createElement("div");
-      el.className = "group relative cursor-pointer select-none w-fit h-fit";
+      el.className = "group relative cursor-pointer select-none flex items-center justify-center";
+      el.style.width = "0px";
+      el.style.height = "0px";
 
       const dotsHtml = station.lines
         .map(
@@ -249,15 +260,15 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
         .join("");
 
       el.innerHTML = `
-        <div class="inline-flex items-center w-fit -space-x-1.5 p-1 rounded-full bg-slate-950/90 border-2 border-white shadow-xl transition-transform hover:scale-125">
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 inline-flex items-center -space-x-1.5 p-1 rounded-full bg-slate-950/90 border-2 border-white shadow-xl transition-transform hover:scale-125 shrink-0 pointer-events-auto">
           ${dotsHtml}
         </div>
-        <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[11px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+        <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[11px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
           ${station.name}
         </div>
       `;
 
-      const marker = new maplibregl.Marker({ element: el })
+      const marker = new maplibregl.Marker({ element: el, anchor: "center" })
         .setLngLat(station.coords)
         .addTo(map);
 
@@ -277,6 +288,13 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       zoom: 12.3,
       minZoom: 10.5,
       maxZoom: 16.5,
+      bearing: 0,
+      pitch: 0,
+      maxPitch: 0,
+      minPitch: 0,
+      dragRotate: false,
+      touchPitch: false,
+      pitchWithRotate: false,
       attributionControl: false,
     });
 
@@ -333,15 +351,23 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
     // Map click handler
     map.on("click", (e) => {
-      const clickCoords: [number, number] = [e.lngLat.lng, e.lngLat.lat];
+      const wrapped = e.lngLat.wrap();
+      const clickCoords: [number, number] = [wrapped.lng, wrapped.lat];
       setPendingGuess(clickCoords);
 
-      // Create or update orange pending pin
+      // Create or update pending guess marker
       if (!pendingMarkerRef.current) {
         const el = document.createElement("div");
-        el.className = "w-6 h-6 rounded-full bg-amber-500 border-2 border-white shadow-xl animate-bounce flex items-center justify-center text-[10px] text-slate-950 font-black";
-        el.innerHTML = "📍";
-        pendingMarkerRef.current = new maplibregl.Marker({ element: el })
+        el.className = "relative pointer-events-none select-none";
+        el.innerHTML = `
+          <div class="absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center z-30">
+            <div class="absolute inset-0 rounded-full bg-amber-400/40 animate-ping"></div>
+            <div class="relative w-4 h-4 rounded-full bg-amber-500 border-2 border-white shadow-xl flex items-center justify-center">
+              <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+            </div>
+          </div>
+        `;
+        pendingMarkerRef.current = new maplibregl.Marker({ element: el, anchor: "center" })
           .setLngLat(clickCoords)
           .addTo(map);
       } else {
@@ -432,6 +458,8 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       center: currentTarget.coords,
       zoom: 13.5,
       duration: 600,
+      pitch: 0,
+      bearing: 0,
     });
 
     // Advance to next station
@@ -540,6 +568,20 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
               <option value="300" className="bg-slate-900 text-white">300 m (Standard)</option>
               <option value="150" className="bg-slate-900 text-white">150 m (Expert)</option>
               <option value="75" className="bg-slate-900 text-white">75 m (Puriste)</option>
+            </select>
+          </div>
+
+          {/* Order Selector Pill */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-sm text-xs shrink-0">
+            <span className="text-[10px] text-slate-400 font-semibold uppercase hidden md:inline">Ordre :</span>
+            <select
+              value={orderMode}
+              onChange={(e) => setOrderMode(e.target.value as "random" | "sequential")}
+              className="bg-transparent text-purple-300 font-bold text-xs focus:outline-none cursor-pointer"
+              title="Ordre d'apparition des stations"
+            >
+              <option value="random" className="bg-slate-900 text-white">🔀 Aléatoire</option>
+              <option value="sequential" className="bg-slate-900 text-white">📏 Séquentiel</option>
             </select>
           </div>
 
