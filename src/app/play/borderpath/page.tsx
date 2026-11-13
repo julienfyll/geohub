@@ -345,27 +345,26 @@ function BorderPathLobby({
   );
 }
 
-function BorderPathGame() {
-  const searchParams = useSearchParams();
+interface BorderPathActiveGameProps {
+  pack: BorderPathPack;
+  mode: BorderPathMode;
+  seed?: string;
+  theme: BorderPathMapTheme;
+  setTheme: React.Dispatch<React.SetStateAction<BorderPathMapTheme>>;
+  hideBorders: boolean;
+  setHideBorders: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function BorderPathActiveGame({
+  pack,
+  mode,
+  seed,
+  theme,
+  setTheme,
+  hideBorders,
+  setHideBorders,
+}: BorderPathActiveGameProps) {
   const router = useRouter();
-
-  const rawPack = searchParams.get("pack") as BorderPathPack | null;
-  const rawMode = searchParams.get("mode") as BorderPathMode | null;
-  const rawPlay = searchParams.get("play") === "1";
-
-  const validPacks: BorderPathPack[] = [
-    "monde",
-    "europe",
-    "france_departements",
-    "ameriques",
-    "afrique",
-  ];
-  const pack: BorderPathPack = rawPack && validPacks.includes(rawPack) ? rawPack : "monde";
-  const mode: BorderPathMode = rawMode === "free" ? "free" : "daily";
-
-  // Map settings
-  const [theme, setTheme] = useState<BorderPathMapTheme>("dark");
-  const [hideBorders, setHideBorders] = useState(false);
 
   // Modals
   const [showSummaryModal, setShowSummaryModal] = useState(false);
@@ -376,7 +375,7 @@ function BorderPathGame() {
 
   // Active Game State - Initialized synchronously so UI renders immediately without blocking spinner
   const [session, setSession] = useState<BorderPathSessionInit>(() =>
-    generateChallenge({ pack, mode })
+    generateChallenge({ pack, mode, seed })
   );
 
   // Bidirectional branches: Branch A (from Start) and Branch B (from Target)
@@ -396,17 +395,6 @@ function BorderPathGame() {
   } | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [gaveUp, setGaveUp] = useState(false);
-
-  // Precomputed optimal solutions
-  const [optimalSolutions, setOptimalSolutions] = useState<string[][]>(() => {
-    const initGraph = getPackGraph(pack);
-    const shortest = findShortestPath(
-      session?.startEntity?.id || "",
-      session?.targetEntity?.id || "",
-      initGraph
-    );
-    return shortest.paths;
-  });
 
   // Load graph for current pack
   const graph = useMemo<BorderPathGraph>(() => {
@@ -440,23 +428,10 @@ function BorderPathGame() {
       setIsComplete(false);
       setGaveUp(false);
       setShowSummaryModal(false);
-
-      const shortest = findShortestPath(
-        newSession.startEntity.id,
-        newSession.targetEntity.id,
-        getPackGraph(targetPack)
-      );
-      setOptimalSolutions(shortest.paths);
+      setShowRestartModal(false);
     },
     []
   );
-
-  // When URL query params change (pack or mode), regenerate session
-  useEffect(() => {
-    if (session.pack !== pack || session.mode !== mode) {
-      initGameSession(pack, mode);
-    }
-  }, [pack, mode, session.pack, session.mode, initGameSession]);
 
   // Remaining BFS distance between Side A and Side B
   const remainingSteps = useMemo(() => {
@@ -590,16 +565,12 @@ function BorderPathGame() {
     setIsComplete(false);
     setGaveUp(false);
     setShowSummaryModal(false);
+    setShowRestartModal(false);
   };
 
   // New random challenge in current pack
   const handleNewChallenge = () => {
     initGameSession(pack, "free");
-  };
-
-  // Toggle Theme
-  const handleToggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "voyager" : prev === "voyager" ? "satellite" : "dark"));
   };
 
   // Toggle Hide Borders
@@ -617,40 +588,6 @@ function BorderPathGame() {
     ...branchAEntities.map((e) => e.id),
     ...branchBEntities.map((e) => e.id),
   ];
-
-  if (!rawPlay) {
-    return (
-      <>
-        <BorderPathLobby
-          initialPack={pack}
-          initialMode={mode}
-          onStartGame={(p, m, seed) => {
-            let url = `/play/borderpath?pack=${p}&mode=${m}&play=1`;
-            if (seed) url += `&seed=${seed}`;
-            router.push(url);
-          }}
-          onOpenRules={() => setShowRulesModal(true)}
-          onOpenSettings={() => setShowSettingsModal(true)}
-        />
-
-        {/* Rules Modal */}
-        <BorderPathRulesModal
-          isOpen={showRulesModal}
-          onClose={() => setShowRulesModal(false)}
-        />
-
-        {/* Settings Modal */}
-        <BorderPathSettingsModal
-          isOpen={showSettingsModal}
-          onClose={() => setShowSettingsModal(false)}
-          theme={theme}
-          onChangeTheme={setTheme}
-          hideBorders={hideBorders}
-          onToggleHideBorders={handleToggleHideBorders}
-        />
-      </>
-    );
-  }
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-slate-950 select-none">
@@ -691,6 +628,7 @@ function BorderPathGame() {
         uniquePlacedCount={uniquePlacedCount}
         errorCount={failedAttempts.length}
         remainingSteps={remainingSteps}
+        entityLabel={pack === "france_departements" ? "départements" : "pays"}
       />
 
       {/* 100% Keyboard Input at Bottom */}
@@ -723,9 +661,9 @@ function BorderPathGame() {
         gaveUp={gaveUp}
         onReplaySame={handleReplaySameChallenge}
         onNewChallenge={handleNewChallenge}
-        onChangePack={() => {
+        onReturnHub={() => {
           setShowSummaryModal(false);
-          setShowPackModal(true);
+          router.push("/");
         }}
       />
 
@@ -761,6 +699,79 @@ function BorderPathGame() {
         onConfirm={handleReplaySameChallenge}
       />
     </div>
+  );
+}
+
+function BorderPathGame() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const rawPack = searchParams.get("pack") as BorderPathPack | null;
+  const rawMode = searchParams.get("mode") as BorderPathMode | null;
+  const rawPlay = searchParams.get("play") === "1";
+  const rawSeed = searchParams.get("seed") || undefined;
+
+  const validPacks: BorderPathPack[] = [
+    "monde",
+    "europe",
+    "france_departements",
+    "ameriques",
+    "afrique",
+  ];
+  const pack: BorderPathPack = rawPack && validPacks.includes(rawPack) ? rawPack : "monde";
+  const mode: BorderPathMode = rawMode === "free" ? "free" : "daily";
+
+  // Shared map & display settings across lobby and game
+  const [theme, setTheme] = useState<BorderPathMapTheme>("dark");
+  const [hideBorders, setHideBorders] = useState(false);
+  const [showRulesModal, setShowRulesModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
+  if (!rawPlay) {
+    return (
+      <>
+        <BorderPathLobby
+          initialPack={pack}
+          initialMode={mode}
+          onStartGame={(p, m, s) => {
+            let url = `/play/borderpath?pack=${p}&mode=${m}&play=1`;
+            if (s) url += `&seed=${s}`;
+            router.push(url);
+          }}
+          onOpenRules={() => setShowRulesModal(true)}
+          onOpenSettings={() => setShowSettingsModal(true)}
+        />
+
+        {/* Rules Modal */}
+        <BorderPathRulesModal
+          isOpen={showRulesModal}
+          onClose={() => setShowRulesModal(false)}
+        />
+
+        {/* Settings Modal */}
+        <BorderPathSettingsModal
+          isOpen={showSettingsModal}
+          onClose={() => setShowSettingsModal(false)}
+          theme={theme}
+          onChangeTheme={setTheme}
+          hideBorders={hideBorders}
+          onToggleHideBorders={() => setHideBorders((prev) => !prev)}
+        />
+      </>
+    );
+  }
+
+  return (
+    <BorderPathActiveGame
+      key={`game-${pack}-${mode}-${rawSeed || "session"}`}
+      pack={pack}
+      mode={mode}
+      seed={rawSeed}
+      theme={theme}
+      setTheme={setTheme}
+      hideBorders={hideBorders}
+      setHideBorders={setHideBorders}
+    />
   );
 }
 
