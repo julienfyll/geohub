@@ -13,6 +13,7 @@ import {
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
+import { DailyChallengeHeroButton } from "@/components/home/DailyChallengeHeroButton";
 
 export default function Home() {
   const todayDate = new Intl.DateTimeFormat("fr-FR", {
@@ -76,364 +77,14 @@ export default function Home() {
           <p className="text-slate-400 text-sm sm:text-base max-w-2xl leading-relaxed">
             Relevez vos défis du jour officiels (tirages équitables identiques pour tous) ou perfectionnez votre intuition territoriale en partie rapide.
           </p>
+
+          {/* Bouton Épuré vers le Hub Défi du Jour */}
+          <DailyChallengeHeroButton />
         </div>
       </section>
 
-      {/* Section 1 : Les Défis du Jour Officiels (2 Grands Encadrés) */}
-      <section className="max-w-6xl mx-auto px-6 pt-10 pb-6 w-full space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-800 pb-3">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400 mb-0.5">
-              <span>★ Rendez-vous Officiel Quotidien</span>
-            </div>
-            <h2 className="text-2xl font-extrabold text-white tracking-tight">
-              Les Défis du Jour
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Tirages officiels uniques avec difficulté progressive intégrée. Une seule tentative comptabilisée par jour pour le classement.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 self-start sm:self-auto">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Reset quotidien à <strong>00:00 UTC</strong></span>
-          </div>
-        </div>
-
-        {/* 2 GRANDS ENCADRÉS MAJEURS CÔTE À CÔTE */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-          {/* ENCADRÉ 1 : BLIND POINT (5 DÉFIS QUOTIDIENS) */}
-          <div className="bg-slate-900/90 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute -right-16 -top-16 w-36 h-36 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none" />
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-lg">
-                    🎯
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white leading-tight">Blind Point — Précision Aveugle</h3>
-                    <span className="text-xs text-slate-400">5 manches quotidiennes • Carte muette</span>
-                  </div>
-                </div>
-                <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-1 rounded-lg font-bold">
-                  5 déclinaisons
-                </span>
-              </div>
-
-              {/* 5 Déclinaisons de Blind Point */}
-              <div className="space-y-2.5">
-                {/* 1. France */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border-2 border-emerald-500/50 hover:border-emerald-400 transition-all flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🇫🇷</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Villes de France</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 139 villes</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Calibré : 2 faciles • 2 moyennes • 1 terroir</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/blindpoint?pack=villes_france&mode=daily&play=1"
-                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/25 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 2. Europe */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🇪🇺</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Villes d'Europe</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 42 métropoles</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Capitales majeures & métropoles continentales</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/blindpoint?pack=villes_europe&mode=daily&play=1"
-                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/25 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 3. Monde */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🌍</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Villes du Monde</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 167 mégapoles</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Équilibrage continental progressif (5 continents)</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/blindpoint?pack=villes_monde&mode=daily&play=1"
-                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/25 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 4. Paris */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🗼</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Monuments de Paris</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 105 trésors</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Intra-muros : précision à la rue près</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/blindpoint?pack=lieux_paris&mode=daily&play=1"
-                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/25 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 5. Merveilles */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🏛️</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Merveilles du Monde (UNESCO)</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 50 sites</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Pétra, Taj Mahal, Colisée, Machu Picchu...</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/blindpoint?pack=lieux_monde&mode=daily&play=1"
-                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/25 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Entraînement libre ou custom ?</span>
-              <Link href="/play/blindpoint" className="text-emerald-400 hover:underline font-bold flex items-center gap-1">
-                <span>Page Dédiée Blind Point</span>
-                <span>→</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* ENCADRÉ 2 : GEORINGS (5 DÉFIS QUOTIDIENS) */}
-          <div className="bg-slate-900/90 border-2 border-blue-500/40 rounded-3xl p-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute -right-16 -top-16 w-36 h-36 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center font-bold text-lg">
-                    🧭
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white leading-tight">GeoRings — Cercles Concentriques</h3>
-                    <span className="text-xs text-slate-400">5 anneaux quotidiens • 3 vies</span>
-                  </div>
-                </div>
-                <span className="text-[11px] font-mono text-blue-400 bg-blue-950/80 border border-blue-500/40 px-2.5 py-1 rounded-lg font-bold">
-                  5 déclinaisons
-                </span>
-              </div>
-
-              {/* 5 Déclinaisons de GeoRings */}
-              <div className="space-y-2.5">
-                {/* 1. France Villes */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border-2 border-blue-500/50 hover:border-blue-400 transition-all flex items-center justify-between gap-3 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">👥</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">France — Villes (Population)</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 1 904 villes</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Centre du jour fixe • 5 anneaux concentriques</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-blue-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/georings?metric=population&scale=fr&mode=daily"
-                      className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md shadow-blue-600/30 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 2. Europe Villes */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-blue-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🇪🇺</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Europe — Villes (Population)</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 12 669 villes</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Centre continental européen fixe pour tous</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-blue-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/georings?metric=population&scale=eu&mode=daily"
-                      className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md shadow-blue-600/30 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 3. Monde Villes */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-blue-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🌍</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Monde — Villes (Population)</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 21 324 villes</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Centre planétaire fixe à échelle globale</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-blue-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/georings?metric=population&scale=world&mode=daily"
-                      className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md shadow-blue-600/30 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 4. France Aéroports */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-sky-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">✈️</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">France — Aéroports (Trafic)</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 55 aéroports</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Hubs & aéroports commerciaux métropolitains</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-sky-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/georings?metric=airports&scale=fr&mode=daily"
-                      className="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs shadow-md shadow-sky-600/30 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 5. Monde Aéroports */}
-                <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-sky-500/40 transition-all flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-2xl shrink-0">🛫</span>
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-white truncate">Monde — Aéroports Internationaux</h4>
-                        <span className="text-[10px] text-slate-400 font-mono">• 3 282 hubs</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">Grands hubs mondiaux (Atlanta, Dubaï, Heathrow...)</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-sky-500/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                      <span>À relever</span>
-                    </span>
-                    <Link
-                      href="/play/georings?metric=airports&scale=world&mode=daily"
-                      className="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black text-xs shadow-md shadow-sky-600/30 transition-all"
-                    >
-                      Jouer →
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Modifier le centre ou les anneaux ?</span>
-              <Link href="/play/georings" className="text-blue-400 hover:underline font-bold flex items-center gap-1">
-                <span>Page Dédiée GeoRings</span>
-                <span>→</span>
-              </Link>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Section 2 : Catalogue des Mini-Jeux (Présentation Claire & Accès Dédié) */}
-      <section className="max-w-6xl mx-auto px-6 py-12 flex-1 w-full space-y-6 border-t border-slate-800/80">
+      {/* Section : Catalogue des Mini-Jeux (Remonté directement en vue haute) */}
+      <section className="max-w-6xl mx-auto px-6 py-12 flex-1 w-full space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
             <h2 className="text-2xl font-extrabold tracking-tight text-white">
@@ -536,7 +187,7 @@ export default function Home() {
                 <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
                   <span className="text-xs font-bold text-slate-200">🏛️ Trésors & Monuments</span>
                   <span className="text-[11px] text-slate-400 leading-tight">
-                    105 Paris • 58 Châteaux • 50 UNESCO
+                    105 Paris • 58 Châteaux • 50 Merveilles
                   </span>
                 </div>
               </div>
@@ -548,30 +199,77 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Game 3 : BorderPath (Coming Soon) */}
-          <div className="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between opacity-75">
+          {/* Game 3 : BorderPath (Active) */}
+          <div className="relative group bg-slate-900/90 border-2 border-indigo-500/50 hover:border-indigo-400 rounded-3xl p-6 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+              <Layers className="w-32 h-32 text-indigo-400" />
+            </div>
+
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-medium uppercase tracking-wider">
-                  Sprint 2 • Bientôt
+                <span className="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 text-xs font-bold uppercase tracking-wider">
+                  ★ Nouveau (Jouable)
                 </span>
-                <Layers className="w-5 h-5 text-slate-500" />
+                <span className="text-xs text-slate-400 font-mono">100% Clavier • BFS Optimal</span>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-300 mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2">
                 BorderPath — Le Maillon Frontalier
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                Reliez deux pays éloignés (ex: Portugal à la Chine) en nommant la séquence minimale de pays contigus ayant des frontières terrestres communes.
+                Reliez deux pays éloignés (ex: Portugal à la Chine) ou deux départements français en nommant au clavier la séquence minimale de territoires limitrophes contigus.
               </p>
+
+              {/* Modes & Packs disponibles */}
+              <div className="flex flex-col gap-3 mb-6">
+                <div>
+                  <span className="text-xs text-slate-400 font-medium block mb-1.5">🗺️ Territoires disponibles :</span>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href="/play/borderpath?pack=monde&mode=daily"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🌍</span>
+                      <span>Monde</span>
+                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 167 pays</span>
+                    </Link>
+                    <Link
+                      href="/play/borderpath?pack=france_departements&mode=daily"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🇫🇷</span>
+                      <span>France</span>
+                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 96 départements</span>
+                    </Link>
+                    <Link
+                      href="/play/borderpath?pack=europe&mode=daily"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
+                    >
+                      <span>🇪🇺</span>
+                      <span>Europe</span>
+                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 46 pays</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <button
-              disabled
-              className="w-full py-3 px-4 rounded-xl bg-slate-800/60 text-slate-500 font-semibold text-xs border border-slate-700/50 cursor-not-allowed"
-            >
-              En cours de développement
-            </button>
+            <div className="grid grid-cols-2 gap-2.5">
+              <Link
+                href="/play/borderpath?pack=monde&mode=daily"
+                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-indigo-600/20"
+              >
+                <Play className="w-4 h-4 fill-white" />
+                <span>Jouer à BorderPath</span>
+              </Link>
+              <Link
+                href="/play/borderpath?pack=monde&mode=free"
+                className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Défi Aléatoire</span>
+              </Link>
+            </div>
           </div>
 
           {/* Game 4 : Capital Blitz (Coming Soon) */}
