@@ -2,13 +2,14 @@ import Link from "next/link";
 import {
   Compass,
   MapPin,
-  Play,
   Sparkles,
   Layers,
-  Zap,
   ArrowRight,
   Plane,
   Users,
+  Clock,
+  Play,
+  Zap,
 } from "lucide-react";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
@@ -199,103 +200,92 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Game 3 : BorderPath (Active) */}
-          <div className="relative group bg-slate-900/90 border-2 border-indigo-500/50 hover:border-indigo-400 rounded-3xl p-6 shadow-2xl transition-all flex flex-col justify-between overflow-hidden">
+          {/* Game 3 : BorderPath */}
+          <Link
+            href="/play/borderpath"
+            className="relative group bg-slate-900/90 border-2 border-indigo-500/50 hover:border-indigo-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden cursor-pointer hover:shadow-indigo-500/10 hover:scale-[1.01]"
+          >
             <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
               <Layers className="w-32 h-32 text-indigo-400" />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 text-xs font-bold uppercase tracking-wider">
-                  ★ Nouveau (Jouable)
+                <span className="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3" />
+                  <span>★ Connexion & Voisinage</span>
                 </span>
                 <span className="text-xs text-slate-400 font-mono">100% Clavier • BFS Optimal</span>
               </div>
 
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">
                 BorderPath — Le Maillon Frontalier
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
                 Reliez deux pays éloignés (ex: Portugal à la Chine) ou deux départements français en nommant au clavier la séquence minimale de territoires limitrophes contigus.
               </p>
 
-              {/* Modes & Packs disponibles */}
-              <div className="flex flex-col gap-3 mb-6">
-                <div>
-                  <span className="text-xs text-slate-400 font-medium block mb-1.5">🗺️ Territoires disponibles :</span>
-                  <div className="flex flex-wrap gap-2">
-                    <Link
-                      href="/play/borderpath?pack=monde&mode=daily"
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                    >
-                      <span>🌍</span>
-                      <span>Monde</span>
-                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 167 pays</span>
-                    </Link>
-                    <Link
-                      href="/play/borderpath?pack=france_departements&mode=daily"
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                    >
-                      <span>🇫🇷</span>
-                      <span>France</span>
-                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 96 départements</span>
-                    </Link>
-                    <Link
-                      href="/play/borderpath?pack=europe&mode=daily"
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
-                    >
-                      <span>🇪🇺</span>
-                      <span>Europe</span>
-                      <span className="text-[10px] text-indigo-400 font-bold ml-0.5">• 46 pays</span>
-                    </Link>
-                  </div>
+              <div className="grid grid-cols-2 gap-2.5 mb-6">
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-200">🌍 Monde & Europe</span>
+                  <span className="text-[11px] text-slate-400 leading-tight">
+                    167 pays Monde • 46 pays Europe
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-200">🇫🇷 France Métropolitaine</span>
+                  <span className="text-[11px] text-slate-400 leading-tight">
+                    96 départements contigus
+                  </span>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
-              <Link
-                href="/play/borderpath?pack=monde&mode=daily"
-                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-indigo-600/20"
-              >
-                <Play className="w-4 h-4 fill-white" />
-                <span>Jouer à BorderPath</span>
-              </Link>
-              <Link
-                href="/play/borderpath?pack=monde&mode=free"
-                className="flex items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm border border-slate-700 transition-all"
-              >
-                <Zap className="w-4 h-4 text-amber-400" />
-                <span>Défi Aléatoire</span>
-              </Link>
+            <div className="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-indigo-600 group-hover:bg-indigo-500 text-white font-semibold text-sm transition-all shadow-lg shadow-indigo-600/25">
+              <span>Configurer & Jouer à BorderPath</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
-          </div>
+          </Link>
 
           {/* Game 4 : Capital Blitz (Coming Soon) */}
-          <div className="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 flex flex-col justify-between opacity-75">
+          <div className="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-7 flex flex-col justify-between opacity-75">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-medium uppercase tracking-wider">
                   Sprint 3 • Bientôt
                 </span>
-                <Zap className="w-5 h-5 text-slate-500" />
+                <span className="text-xs text-slate-500 font-mono">Contre-la-montre</span>
               </div>
 
-              <h3 className="text-xl font-bold text-slate-300 mb-2">
+              <h3 className="text-2xl font-bold text-slate-300 mb-2">
                 Capital Blitz — Contre-la-montre
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
                 60 secondes pour identifier un maximum de capitales, drapeaux et silhouettes nationales. Combo multiplicateur pour les séries sans faute.
               </p>
+
+              <div className="grid grid-cols-2 gap-2.5 mb-6">
+                <div className="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-400">⚡ Sprint 60s</span>
+                  <span className="text-[11px] text-slate-500 leading-tight">
+                    Multiplicateurs & combos
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-400">🏁 Capitales & Drapeaux</span>
+                  <span className="text-[11px] text-slate-500 leading-tight">
+                    195 nations reconnues
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <button
-              disabled
-              className="w-full py-3 px-4 rounded-xl bg-slate-800/60 text-slate-500 font-semibold text-xs border border-slate-700/50 cursor-not-allowed"
-            >
-              En cours de développement
-            </button>
+            <div className="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-slate-800/60 text-slate-500 font-semibold text-sm border border-slate-700/50 cursor-not-allowed">
+              <span>En cours de développement</span>
+              <Clock className="w-4 h-4 text-slate-600" />
+            </div>
           </div>
         </div>
       </section>
