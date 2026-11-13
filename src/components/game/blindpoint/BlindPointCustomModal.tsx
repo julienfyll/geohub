@@ -34,6 +34,7 @@ interface BlindPointCustomModalProps {
   onClose: () => void;
   initialPack?: BlindPointPack;
   initialDifficulty?: BlindPointDifficulty | "all";
+  initialSelectedLines?: string[];
 }
 
 const AVAILABLE_PACKS: {
@@ -116,6 +117,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
   onClose,
   initialPack = "villes_france",
   initialDifficulty = "all",
+  initialSelectedLines,
 }) => {
   const router = useRouter();
 
@@ -126,10 +128,20 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
 
   // Retrace le Réseau Dedicated Parameters
   const [tolerance, setTolerance] = useState<string>("300");
-  const [retraceOrder, setRetraceOrder] = useState<"random" | "sequential">("random");
-  const [selectedLines, setSelectedLines] = useState<string[]>(
-    ALL_METRO_LINES.map((l) => l.id)
+  const [retraceOrder, setRetraceOrder] = useState<"random" | "sequential">(
+    "random"
   );
+  const [selectedLines, setSelectedLines] = useState<string[]>(
+    initialSelectedLines && initialSelectedLines.length > 0
+      ? initialSelectedLines
+      : ALL_METRO_LINES.map((l) => l.id)
+  );
+
+  useEffect(() => {
+    if (isOpen && initialSelectedLines && initialSelectedLines.length > 0) {
+      setSelectedLines(initialSelectedLines);
+    }
+  }, [isOpen, initialSelectedLines]);
 
   // Classic Points Aveugles Parameters
   const [selectedPacks, setSelectedPacks] = useState<BlindPointPack[]>([initialPack]);
@@ -202,7 +214,7 @@ export const BlindPointCustomModal: React.FC<BlindPointCustomModalProps> = ({
     // Retrace le Réseau Mode URL
     if (activeTab === "retrace") {
       let url = `${origin}/play/blindpoint?pack=metro_paris&mode=custom&customType=retrace&tolerance=${tolerance}&order=${retraceOrder}`;
-      if (selectedLines.length > 0 && selectedLines.length < ALL_METRO_LINES.length) {
+      if (selectedLines.length > 0) {
         url += `&lines=${selectedLines.join(",")}`;
       }
       url += `&seed=${seed}&play=1`;

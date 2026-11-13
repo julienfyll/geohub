@@ -38,6 +38,7 @@ import { BlindPointSettingsModal } from "@/components/game/blindpoint/BlindPoint
 import { BlindPointCustomModal } from "@/components/game/blindpoint/BlindPointCustomModal";
 import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import { BlindPointRetraceGame } from "@/components/game/blindpoint/BlindPointRetraceGame";
+import { ALL_METRO_LINES } from "@/lib/games/blindpoint/data/metro_topology";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { LeaderboardTriggerButton } from "@/components/leaderboard/LeaderboardTriggerButton";
@@ -1079,7 +1080,9 @@ function BlindPointGame() {
   // Retrace le Réseau Mode (Custom Metro game mode)
   if (isRetraceCustomMode) {
     const linesParam = searchParams.get("lines");
-    const activeLines = linesParam ? linesParam.split(",") : ["1", "4", "6"];
+    const activeLines = linesParam
+      ? linesParam.split(",")
+      : ALL_METRO_LINES.map((l) => l.id);
     const activeTolerance = searchParams.get("tolerance") || "300";
     const rawOrder = searchParams.get("order");
     const activeOrder: "random" | "sequential" = rawOrder === "sequential" ? "sequential" : "random";
@@ -1099,6 +1102,7 @@ function BlindPointGame() {
           onClose={() => setShowCustomModal(false)}
           initialPack="metro_paris"
           initialDifficulty="all"
+          initialSelectedLines={activeLines}
         />
       </>
     );
