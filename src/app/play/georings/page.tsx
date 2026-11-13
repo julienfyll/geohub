@@ -1085,16 +1085,16 @@ function GeoRingsGame() {
     <div className="relative w-screen h-screen overflow-hidden flex flex-col bg-slate-950 text-slate-100">
       {/* Top Navigation Bar */}
       <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <QuickMenuDrawer />
 
           <Link
-            href="/"
-            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm"
-            title="Retour au Hub d'accueil"
+            href="/play/georings"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
+            title="Retour au Lobby de sélection GeoRings"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Hub</span>
+            <span className="hidden sm:inline">Lobby</span>
           </Link>
 
           <div className="flex items-center gap-2">
