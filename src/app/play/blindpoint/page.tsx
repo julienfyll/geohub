@@ -518,22 +518,18 @@ function BlindPointGame() {
     const p = session?.pack || pack;
     const d = session?.difficulty || difficulty;
     const m = session?.mode || mode;
+    const s = session?.seed || userSeed || (typeof window !== "undefined" ? searchParams.get("seed") : null) || undefined;
 
-    if (m === "free" || m === "custom") {
-      const freeSeed = `&seed=${Date.now()}`;
-      let url = `/play/blindpoint?pack=${p}&difficulty=${d}&mode=${m}${freeSeed}`;
-      if (rawPacks) url += `&packs=${encodeURIComponent(rawPacks)}`;
-      if (rawRounds) url += `&rounds=${rawRounds}`;
-      if (rawTimer) url += `&timer=${rawTimer}`;
-      if (rawTheme) url += `&theme=${rawTheme}`;
-      if (rawBorders) url += `&borders=${rawBorders}`;
-      if (rawRoads) url += `&roads=${rawRoads}`;
-      if (rawContinent) url += `&continent=${rawContinent}`;
-      url += `&play=1`;
-      router.push(url);
-    } else {
-      loadGameSession(p, d, m, undefined);
-    }
+    loadGameSession(
+      p,
+      d,
+      m,
+      s,
+      session?.packs ? session.packs.join(",") : rawPacks || undefined,
+      rawRounds || undefined,
+      rawTimer || undefined,
+      rawContinent || undefined
+    );
   };
 
   const getCustomShareUrl = () => {
@@ -1170,6 +1166,7 @@ function BlindPointGame() {
           onValidateGuess={handleValidateGuess}
           onOpenSettings={() => setShowSettingsModal(true)}
           onOpenSummary={() => setShowSummaryModal(true)}
+          onRestart={handleRestartCurrentGame}
           onBackToLobby={handleBackToLobby}
           onOpenCustomModal={() => setShowCustomModal(true)}
           onChangeMode={handleChangeGameConfig}

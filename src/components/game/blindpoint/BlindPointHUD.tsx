@@ -21,6 +21,7 @@ import {
   Trophy,
   Sliders,
   Zap,
+  RotateCcw,
 } from "lucide-react";
 import {
   BlindPointClientTarget,
@@ -52,6 +53,7 @@ interface BlindPointHUDProps {
   onValidateGuess: () => void;
   onOpenSettings: () => void;
   onOpenSummary?: () => void;
+  onRestart?: () => void;
   onBackToLobby?: () => void;
   onOpenCustomModal?: () => void;
   onChangeMode?: (pack: BlindPointPack, difficulty: BlindPointDifficulty | "all", mode: BlindPointMode) => void;
@@ -78,6 +80,7 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
   onValidateGuess,
   onOpenSettings,
   onOpenSummary,
+  onRestart,
   onBackToLobby,
   onOpenCustomModal,
   onChangeMode,
@@ -462,6 +465,19 @@ export const BlindPointHUD: React.FC<BlindPointHUDProps> = ({
             >
               <Trophy className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Bilan</span>
+            </button>
+          )}
+
+          {/* Restart button - Non disponible en Défi du Jour */}
+          {mode !== "daily" && onRestart && (
+            <button
+              type="button"
+              onClick={onRestart}
+              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs"
+              title="Recommencer la partie"
+              aria-label="Recommencer la partie"
+            >
+              <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
             </button>
           )}
 

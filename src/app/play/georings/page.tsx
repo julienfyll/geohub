@@ -595,6 +595,57 @@ function GeoRingsGame() {
     }
   };
 
+  // Replay exactly the same challenge from the beginning
+  const handleRestartSameGame = async () => {
+    if (isLobby || !session) return;
+    setLoading(true);
+    setFeedback(null);
+    setIsGameOver(false);
+    setShowGameOverModal(true);
+    setIsReviewing(false);
+    setCurrentRingGuesses([]);
+    setCurrentRingTopCities([]);
+    setHoveredReviewCity(null);
+    setPinnedReviewCities(new Map());
+    setCurrentRingIndex(0);
+    setMarkers([]);
+    setCompletedRadii([]);
+
+    try {
+      const restartSeed = session.seedCity?.id || session.seed || userSeed;
+      let url = `/api/games/georings/session?scale=${scale}&mode=${mode}&metric=${metric}`;
+      if (restartSeed) url += `&seed=${restartSeed}`;
+      if (continent) url += `&continent=${continent}`;
+      if (customRadii) url += `&radii=${customRadii}`;
+      if (customLives) url += `&lives=${customLives}`;
+
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("Erreur d'initialisation");
+      const data: GeoRingsInitResponse & { seed: string } = await res.json();
+      setSession(data);
+
+      const maxTries = data.maxTriesPerRing ?? 3;
+      setTotalTries(maxTries);
+      setTriesLeft(maxTries);
+
+      const initialRings: RingStatus[] = data.rings.map((r, idx) => ({
+        index: r.index,
+        innerRadiusKm: r.innerRadiusKm,
+        outerRadiusKm: r.outerRadiusKm,
+        isCurrent: idx === 0,
+        isCompleted: false,
+        isFailed: false,
+        triesUsed: 0,
+      }));
+      setRings(initialRings);
+    } catch (err) {
+      console.error(err);
+      setFeedback({ text: "Impossible de relancer la partie.", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!isLobby) {
       initGame();
@@ -1235,6 +1286,19 @@ function GeoRingsGame() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+          {/* Restart Button - Non disponible en Défi du Jour */}
+          {mode !== "daily" && (
+            <button
+              type="button"
+              onClick={handleRestartSameGame}
+              title="Recommencer la partie"
+              aria-label="Recommencer la partie"
+              className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all text-xs"
+            >
+              <RotateCcw className="w-4 h-4 text-slate-400 hover:text-white" />
+            </button>
+          )}
+
           {isGameOver && (
             <button
               type="button"
