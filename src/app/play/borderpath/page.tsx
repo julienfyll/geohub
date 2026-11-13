@@ -329,7 +329,7 @@ function BorderPathGame() {
           router.push(`/play/borderpath?pack=${pack}&mode=${newMode}`);
         }}
         onGiveUp={handleGiveUp}
-        onRestart={() => initGameSession(pack, mode)}
+        onRestart={handleReplaySameChallenge}
       />
 
       {/* Optimal Target Card (Bottom-Left) */}
