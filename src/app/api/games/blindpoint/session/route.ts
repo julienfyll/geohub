@@ -7,6 +7,8 @@ import {
 } from "@/lib/games/blindpoint/types";
 import { getSessionTargets, toClientTarget, hashString } from "@/lib/games/blindpoint/targets";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const rawPack = searchParams.get("pack") || "villes_france";
@@ -94,5 +96,11 @@ export async function GET(request: NextRequest) {
     currentTarget,
   };
 
-  return NextResponse.json(response);
+  return NextResponse.json(response, {
+    headers: {
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
+    },
+  });
 }

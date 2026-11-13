@@ -288,7 +288,7 @@ function BlindPointGame() {
         if (targetContinent) url += `&continent=${targetContinent}`;
         if (targetSeed) url += `&seed=${targetSeed}`;
 
-        const res = await fetch(url);
+        const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error("Erreur de chargement de session");
         const data: BlindPointSessionInitResponse = await res.json();
 

@@ -568,7 +568,7 @@ function GeoRingsGame() {
       if (customRadii) url += `&radii=${customRadii}`;
       if (customLives) url += `&lives=${customLives}`;
 
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) throw new Error("Erreur d'initialisation");
       const data: GeoRingsInitResponse & { seed: string } = await res.json();
       setSession(data);
