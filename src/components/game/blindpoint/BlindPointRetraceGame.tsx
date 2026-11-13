@@ -233,14 +233,14 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       }
 
       const el = document.createElement("div");
-      el.className = "group relative cursor-pointer select-none";
+      el.className = "group relative cursor-pointer select-none w-fit h-fit";
 
       const dotsHtml = station.lines
         .map(
           (line) => `
           <span style="background-color: ${METRO_LINE_COLORS[line]?.bg || "#fff"}; color: ${
             METRO_LINE_COLORS[line]?.text || "#000"
-          };" class="w-4 h-4 rounded-full flex items-center justify-center font-black text-[9px] shadow-sm">
+          };" class="w-4 h-4 rounded-full flex items-center justify-center font-black text-[9px] shadow-sm shrink-0">
             ${line}
           </span>
         `
@@ -248,7 +248,7 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
         .join("");
 
       el.innerHTML = `
-        <div class="flex items-center -space-x-1.5 p-1 rounded-full bg-slate-950/90 border-2 border-white shadow-xl transition-transform hover:scale-125">
+        <div class="inline-flex items-center w-fit -space-x-1.5 p-1 rounded-full bg-slate-950/90 border-2 border-white shadow-xl transition-transform hover:scale-125">
           ${dotsHtml}
         </div>
         <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[11px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
