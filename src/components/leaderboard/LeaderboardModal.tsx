@@ -73,7 +73,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       setActiveVariant("cities");
     } else if (
       activeTab === "blindpoint" &&
-      !["villes_france", "lieux_paris", "lieux_france", "villes_monde"].includes(activeVariant)
+      !["villes_france", "villes_europe", "villes_monde", "lieux_paris", "lieux_monde"].includes(activeVariant)
     ) {
       setActiveVariant("villes_france");
     } else if (
@@ -83,6 +83,17 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       setActiveVariant("monde");
     }
   }, [activeTab, activeVariant]);
+
+  const handleTabChange = (tab: "georings" | "blindpoint" | "borderpath" | "streaks") => {
+    setActiveTab(tab);
+    if (tab === "georings") {
+      setActiveVariant("cities");
+    } else if (tab === "blindpoint") {
+      setActiveVariant("villes_france");
+    } else if (tab === "borderpath") {
+      setActiveVariant("monde");
+    }
+  };
 
   // Fetch leaderboard data
   useEffect(() => {
@@ -193,8 +204,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         <div className="px-5 pt-4 pb-2 border-b border-slate-800/60 bg-slate-950/30 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-2xl border border-slate-800">
             <button
-              onClick={() => setActiveTab("georings")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              onClick={() => handleTabChange("georings")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
                 activeTab === "georings"
                   ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
                   : "text-slate-400 hover:text-white"
@@ -205,8 +216,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             </button>
 
             <button
-              onClick={() => setActiveTab("blindpoint")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              onClick={() => handleTabChange("blindpoint")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
                 activeTab === "blindpoint"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
                   : "text-slate-400 hover:text-white"
@@ -217,8 +228,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             </button>
 
             <button
-              onClick={() => setActiveTab("borderpath")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              onClick={() => handleTabChange("borderpath")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
                 activeTab === "borderpath"
                   ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30"
                   : "text-slate-400 hover:text-white"
@@ -229,8 +240,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             </button>
 
             <button
-              onClick={() => setActiveTab("streaks")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              onClick={() => handleTabChange("streaks")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
                 activeTab === "streaks"
                   ? "bg-amber-600 text-white shadow-md shadow-amber-600/30"
                   : "text-slate-400 hover:text-white"
@@ -246,7 +257,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs">
               <button
                 onClick={() => setDateOffset(0)}
-                className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded-lg font-semibold transition-colors ${
                   dateOffset === 0
                     ? "bg-slate-800 text-white shadow-sm"
                     : "text-slate-400 hover:text-white"
@@ -256,7 +267,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
               </button>
               <button
                 onClick={() => setDateOffset(1)}
-                className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded-lg font-semibold transition-colors ${
                   dateOffset === 1
                     ? "bg-slate-800 text-white shadow-sm"
                     : "text-slate-400 hover:text-white"
@@ -279,10 +290,10 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
               <>
                 <button
                   onClick={() => setActiveVariant("cities")}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "cities"
-                      ? "bg-blue-500/20 border border-blue-500/40 text-blue-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      ? "bg-blue-500/20 border-blue-500/40 text-blue-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   <Users className="w-3.5 h-3.5" />
@@ -290,10 +301,10 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 </button>
                 <button
                   onClick={() => setActiveVariant("airports")}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "airports"
-                      ? "bg-sky-500/20 border border-sky-500/40 text-sky-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      ? "bg-sky-500/20 border-sky-500/40 text-sky-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   <Plane className="w-3.5 h-3.5" />
@@ -304,50 +315,50 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
               <>
                 <button
                   onClick={() => setActiveVariant("monde")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "monde"
-                      ? "bg-indigo-500/20 border border-indigo-500/40 text-indigo-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      ? "bg-indigo-500/20 border-indigo-500/40 text-indigo-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🌍 Monde
                 </button>
                 <button
                   onClick={() => setActiveVariant("europe")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "europe"
-                      ? "bg-indigo-500/20 border border-indigo-500/40 text-indigo-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      ? "bg-indigo-500/20 border-indigo-500/40 text-indigo-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🇪🇺 Europe
                 </button>
                 <button
                   onClick={() => setActiveVariant("france_departements")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "france_departements"
-                      ? "bg-indigo-500/20 border border-indigo-500/40 text-indigo-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      ? "bg-indigo-500/20 border-indigo-500/40 text-indigo-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🇫🇷 96 Dépts
                 </button>
                 <button
                   onClick={() => setActiveVariant("ameriques")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "ameriques"
                       ? "bg-indigo-500/20 border border-indigo-500/40 text-indigo-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🌎 Amériques
                 </button>
                 <button
                   onClick={() => setActiveVariant("afrique")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "afrique"
                       ? "bg-indigo-500/20 border border-indigo-500/40 text-indigo-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🌍 Afrique
@@ -357,50 +368,50 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
               <>
                 <button
                   onClick={() => setActiveVariant("villes_france")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "villes_france"
-                      ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🇫🇷 Villes
                 </button>
                 <button
                   onClick={() => setActiveVariant("villes_europe")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "villes_europe"
-                      ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🇪🇺 Europe
                 </button>
                 <button
                   onClick={() => setActiveVariant("villes_monde")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "villes_monde"
                       ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🌍 Monde
                 </button>
                 <button
                   onClick={() => setActiveVariant("lieux_paris")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "lieux_paris"
                       ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🗼 Paris
                 </button>
                 <button
                   onClick={() => setActiveVariant("lieux_monde")}
-                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
                     activeVariant === "lieux_monde"
                       ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300"
-                      : "bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
                   }`}
                 >
                   🏛️ Merveilles
