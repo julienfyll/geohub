@@ -351,15 +351,23 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
 
     // Map click handler
     map.on("click", (e) => {
-      const clickCoords: [number, number] = [e.lngLat.lng, e.lngLat.lat];
+      const wrapped = e.lngLat.wrap();
+      const clickCoords: [number, number] = [wrapped.lng, wrapped.lat];
       setPendingGuess(clickCoords);
 
-      // Create or update orange pending pin
+      // Create or update pending guess marker
       if (!pendingMarkerRef.current) {
         const el = document.createElement("div");
-        el.className = "w-6 h-6 rounded-full bg-amber-500 border-2 border-white shadow-xl animate-bounce flex items-center justify-center text-[10px] text-slate-950 font-black";
-        el.innerHTML = "📍";
-        pendingMarkerRef.current = new maplibregl.Marker({ element: el, anchor: "bottom" })
+        el.className = "relative pointer-events-none select-none";
+        el.innerHTML = `
+          <div class="absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center z-30">
+            <div class="absolute inset-0 rounded-full bg-amber-400/40 animate-ping"></div>
+            <div class="relative w-4 h-4 rounded-full bg-amber-500 border-2 border-white shadow-xl flex items-center justify-center">
+              <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+            </div>
+          </div>
+        `;
+        pendingMarkerRef.current = new maplibregl.Marker({ element: el, anchor: "center" })
           .setLngLat(clickCoords)
           .addTo(map);
       } else {
