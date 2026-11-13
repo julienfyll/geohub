@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
+import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import {
   METRO_TOPOLOGY_STATIONS,
   METRO_LINE_TOPOLOGY,
@@ -712,37 +713,15 @@ export const BlindPointRetraceGame: React.FC<BlindPointRetraceGameProps> = ({
       </footer>
 
       {/* Confirmation Reset Modal */}
-      {showConfirmReset && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-4 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-rose-600/20 border border-rose-500/40 text-rose-400 mx-auto flex items-center justify-center">
-              <RotateCcw className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-lg font-black text-white">Réinitialiser le Réseau ?</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Toutes vos stations découvertes et tronçons illuminés seront effacés.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowConfirmReset(false)}
-                className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs"
-              >
-                Annuler
-              </button>
-              <button
-                type="button"
-                onClick={handleResetNetwork}
-                className="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30"
-              >
-                Confirmer l'effacement
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <RestartConfirmModal
+        isOpen={showConfirmReset}
+        onClose={() => setShowConfirmReset(false)}
+        onConfirm={handleResetNetwork}
+        title="Réinitialiser le réseau ?"
+        message="Êtes-vous sûr de vouloir recommencer ? Toutes vos stations découvertes et tronçons illuminés sur ce réseau seront effacés."
+        confirmLabel="Recommencer"
+        cancelLabel="Annuler"
+      />
 
       {/* Rules / Help Modal */}
       {showHelp && (
