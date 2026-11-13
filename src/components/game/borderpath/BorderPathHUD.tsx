@@ -6,15 +6,13 @@ import {
   BorderPathEntity,
   BorderPathPack,
   BorderPathMode,
-  BorderPathMapTheme,
 } from "@/lib/games/borderpath/types";
 import {
   ArrowLeft,
   ArrowRight,
   ChevronDown,
   Layers,
-  Eye,
-  EyeOff,
+  Settings,
   RotateCcw,
   Flag,
   HelpCircle,
@@ -28,11 +26,8 @@ interface BorderPathHUDProps {
   mode: BorderPathMode;
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
-  theme: BorderPathMapTheme;
-  hideBorders: boolean;
-  onToggleTheme: () => void;
-  onToggleHideBorders: () => void;
   onOpenRules: () => void;
+  onOpenSettings: () => void;
   onOpenPackModal: () => void;
   onChangeMode?: (mode: BorderPathMode) => void;
   onGiveUp: () => void;
@@ -44,11 +39,8 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   mode,
   startEntity,
   targetEntity,
-  theme,
-  hideBorders,
-  onToggleTheme,
-  onToggleHideBorders,
   onOpenRules,
+  onOpenSettings,
   onOpenPackModal,
   onChangeMode,
   onGiveUp,
@@ -148,34 +140,8 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
         </div>
       </div>
 
-      {/* Right: Map & Game Controls + UserNav */}
+      {/* Right: Actions, Settings (Gear) & UserNav */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        {/* Map Theme Toggle */}
-        <button
-          type="button"
-          onClick={onToggleTheme}
-          className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs"
-          title={`Changer de fond de carte (Actuel: ${theme})`}
-          aria-label="Changer de fond de carte"
-        >
-          <Layers className="w-4 h-4 text-blue-400" />
-        </button>
-
-        {/* Carte Muette Toggle */}
-        <button
-          type="button"
-          onClick={onToggleHideBorders}
-          className={`p-2 rounded-lg border transition-all text-xs ${
-            hideBorders
-              ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-              : "bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-700/80"
-          }`}
-          title={hideBorders ? "Afficher les frontières" : "Masquer les frontières (Carte Muette)"}
-          aria-label="Mode Carte Muette"
-        >
-          {hideBorders ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-        </button>
-
         {/* Restart Button */}
         <button
           type="button"
@@ -196,6 +162,17 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
           aria-label="Abandonner la partie"
         >
           <Flag className="w-4 h-4 text-rose-400" />
+        </button>
+
+        {/* Settings Button (Roue crantée standard GeoHub) */}
+        <button
+          type="button"
+          onClick={onOpenSettings}
+          className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-all text-xs"
+          title="Paramètres de jeu (Fond de carte, Carte Muette...)"
+          aria-label="Paramètres de jeu"
+        >
+          <Settings className="w-4 h-4 text-slate-400 hover:text-white" />
         </button>
 
         {/* Rules Modal Button */}

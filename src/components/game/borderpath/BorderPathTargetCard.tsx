@@ -34,50 +34,42 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
           <div className="shrink-0">
             {isOptimal ? (
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold font-mono whitespace-nowrap">
-                🎯 Parcours Optimal
+                🎯 Optimal (0)
               </span>
             ) : (
               <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] font-bold font-mono whitespace-nowrap">
-                +{delta} {delta > 1 ? "coups" : "coup"} de trop
+                +{delta} {delta > 1 ? "coups" : "coup"}
               </span>
             )}
           </div>
         </div>
 
-        {/* Primary Metrics: Optimal Target vs Player Attempts */}
+        {/* Primary Metrics: Optimal Target vs Player Attempts (Stacked vertically, 100% immune to overflow) */}
         <div className="grid grid-cols-2 gap-2.5">
-          {/* Chemin Minimal */}
-          <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
-              <span className="text-emerald-400 font-extrabold text-base font-mono">
-                {optimalCountries}
-              </span>
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                Chemin direct
-              </span>
-              <span className="text-xs font-semibold text-emerald-300/90 whitespace-nowrap">
-                pays minimum
-              </span>
-            </div>
+          {/* Chemin direct */}
+          <div className="flex flex-col items-center justify-center py-2.5 px-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-center">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+              Chemin direct
+            </span>
+            <span className="text-2xl font-black font-mono text-emerald-400 my-0.5 leading-none">
+              {optimalCountries}
+            </span>
+            <span className="text-[11px] font-medium text-emerald-300/80 mt-0.5">
+              pays minimum
+            </span>
           </div>
 
           {/* Coups joués */}
-          <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center shrink-0">
-              <span className="text-white font-extrabold text-base font-mono">
-                {totalAttempts}
-              </span>
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                Coups joués
-              </span>
-              <span className="text-xs font-semibold text-slate-300 whitespace-nowrap">
-                pays + erreurs
-              </span>
-            </div>
+          <div className="flex flex-col items-center justify-center py-2.5 px-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-center">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+              Coups joués
+            </span>
+            <span className="text-2xl font-black font-mono text-white my-0.5 leading-none">
+              {totalAttempts}
+            </span>
+            <span className="text-[11px] font-medium text-slate-400 mt-0.5">
+              pays + erreurs
+            </span>
           </div>
         </div>
 
@@ -88,7 +80,7 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
               <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
               <span className="text-xs">Pays validés sur la carte :</span>
             </div>
-            <span className="font-mono font-bold text-emerald-400 text-xs whitespace-nowrap">
+            <span className="font-mono font-bold text-emerald-400 text-xs">
               {uniquePlacedCount}
             </span>
           </div>
@@ -103,7 +95,7 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
               <span className="text-xs">Erreurs (non limitrophes) :</span>
             </div>
             <span
-              className={`font-mono font-bold text-xs px-2 py-0.5 rounded whitespace-nowrap ${
+              className={`font-mono font-bold text-xs px-2 py-0.5 rounded ${
                 errorCount > 0
                   ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
                   : "text-slate-500"
@@ -116,7 +108,7 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
           {delta > 0 && (
             <div className="flex items-center justify-between pt-1.5 border-t border-slate-800/80 text-xs text-amber-300/90 font-medium">
               <span>Écart vs chemin optimal :</span>
-              <span className="font-mono font-bold whitespace-nowrap">
+              <span className="font-mono font-bold">
                 +{delta} {delta > 1 ? "coups" : "coup"}
               </span>
             </div>
@@ -129,9 +121,9 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
             <>
               <div className="flex items-center gap-1.5 text-slate-400 text-xs">
                 <Route className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>Distance restante estimée :</span>
+                <span>Distance restante :</span>
               </div>
-              <span className="font-mono font-bold text-amber-400 text-xs whitespace-nowrap">
+              <span className="font-mono font-bold text-amber-400 text-xs">
                 ~{remainingSteps} {remainingSteps > 1 ? "frontières" : "frontière"}
               </span>
             </>
