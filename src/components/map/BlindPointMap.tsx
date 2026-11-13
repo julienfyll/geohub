@@ -119,6 +119,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const guessMarkerRef = useRef<maplibregl.Marker | null>(null);
   const isLoadedRef = useRef<boolean>(false);
   const currentThemeRef = useRef<BlindPointMapTheme>(mapTheme);
   const hoverPopupRef = useRef<maplibregl.Popup | null>(null);
@@ -216,7 +217,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           features: [],
         },
       });
+    }
 
+    if (!map.getLayer("arc-glow")) {
       // Neon outer glow
       map.addLayer({
         id: "arc-glow",
@@ -229,7 +232,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           "line-blur": 3,
         },
       });
+    }
 
+    if (!map.getLayer("arc-line")) {
       // Sharp central dashed geodesic line
       map.addLayer({
         id: "arc-line",
@@ -252,7 +257,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           features: [],
         },
       });
+    }
 
+    if (!map.getLayer("points-shadow")) {
       // Outer drop-shadow ring for guaranteed contrast on any background (light, dark, satellite)
       map.addLayer({
         id: "points-shadow",
@@ -264,7 +271,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           "circle-opacity": isDark ? 0.5 : 0.25,
         },
       });
+    }
 
+    if (!map.getLayer("points-outer")) {
       // Contrasting white border ring
       map.addLayer({
         id: "points-outer",
@@ -276,7 +285,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           "circle-opacity": 0.98,
         },
       });
+    }
 
+    if (!map.getLayer("points-inner")) {
       // Colored inner circle
       map.addLayer({
         id: "points-inner",
@@ -292,7 +303,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           ],
         },
       });
+    }
 
+    if (!map.getLayer("points-number")) {
       // Centered number inside point (for review mode 1 to 5)
       map.addLayer({
         id: "points-number",
@@ -310,7 +323,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           "text-color": "#ffffff",
         },
       });
+    }
 
+    if (!map.getLayer("points-labels")) {
       // Text labels (above / below point with adaptive halo)
       map.addLayer({
         id: "points-labels",
@@ -344,8 +359,10 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           "text-halo-blur": 0.5,
         },
       });
+    }
 
-      // Interactive hover tooltip on point dots
+    // Interactive hover tooltip on point dots
+    if (!hoverPopupRef.current) {
       const hoverPopup = new maplibregl.Popup({
         closeButton: false,
         closeOnClick: false,
@@ -452,8 +469,9 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         interactionStateRef.current;
       if (curRev || curRevAll) return;
 
-      const lat = e.lngLat.lat;
-      const lon = e.lngLat.lng;
+      const wrapped = e.lngLat.wrap();
+      const lat = wrapped.lat;
+      const lon = wrapped.lng;
       curPlace({ lat, lon });
     });
 
@@ -477,6 +495,10 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       if (hoverPopupRef.current) {
         hoverPopupRef.current.remove();
         hoverPopupRef.current = null;
+      }
+      if (guessMarkerRef.current) {
+        guessMarkerRef.current.remove();
+        guessMarkerRef.current = null;
       }
       map.remove();
       mapRef.current = null;
@@ -625,14 +647,16 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     let restored = false;
     const restoreAllLayers = () => {
       if (restored) return;
+      if (!map.isStyleLoaded()) return;
       restored = true;
+      map.off("styledata", restoreAllLayers);
       setupLayers(map, mapTheme);
       updateMapData();
       updateBasemapBorders();
       updateCanvasCursor();
     };
 
-    map.once("style.load", restoreAllLayers);
+    map.on("styledata", restoreAllLayers);
     map.setStyle(nextStyle, { diff: false });
   }, [mapTheme]);
 
@@ -660,10 +684,6 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
     updateBasemapBorders();
   }, [showBorders, showRoads, showNature, mapTheme]);
 
-  useEffect(() => {
-    updateBasemapBorders();
-  }, [showBorders]);
-
   /**
    * Synchronizes hardware WebGL points & arcs for all states:
    * 1. Active guess placing
@@ -673,6 +693,11 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
   const updateMapData = () => {
     const map = mapRef.current;
     if (!map || !isLoadedRef.current) return;
+
+    // Self-healing: if sources or layers were wiped (e.g. style change), re-create them!
+    if (!map.getSource("points-source") || !map.getSource("arc-source")) {
+      setupLayers(map, currentThemeRef.current);
+    }
 
     const pointsSource = map.getSource("points-source") as maplibregl.GeoJSONSource | undefined;
     const arcSource = map.getSource("arc-source") as maplibregl.GeoJSONSource | undefined;
@@ -869,6 +894,49 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
       features: [],
     });
   };
+
+  // Synchronize high-visibility animated DOM marker for active player guess
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (currentGuess && !isRevealing && !isGameOverReview) {
+      if (!guessMarkerRef.current) {
+        const el = document.createElement("div");
+        el.className = "relative flex flex-col items-center select-none pointer-events-none";
+        el.innerHTML = `
+          <!-- Pulsing Radar Ripple at exact coordinate -->
+          <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-10 h-10 rounded-full bg-blue-500/40 animate-ping"></div>
+          <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 rounded-full bg-blue-400 border-2 border-white shadow-lg"></div>
+
+          <!-- Floating 'Mon tir' Pill Badge -->
+          <div class="mb-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/95 border border-blue-400 text-blue-200 text-[11px] font-extrabold tracking-wide shadow-2xl whitespace-nowrap backdrop-blur-md">
+            🎯 Mon tir
+          </div>
+
+          <!-- High-Impact Pin Body & Pointer -->
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 via-blue-500 to-cyan-400 border-2 border-white shadow-[0_4px_16px_rgba(37,99,235,0.7)] flex items-center justify-center">
+            <div class="w-2.5 h-2.5 rounded-full bg-white shadow-sm"></div>
+          </div>
+          <div class="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[8px] border-t-blue-600 -mt-0.5 drop-shadow-md"></div>
+        `;
+
+        guessMarkerRef.current = new maplibregl.Marker({
+          element: el,
+          anchor: "bottom",
+        })
+          .setLngLat([currentGuess.lon, currentGuess.lat])
+          .addTo(map);
+      } else {
+        guessMarkerRef.current.setLngLat([currentGuess.lon, currentGuess.lat]);
+      }
+    } else {
+      if (guessMarkerRef.current) {
+        guessMarkerRef.current.remove();
+        guessMarkerRef.current = null;
+      }
+    }
+  }, [currentGuess, isRevealing, isGameOverReview]);
 
   // Trigger data updates whenever props change
   useEffect(() => {
