@@ -6,7 +6,6 @@ import {
   Search,
   ArrowUp,
   ArrowDown,
-  Navigation,
   Train,
   ChevronRight,
   Info,
@@ -17,7 +16,6 @@ import {
 } from "@/lib/games/borderpath/metroTypes";
 import {
   METRO_LINES_MAP,
-  METRO_STATIONS_MAP,
   getLineStationsCentered,
 } from "@/lib/games/borderpath/metroEngine";
 
@@ -87,34 +85,34 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 pointer-events-none flex justify-end">
+    <div className="fixed top-14 bottom-0 right-0 left-0 sm:left-auto sm:w-[420px] z-30 pointer-events-none flex justify-end">
       {/* Backdrop overlay for mobile */}
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-xs md:hidden pointer-events-auto transition-opacity duration-200"
+        className="fixed inset-0 top-14 bg-black/50 backdrop-blur-xs sm:hidden pointer-events-auto transition-opacity duration-200"
         onClick={onClose}
       />
 
-      {/* Drawer Container */}
+      {/* Drawer Container: Stays strictly UNDER the top bar (top-14 h-[calc(100vh-3.5rem)]) */}
       <div
-        className="pointer-events-auto w-full md:w-[420px] h-full bg-slate-900/95 border-l border-slate-800 shadow-2xl backdrop-blur-md flex flex-col z-10 transition-transform duration-300 animate-in slide-in-from-right"
+        className="pointer-events-auto w-full sm:w-[420px] h-full bg-slate-900/98 border-l border-slate-800 shadow-2xl backdrop-blur-xl flex flex-col z-10 transition-transform duration-300 animate-in slide-in-from-right"
         style={{
           boxShadow: activeLine
-            ? `-6px 0 24px -4px ${activeLine.bg}25`
+            ? `-6px 0 28px -4px ${activeLine.bg}30`
             : undefined,
         }}
       >
         {/* Header */}
-        <div className="p-4 border-b border-slate-800/80 bg-slate-950/60 shrink-0">
+        <div className="p-4 border-b border-slate-800/80 bg-slate-950/70 shrink-0">
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
                 <Train className="w-4 h-4" />
               </div>
               <div>
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Départ du tronçon
                 </span>
-                <h3 className="text-base font-bold text-white leading-tight">
+                <h3 className="text-sm sm:text-base font-extrabold text-white leading-tight">
                   {currentStation.name}
                 </h3>
               </div>
@@ -122,7 +120,7 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
               title="Fermer le volet"
             >
               <X className="w-5 h-5" />
@@ -140,7 +138,7 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
                     onSelectLine(line.id);
                     setSearchQuery("");
                   }}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl font-bold text-xs transition-all shrink-0 border ${
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl font-bold text-xs transition-all shrink-0 border cursor-pointer ${
                     isSelected
                       ? "scale-105 shadow-md shadow-black/40"
                       : "opacity-65 hover:opacity-100 hover:scale-100 bg-slate-800/60 border-slate-700/60 text-slate-300"
@@ -175,8 +173,8 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
         {activeLine && (
           <div className="px-4 py-2.5 bg-slate-900/90 border-b border-slate-800/60 shrink-0">
             <div className="flex items-center justify-between text-xs mb-2">
-              <span className="text-slate-400 font-medium">Direction :</span>
-              <span className="font-semibold text-slate-200 truncate max-w-[280px]">
+              <span className="text-slate-400 font-medium text-[11px]">Direction :</span>
+              <span className="font-semibold text-slate-200 truncate max-w-[270px] text-[11px]">
                 {activeLine.terminus[0]} ↔ {activeLine.terminus[1]}
               </span>
             </div>
@@ -203,35 +201,30 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
           </div>
         )}
 
-        {/* Vertical Stations Slider / Scroller */}
+        {/* Vertical Stations Scroller with Continuous Timeline Tracks */}
         <div
           ref={scrollContainerRef}
-          className="flex-1 overflow-y-auto px-4 py-3 space-y-1 relative"
+          className="flex-1 overflow-y-auto px-4 py-3 relative"
         >
-          {/* Guide Rail Line in the background */}
-          {activeLine && (
-            <div
-              className="absolute left-[33px] top-4 bottom-4 w-1 rounded-full opacity-30 pointer-events-none"
-              style={{ backgroundColor: activeLine.bg }}
-            />
-          )}
-
           {/* Section 1: UPSTREAM (Vers Terminus A) */}
           {filteredBefore.length > 0 && (
-            <div className="mb-2">
-              <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                <ArrowUp className="w-3.5 h-3.5" />
+            <div className="mb-1">
+              <div className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <ArrowUp className="w-3 h-3 text-cyan-400" />
                 <span>Vers {activeLine?.terminus[0]}</span>
               </div>
 
               {filteredBefore.map((st, i) => {
                 const distance = before.length - i;
+                const isFirst = i === 0;
                 return (
                   <StationRow
                     key={st.id}
                     station={st}
                     activeLine={activeLine!}
                     distanceLabel={`-${distance} st.`}
+                    isFirst={isFirst}
+                    isLast={false}
                     onSelect={() => onSelectDestination(activeLine!.id, st.id)}
                   />
                 );
@@ -243,11 +236,11 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
           {current && (
             <div
               ref={centerRef}
-              className="relative my-3 p-3 rounded-xl border bg-slate-800/90 shadow-lg z-10 transition-all"
+              className="relative my-2 p-3 rounded-xl border bg-slate-800/95 shadow-xl z-10 transition-all"
               style={{
                 borderColor: activeLine ? activeLine.bg : "#3b82f6",
                 boxShadow: activeLine
-                  ? `0 0 15px -3px ${activeLine.bg}40`
+                  ? `0 0 18px -2px ${activeLine.bg}45`
                   : undefined,
               }}
             >
@@ -275,8 +268,8 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
                   </div>
                 </div>
 
-                <span className="text-[11px] font-semibold text-slate-400 px-2 py-0.5 rounded-md bg-slate-900/80">
-                  Départ
+                <span className="text-[10px] font-bold text-slate-300 px-2 py-0.5 rounded-md bg-slate-900/80 border border-slate-700/60">
+                  Vous êtes ici
                 </span>
               </div>
             </div>
@@ -284,20 +277,23 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
 
           {/* Section 3: DOWNSTREAM (Vers Terminus B) */}
           {filteredAfter.length > 0 && (
-            <div className="mt-2">
-              <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                <ArrowDown className="w-3.5 h-3.5" />
+            <div className="mt-1">
+              <div className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <ArrowDown className="w-3 h-3 text-cyan-400" />
                 <span>Vers {activeLine?.terminus[1]}</span>
               </div>
 
               {filteredAfter.map((st, i) => {
                 const distance = i + 1;
+                const isLast = i === filteredAfter.length - 1;
                 return (
                   <StationRow
                     key={st.id}
                     station={st}
                     activeLine={activeLine!}
                     distanceLabel={`+${distance} st.`}
+                    isFirst={false}
+                    isLast={isLast}
                     onSelect={() => onSelectDestination(activeLine!.id, st.id)}
                   />
                 );
@@ -319,7 +315,7 @@ export const MetroLineDrawer: React.FC<MetroLineDrawerProps> = ({
             <Info className="w-3.5 h-3.5 text-blue-400" />
             <span>Progression irréversible : chaque trajet compte</span>
           </div>
-          <span className="text-[10px] text-slate-500">
+          <span className="text-[10px] text-slate-500 font-mono">
             {activeLine?.stations.length} stations
           </span>
         </div>
@@ -332,6 +328,8 @@ interface StationRowProps {
   station: MetroStation;
   activeLine: MetroLine;
   distanceLabel: string;
+  isFirst: boolean;
+  isLast: boolean;
   onSelect: () => void;
 }
 
@@ -339,6 +337,8 @@ const StationRow: React.FC<StationRowProps> = ({
   station,
   activeLine,
   distanceLabel,
+  isFirst,
+  isLast,
   onSelect,
 }) => {
   // Connecting lines at this station (excluding the current active line)
@@ -352,54 +352,72 @@ const StationRow: React.FC<StationRowProps> = ({
   return (
     <div
       onClick={onSelect}
-      className="group relative flex items-center justify-between px-3 py-2 rounded-xl border border-transparent hover:border-slate-700/80 hover:bg-slate-800/70 transition-all cursor-pointer select-none"
+      className="group relative flex items-stretch justify-between px-2.5 rounded-xl hover:bg-slate-800/80 transition-all cursor-pointer select-none"
     >
-      {/* Node Dot on Rail */}
-      <div className="flex items-center gap-3">
-        <div className="w-4 h-4 rounded-full border-2 border-slate-700 bg-slate-900 group-hover:border-white group-hover:scale-125 transition-all shrink-0 z-10 flex items-center justify-center">
-          <div
-            className="w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            style={{ backgroundColor: activeLine.bg }}
-          />
-        </div>
+      {/* Continuous Timeline Track Column: Never cuts off regardless of scroll position */}
+      <div className="relative flex flex-col items-center justify-center w-6 shrink-0 self-stretch mr-2.5">
+        {/* Top Track Segment */}
+        <div
+          className="w-1 flex-1 transition-opacity"
+          style={{
+            backgroundColor: activeLine.bg,
+            opacity: isFirst ? 0 : 0.45,
+          }}
+        />
 
-        <div>
-          <div className="text-xs font-bold text-slate-200 group-hover:text-white transition-colors">
-            {station.name}
-          </div>
+        {/* Station Node Dot */}
+        <div
+          className="w-3.5 h-3.5 rounded-full border-2 bg-slate-900 group-hover:scale-125 transition-transform shrink-0 z-10 shadow-sm"
+          style={{ borderColor: activeLine.bg }}
+        />
 
-          {/* Transfer badges */}
-          {connectingLines.length > 0 && (
-            <div className="flex items-center gap-1 mt-0.5">
-              <span className="text-[10px] text-slate-400 font-medium mr-0.5">
-                Corr.
-              </span>
-              {connectingLines.map((line) => (
-                <span
-                  key={line.id}
-                  className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 shadow-xs"
-                  style={{
-                    backgroundColor: line.bg,
-                    color: line.text,
-                  }}
-                  title={`Correspondance ${line.name}`}
-                >
-                  {line.num}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Bottom Track Segment */}
+        <div
+          className="w-1 flex-1 transition-opacity"
+          style={{
+            backgroundColor: activeLine.bg,
+            opacity: isLast ? 0 : 0.45,
+          }}
+        />
       </div>
 
-      {/* Action / Distance side */}
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] font-semibold text-slate-400 group-hover:text-slate-300">
+      {/* Station Name & Transfer Badges */}
+      <div className="py-2.5 flex-1 min-w-0 pr-2">
+        <div className="text-xs font-bold text-slate-200 group-hover:text-white transition-colors truncate">
+          {station.name}
+        </div>
+
+        {/* Transfer badges */}
+        {connectingLines.length > 0 && (
+          <div className="flex items-center gap-1 mt-0.5">
+            <span className="text-[9px] text-slate-400 font-medium mr-0.5">
+              Corr.
+            </span>
+            {connectingLines.map((line) => (
+              <span
+                key={line.id}
+                className="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-black shrink-0 shadow-xs"
+                style={{
+                  backgroundColor: line.bg,
+                  color: line.text,
+                }}
+                title={`Correspondance ${line.name}`}
+              >
+                {line.num}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Distance and Arrow Action */}
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-[10px] font-semibold text-slate-400 group-hover:text-slate-300 font-mono">
           {distanceLabel}
         </span>
 
-        <div className="w-6 h-6 rounded-lg bg-slate-800 group-hover:bg-blue-600 group-hover:text-white text-slate-400 flex items-center justify-center transition-all opacity-70 group-hover:opacity-100">
-          <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        <div className="w-5 h-5 rounded-lg bg-slate-800 group-hover:bg-blue-600 group-hover:text-white text-slate-400 flex items-center justify-center transition-all opacity-60 group-hover:opacity-100">
+          <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
         </div>
       </div>
     </div>

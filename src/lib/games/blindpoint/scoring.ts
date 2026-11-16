@@ -18,7 +18,7 @@ const EARTH_RADIUS_KM = 6371.0088;
  */
 export function calculateBlindPointScore(
   distanceKm: number,
-  scale: "fr" | "world" | "paris"
+  scale: "fr" | "world" | "paris" | "europe"
 ): number {
   const bullseyeThreshold = scale === "paris" ? 0.05 : 1.0;
   if (distanceKm <= bullseyeThreshold) {
@@ -27,8 +27,9 @@ export function calculateBlindPointScore(
 
   // Paris tolerance: D = 1.5 km (~4600 pts à 300m, ~1840 pts à 1.5 km)
   // France tolerance: D = 170 km (~4740 pts à 15km, ~290 pts à 400km)
+  // Europe tolerance: D = 1100 km (~4650 pts à 100km, ~2200 pts à 1000km)
   // World tolerance: D = 2200 km (~4720 pts à 200km, ~2050 pts à 2000km)
-  const D = scale === "paris" ? 1.5 : scale === "fr" ? 170 : 2200;
+  const D = scale === "paris" ? 1.5 : scale === "fr" ? 170 : scale === "europe" ? 1100 : 2200;
   const p = 1.2;
   const rawScore = 5000 * Math.exp(-Math.pow(distanceKm / D, p));
   const rounded = Math.round(rawScore);
@@ -39,7 +40,7 @@ export function calculateBlindPointScore(
 export function getScoreRating(
   distanceKm: number,
   score: number,
-  scale?: "fr" | "world" | "paris"
+  scale?: "fr" | "world" | "paris" | "europe"
 ): {
   emoji: string;
   label: string;

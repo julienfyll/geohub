@@ -14,6 +14,7 @@ const SATELLITE_STYLE: StyleSpecification = {
       type: "raster",
       tiles: [
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       ],
       tileSize: 256,
       attribution:
@@ -30,6 +31,13 @@ const SATELLITE_STYLE: StyleSpecification = {
     },
   },
   layers: [
+    {
+      id: "satellite-bg",
+      type: "background",
+      paint: {
+        "background-color": "#09101f",
+      },
+    },
     {
       id: "satellite-tiles",
       type: "raster",
@@ -83,9 +91,11 @@ export const THEME_NAMES: Record<BlindPointMapTheme, string> = {
 const FRANCE_BOUNDS: [number, number, number, number] = [-5.2, 41.3, 9.6, 51.1];
 // Bounding box for Paris Intra-muros + close ring
 const PARIS_BOUNDS: [number, number, number, number] = [2.22, 48.815, 2.47, 48.905];
+// Bounding box for Europe (Atlantic to Balkans / Scandinavia to Mediterranean)
+const EUROPE_BOUNDS: [number, number, number, number] = [-11.0, 35.0, 33.0, 65.0];
 
 export interface BlindPointMapProps {
-  scale: "fr" | "world" | "paris";
+  scale: "fr" | "world" | "paris" | "europe";
   roundIndex?: number;
   isRevealing: boolean;
   isGameOverReview: boolean;
@@ -129,7 +139,7 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
   interactionStateRef.current = { isRevealing, isGameOverReview, onPlaceGuess };
 
   /**
-   * Resets map view to default whole territory view (France vs World)
+   * Resets map view to default whole territory view (France vs Europe vs World)
    */
   const resetCamera = useCallback(() => {
     const map = mapRef.current;
@@ -153,6 +163,20 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
           padding: { top: 120, bottom: 120, left: 60, right: 60 },
           duration: 900,
           maxZoom: 7,
+          bearing: 0,
+          pitch: 0,
+        }
+      );
+    } else if (scale === "europe") {
+      map.fitBounds(
+        [
+          [EUROPE_BOUNDS[0], EUROPE_BOUNDS[1]],
+          [EUROPE_BOUNDS[2], EUROPE_BOUNDS[3]],
+        ],
+        {
+          padding: { top: 120, bottom: 120, left: 60, right: 60 },
+          duration: 900,
+          maxZoom: 5.5,
           bearing: 0,
           pitch: 0,
         }
@@ -406,8 +430,11 @@ export const BlindPointMap: React.FC<BlindPointMapProps> = ({
         ? [2.3488, 48.8534]
         : scale === "fr"
         ? [2.2137, 46.2276]
+        : scale === "europe"
+        ? [14.0, 50.0]
         : [10, 20];
-    const initialZoom = scale === "paris" ? 12.8 : scale === "fr" ? 5.2 : 1.8;
+    const initialZoom =
+      scale === "paris" ? 12.8 : scale === "fr" ? 5.2 : scale === "europe" ? 3.6 : 1.8;
 
     const rawStyle = BASEMAP_STYLES[mapTheme] || BASEMAP_STYLES.dark;
     const initialStyle =

@@ -14,6 +14,7 @@ const SATELLITE_STYLE: StyleSpecification = {
       type: "raster",
       tiles: [
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       ],
       tileSize: 256,
       attribution:
@@ -30,6 +31,13 @@ const SATELLITE_STYLE: StyleSpecification = {
     },
   },
   layers: [
+    {
+      id: "satellite-bg",
+      type: "background",
+      paint: {
+        "background-color": "#09101f",
+      },
+    },
     {
       id: "satellite-tiles",
       type: "raster",

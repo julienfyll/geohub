@@ -21,7 +21,7 @@ export interface BlindPointTarget {
   subtitle: string; // e.g. "Loir-et-Cher, Centre-Val de Loire, France" or "Agra, Inde"
   latitude: number;
   longitude: number;
-  scale: "fr" | "world" | "paris";
+  scale: "fr" | "world" | "paris" | "europe";
   pack: BlindPointPack;
   difficulty?: BlindPointDifficulty;
   continent?: string;
@@ -39,7 +39,7 @@ export interface BlindPointClientTarget {
   name: string;
   subtitle: string;
   pack: BlindPointPack;
-  scale: "fr" | "world" | "paris";
+  scale: "fr" | "world" | "paris" | "europe";
   difficulty?: BlindPointDifficulty;
   roundIndex: number;
   totalRounds: number;
@@ -85,7 +85,7 @@ export interface BlindPointSessionInitResponse {
   packs?: BlindPointPack[];
   mode: BlindPointMode;
   difficulty?: BlindPointDifficulty | "all";
-  scale: "fr" | "world" | "paris";
+  scale: "fr" | "world" | "paris" | "europe";
   seed: string;
   totalRounds: number;
   timerSeconds?: number;

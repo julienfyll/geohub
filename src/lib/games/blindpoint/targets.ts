@@ -180,17 +180,20 @@ export function getSessionTargets(
   customSeed?: string,
   totalRounds: number = 5,
   continentFilter?: string
-): { seed: string; targets: BlindPointTarget[]; scale: "fr" | "world" | "paris" } {
+): { seed: string; targets: BlindPointTarget[]; scale: "fr" | "world" | "paris" | "europe" } {
   const packsArray: BlindPointPack[] = Array.isArray(pack) ? pack : [pack];
 
   // Determine overall map scale
-  let scale: "fr" | "world" | "paris" = "fr";
+  let scale: "fr" | "world" | "paris" | "europe" = "fr";
+  const hasEuropePack = packsArray.some((p) => p === "villes_europe");
   const hasWorldPack = packsArray.some(
-    (p) => p === "villes_monde" || p === "lieux_monde" || p === "monuments_monde" || p === "villes_europe"
+    (p) => p === "villes_monde" || p === "lieux_monde" || p === "monuments_monde"
   );
   const onlyParis = packsArray.length === 1 && (packsArray[0] === "lieux_paris" || packsArray[0] === "metro_paris");
 
-  if (hasWorldPack) {
+  if (hasEuropePack && !hasWorldPack) {
+    scale = "europe";
+  } else if (hasWorldPack) {
     scale = "world";
   } else if (onlyParis) {
     scale = "paris";

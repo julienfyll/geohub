@@ -490,7 +490,9 @@ function BlindPointGame() {
 
   const scale =
     session?.scale ||
-    (activePack === "lieux_paris"
+    (activePack === "villes_europe"
+      ? "europe"
+      : activePack === "lieux_paris"
       ? "paris"
       : activePack === "villes_monde" || activePack === "lieux_monde" || activePack === "monuments_monde"
       ? "world"
