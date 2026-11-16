@@ -751,6 +751,7 @@ function BorderPathGame() {
     "france_departements",
     "ameriques",
     "afrique",
+    "metro_paris",
   ];
   const pack: BorderPathPack = rawPack && validPacks.includes(rawPack) ? rawPack : "monde";
   const mode: BorderPathMode = rawMode === "free" ? "free" : "daily";
