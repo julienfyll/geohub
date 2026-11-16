@@ -19,8 +19,8 @@ import {
   METRO_LINES_MAP,
   generateMetroChallenge,
   validateMetroHop,
-  getLineSegment,
 } from "@/lib/games/borderpath/metroEngine";
+import { BASEMAP_STYLES } from "../BorderPathMap";
 import { MetroLineDrawer } from "./MetroLineDrawer";
 import { BorderPathHUD } from "../BorderPathHUD";
 import { BorderPathRulesModal } from "../BorderPathRulesModal";
@@ -28,16 +28,15 @@ import { BorderPathPackModal } from "../BorderPathPackModal";
 import { BorderPathSettingsModal } from "../BorderPathSettingsModal";
 import { RestartConfirmModal } from "../../RestartConfirmModal";
 import {
-  Trophy,
   Train,
-  Sparkles,
-  Layers,
-  ArrowRight,
+  Target,
   Compass,
-  CheckCircle2,
-  Share2,
   RotateCcw,
+  Navigation,
+  ChevronRight,
+  CheckCircle2,
 } from "lucide-react";
+import metroTopologyData from "@/../public/data/geo/metro_paris_topology.json";
 
 interface BorderPathMetroActiveGameProps {
   pack: BorderPathPack;
@@ -68,7 +67,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
   const [showVictoryModal, setShowVictoryModal] = useState(false);
 
   // Challenge Session
-  const [challenge, setChallenge] = useState(() => generateMetroChallenge(seed));
+  const [challenge] = useState(() => generateMetroChallenge(seed));
   const { startStation, targetStation, optimal } = challenge;
 
   // Game state
@@ -92,6 +91,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
   // MapLibre refs
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const isMapLoadedRef = useRef(false);
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
 
   // Distinct lines used
@@ -105,7 +105,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     return hops.reduce((acc, h) => acc + h.stationsCount, 0);
   }, [hops]);
 
-  // Orthodromic distance to target in meters
+  // Orthodromic distance to target in km
   const distanceToTargetKm = useMemo(() => {
     const R = 6371;
     const lat1 = (currentStation.latitude * Math.PI) / 180;
@@ -119,13 +119,74 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     return (R * c).toFixed(1);
   }, [currentStation, targetStation]);
 
+  // Build GeoJSON features for the entire phantom network
+  const phantomNetworkGeoJSON = useMemo(() => {
+    const stMap = new Map<string, [number, number]>();
+    (
+      metroTopologyData.stations as unknown as { id: string; coords: [number, number] }[]
+    ).forEach((s) => {
+      stMap.set(s.id, s.coords);
+    });
+
+    const features: GeoJSON.Feature[] = [];
+
+    (
+      metroTopologyData.lines as unknown as { id: string; edges?: [string, string][] }[]
+    ).forEach((line) => {
+      (line.edges || []).forEach(([u, v]) => {
+        const coordU = stMap.get(u);
+        const coordV = stMap.get(v);
+        if (coordU && coordV) {
+          features.push({
+            type: "Feature",
+            properties: { lineId: line.id },
+            geometry: {
+              type: "LineString",
+              coordinates: [coordU, coordV],
+            },
+          });
+        }
+      });
+    });
+
+    return {
+      type: "FeatureCollection" as const,
+      features,
+    };
+  }, []);
+
+  // Build GeoJSON for all phantom station dots
+  const phantomStationsGeoJSON = useMemo(() => {
+    const features: GeoJSON.Feature[] = (
+      metroTopologyData.stations as unknown as {
+        id: string;
+        coords: [number, number];
+        name: string;
+      }[]
+    ).map((s) => ({
+      type: "Feature",
+      properties: { id: s.id, name: s.name },
+      geometry: {
+        type: "Point",
+        coordinates: s.coords,
+      },
+    }));
+
+    return {
+      type: "FeatureCollection" as const,
+      features,
+    };
+  }, []);
+
   // Initialize MapLibre
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
+    const styleUrl = BASEMAP_STYLES[theme] || BASEMAP_STYLES.dark;
+
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+      style: styleUrl,
       center: [2.3488, 48.8534], // Paris Notre-Dame
       zoom: 12.2,
       minZoom: 10.5,
@@ -134,60 +195,192 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     });
 
     mapRef.current = map;
+    isMapLoadedRef.current = false;
 
     map.on("load", () => {
-      // Add a single geojson source for drawn tracks
-      map.addSource("metro-traversed-tracks", {
-        type: "geojson",
-        data: { type: "FeatureCollection", features: [] },
-      });
+      isMapLoadedRef.current = true;
+      map.resize();
 
-      // Glow halo layer
-      map.addLayer({
-        id: "metro-tracks-glow",
-        type: "line",
-        source: "metro-traversed-tracks",
-        layout: { "line-join": "round", "line-cap": "round" },
-        paint: {
-          "line-color": ["get", "color"],
-          "line-width": 8,
-          "line-opacity": 0.4,
-          "line-blur": 3,
-        },
-      });
+      // 1. Add Phantom Network Track Source & Layer
+      if (!map.getSource("metro-phantom-network")) {
+        map.addSource("metro-phantom-network", {
+          type: "geojson",
+          data: phantomNetworkGeoJSON,
+        });
 
-      // Sharp main line layer
-      map.addLayer({
-        id: "metro-tracks-main",
-        type: "line",
-        source: "metro-traversed-tracks",
-        layout: { "line-join": "round", "line-cap": "round" },
-        paint: {
-          "line-color": ["get", "color"],
-          "line-width": 4.5,
-          "line-opacity": 0.95,
-        },
-      });
+        map.addLayer({
+          id: "metro-phantom-lines",
+          type: "line",
+          source: "metro-phantom-network",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": theme === "voyager" ? "#94a3b8" : "#334155",
+            "line-width": 2,
+            "line-opacity": 0.45,
+          },
+        });
+      }
+
+      // 2. Add Phantom Station Dots Source & Layer
+      if (!map.getSource("metro-phantom-stations")) {
+        map.addSource("metro-phantom-stations", {
+          type: "geojson",
+          data: phantomStationsGeoJSON,
+        });
+
+        map.addLayer({
+          id: "metro-phantom-dots",
+          type: "circle",
+          source: "metro-phantom-stations",
+          paint: {
+            "circle-radius": 2.5,
+            "circle-color": theme === "voyager" ? "#64748b" : "#475569",
+            "circle-opacity": 0.6,
+          },
+        });
+      }
+
+      // 3. Add Active Traversed Tracks Source & Layers (Glow + Sharp Core)
+      if (!map.getSource("metro-traversed-tracks")) {
+        map.addSource("metro-traversed-tracks", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+
+        map.addLayer({
+          id: "metro-tracks-glow",
+          type: "line",
+          source: "metro-traversed-tracks",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": ["get", "color"],
+            "line-width": 9,
+            "line-opacity": 0.45,
+            "line-blur": 3.5,
+          },
+        });
+
+        map.addLayer({
+          id: "metro-tracks-main",
+          type: "line",
+          source: "metro-traversed-tracks",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": ["get", "color"],
+            "line-width": 4.5,
+            "line-opacity": 1.0,
+          },
+        });
+      }
 
       // Fit map to show both start and target
       const bounds = new maplibregl.LngLatBounds();
       bounds.extend(startStation.coords);
       bounds.extend(targetStation.coords);
-      map.fitBounds(bounds, { padding: 90, maxZoom: 13.8 });
+      map.fitBounds(bounds, {
+        padding: { top: 90, bottom: 130, left: 90, right: 90 },
+        maxZoom: 13.5,
+      });
     });
 
+    // Resize observer to prevent zero-dimension canvas
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+    if (mapContainerRef.current) {
+      resizeObserver.observe(mapContainerRef.current);
+    }
+
     return () => {
+      resizeObserver.disconnect();
       map.remove();
       mapRef.current = null;
+      isMapLoadedRef.current = false;
     };
-  }, [startStation, targetStation]);
+  }, [startStation, targetStation, phantomNetworkGeoJSON, phantomStationsGeoJSON]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle Theme Switching
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isMapLoadedRef.current) return;
+    const styleUrl = BASEMAP_STYLES[theme] || BASEMAP_STYLES.dark;
+    map.setStyle(styleUrl);
+
+    map.once("styledata", () => {
+      // Re-add sources and layers on style reload
+      if (!map.getSource("metro-phantom-network")) {
+        map.addSource("metro-phantom-network", {
+          type: "geojson",
+          data: phantomNetworkGeoJSON,
+        });
+        map.addLayer({
+          id: "metro-phantom-lines",
+          type: "line",
+          source: "metro-phantom-network",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": theme === "voyager" ? "#94a3b8" : "#334155",
+            "line-width": 2,
+            "line-opacity": 0.45,
+          },
+        });
+      }
+
+      if (!map.getSource("metro-phantom-stations")) {
+        map.addSource("metro-phantom-stations", {
+          type: "geojson",
+          data: phantomStationsGeoJSON,
+        });
+        map.addLayer({
+          id: "metro-phantom-dots",
+          type: "circle",
+          source: "metro-phantom-stations",
+          paint: {
+            "circle-radius": 2.5,
+            "circle-color": theme === "voyager" ? "#64748b" : "#475569",
+            "circle-opacity": 0.6,
+          },
+        });
+      }
+
+      if (!map.getSource("metro-traversed-tracks")) {
+        map.addSource("metro-traversed-tracks", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+        map.addLayer({
+          id: "metro-tracks-glow",
+          type: "line",
+          source: "metro-traversed-tracks",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": ["get", "color"],
+            "line-width": 9,
+            "line-opacity": 0.45,
+            "line-blur": 3.5,
+          },
+        });
+        map.addLayer({
+          id: "metro-tracks-main",
+          type: "line",
+          source: "metro-traversed-tracks",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+            "line-color": ["get", "color"],
+            "line-width": 4.5,
+            "line-opacity": 1.0,
+          },
+        });
+      }
+    });
+  }, [theme, phantomNetworkGeoJSON, phantomStationsGeoJSON]);
 
   // Update track polylines whenever visitedSegments change
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !map.isStyleLoaded()) return;
 
-    const source = map.getSource("metro-traversed-tracks") as maplibregl.GeoJSONSource;
+    const source = map.getSource("metro-traversed-tracks") as maplibregl.GeoJSONSource | undefined;
     if (!source) return;
 
     const features: GeoJSON.Feature[] = visitedSegments.map((seg) => {
@@ -222,7 +415,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     markersRef.current.forEach((m) => m.remove());
     markersRef.current.clear();
 
-    // 1. Target Station Marker (AMBER FLAG/PIN, NO line pills)
+    // 1. Target Station Marker (AMBER TARGET PIN, NO line pills)
     const targetEl = document.createElement("div");
     targetEl.className = "flex flex-col items-center cursor-pointer select-none group";
     targetEl.innerHTML = `
@@ -237,16 +430,17 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
       .addTo(map);
     markersRef.current.set(targetStation.id, targetMarker);
 
-    // 2. Visited Intermediate Stations (clean dots)
+    // 2. Visited Intermediate Stations (small clean dots)
     visitedStationIds.forEach((id) => {
       if (id === currentStationId || id === targetStation.id) return;
       const st = METRO_STATIONS_MAP[id];
       if (!st) return;
 
       const interEl = document.createElement("div");
-      interEl.className = "group relative cursor-pointer select-none flex items-center justify-center";
+      interEl.className =
+        "group relative cursor-pointer select-none flex items-center justify-center";
       interEl.innerHTML = `
-        <div class="w-3.5 h-3.5 rounded-full bg-slate-900 border-2 border-white/80 shadow-md transition-transform group-hover:scale-150"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-slate-900 border-2 border-white/90 shadow-md transition-transform group-hover:scale-150"></div>
         <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[10px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
           ${st.name}
         </div>
@@ -265,7 +459,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
       .map((lineId) => {
         const line = METRO_LINES_MAP[lineId];
         return `
-          <button data-line-id="${lineId}" class="line-badge-btn w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] shadow-md transition-transform hover:scale-125" style="background-color: ${line?.bg || "#fff"}; color: ${line?.text || "#000"};">
+          <button data-line-id="${lineId}" class="line-badge-btn w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] shadow-md transition-transform hover:scale-125 cursor-pointer" style="background-color: ${line?.bg || "#fff"}; color: ${line?.text || "#000"};">
             ${line?.num || lineId}
           </button>
         `;
@@ -370,7 +564,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
           setShowVictoryModal(true);
         }, 800);
       } else {
-        // Automatically default next drawer line to the lines passing through destId
+        // Automatically default next drawer line to lines passing through destId
         if (nextSt && nextSt.lines.length > 0) {
           if (!nextSt.lines.includes(selectedDrawerLineId)) {
             setSelectedDrawerLineId(nextSt.lines[0]);
@@ -400,21 +594,103 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
       />
 
       {/* MapLibre Canvas Container */}
-      <div ref={mapContainerRef} className="absolute inset-0 z-0" />
+      <div className="absolute inset-0 z-0 w-full h-full">
+        <div ref={mapContainerRef} className="w-full h-full" />
+      </div>
 
-      {/* Bottom Floating Control Bar */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
-        {/* Open Line Drawer Button */}
+      {/* Bottom-Left: Encadré de Jeu / Score Card (Ne déborde JAMAIS sur le bandeau supérieur) */}
+      <div className="absolute bottom-8 left-4 sm:left-6 z-20 pointer-events-auto">
+        <div className="bg-slate-900/95 border border-slate-700/80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl flex flex-col gap-3 w-76 sm:w-84 transition-all">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5 text-xs font-bold text-slate-200 uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 text-cyan-400">
+              <Train className="w-4 h-4 shrink-0" />
+              <span>Parcours Métro</span>
+            </div>
+            <span className="text-[10px] text-slate-400 font-mono">16 lignes</span>
+          </div>
+
+          {/* Dual Metrics */}
+          <div className="grid grid-cols-2 gap-2.5">
+            {/* Lignes prises */}
+            <div className="flex flex-col items-center justify-center py-2 px-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-center">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                Lignes prises
+              </span>
+              <span className="text-2xl font-black font-mono text-cyan-400 my-0.5 leading-none">
+                {distinctLinesCount}
+              </span>
+              <span className="text-[10px] font-medium text-cyan-300/80 mt-0.5">
+                {distinctLinesCount > 1 ? "lignes utilisées" : "ligne utilisée"}
+              </span>
+            </div>
+
+            {/* Stations franchies */}
+            <div className="flex flex-col items-center justify-center py-2 px-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-center">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                Stations
+              </span>
+              <span className="text-2xl font-black font-mono text-white my-0.5 leading-none">
+                {totalStationsTraversed}
+              </span>
+              <span className="text-[10px] font-medium text-slate-400 mt-0.5">
+                stations franchies
+              </span>
+            </div>
+          </div>
+
+          {/* Current Station Info */}
+          <div className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/90 flex flex-col gap-1.5 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400 text-[11px]">Position actuelle :</span>
+              <span className="font-bold text-white text-xs truncate max-w-[160px]">
+                {currentStation.name}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400 text-[11px]">Lignes disponibles :</span>
+              <div className="flex items-center gap-1">
+                {currentStation.lines.map((lId) => {
+                  const line = METRO_LINES_MAP[lId];
+                  return (
+                    <span
+                      key={lId}
+                      className="w-4 h-4 rounded-full flex items-center justify-center font-black text-[9px]"
+                      style={{ backgroundColor: line?.bg || "#fff", color: line?.text || "#000" }}
+                    >
+                      {line?.num || lId}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer: Distance à vol d'oiseau */}
+          <div className="pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+              <Compass className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>Distance restante :</span>
+            </div>
+            <span className="font-mono font-bold text-amber-400 text-xs">
+              ~{distanceToTargetKm} km
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Center Floating Action Button */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
         {!isComplete && (
           <button
             type="button"
             onClick={() => setIsDrawerOpen(true)}
-            className="px-5 py-3 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-white border-2 border-cyan-500/60 hover:border-cyan-400 shadow-2xl backdrop-blur-md font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+            className="px-5 py-3 rounded-2xl bg-slate-900/95 hover:bg-slate-800 text-white border-2 border-cyan-500/70 hover:border-cyan-400 shadow-2xl backdrop-blur-md font-bold text-xs sm:text-sm flex items-center gap-2.5 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
           >
             <div className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
               <Train className="w-3.5 h-3.5" />
             </div>
-            <span>Prendre une ligne à {currentStation.name}</span>
+            <span>Prendre le métro à {currentStation.name}</span>
             <div className="flex items-center gap-1 ml-1">
               {currentStation.lines.map((lId) => {
                 const line = METRO_LINES_MAP[lId];
@@ -431,25 +707,6 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
             </div>
           </button>
         )}
-      </div>
-
-      {/* Floating Realtime Counters Card (Top Left below HUD) */}
-      <div className="absolute top-18 left-4 z-30 hidden sm:flex flex-col gap-1.5 p-3 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-slate-800/80 shadow-xl pointer-events-none">
-        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <Train className="w-3 h-3 text-cyan-400" />
-          <span>Trajet en cours</span>
-        </span>
-        <div className="flex items-center gap-3 text-xs">
-          <div>
-            <span className="text-slate-400 block text-[10px]">Lignes prises</span>
-            <span className="font-extrabold text-white text-sm">{distinctLinesCount}</span>
-          </div>
-          <div className="w-px h-6 bg-slate-800" />
-          <div>
-            <span className="text-slate-400 block text-[10px]">Stations franchies</span>
-            <span className="font-extrabold text-white text-sm">{totalStationsTraversed}</span>
-          </div>
-        </div>
       </div>
 
       {/* Vertical Station Selection Drawer */}
