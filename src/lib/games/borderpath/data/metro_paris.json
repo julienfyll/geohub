@@ -1,0 +1,6618 @@
+{
+  "la_defense": {
+    "id": "la_defense",
+    "name": "La Défense",
+    "normalizedName": "ladefense",
+    "latitude": 48.892187,
+    "longitude": 2.237018,
+    "coords": [
+      2.237018,
+      48.892187
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "esplanade_de_la_defense"
+    ]
+  },
+  "esplanade_de_la_defense": {
+    "id": "esplanade_de_la_defense",
+    "name": "Esplanade de la Défense",
+    "normalizedName": "esplanadedeladefense",
+    "latitude": 48.888138,
+    "longitude": 2.249793,
+    "coords": [
+      2.249793,
+      48.888138
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "la_defense",
+      "pont_de_neuilly"
+    ]
+  },
+  "pont_de_neuilly": {
+    "id": "pont_de_neuilly",
+    "name": "Pont de Neuilly",
+    "normalizedName": "pontdeneuilly",
+    "latitude": 48.884708,
+    "longitude": 2.260515,
+    "coords": [
+      2.260515,
+      48.884708
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "esplanade_de_la_defense",
+      "les_sablons"
+    ]
+  },
+  "les_sablons": {
+    "id": "les_sablons",
+    "name": "Les Sablons",
+    "normalizedName": "lessablons",
+    "latitude": 48.881016,
+    "longitude": 2.272239,
+    "coords": [
+      2.272239,
+      48.881016
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "pont_de_neuilly",
+      "porte_maillot"
+    ]
+  },
+  "porte_maillot": {
+    "id": "porte_maillot",
+    "name": "Porte Maillot",
+    "normalizedName": "portemaillot",
+    "latitude": 48.877551,
+    "longitude": 2.283162,
+    "coords": [
+      2.283162,
+      48.877551
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "argentine",
+      "les_sablons"
+    ]
+  },
+  "argentine": {
+    "id": "argentine",
+    "name": "Argentine",
+    "normalizedName": "argentine",
+    "latitude": 48.875338,
+    "longitude": 2.290128,
+    "coords": [
+      2.290128,
+      48.875338
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "charles_de_gaulle_etoile",
+      "porte_maillot"
+    ]
+  },
+  "charles_de_gaulle_etoile": {
+    "id": "charles_de_gaulle_etoile",
+    "name": "Charles De Gaulle-Étoile",
+    "normalizedName": "charlesdegaulleetoile",
+    "latitude": 48.874749,
+    "longitude": 2.29556,
+    "coords": [
+      2.29556,
+      48.874749
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "2",
+      "6"
+    ],
+    "neighbors": [
+      "argentine",
+      "george_v",
+      "kleber",
+      "ternes",
+      "victor_hugo"
+    ]
+  },
+  "george_v": {
+    "id": "george_v",
+    "name": "George V",
+    "normalizedName": "georgev",
+    "latitude": 48.872024,
+    "longitude": 2.30056,
+    "coords": [
+      2.30056,
+      48.872024
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "charles_de_gaulle_etoile",
+      "franklin_d_roosevelt"
+    ]
+  },
+  "franklin_d_roosevelt": {
+    "id": "franklin_d_roosevelt",
+    "name": "Franklin D. Roosevelt",
+    "normalizedName": "franklindroosevelt",
+    "latitude": 48.869439,
+    "longitude": 2.308607,
+    "coords": [
+      2.308607,
+      48.869439
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "9"
+    ],
+    "neighbors": [
+      "alma_marceau",
+      "champs_elysees_clemenceau",
+      "george_v",
+      "saint_philippe_du_roule"
+    ]
+  },
+  "champs_elysees_clemenceau": {
+    "id": "champs_elysees_clemenceau",
+    "name": "Champs-Élysées – Clemenceau",
+    "normalizedName": "champselyseesclemenceau",
+    "latitude": 48.867905,
+    "longitude": 2.313546,
+    "coords": [
+      2.313546,
+      48.867905
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "13"
+    ],
+    "neighbors": [
+      "concorde",
+      "franklin_d_roosevelt",
+      "invalides",
+      "miromesnil"
+    ]
+  },
+  "concorde": {
+    "id": "concorde",
+    "name": "Concorde",
+    "normalizedName": "concorde",
+    "latitude": 48.866167,
+    "longitude": 2.323176,
+    "coords": [
+      2.323176,
+      48.866167
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "8",
+      "12"
+    ],
+    "neighbors": [
+      "assemblee_nationale",
+      "champs_elysees_clemenceau",
+      "invalides",
+      "madeleine",
+      "tuileries"
+    ]
+  },
+  "tuileries": {
+    "id": "tuileries",
+    "name": "Tuileries",
+    "normalizedName": "tuileries",
+    "latitude": 48.864344,
+    "longitude": 2.33013,
+    "coords": [
+      2.33013,
+      48.864344
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "concorde",
+      "palais_royal_musee_du_louvre"
+    ]
+  },
+  "palais_royal_musee_du_louvre": {
+    "id": "palais_royal_musee_du_louvre",
+    "name": "Palais Royal - Musée du Louvre",
+    "normalizedName": "palaisroyalmuseedulouvre",
+    "latitude": 48.86283,
+    "longitude": 2.336878,
+    "coords": [
+      2.336878,
+      48.86283
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "7"
+    ],
+    "neighbors": [
+      "louvre_rivoli",
+      "pont_neuf",
+      "pyramides",
+      "tuileries"
+    ]
+  },
+  "louvre_rivoli": {
+    "id": "louvre_rivoli",
+    "name": "Louvre-Rivoli",
+    "normalizedName": "louvrerivoli",
+    "latitude": 48.860806,
+    "longitude": 2.341109,
+    "coords": [
+      2.341109,
+      48.860806
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "chatelet",
+      "palais_royal_musee_du_louvre"
+    ]
+  },
+  "chatelet": {
+    "id": "chatelet",
+    "name": "Châtelet",
+    "normalizedName": "chatelet",
+    "latitude": 48.857631,
+    "longitude": 2.348037,
+    "coords": [
+      2.348037,
+      48.857631
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "4",
+      "7",
+      "11",
+      "14"
+    ],
+    "neighbors": [
+      "cite",
+      "gare_de_lyon",
+      "hotel_de_ville",
+      "les_halles",
+      "louvre_rivoli",
+      "pont_marie",
+      "pont_neuf",
+      "pyramides"
+    ]
+  },
+  "hotel_de_ville": {
+    "id": "hotel_de_ville",
+    "name": "Hôtel de Ville",
+    "normalizedName": "hoteldeville",
+    "latitude": 48.857478,
+    "longitude": 2.351578,
+    "coords": [
+      2.351578,
+      48.857478
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "11"
+    ],
+    "neighbors": [
+      "chatelet",
+      "rambuteau",
+      "saint_paul"
+    ]
+  },
+  "saint_paul": {
+    "id": "saint_paul",
+    "name": "Saint-Paul",
+    "normalizedName": "saintpaul",
+    "latitude": 48.855236,
+    "longitude": 2.360956,
+    "coords": [
+      2.360956,
+      48.855236
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "bastille",
+      "hotel_de_ville"
+    ]
+  },
+  "bastille": {
+    "id": "bastille",
+    "name": "Bastille",
+    "normalizedName": "bastille",
+    "latitude": 48.853439,
+    "longitude": 2.369514,
+    "coords": [
+      2.369514,
+      48.853439
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "5",
+      "8"
+    ],
+    "neighbors": [
+      "breguet_sabin",
+      "chemin_vert",
+      "gare_de_lyon",
+      "ledru_rollin",
+      "quai_de_la_rapee",
+      "saint_paul"
+    ]
+  },
+  "gare_de_lyon": {
+    "id": "gare_de_lyon",
+    "name": "Gare de Lyon",
+    "normalizedName": "garedelyon",
+    "latitude": 48.843487,
+    "longitude": 2.373923,
+    "coords": [
+      2.373923,
+      48.843487
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "14"
+    ],
+    "neighbors": [
+      "bastille",
+      "bercy",
+      "chatelet",
+      "reuilly_diderot"
+    ]
+  },
+  "reuilly_diderot": {
+    "id": "reuilly_diderot",
+    "name": "Reuilly-Diderot",
+    "normalizedName": "reuillydiderot",
+    "latitude": 48.847129,
+    "longitude": 2.387025,
+    "coords": [
+      2.387025,
+      48.847129
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "8"
+    ],
+    "neighbors": [
+      "faidherbe_chaligny",
+      "gare_de_lyon",
+      "montgallet",
+      "nation"
+    ]
+  },
+  "nation": {
+    "id": "nation",
+    "name": "Nation",
+    "normalizedName": "nation",
+    "latitude": 48.847375,
+    "longitude": 2.395462,
+    "coords": [
+      2.395462,
+      48.847375
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1",
+      "2",
+      "6",
+      "9"
+    ],
+    "neighbors": [
+      "avron",
+      "buzenval",
+      "picpus",
+      "porte_de_vincennes",
+      "reuilly_diderot",
+      "rue_des_boulets"
+    ]
+  },
+  "porte_de_vincennes": {
+    "id": "porte_de_vincennes",
+    "name": "Porte de Vincennes",
+    "normalizedName": "portedevincennes",
+    "latitude": 48.847336,
+    "longitude": 2.408089,
+    "coords": [
+      2.408089,
+      48.847336
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "nation",
+      "saint_mande"
+    ]
+  },
+  "saint_mande": {
+    "id": "saint_mande",
+    "name": "Saint-Mandé",
+    "normalizedName": "saintmande",
+    "latitude": 48.846423,
+    "longitude": 2.41876,
+    "coords": [
+      2.41876,
+      48.846423
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "berault",
+      "porte_de_vincennes"
+    ]
+  },
+  "berault": {
+    "id": "berault",
+    "name": "Bérault",
+    "normalizedName": "berault",
+    "latitude": 48.845471,
+    "longitude": 2.429205,
+    "coords": [
+      2.429205,
+      48.845471
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "chateau_de_vincennes",
+      "saint_mande"
+    ]
+  },
+  "chateau_de_vincennes": {
+    "id": "chateau_de_vincennes",
+    "name": "Château de Vincennes",
+    "normalizedName": "chateaudevincennes",
+    "latitude": 48.844456,
+    "longitude": 2.44044,
+    "coords": [
+      2.44044,
+      48.844456
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "1"
+    ],
+    "neighbors": [
+      "berault"
+    ]
+  },
+  "porte_dauphine": {
+    "id": "porte_dauphine",
+    "name": "Porte Dauphine",
+    "normalizedName": "portedauphine",
+    "latitude": 48.871467,
+    "longitude": 2.277083,
+    "coords": [
+      2.277083,
+      48.871467
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "victor_hugo"
+    ]
+  },
+  "victor_hugo": {
+    "id": "victor_hugo",
+    "name": "Victor Hugo",
+    "normalizedName": "victorhugo",
+    "latitude": 48.869799,
+    "longitude": 2.285335,
+    "coords": [
+      2.285335,
+      48.869799
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "charles_de_gaulle_etoile",
+      "porte_dauphine"
+    ]
+  },
+  "ternes": {
+    "id": "ternes",
+    "name": "Ternes",
+    "normalizedName": "ternes",
+    "latitude": 48.877973,
+    "longitude": 2.29831,
+    "coords": [
+      2.29831,
+      48.877973
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "charles_de_gaulle_etoile",
+      "courcelles"
+    ]
+  },
+  "courcelles": {
+    "id": "courcelles",
+    "name": "Courcelles",
+    "normalizedName": "courcelles",
+    "latitude": 48.87933,
+    "longitude": 2.30407,
+    "coords": [
+      2.30407,
+      48.87933
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "monceau",
+      "ternes"
+    ]
+  },
+  "monceau": {
+    "id": "monceau",
+    "name": "Monceau",
+    "normalizedName": "monceau",
+    "latitude": 48.880325,
+    "longitude": 2.308774,
+    "coords": [
+      2.308774,
+      48.880325
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "courcelles",
+      "villiers"
+    ]
+  },
+  "villiers": {
+    "id": "villiers",
+    "name": "Villiers",
+    "normalizedName": "villiers",
+    "latitude": 48.881094,
+    "longitude": 2.314721,
+    "coords": [
+      2.314721,
+      48.881094
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "3"
+    ],
+    "neighbors": [
+      "europe",
+      "malesherbes",
+      "monceau",
+      "rome"
+    ]
+  },
+  "rome": {
+    "id": "rome",
+    "name": "Rome",
+    "normalizedName": "rome",
+    "latitude": 48.882333,
+    "longitude": 2.321802,
+    "coords": [
+      2.321802,
+      48.882333
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "place_de_clichy",
+      "villiers"
+    ]
+  },
+  "place_de_clichy": {
+    "id": "place_de_clichy",
+    "name": "Place de Clichy",
+    "normalizedName": "placedeclichy",
+    "latitude": 48.883805,
+    "longitude": 2.327243,
+    "coords": [
+      2.327243,
+      48.883805
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "13"
+    ],
+    "neighbors": [
+      "blanche",
+      "la_fourche",
+      "liege",
+      "rome"
+    ]
+  },
+  "blanche": {
+    "id": "blanche",
+    "name": "Blanche",
+    "normalizedName": "blanche",
+    "latitude": 48.883556,
+    "longitude": 2.33338,
+    "coords": [
+      2.33338,
+      48.883556
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "pigalle",
+      "place_de_clichy"
+    ]
+  },
+  "pigalle": {
+    "id": "pigalle",
+    "name": "Pigalle",
+    "normalizedName": "pigalle",
+    "latitude": 48.882225,
+    "longitude": 2.338233,
+    "coords": [
+      2.338233,
+      48.882225
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "12"
+    ],
+    "neighbors": [
+      "abbesses",
+      "anvers",
+      "blanche",
+      "saint_georges"
+    ]
+  },
+  "anvers": {
+    "id": "anvers",
+    "name": "Anvers",
+    "normalizedName": "anvers",
+    "latitude": 48.882973,
+    "longitude": 2.344667,
+    "coords": [
+      2.344667,
+      48.882973
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "barbes_rochechouart",
+      "pigalle"
+    ]
+  },
+  "barbes_rochechouart": {
+    "id": "barbes_rochechouart",
+    "name": "Barbès-Rochechouart",
+    "normalizedName": "barbesrochechouart",
+    "latitude": 48.883804,
+    "longitude": 2.350613,
+    "coords": [
+      2.350613,
+      48.883804
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "4"
+    ],
+    "neighbors": [
+      "anvers",
+      "chateau_rouge",
+      "gare_du_nord",
+      "la_chapelle"
+    ]
+  },
+  "la_chapelle": {
+    "id": "la_chapelle",
+    "name": "La Chapelle",
+    "normalizedName": "lachapelle",
+    "latitude": 48.8844,
+    "longitude": 2.3604,
+    "coords": [
+      2.3604,
+      48.8844
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "barbes_rochechouart",
+      "stalingrad"
+    ]
+  },
+  "stalingrad": {
+    "id": "stalingrad",
+    "name": "Stalingrad",
+    "normalizedName": "stalingrad",
+    "latitude": 48.884798,
+    "longitude": 2.369581,
+    "coords": [
+      2.369581,
+      48.884798
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "5",
+      "7"
+    ],
+    "neighbors": [
+      "gare_du_nord",
+      "jaures",
+      "la_chapelle",
+      "louis_blanc",
+      "riquet"
+    ]
+  },
+  "jaures": {
+    "id": "jaures",
+    "name": "Jaurès",
+    "normalizedName": "jaures",
+    "latitude": 48.881624,
+    "longitude": 2.370259,
+    "coords": [
+      2.370259,
+      48.881624
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "5",
+      "7bis"
+    ],
+    "neighbors": [
+      "bolivar",
+      "colonel_fabien",
+      "laumiere",
+      "louis_blanc",
+      "stalingrad"
+    ]
+  },
+  "colonel_fabien": {
+    "id": "colonel_fabien",
+    "name": "Colonel Fabien",
+    "normalizedName": "colonelfabien",
+    "latitude": 48.87761,
+    "longitude": 2.370811,
+    "coords": [
+      2.370811,
+      48.87761
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "belleville",
+      "jaures"
+    ]
+  },
+  "belleville": {
+    "id": "belleville",
+    "name": "Belleville",
+    "normalizedName": "belleville",
+    "latitude": 48.872283,
+    "longitude": 2.376731,
+    "coords": [
+      2.376731,
+      48.872283
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "11"
+    ],
+    "neighbors": [
+      "colonel_fabien",
+      "couronnes",
+      "goncourt",
+      "pyrenees"
+    ]
+  },
+  "couronnes": {
+    "id": "couronnes",
+    "name": "Couronnes",
+    "normalizedName": "couronnes",
+    "latitude": 48.869091,
+    "longitude": 2.380543,
+    "coords": [
+      2.380543,
+      48.869091
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "belleville",
+      "menilmontant"
+    ]
+  },
+  "menilmontant": {
+    "id": "menilmontant",
+    "name": "Ménilmontant",
+    "normalizedName": "menilmontant",
+    "latitude": 48.866447,
+    "longitude": 2.383599,
+    "coords": [
+      2.383599,
+      48.866447
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "couronnes",
+      "pere_lachaise"
+    ]
+  },
+  "pere_lachaise": {
+    "id": "pere_lachaise",
+    "name": "Père Lachaise",
+    "normalizedName": "perelachaise",
+    "latitude": 48.862184,
+    "longitude": 2.387836,
+    "coords": [
+      2.387836,
+      48.862184
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2",
+      "3"
+    ],
+    "neighbors": [
+      "gambetta",
+      "menilmontant",
+      "philippe_auguste",
+      "rue_saint_maur"
+    ]
+  },
+  "philippe_auguste": {
+    "id": "philippe_auguste",
+    "name": "Philippe Auguste",
+    "normalizedName": "philippeauguste",
+    "latitude": 48.858062,
+    "longitude": 2.390861,
+    "coords": [
+      2.390861,
+      48.858062
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "alexandre_dumas",
+      "pere_lachaise"
+    ]
+  },
+  "alexandre_dumas": {
+    "id": "alexandre_dumas",
+    "name": "Alexandre Dumas",
+    "normalizedName": "alexandredumas",
+    "latitude": 48.856228,
+    "longitude": 2.394676,
+    "coords": [
+      2.394676,
+      48.856228
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "avron",
+      "philippe_auguste"
+    ]
+  },
+  "avron": {
+    "id": "avron",
+    "name": "Avron",
+    "normalizedName": "avron",
+    "latitude": 48.851905,
+    "longitude": 2.397997,
+    "coords": [
+      2.397997,
+      48.851905
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "2"
+    ],
+    "neighbors": [
+      "alexandre_dumas",
+      "nation"
+    ]
+  },
+  "pont_de_levallois": {
+    "id": "pont_de_levallois",
+    "name": "Pont de Levallois",
+    "normalizedName": "pontdelevallois",
+    "latitude": 48.897154,
+    "longitude": 2.280414,
+    "coords": [
+      2.280414,
+      48.897154
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "anatole_france"
+    ]
+  },
+  "anatole_france": {
+    "id": "anatole_france",
+    "name": "Anatole France",
+    "normalizedName": "anatolefrance",
+    "latitude": 48.892083,
+    "longitude": 2.28501,
+    "coords": [
+      2.28501,
+      48.892083
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "louise_michel",
+      "pont_de_levallois"
+    ]
+  },
+  "louise_michel": {
+    "id": "louise_michel",
+    "name": "Louise Michel",
+    "normalizedName": "louisemichel",
+    "latitude": 48.888706,
+    "longitude": 2.288084,
+    "coords": [
+      2.288084,
+      48.888706
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "anatole_france",
+      "porte_de_champerret"
+    ]
+  },
+  "porte_de_champerret": {
+    "id": "porte_de_champerret",
+    "name": "Porte de Champerret",
+    "normalizedName": "portedechamperret",
+    "latitude": 48.886006,
+    "longitude": 2.29353,
+    "coords": [
+      2.29353,
+      48.886006
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "louise_michel",
+      "pereire_levallois"
+    ]
+  },
+  "pereire_levallois": {
+    "id": "pereire_levallois",
+    "name": "Pereire-Levallois",
+    "normalizedName": "pereirelevallois",
+    "latitude": 48.884896,
+    "longitude": 2.297724,
+    "coords": [
+      2.297724,
+      48.884896
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "porte_de_champerret",
+      "wagram"
+    ]
+  },
+  "wagram": {
+    "id": "wagram",
+    "name": "Wagram",
+    "normalizedName": "wagram",
+    "latitude": 48.883809,
+    "longitude": 2.304674,
+    "coords": [
+      2.304674,
+      48.883809
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "malesherbes",
+      "pereire_levallois"
+    ]
+  },
+  "malesherbes": {
+    "id": "malesherbes",
+    "name": "Malesherbes",
+    "normalizedName": "malesherbes",
+    "latitude": 48.882892,
+    "longitude": 2.309052,
+    "coords": [
+      2.309052,
+      48.882892
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "villiers",
+      "wagram"
+    ]
+  },
+  "europe": {
+    "id": "europe",
+    "name": "Europe",
+    "normalizedName": "europe",
+    "latitude": 48.87877,
+    "longitude": 2.322265,
+    "coords": [
+      2.322265,
+      48.87877
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "saint_lazare",
+      "villiers"
+    ]
+  },
+  "saint_lazare": {
+    "id": "saint_lazare",
+    "name": "Saint-Lazare",
+    "normalizedName": "saintlazare",
+    "latitude": 48.875151,
+    "longitude": 2.324381,
+    "coords": [
+      2.324381,
+      48.875151
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3",
+      "12",
+      "13",
+      "14"
+    ],
+    "neighbors": [
+      "europe",
+      "havre_caumartin",
+      "liege",
+      "madeleine",
+      "miromesnil",
+      "pont_cardinet",
+      "trinite_d_estienne_d_orves"
+    ]
+  },
+  "havre_caumartin": {
+    "id": "havre_caumartin",
+    "name": "Havre-Caumartin",
+    "normalizedName": "havrecaumartin",
+    "latitude": 48.873513,
+    "longitude": 2.327543,
+    "coords": [
+      2.327543,
+      48.873513
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3",
+      "9"
+    ],
+    "neighbors": [
+      "chaussee_d_antin_la_fayette",
+      "opera",
+      "saint_augustin",
+      "saint_lazare"
+    ]
+  },
+  "opera": {
+    "id": "opera",
+    "name": "Opéra",
+    "normalizedName": "opera",
+    "latitude": 48.869939,
+    "longitude": 2.332592,
+    "coords": [
+      2.332592,
+      48.869939
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3",
+      "7",
+      "8"
+    ],
+    "neighbors": [
+      "chaussee_d_antin_la_fayette",
+      "havre_caumartin",
+      "madeleine",
+      "pyramides",
+      "quatre_septembre",
+      "richelieu_drouot"
+    ]
+  },
+  "quatre_septembre": {
+    "id": "quatre_septembre",
+    "name": "Quatre Septembre",
+    "normalizedName": "quatreseptembre",
+    "latitude": 48.869638,
+    "longitude": 2.336233,
+    "coords": [
+      2.336233,
+      48.869638
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "bourse",
+      "opera"
+    ]
+  },
+  "bourse": {
+    "id": "bourse",
+    "name": "Bourse",
+    "normalizedName": "bourse",
+    "latitude": 48.868654,
+    "longitude": 2.341376,
+    "coords": [
+      2.341376,
+      48.868654
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "quatre_septembre",
+      "sentier"
+    ]
+  },
+  "sentier": {
+    "id": "sentier",
+    "name": "Sentier",
+    "normalizedName": "sentier",
+    "latitude": 48.867513,
+    "longitude": 2.346552,
+    "coords": [
+      2.346552,
+      48.867513
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "bourse",
+      "reaumur_sebastopol"
+    ]
+  },
+  "reaumur_sebastopol": {
+    "id": "reaumur_sebastopol",
+    "name": "Réaumur Sébastopol",
+    "normalizedName": "reaumursebastopol",
+    "latitude": 48.866734,
+    "longitude": 2.352829,
+    "coords": [
+      2.352829,
+      48.866734
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3",
+      "4"
+    ],
+    "neighbors": [
+      "arts_et_metiers",
+      "etienne_marcel",
+      "sentier",
+      "strasbourg_saint_denis"
+    ]
+  },
+  "arts_et_metiers": {
+    "id": "arts_et_metiers",
+    "name": "Arts et Métiers",
+    "normalizedName": "artsetmetiers",
+    "latitude": 48.865323,
+    "longitude": 2.35673,
+    "coords": [
+      2.35673,
+      48.865323
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3",
+      "11"
+    ],
+    "neighbors": [
+      "rambuteau",
+      "reaumur_sebastopol",
+      "republique",
+      "temple"
+    ]
+  },
+  "temple": {
+    "id": "temple",
+    "name": "Temple",
+    "normalizedName": "temple",
+    "latitude": 48.866514,
+    "longitude": 2.360804,
+    "coords": [
+      2.360804,
+      48.866514
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "arts_et_metiers",
+      "republique"
+    ]
+  },
+  "republique": {
+    "id": "republique",
+    "name": "République",
+    "normalizedName": "republique",
+    "latitude": 48.867601,
+    "longitude": 2.362757,
+    "coords": [
+      2.362757,
+      48.867601
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3",
+      "5",
+      "8",
+      "9",
+      "11"
+    ],
+    "neighbors": [
+      "arts_et_metiers",
+      "filles_du_calvaire",
+      "goncourt",
+      "jacques_bonsergent",
+      "oberkampf",
+      "parmentier",
+      "strasbourg_saint_denis",
+      "temple"
+    ]
+  },
+  "parmentier": {
+    "id": "parmentier",
+    "name": "Parmentier",
+    "normalizedName": "parmentier",
+    "latitude": 48.865254,
+    "longitude": 2.374582,
+    "coords": [
+      2.374582,
+      48.865254
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "republique",
+      "rue_saint_maur"
+    ]
+  },
+  "rue_saint_maur": {
+    "id": "rue_saint_maur",
+    "name": "Rue Saint-Maur",
+    "normalizedName": "ruesaintmaur",
+    "latitude": 48.864286,
+    "longitude": 2.379742,
+    "coords": [
+      2.379742,
+      48.864286
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "parmentier",
+      "pere_lachaise"
+    ]
+  },
+  "gambetta": {
+    "id": "gambetta",
+    "name": "Gambetta",
+    "normalizedName": "gambetta",
+    "latitude": 48.865163,
+    "longitude": 2.398747,
+    "coords": [
+      2.398747,
+      48.865163
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3",
+      "3bis"
+    ],
+    "neighbors": [
+      "pelleport",
+      "pere_lachaise",
+      "porte_de_bagnolet"
+    ]
+  },
+  "porte_de_bagnolet": {
+    "id": "porte_de_bagnolet",
+    "name": "Porte de Bagnolet",
+    "normalizedName": "portedebagnolet",
+    "latitude": 48.8646,
+    "longitude": 2.408031,
+    "coords": [
+      2.408031,
+      48.8646
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "gallieni",
+      "gambetta"
+    ]
+  },
+  "gallieni": {
+    "id": "gallieni",
+    "name": "Gallieni",
+    "normalizedName": "gallieni",
+    "latitude": 48.865335,
+    "longitude": 2.416697,
+    "coords": [
+      2.416697,
+      48.865335
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3"
+    ],
+    "neighbors": [
+      "porte_de_bagnolet"
+    ]
+  },
+  "pelleport": {
+    "id": "pelleport",
+    "name": "Pelleport",
+    "normalizedName": "pelleport",
+    "latitude": 48.86844,
+    "longitude": 2.401562,
+    "coords": [
+      2.401562,
+      48.86844
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3bis"
+    ],
+    "neighbors": [
+      "gambetta",
+      "saint_fargeau"
+    ]
+  },
+  "saint_fargeau": {
+    "id": "saint_fargeau",
+    "name": "Saint-Fargeau",
+    "normalizedName": "saintfargeau",
+    "latitude": 48.872101,
+    "longitude": 2.404515,
+    "coords": [
+      2.404515,
+      48.872101
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3bis"
+    ],
+    "neighbors": [
+      "pelleport",
+      "porte_des_lilas"
+    ]
+  },
+  "porte_des_lilas": {
+    "id": "porte_des_lilas",
+    "name": "Porte des Lilas",
+    "normalizedName": "portedeslilas",
+    "latitude": 48.877111,
+    "longitude": 2.406729,
+    "coords": [
+      2.406729,
+      48.877111
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "3bis",
+      "11"
+    ],
+    "neighbors": [
+      "mairie_des_lilas",
+      "saint_fargeau",
+      "telegraphe"
+    ]
+  },
+  "porte_de_clignancourt": {
+    "id": "porte_de_clignancourt",
+    "name": "Porte de Clignancourt",
+    "normalizedName": "portedeclignancourt",
+    "latitude": 48.897402,
+    "longitude": 2.344848,
+    "coords": [
+      2.344848,
+      48.897402
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "simplon"
+    ]
+  },
+  "simplon": {
+    "id": "simplon",
+    "name": "Simplon",
+    "normalizedName": "simplon",
+    "latitude": 48.894344,
+    "longitude": 2.347431,
+    "coords": [
+      2.347431,
+      48.894344
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "marcadet_poissonniers",
+      "porte_de_clignancourt"
+    ]
+  },
+  "marcadet_poissonniers": {
+    "id": "marcadet_poissonniers",
+    "name": "Marcadet-Poissonniers",
+    "normalizedName": "marcadetpoissonniers",
+    "latitude": 48.891465,
+    "longitude": 2.349815,
+    "coords": [
+      2.349815,
+      48.891465
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "12"
+    ],
+    "neighbors": [
+      "chateau_rouge",
+      "jules_joffrin",
+      "marx_dormoy",
+      "simplon"
+    ]
+  },
+  "chateau_rouge": {
+    "id": "chateau_rouge",
+    "name": "Château Rouge",
+    "normalizedName": "chateaurouge",
+    "latitude": 48.886711,
+    "longitude": 2.349559,
+    "coords": [
+      2.349559,
+      48.886711
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "barbes_rochechouart",
+      "marcadet_poissonniers"
+    ]
+  },
+  "gare_du_nord": {
+    "id": "gare_du_nord",
+    "name": "Gare du Nord",
+    "normalizedName": "garedunord",
+    "latitude": 48.880195,
+    "longitude": 2.357633,
+    "coords": [
+      2.357633,
+      48.880195
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "5"
+    ],
+    "neighbors": [
+      "barbes_rochechouart",
+      "gare_de_l_est",
+      "stalingrad"
+    ]
+  },
+  "gare_de_l_est": {
+    "id": "gare_de_l_est",
+    "name": "Gare de l'Est",
+    "normalizedName": "garedelest",
+    "latitude": 48.875991,
+    "longitude": 2.357881,
+    "coords": [
+      2.357881,
+      48.875991
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "5",
+      "7"
+    ],
+    "neighbors": [
+      "chateau_d_eau",
+      "chateau_landon",
+      "gare_du_nord",
+      "jacques_bonsergent",
+      "poissonniere"
+    ]
+  },
+  "chateau_d_eau": {
+    "id": "chateau_d_eau",
+    "name": "Château d'Eau",
+    "normalizedName": "chateaudeau",
+    "latitude": 48.872621,
+    "longitude": 2.356154,
+    "coords": [
+      2.356154,
+      48.872621
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "gare_de_l_est",
+      "strasbourg_saint_denis"
+    ]
+  },
+  "strasbourg_saint_denis": {
+    "id": "strasbourg_saint_denis",
+    "name": "Strasbourg-Saint-Denis",
+    "normalizedName": "strasbourgsaintdenis",
+    "latitude": 48.869402,
+    "longitude": 2.353819,
+    "coords": [
+      2.353819,
+      48.869402
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "8",
+      "9"
+    ],
+    "neighbors": [
+      "bonne_nouvelle",
+      "chateau_d_eau",
+      "reaumur_sebastopol",
+      "republique"
+    ]
+  },
+  "etienne_marcel": {
+    "id": "etienne_marcel",
+    "name": "Étienne Marcel",
+    "normalizedName": "etiennemarcel",
+    "latitude": 48.863972,
+    "longitude": 2.349618,
+    "coords": [
+      2.349618,
+      48.863972
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "les_halles",
+      "reaumur_sebastopol"
+    ]
+  },
+  "les_halles": {
+    "id": "les_halles",
+    "name": "Les Halles",
+    "normalizedName": "leshalles",
+    "latitude": 48.862515,
+    "longitude": 2.345786,
+    "coords": [
+      2.345786,
+      48.862515
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "chatelet",
+      "etienne_marcel"
+    ]
+  },
+  "cite": {
+    "id": "cite",
+    "name": "Cité",
+    "normalizedName": "cite",
+    "latitude": 48.854936,
+    "longitude": 2.347321,
+    "coords": [
+      2.347321,
+      48.854936
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "chatelet",
+      "saint_michel"
+    ]
+  },
+  "saint_michel": {
+    "id": "saint_michel",
+    "name": "Saint-Michel",
+    "normalizedName": "saintmichel",
+    "latitude": 48.853168,
+    "longitude": 2.343286,
+    "coords": [
+      2.343286,
+      48.853168
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "cite",
+      "odeon"
+    ]
+  },
+  "odeon": {
+    "id": "odeon",
+    "name": "Odéon",
+    "normalizedName": "odeon",
+    "latitude": 48.851936,
+    "longitude": 2.340613,
+    "coords": [
+      2.340613,
+      48.851936
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "10"
+    ],
+    "neighbors": [
+      "cluny_la_sorbonne",
+      "mabillon",
+      "saint_germain_des_pres",
+      "saint_michel"
+    ]
+  },
+  "saint_germain_des_pres": {
+    "id": "saint_germain_des_pres",
+    "name": "Saint-Germain-des-Prés",
+    "normalizedName": "saintgermaindespres",
+    "latitude": 48.853719,
+    "longitude": 2.333776,
+    "coords": [
+      2.333776,
+      48.853719
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "odeon",
+      "saint_sulpice"
+    ]
+  },
+  "saint_sulpice": {
+    "id": "saint_sulpice",
+    "name": "Saint-Sulpice",
+    "normalizedName": "saintsulpice",
+    "latitude": 48.851071,
+    "longitude": 2.330701,
+    "coords": [
+      2.330701,
+      48.851071
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "saint_germain_des_pres",
+      "saint_placide"
+    ]
+  },
+  "saint_placide": {
+    "id": "saint_placide",
+    "name": "Saint-Placide",
+    "normalizedName": "saintplacide",
+    "latitude": 48.846878,
+    "longitude": 2.326793,
+    "coords": [
+      2.326793,
+      48.846878
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "montparnasse_bienvenue",
+      "saint_sulpice"
+    ]
+  },
+  "montparnasse_bienvenue": {
+    "id": "montparnasse_bienvenue",
+    "name": "Montparnasse-Bienvenüe",
+    "normalizedName": "montparnassebienvenue",
+    "latitude": 48.842327,
+    "longitude": 2.320985,
+    "coords": [
+      2.320985,
+      48.842327
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "6",
+      "12",
+      "13"
+    ],
+    "neighbors": [
+      "duroc",
+      "edgar_quinet",
+      "falguiere",
+      "gaite",
+      "notre_dame_des_champs",
+      "pasteur",
+      "saint_placide",
+      "vavin"
+    ]
+  },
+  "vavin": {
+    "id": "vavin",
+    "name": "Vavin",
+    "normalizedName": "vavin",
+    "latitude": 48.842218,
+    "longitude": 2.329009,
+    "coords": [
+      2.329009,
+      48.842218
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "montparnasse_bienvenue",
+      "raspail"
+    ]
+  },
+  "raspail": {
+    "id": "raspail",
+    "name": "Raspail",
+    "normalizedName": "raspail",
+    "latitude": 48.838964,
+    "longitude": 2.330754,
+    "coords": [
+      2.330754,
+      48.838964
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "6"
+    ],
+    "neighbors": [
+      "denfert_rochereau",
+      "edgar_quinet",
+      "vavin"
+    ]
+  },
+  "denfert_rochereau": {
+    "id": "denfert_rochereau",
+    "name": "Denfert-Rochereau",
+    "normalizedName": "denfertrochereau",
+    "latitude": 48.834293,
+    "longitude": 2.332852,
+    "coords": [
+      2.332852,
+      48.834293
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4",
+      "6"
+    ],
+    "neighbors": [
+      "mouton_duvernet",
+      "raspail",
+      "saint_jacques"
+    ]
+  },
+  "mouton_duvernet": {
+    "id": "mouton_duvernet",
+    "name": "Mouton-Duvernet",
+    "normalizedName": "moutonduvernet",
+    "latitude": 48.831113,
+    "longitude": 2.329705,
+    "coords": [
+      2.329705,
+      48.831113
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "alesia",
+      "denfert_rochereau"
+    ]
+  },
+  "alesia": {
+    "id": "alesia",
+    "name": "Alésia",
+    "normalizedName": "alesia",
+    "latitude": 48.828188,
+    "longitude": 2.327165,
+    "coords": [
+      2.327165,
+      48.828188
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "mouton_duvernet",
+      "porte_d_orleans"
+    ]
+  },
+  "porte_d_orleans": {
+    "id": "porte_d_orleans",
+    "name": "Porte d'Orléans",
+    "normalizedName": "portedorleans",
+    "latitude": 48.823412,
+    "longitude": 2.325576,
+    "coords": [
+      2.325576,
+      48.823412
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "alesia",
+      "mairie_de_montrouge"
+    ]
+  },
+  "mairie_de_montrouge": {
+    "id": "mairie_de_montrouge",
+    "name": "Mairie de Montrouge",
+    "normalizedName": "mairiedemontrouge",
+    "latitude": 48.818676,
+    "longitude": 2.31974,
+    "coords": [
+      2.31974,
+      48.818676
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "barbara",
+      "porte_d_orleans"
+    ]
+  },
+  "barbara": {
+    "id": "barbara",
+    "name": "Barbara",
+    "normalizedName": "barbara",
+    "latitude": 48.809704,
+    "longitude": 2.317449,
+    "coords": [
+      2.317449,
+      48.809704
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "bagneux_lucie_aubrac",
+      "mairie_de_montrouge"
+    ]
+  },
+  "bagneux_lucie_aubrac": {
+    "id": "bagneux_lucie_aubrac",
+    "name": "Bagneux - Lucie Aubrac",
+    "normalizedName": "bagneuxlucieaubrac",
+    "latitude": 48.80363,
+    "longitude": 2.318054,
+    "coords": [
+      2.318054,
+      48.80363
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "4"
+    ],
+    "neighbors": [
+      "barbara"
+    ]
+  },
+  "bobigny_pablo_picasso": {
+    "id": "bobigny_pablo_picasso",
+    "name": "Bobigny Pablo Picasso",
+    "normalizedName": "bobignypablopicasso",
+    "latitude": 48.906375,
+    "longitude": 2.44919,
+    "coords": [
+      2.44919,
+      48.906375
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "bobigny_pantin_raymond_queneau"
+    ]
+  },
+  "bobigny_pantin_raymond_queneau": {
+    "id": "bobigny_pantin_raymond_queneau",
+    "name": "Bobigny-Pantin - Raymond Queneau",
+    "normalizedName": "bobignypantinraymondqueneau",
+    "latitude": 48.895455,
+    "longitude": 2.425327,
+    "coords": [
+      2.425327,
+      48.895455
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "bobigny_pablo_picasso",
+      "eglise_de_pantin"
+    ]
+  },
+  "eglise_de_pantin": {
+    "id": "eglise_de_pantin",
+    "name": "Église de Pantin",
+    "normalizedName": "eglisedepantin",
+    "latitude": 48.89315,
+    "longitude": 2.412763,
+    "coords": [
+      2.412763,
+      48.89315
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "bobigny_pantin_raymond_queneau",
+      "hoche"
+    ]
+  },
+  "hoche": {
+    "id": "hoche",
+    "name": "Hoche",
+    "normalizedName": "hoche",
+    "latitude": 48.891229,
+    "longitude": 2.402352,
+    "coords": [
+      2.402352,
+      48.891229
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "eglise_de_pantin",
+      "porte_de_pantin"
+    ]
+  },
+  "porte_de_pantin": {
+    "id": "porte_de_pantin",
+    "name": "Porte de Pantin",
+    "normalizedName": "portedepantin",
+    "latitude": 48.888417,
+    "longitude": 2.391784,
+    "coords": [
+      2.391784,
+      48.888417
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "hoche",
+      "ourcq"
+    ]
+  },
+  "ourcq": {
+    "id": "ourcq",
+    "name": "Ourcq",
+    "normalizedName": "ourcq",
+    "latitude": 48.886857,
+    "longitude": 2.385913,
+    "coords": [
+      2.385913,
+      48.886857
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "laumiere",
+      "porte_de_pantin"
+    ]
+  },
+  "laumiere": {
+    "id": "laumiere",
+    "name": "Laumière",
+    "normalizedName": "laumiere",
+    "latitude": 48.884971,
+    "longitude": 2.378717,
+    "coords": [
+      2.378717,
+      48.884971
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "jaures",
+      "ourcq"
+    ]
+  },
+  "jacques_bonsergent": {
+    "id": "jacques_bonsergent",
+    "name": "Jacques Bonsergent",
+    "normalizedName": "jacquesbonsergent",
+    "latitude": 48.870396,
+    "longitude": 2.3614,
+    "coords": [
+      2.3614,
+      48.870396
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "gare_de_l_est",
+      "republique"
+    ]
+  },
+  "oberkampf": {
+    "id": "oberkampf",
+    "name": "Oberkampf",
+    "normalizedName": "oberkampf",
+    "latitude": 48.865019,
+    "longitude": 2.368011,
+    "coords": [
+      2.368011,
+      48.865019
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5",
+      "9"
+    ],
+    "neighbors": [
+      "republique",
+      "richard_lenoir",
+      "saint_ambroise"
+    ]
+  },
+  "richard_lenoir": {
+    "id": "richard_lenoir",
+    "name": "Richard Lenoir",
+    "normalizedName": "richardlenoir",
+    "latitude": 48.859874,
+    "longitude": 2.371914,
+    "coords": [
+      2.371914,
+      48.859874
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "breguet_sabin",
+      "oberkampf"
+    ]
+  },
+  "breguet_sabin": {
+    "id": "breguet_sabin",
+    "name": "Bréguet-Sabin",
+    "normalizedName": "breguetsabin",
+    "latitude": 48.856141,
+    "longitude": 2.370209,
+    "coords": [
+      2.370209,
+      48.856141
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "bastille",
+      "richard_lenoir"
+    ]
+  },
+  "quai_de_la_rapee": {
+    "id": "quai_de_la_rapee",
+    "name": "Quai de la Rapée",
+    "normalizedName": "quaidelarapee",
+    "latitude": 48.846485,
+    "longitude": 2.36591,
+    "coords": [
+      2.36591,
+      48.846485
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "bastille",
+      "gare_d_austerlitz"
+    ]
+  },
+  "gare_d_austerlitz": {
+    "id": "gare_d_austerlitz",
+    "name": "Gare d'Austerlitz",
+    "normalizedName": "garedausterlitz",
+    "latitude": 48.84236,
+    "longitude": 2.365582,
+    "coords": [
+      2.365582,
+      48.84236
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5",
+      "10"
+    ],
+    "neighbors": [
+      "jussieu",
+      "quai_de_la_rapee",
+      "saint_marcel"
+    ]
+  },
+  "saint_marcel": {
+    "id": "saint_marcel",
+    "name": "Saint-Marcel",
+    "normalizedName": "saintmarcel",
+    "latitude": 48.838427,
+    "longitude": 2.360967,
+    "coords": [
+      2.360967,
+      48.838427
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "campo_formio",
+      "gare_d_austerlitz"
+    ]
+  },
+  "campo_formio": {
+    "id": "campo_formio",
+    "name": "Campo Formio",
+    "normalizedName": "campoformio",
+    "latitude": 48.835153,
+    "longitude": 2.358566,
+    "coords": [
+      2.358566,
+      48.835153
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5"
+    ],
+    "neighbors": [
+      "place_d_italie",
+      "saint_marcel"
+    ]
+  },
+  "place_d_italie": {
+    "id": "place_d_italie",
+    "name": "Place d'Italie",
+    "normalizedName": "placeditalie",
+    "latitude": 48.830973,
+    "longitude": 2.35558,
+    "coords": [
+      2.35558,
+      48.830973
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "5",
+      "6",
+      "7"
+    ],
+    "neighbors": [
+      "campo_formio",
+      "corvisart",
+      "les_gobelins",
+      "nationale",
+      "tolbiac"
+    ]
+  },
+  "kleber": {
+    "id": "kleber",
+    "name": "Kléber",
+    "normalizedName": "kleber",
+    "latitude": 48.871262,
+    "longitude": 2.293241,
+    "coords": [
+      2.293241,
+      48.871262
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "boissiere",
+      "charles_de_gaulle_etoile"
+    ]
+  },
+  "boissiere": {
+    "id": "boissiere",
+    "name": "Boissière",
+    "normalizedName": "boissiere",
+    "latitude": 48.866983,
+    "longitude": 2.290059,
+    "coords": [
+      2.290059,
+      48.866983
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "kleber",
+      "trocadero"
+    ]
+  },
+  "trocadero": {
+    "id": "trocadero",
+    "name": "Trocadéro",
+    "normalizedName": "trocadero",
+    "latitude": 48.863611,
+    "longitude": 2.28758,
+    "coords": [
+      2.28758,
+      48.863611
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6",
+      "9"
+    ],
+    "neighbors": [
+      "boissiere",
+      "iena",
+      "passy",
+      "rue_de_la_pompe"
+    ]
+  },
+  "passy": {
+    "id": "passy",
+    "name": "Passy",
+    "normalizedName": "passy",
+    "latitude": 48.857449,
+    "longitude": 2.285812,
+    "coords": [
+      2.285812,
+      48.857449
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "bir_hakeim",
+      "trocadero"
+    ]
+  },
+  "bir_hakeim": {
+    "id": "bir_hakeim",
+    "name": "Bir-Hakeim",
+    "normalizedName": "birhakeim",
+    "latitude": 48.853943,
+    "longitude": 2.289335,
+    "coords": [
+      2.289335,
+      48.853943
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "dupleix",
+      "passy"
+    ]
+  },
+  "dupleix": {
+    "id": "dupleix",
+    "name": "Dupleix",
+    "normalizedName": "dupleix",
+    "latitude": 48.850435,
+    "longitude": 2.293612,
+    "coords": [
+      2.293612,
+      48.850435
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "bir_hakeim",
+      "la_motte_picquet_grenelle"
+    ]
+  },
+  "la_motte_picquet_grenelle": {
+    "id": "la_motte_picquet_grenelle",
+    "name": "La Motte Picquet-Grenelle",
+    "normalizedName": "lamottepicquetgrenelle",
+    "latitude": 48.849575,
+    "longitude": 2.298625,
+    "coords": [
+      2.298625,
+      48.849575
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6",
+      "8",
+      "10"
+    ],
+    "neighbors": [
+      "avenue_emile_zola",
+      "cambronne",
+      "commerce",
+      "dupleix",
+      "ecole_militaire",
+      "segur"
+    ]
+  },
+  "cambronne": {
+    "id": "cambronne",
+    "name": "Cambronne",
+    "normalizedName": "cambronne",
+    "latitude": 48.847507,
+    "longitude": 2.302968,
+    "coords": [
+      2.302968,
+      48.847507
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "la_motte_picquet_grenelle",
+      "sevres_lecourbe"
+    ]
+  },
+  "sevres_lecourbe": {
+    "id": "sevres_lecourbe",
+    "name": "Sèvres-Lecourbe",
+    "normalizedName": "sevreslecourbe",
+    "latitude": 48.845627,
+    "longitude": 2.309531,
+    "coords": [
+      2.309531,
+      48.845627
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "cambronne",
+      "pasteur"
+    ]
+  },
+  "pasteur": {
+    "id": "pasteur",
+    "name": "Pasteur",
+    "normalizedName": "pasteur",
+    "latitude": 48.842871,
+    "longitude": 2.312448,
+    "coords": [
+      2.312448,
+      48.842871
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6",
+      "12"
+    ],
+    "neighbors": [
+      "falguiere",
+      "montparnasse_bienvenue",
+      "sevres_lecourbe",
+      "volontaires"
+    ]
+  },
+  "edgar_quinet": {
+    "id": "edgar_quinet",
+    "name": "Edgar Quinet",
+    "normalizedName": "edgarquinet",
+    "latitude": 48.840663,
+    "longitude": 2.326385,
+    "coords": [
+      2.326385,
+      48.840663
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "montparnasse_bienvenue",
+      "raspail"
+    ]
+  },
+  "saint_jacques": {
+    "id": "saint_jacques",
+    "name": "Saint-Jacques",
+    "normalizedName": "saintjacques",
+    "latitude": 48.832901,
+    "longitude": 2.337135,
+    "coords": [
+      2.337135,
+      48.832901
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "denfert_rochereau",
+      "glaciere"
+    ]
+  },
+  "glaciere": {
+    "id": "glaciere",
+    "name": "Glacière",
+    "normalizedName": "glaciere",
+    "latitude": 48.83113,
+    "longitude": 2.343512,
+    "coords": [
+      2.343512,
+      48.83113
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "corvisart",
+      "saint_jacques"
+    ]
+  },
+  "corvisart": {
+    "id": "corvisart",
+    "name": "Corvisart",
+    "normalizedName": "corvisart",
+    "latitude": 48.829791,
+    "longitude": 2.350415,
+    "coords": [
+      2.350415,
+      48.829791
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "glaciere",
+      "place_d_italie"
+    ]
+  },
+  "nationale": {
+    "id": "nationale",
+    "name": "Nationale",
+    "normalizedName": "nationale",
+    "latitude": 48.833217,
+    "longitude": 2.362856,
+    "coords": [
+      2.362856,
+      48.833217
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "chevaleret",
+      "place_d_italie"
+    ]
+  },
+  "chevaleret": {
+    "id": "chevaleret",
+    "name": "Chevaleret",
+    "normalizedName": "chevaleret",
+    "latitude": 48.834948,
+    "longitude": 2.368126,
+    "coords": [
+      2.368126,
+      48.834948
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "nationale",
+      "quai_de_la_gare"
+    ]
+  },
+  "quai_de_la_gare": {
+    "id": "quai_de_la_gare",
+    "name": "Quai de la Gare",
+    "normalizedName": "quaidelagare",
+    "latitude": 48.837045,
+    "longitude": 2.372826,
+    "coords": [
+      2.372826,
+      48.837045
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "bercy",
+      "chevaleret"
+    ]
+  },
+  "bercy": {
+    "id": "bercy",
+    "name": "Bercy",
+    "normalizedName": "bercy",
+    "latitude": 48.840389,
+    "longitude": 2.379911,
+    "coords": [
+      2.379911,
+      48.840389
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6",
+      "14"
+    ],
+    "neighbors": [
+      "cour_saint_emilion",
+      "dugommier",
+      "gare_de_lyon",
+      "quai_de_la_gare"
+    ]
+  },
+  "dugommier": {
+    "id": "dugommier",
+    "name": "Dugommier",
+    "normalizedName": "dugommier",
+    "latitude": 48.839041,
+    "longitude": 2.38962,
+    "coords": [
+      2.38962,
+      48.839041
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "bercy",
+      "daumesnil"
+    ]
+  },
+  "daumesnil": {
+    "id": "daumesnil",
+    "name": "Daumesnil",
+    "normalizedName": "daumesnil",
+    "latitude": 48.839445,
+    "longitude": 2.396183,
+    "coords": [
+      2.396183,
+      48.839445
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6",
+      "8"
+    ],
+    "neighbors": [
+      "bel_air",
+      "dugommier",
+      "michel_bizot",
+      "montgallet"
+    ]
+  },
+  "bel_air": {
+    "id": "bel_air",
+    "name": "Bel-Air",
+    "normalizedName": "belair",
+    "latitude": 48.841338,
+    "longitude": 2.400919,
+    "coords": [
+      2.400919,
+      48.841338
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "daumesnil",
+      "picpus"
+    ]
+  },
+  "picpus": {
+    "id": "picpus",
+    "name": "Picpus",
+    "normalizedName": "picpus",
+    "latitude": 48.845062,
+    "longitude": 2.401289,
+    "coords": [
+      2.401289,
+      48.845062
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "6"
+    ],
+    "neighbors": [
+      "bel_air",
+      "nation"
+    ]
+  },
+  "la_courneuve_8_mai_1945": {
+    "id": "la_courneuve_8_mai_1945",
+    "name": "La Courneuve 8 Mai 1945",
+    "normalizedName": "lacourneuve8mai1945",
+    "latitude": 48.920786,
+    "longitude": 2.410599,
+    "coords": [
+      2.410599,
+      48.920786
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "fort_d_aubervilliers"
+    ]
+  },
+  "fort_d_aubervilliers": {
+    "id": "fort_d_aubervilliers",
+    "name": "Fort d'Aubervilliers",
+    "normalizedName": "fortdaubervilliers",
+    "latitude": 48.91495,
+    "longitude": 2.404409,
+    "coords": [
+      2.404409,
+      48.91495
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "aubervilliers_pantin_quatre_chemins",
+      "la_courneuve_8_mai_1945"
+    ]
+  },
+  "aubervilliers_pantin_quatre_chemins": {
+    "id": "aubervilliers_pantin_quatre_chemins",
+    "name": "Aubervilliers Pantin - Quatre Chemins",
+    "normalizedName": "aubervillierspantinquatrechemins",
+    "latitude": 48.903784,
+    "longitude": 2.392221,
+    "coords": [
+      2.392221,
+      48.903784
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "fort_d_aubervilliers",
+      "porte_de_la_villette"
+    ]
+  },
+  "porte_de_la_villette": {
+    "id": "porte_de_la_villette",
+    "name": "Porte de la Villette",
+    "normalizedName": "portedelavillette",
+    "latitude": 48.89739,
+    "longitude": 2.385508,
+    "coords": [
+      2.385508,
+      48.89739
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "aubervilliers_pantin_quatre_chemins",
+      "corentin_cariou"
+    ]
+  },
+  "corentin_cariou": {
+    "id": "corentin_cariou",
+    "name": "Corentin Cariou",
+    "normalizedName": "corentincariou",
+    "latitude": 48.894656,
+    "longitude": 2.38216,
+    "coords": [
+      2.38216,
+      48.894656
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "crimee",
+      "porte_de_la_villette"
+    ]
+  },
+  "crimee": {
+    "id": "crimee",
+    "name": "Crimée",
+    "normalizedName": "crimee",
+    "latitude": 48.890906,
+    "longitude": 2.37709,
+    "coords": [
+      2.37709,
+      48.890906
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "corentin_cariou",
+      "riquet"
+    ]
+  },
+  "riquet": {
+    "id": "riquet",
+    "name": "Riquet",
+    "normalizedName": "riquet",
+    "latitude": 48.887968,
+    "longitude": 2.373457,
+    "coords": [
+      2.373457,
+      48.887968
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "crimee",
+      "stalingrad"
+    ]
+  },
+  "louis_blanc": {
+    "id": "louis_blanc",
+    "name": "Louis Blanc",
+    "normalizedName": "louisblanc",
+    "latitude": 48.881192,
+    "longitude": 2.364379,
+    "coords": [
+      2.364379,
+      48.881192
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7",
+      "7bis"
+    ],
+    "neighbors": [
+      "chateau_landon",
+      "jaures",
+      "stalingrad"
+    ]
+  },
+  "chateau_landon": {
+    "id": "chateau_landon",
+    "name": "Château-Landon",
+    "normalizedName": "chateaulandon",
+    "latitude": 48.878444,
+    "longitude": 2.361965,
+    "coords": [
+      2.361965,
+      48.878444
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "gare_de_l_est",
+      "louis_blanc"
+    ]
+  },
+  "poissonniere": {
+    "id": "poissonniere",
+    "name": "Poissonnière",
+    "normalizedName": "poissonniere",
+    "latitude": 48.8771,
+    "longitude": 2.348776,
+    "coords": [
+      2.348776,
+      48.8771
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "cadet",
+      "gare_de_l_est"
+    ]
+  },
+  "cadet": {
+    "id": "cadet",
+    "name": "Cadet",
+    "normalizedName": "cadet",
+    "latitude": 48.876009,
+    "longitude": 2.344572,
+    "coords": [
+      2.344572,
+      48.876009
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "le_peletier",
+      "poissonniere"
+    ]
+  },
+  "le_peletier": {
+    "id": "le_peletier",
+    "name": "Le Peletier",
+    "normalizedName": "lepeletier",
+    "latitude": 48.874972,
+    "longitude": 2.340576,
+    "coords": [
+      2.340576,
+      48.874972
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "cadet",
+      "chaussee_d_antin_la_fayette"
+    ]
+  },
+  "chaussee_d_antin_la_fayette": {
+    "id": "chaussee_d_antin_la_fayette",
+    "name": "Chaussée d'Antin - La Fayette",
+    "normalizedName": "chausseedantinlafayette",
+    "latitude": 48.872804,
+    "longitude": 2.334456,
+    "coords": [
+      2.334456,
+      48.872804
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7",
+      "9"
+    ],
+    "neighbors": [
+      "havre_caumartin",
+      "le_peletier",
+      "opera",
+      "richelieu_drouot"
+    ]
+  },
+  "pyramides": {
+    "id": "pyramides",
+    "name": "Pyramides",
+    "normalizedName": "pyramides",
+    "latitude": 48.865738,
+    "longitude": 2.334438,
+    "coords": [
+      2.334438,
+      48.865738
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7",
+      "14"
+    ],
+    "neighbors": [
+      "chatelet",
+      "madeleine",
+      "opera",
+      "palais_royal_musee_du_louvre"
+    ]
+  },
+  "pont_neuf": {
+    "id": "pont_neuf",
+    "name": "Pont Neuf",
+    "normalizedName": "pontneuf",
+    "latitude": 48.858554,
+    "longitude": 2.342233,
+    "coords": [
+      2.342233,
+      48.858554
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "chatelet",
+      "palais_royal_musee_du_louvre"
+    ]
+  },
+  "pont_marie": {
+    "id": "pont_marie",
+    "name": "Pont Marie",
+    "normalizedName": "pontmarie",
+    "latitude": 48.853575,
+    "longitude": 2.357163,
+    "coords": [
+      2.357163,
+      48.853575
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "chatelet",
+      "sully_morland"
+    ]
+  },
+  "sully_morland": {
+    "id": "sully_morland",
+    "name": "Sully-Morland",
+    "normalizedName": "sullymorland",
+    "latitude": 48.851621,
+    "longitude": 2.361525,
+    "coords": [
+      2.361525,
+      48.851621
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "jussieu",
+      "pont_marie"
+    ]
+  },
+  "jussieu": {
+    "id": "jussieu",
+    "name": "Jussieu",
+    "normalizedName": "jussieu",
+    "latitude": 48.845951,
+    "longitude": 2.35505,
+    "coords": [
+      2.35505,
+      48.845951
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7",
+      "10"
+    ],
+    "neighbors": [
+      "cardinal_lemoine",
+      "gare_d_austerlitz",
+      "place_monge",
+      "sully_morland"
+    ]
+  },
+  "place_monge": {
+    "id": "place_monge",
+    "name": "Place Monge",
+    "normalizedName": "placemonge",
+    "latitude": 48.842867,
+    "longitude": 2.352225,
+    "coords": [
+      2.352225,
+      48.842867
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "censier_daubenton",
+      "jussieu"
+    ]
+  },
+  "censier_daubenton": {
+    "id": "censier_daubenton",
+    "name": "Censier-Daubenton",
+    "normalizedName": "censierdaubenton",
+    "latitude": 48.840234,
+    "longitude": 2.351606,
+    "coords": [
+      2.351606,
+      48.840234
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "les_gobelins",
+      "place_monge"
+    ]
+  },
+  "les_gobelins": {
+    "id": "les_gobelins",
+    "name": "Les Gobelins",
+    "normalizedName": "lesgobelins",
+    "latitude": 48.83593,
+    "longitude": 2.352542,
+    "coords": [
+      2.352542,
+      48.83593
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "censier_daubenton",
+      "place_d_italie"
+    ]
+  },
+  "tolbiac": {
+    "id": "tolbiac",
+    "name": "Tolbiac",
+    "normalizedName": "tolbiac",
+    "latitude": 48.826426,
+    "longitude": 2.357246,
+    "coords": [
+      2.357246,
+      48.826426
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "maison_blanche",
+      "place_d_italie"
+    ]
+  },
+  "maison_blanche": {
+    "id": "maison_blanche",
+    "name": "Maison Blanche​",
+    "normalizedName": "maisonblanche",
+    "latitude": 48.82142,
+    "longitude": 2.359055,
+    "coords": [
+      2.359055,
+      48.82142
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7",
+      "14"
+    ],
+    "neighbors": [
+      "hopital_bicetre",
+      "le_kremlin_bicetre",
+      "olympiades",
+      "porte_d_italie",
+      "tolbiac"
+    ]
+  },
+  "porte_d_italie": {
+    "id": "porte_d_italie",
+    "name": "Porte d'Italie",
+    "normalizedName": "porteditalie",
+    "latitude": 48.819223,
+    "longitude": 2.359705,
+    "coords": [
+      2.359705,
+      48.819223
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "maison_blanche",
+      "porte_de_choisy"
+    ]
+  },
+  "porte_de_choisy": {
+    "id": "porte_de_choisy",
+    "name": "Porte de Choisy",
+    "normalizedName": "portedechoisy",
+    "latitude": 48.819876,
+    "longitude": 2.364532,
+    "coords": [
+      2.364532,
+      48.819876
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "porte_d_italie",
+      "porte_d_ivry"
+    ]
+  },
+  "porte_d_ivry": {
+    "id": "porte_d_ivry",
+    "name": "Porte d'Ivry",
+    "normalizedName": "portedivry",
+    "latitude": 48.821356,
+    "longitude": 2.369291,
+    "coords": [
+      2.369291,
+      48.821356
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "pierre_et_marie_curie",
+      "porte_de_choisy"
+    ]
+  },
+  "pierre_et_marie_curie": {
+    "id": "pierre_et_marie_curie",
+    "name": "Pierre et Marie Curie",
+    "normalizedName": "pierreetmariecurie",
+    "latitude": 48.815931,
+    "longitude": 2.377267,
+    "coords": [
+      2.377267,
+      48.815931
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "mairie_d_ivry",
+      "porte_d_ivry"
+    ]
+  },
+  "mairie_d_ivry": {
+    "id": "mairie_d_ivry",
+    "name": "Mairie d'Ivry",
+    "normalizedName": "mairiedivry",
+    "latitude": 48.810521,
+    "longitude": 2.38429,
+    "coords": [
+      2.38429,
+      48.810521
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "pierre_et_marie_curie"
+    ]
+  },
+  "le_kremlin_bicetre": {
+    "id": "le_kremlin_bicetre",
+    "name": "Le Kremlin-Bicêtre",
+    "normalizedName": "lekremlinbicetre",
+    "latitude": 48.81013,
+    "longitude": 2.362263,
+    "coords": [
+      2.362263,
+      48.81013
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "maison_blanche",
+      "villejuif_leo_lagrange"
+    ]
+  },
+  "villejuif_leo_lagrange": {
+    "id": "villejuif_leo_lagrange",
+    "name": "Villejuif - Léo Lagrange",
+    "normalizedName": "villejuifleolagrange",
+    "latitude": 48.804688,
+    "longitude": 2.363953,
+    "coords": [
+      2.363953,
+      48.804688
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "le_kremlin_bicetre",
+      "villejuif_paul_vaillant_couturier"
+    ]
+  },
+  "villejuif_paul_vaillant_couturier": {
+    "id": "villejuif_paul_vaillant_couturier",
+    "name": "Villejuif Paul Vaillant-Couturier",
+    "normalizedName": "villejuifpaulvaillantcouturier",
+    "latitude": 48.796483,
+    "longitude": 2.36827,
+    "coords": [
+      2.36827,
+      48.796483
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "villejuif_leo_lagrange",
+      "villejuif_louis_aragon"
+    ]
+  },
+  "villejuif_louis_aragon": {
+    "id": "villejuif_louis_aragon",
+    "name": "Villejuif - Louis Aragon",
+    "normalizedName": "villejuiflouisaragon",
+    "latitude": 48.787563,
+    "longitude": 2.367804,
+    "coords": [
+      2.367804,
+      48.787563
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7"
+    ],
+    "neighbors": [
+      "villejuif_paul_vaillant_couturier"
+    ]
+  },
+  "bolivar": {
+    "id": "bolivar",
+    "name": "Bolivar",
+    "normalizedName": "bolivar",
+    "latitude": 48.880667,
+    "longitude": 2.374496,
+    "coords": [
+      2.374496,
+      48.880667
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7bis"
+    ],
+    "neighbors": [
+      "buttes_chaumont",
+      "jaures"
+    ]
+  },
+  "buttes_chaumont": {
+    "id": "buttes_chaumont",
+    "name": "Buttes-Chaumont",
+    "normalizedName": "butteschaumont",
+    "latitude": 48.878514,
+    "longitude": 2.381615,
+    "coords": [
+      2.381615,
+      48.878514
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7bis"
+    ],
+    "neighbors": [
+      "bolivar",
+      "botzaris"
+    ]
+  },
+  "botzaris": {
+    "id": "botzaris",
+    "name": "Botzaris",
+    "normalizedName": "botzaris",
+    "latitude": 48.879493,
+    "longitude": 2.388567,
+    "coords": [
+      2.388567,
+      48.879493
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7bis"
+    ],
+    "neighbors": [
+      "buttes_chaumont",
+      "place_des_fetes"
+    ]
+  },
+  "place_des_fetes": {
+    "id": "place_des_fetes",
+    "name": "Place des Fêtes",
+    "normalizedName": "placedesfetes",
+    "latitude": 48.87695,
+    "longitude": 2.392984,
+    "coords": [
+      2.392984,
+      48.87695
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7bis",
+      "11"
+    ],
+    "neighbors": [
+      "botzaris",
+      "jourdain",
+      "pre_saint_gervais",
+      "telegraphe"
+    ]
+  },
+  "pre_saint_gervais": {
+    "id": "pre_saint_gervais",
+    "name": "Pré Saint-Gervais",
+    "normalizedName": "presaintgervais",
+    "latitude": 48.880272,
+    "longitude": 2.398468,
+    "coords": [
+      2.398468,
+      48.880272
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7bis"
+    ],
+    "neighbors": [
+      "danube",
+      "place_des_fetes"
+    ]
+  },
+  "danube": {
+    "id": "danube",
+    "name": "Danube",
+    "normalizedName": "danube",
+    "latitude": 48.881816,
+    "longitude": 2.394012,
+    "coords": [
+      2.394012,
+      48.881816
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "7bis"
+    ],
+    "neighbors": [
+      "pre_saint_gervais"
+    ]
+  },
+  "balard": {
+    "id": "balard",
+    "name": "Balard",
+    "normalizedName": "balard",
+    "latitude": 48.836295,
+    "longitude": 2.27833,
+    "coords": [
+      2.27833,
+      48.836295
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "lourmel"
+    ]
+  },
+  "lourmel": {
+    "id": "lourmel",
+    "name": "Lourmel",
+    "normalizedName": "lourmel",
+    "latitude": 48.838735,
+    "longitude": 2.282143,
+    "coords": [
+      2.282143,
+      48.838735
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "balard",
+      "boucicaut"
+    ]
+  },
+  "boucicaut": {
+    "id": "boucicaut",
+    "name": "Boucicaut",
+    "normalizedName": "boucicaut",
+    "latitude": 48.841094,
+    "longitude": 2.287946,
+    "coords": [
+      2.287946,
+      48.841094
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "felix_faure",
+      "lourmel"
+    ]
+  },
+  "felix_faure": {
+    "id": "felix_faure",
+    "name": "Félix Faure",
+    "normalizedName": "felixfaure",
+    "latitude": 48.842747,
+    "longitude": 2.291912,
+    "coords": [
+      2.291912,
+      48.842747
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "boucicaut",
+      "commerce"
+    ]
+  },
+  "commerce": {
+    "id": "commerce",
+    "name": "Commerce",
+    "normalizedName": "commerce",
+    "latitude": 48.844795,
+    "longitude": 2.293952,
+    "coords": [
+      2.293952,
+      48.844795
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "felix_faure",
+      "la_motte_picquet_grenelle"
+    ]
+  },
+  "ecole_militaire": {
+    "id": "ecole_militaire",
+    "name": "École Militaire",
+    "normalizedName": "ecolemilitaire",
+    "latitude": 48.854891,
+    "longitude": 2.306403,
+    "coords": [
+      2.306403,
+      48.854891
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "la_motte_picquet_grenelle",
+      "la_tour_maubourg"
+    ]
+  },
+  "la_tour_maubourg": {
+    "id": "la_tour_maubourg",
+    "name": "La Tour Maubourg",
+    "normalizedName": "latourmaubourg",
+    "latitude": 48.857725,
+    "longitude": 2.310566,
+    "coords": [
+      2.310566,
+      48.857725
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "ecole_militaire",
+      "invalides"
+    ]
+  },
+  "invalides": {
+    "id": "invalides",
+    "name": "Invalides",
+    "normalizedName": "invalides",
+    "latitude": 48.860028,
+    "longitude": 2.313915,
+    "coords": [
+      2.313915,
+      48.860028
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8",
+      "13"
+    ],
+    "neighbors": [
+      "champs_elysees_clemenceau",
+      "concorde",
+      "la_tour_maubourg",
+      "varenne"
+    ]
+  },
+  "madeleine": {
+    "id": "madeleine",
+    "name": "Madeleine",
+    "normalizedName": "madeleine",
+    "latitude": 48.869633,
+    "longitude": 2.326272,
+    "coords": [
+      2.326272,
+      48.869633
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8",
+      "12",
+      "14"
+    ],
+    "neighbors": [
+      "concorde",
+      "opera",
+      "pyramides",
+      "saint_lazare"
+    ]
+  },
+  "richelieu_drouot": {
+    "id": "richelieu_drouot",
+    "name": "Richelieu-Drouot",
+    "normalizedName": "richelieudrouot",
+    "latitude": 48.871693,
+    "longitude": 2.338463,
+    "coords": [
+      2.338463,
+      48.871693
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8",
+      "9"
+    ],
+    "neighbors": [
+      "chaussee_d_antin_la_fayette",
+      "grands_boulevards",
+      "opera"
+    ]
+  },
+  "grands_boulevards": {
+    "id": "grands_boulevards",
+    "name": "Grands Boulevards",
+    "normalizedName": "grandsboulevards",
+    "latitude": 48.871257,
+    "longitude": 2.344561,
+    "coords": [
+      2.344561,
+      48.871257
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8",
+      "9"
+    ],
+    "neighbors": [
+      "bonne_nouvelle",
+      "richelieu_drouot"
+    ]
+  },
+  "bonne_nouvelle": {
+    "id": "bonne_nouvelle",
+    "name": "Bonne Nouvelle",
+    "normalizedName": "bonnenouvelle",
+    "latitude": 48.87059,
+    "longitude": 2.348491,
+    "coords": [
+      2.348491,
+      48.87059
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8",
+      "9"
+    ],
+    "neighbors": [
+      "grands_boulevards",
+      "strasbourg_saint_denis"
+    ]
+  },
+  "filles_du_calvaire": {
+    "id": "filles_du_calvaire",
+    "name": "Filles du Calvaire",
+    "normalizedName": "fillesducalvaire",
+    "latitude": 48.863258,
+    "longitude": 2.366661,
+    "coords": [
+      2.366661,
+      48.863258
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "republique",
+      "saint_sebastien_froissart"
+    ]
+  },
+  "saint_sebastien_froissart": {
+    "id": "saint_sebastien_froissart",
+    "name": "Saint-Sébastien-Froissart",
+    "normalizedName": "saintsebastienfroissart",
+    "latitude": 48.861169,
+    "longitude": 2.367211,
+    "coords": [
+      2.367211,
+      48.861169
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "chemin_vert",
+      "filles_du_calvaire"
+    ]
+  },
+  "chemin_vert": {
+    "id": "chemin_vert",
+    "name": "Chemin Vert",
+    "normalizedName": "cheminvert",
+    "latitude": 48.857103,
+    "longitude": 2.368184,
+    "coords": [
+      2.368184,
+      48.857103
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "bastille",
+      "saint_sebastien_froissart"
+    ]
+  },
+  "ledru_rollin": {
+    "id": "ledru_rollin",
+    "name": "Ledru Rollin",
+    "normalizedName": "ledrurollin",
+    "latitude": 48.851524,
+    "longitude": 2.375101,
+    "coords": [
+      2.375101,
+      48.851524
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "bastille",
+      "faidherbe_chaligny"
+    ]
+  },
+  "faidherbe_chaligny": {
+    "id": "faidherbe_chaligny",
+    "name": "Faidherbe Chaligny",
+    "normalizedName": "faidherbechaligny",
+    "latitude": 48.850178,
+    "longitude": 2.384092,
+    "coords": [
+      2.384092,
+      48.850178
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "ledru_rollin",
+      "reuilly_diderot"
+    ]
+  },
+  "montgallet": {
+    "id": "montgallet",
+    "name": "Montgallet",
+    "normalizedName": "montgallet",
+    "latitude": 48.844066,
+    "longitude": 2.390482,
+    "coords": [
+      2.390482,
+      48.844066
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "daumesnil",
+      "reuilly_diderot"
+    ]
+  },
+  "michel_bizot": {
+    "id": "michel_bizot",
+    "name": "Michel Bizot",
+    "normalizedName": "michelbizot",
+    "latitude": 48.837117,
+    "longitude": 2.402333,
+    "coords": [
+      2.402333,
+      48.837117
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "daumesnil",
+      "porte_doree"
+    ]
+  },
+  "porte_doree": {
+    "id": "porte_doree",
+    "name": "Porte Dorée",
+    "normalizedName": "portedoree",
+    "latitude": 48.834785,
+    "longitude": 2.405383,
+    "coords": [
+      2.405383,
+      48.834785
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "michel_bizot",
+      "porte_de_charenton"
+    ]
+  },
+  "porte_de_charenton": {
+    "id": "porte_de_charenton",
+    "name": "Porte de Charenton",
+    "normalizedName": "portedecharenton",
+    "latitude": 48.832737,
+    "longitude": 2.40031,
+    "coords": [
+      2.40031,
+      48.832737
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "liberte",
+      "porte_doree"
+    ]
+  },
+  "liberte": {
+    "id": "liberte",
+    "name": "Liberté",
+    "normalizedName": "liberte",
+    "latitude": 48.82662,
+    "longitude": 2.405852,
+    "coords": [
+      2.405852,
+      48.82662
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "charenton_ecoles",
+      "porte_de_charenton"
+    ]
+  },
+  "charenton_ecoles": {
+    "id": "charenton_ecoles",
+    "name": "Charenton-Écoles",
+    "normalizedName": "charentonecoles",
+    "latitude": 48.821898,
+    "longitude": 2.413133,
+    "coords": [
+      2.413133,
+      48.821898
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "ecole_veterinaire_de_maisons_alfort",
+      "liberte"
+    ]
+  },
+  "ecole_veterinaire_de_maisons_alfort": {
+    "id": "ecole_veterinaire_de_maisons_alfort",
+    "name": "École Vétérinaire de Maisons-Alfort",
+    "normalizedName": "ecoleveterinairedemaisonsalfort",
+    "latitude": 48.814803,
+    "longitude": 2.422376,
+    "coords": [
+      2.422376,
+      48.814803
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "charenton_ecoles",
+      "maisons_alfort_stade"
+    ]
+  },
+  "maisons_alfort_stade": {
+    "id": "maisons_alfort_stade",
+    "name": "Maisons-Alfort-Stade",
+    "normalizedName": "maisonsalfortstade",
+    "latitude": 48.809144,
+    "longitude": 2.43451,
+    "coords": [
+      2.43451,
+      48.809144
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "ecole_veterinaire_de_maisons_alfort",
+      "maisons_alfort_les_juilliottes"
+    ]
+  },
+  "maisons_alfort_les_juilliottes": {
+    "id": "maisons_alfort_les_juilliottes",
+    "name": "Maisons-Alfort-Les Juilliottes",
+    "normalizedName": "maisonsalfortlesjuilliottes",
+    "latitude": 48.803355,
+    "longitude": 2.445574,
+    "coords": [
+      2.445574,
+      48.803355
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "creteil_l_echat",
+      "maisons_alfort_stade"
+    ]
+  },
+  "creteil_l_echat": {
+    "id": "creteil_l_echat",
+    "name": "Créteil–L’Échat",
+    "normalizedName": "creteillechat",
+    "latitude": 48.796682,
+    "longitude": 2.449413,
+    "coords": [
+      2.449413,
+      48.796682
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "creteil_universite",
+      "maisons_alfort_les_juilliottes"
+    ]
+  },
+  "creteil_universite": {
+    "id": "creteil_universite",
+    "name": "Créteil-Université",
+    "normalizedName": "creteiluniversite",
+    "latitude": 48.78992,
+    "longitude": 2.450512,
+    "coords": [
+      2.450512,
+      48.78992
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "creteil_l_echat",
+      "creteil_prefecture"
+    ]
+  },
+  "creteil_prefecture": {
+    "id": "creteil_prefecture",
+    "name": "Créteil–Préfecture",
+    "normalizedName": "creteilprefecture",
+    "latitude": 48.780003,
+    "longitude": 2.459363,
+    "coords": [
+      2.459363,
+      48.780003
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "creteil_pointe_du_lac",
+      "creteil_universite"
+    ]
+  },
+  "creteil_pointe_du_lac": {
+    "id": "creteil_pointe_du_lac",
+    "name": "Créteil - Pointe du Lac",
+    "normalizedName": "creteilpointedulac",
+    "latitude": 48.768811,
+    "longitude": 2.46428,
+    "coords": [
+      2.46428,
+      48.768811
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "8"
+    ],
+    "neighbors": [
+      "creteil_prefecture"
+    ]
+  },
+  "pont_de_sevres": {
+    "id": "pont_de_sevres",
+    "name": "Pont de Sèvres",
+    "normalizedName": "pontdesevres",
+    "latitude": 48.829746,
+    "longitude": 2.231028,
+    "coords": [
+      2.231028,
+      48.829746
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "billancourt"
+    ]
+  },
+  "billancourt": {
+    "id": "billancourt",
+    "name": "Billancourt",
+    "normalizedName": "billancourt",
+    "latitude": 48.831738,
+    "longitude": 2.237437,
+    "coords": [
+      2.237437,
+      48.831738
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "marcel_sembat",
+      "pont_de_sevres"
+    ]
+  },
+  "marcel_sembat": {
+    "id": "marcel_sembat",
+    "name": "Marcel Sembat",
+    "normalizedName": "marcelsembat",
+    "latitude": 48.833629,
+    "longitude": 2.243579,
+    "coords": [
+      2.243579,
+      48.833629
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "billancourt",
+      "porte_de_saint_cloud"
+    ]
+  },
+  "porte_de_saint_cloud": {
+    "id": "porte_de_saint_cloud",
+    "name": "Porte de Saint-Cloud",
+    "normalizedName": "portedesaintcloud",
+    "latitude": 48.837961,
+    "longitude": 2.257122,
+    "coords": [
+      2.257122,
+      48.837961
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "exelmans",
+      "marcel_sembat"
+    ]
+  },
+  "exelmans": {
+    "id": "exelmans",
+    "name": "Exelmans",
+    "normalizedName": "exelmans",
+    "latitude": 48.842413,
+    "longitude": 2.259608,
+    "coords": [
+      2.259608,
+      48.842413
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "michel_ange_molitor",
+      "porte_de_saint_cloud"
+    ]
+  },
+  "michel_ange_molitor": {
+    "id": "michel_ange_molitor",
+    "name": "Michel Ange-Molitor",
+    "normalizedName": "michelangemolitor",
+    "latitude": 48.845248,
+    "longitude": 2.261623,
+    "coords": [
+      2.261623,
+      48.845248
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9",
+      "10"
+    ],
+    "neighbors": [
+      "chardon_lagache",
+      "exelmans",
+      "michel_ange_auteuil"
+    ]
+  },
+  "michel_ange_auteuil": {
+    "id": "michel_ange_auteuil",
+    "name": "Michel Ange-Auteuil",
+    "normalizedName": "michelangeauteuil",
+    "latitude": 48.847896,
+    "longitude": 2.264082,
+    "coords": [
+      2.264082,
+      48.847896
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9",
+      "10"
+    ],
+    "neighbors": [
+      "jasmin",
+      "michel_ange_molitor",
+      "porte_d_auteuil"
+    ]
+  },
+  "jasmin": {
+    "id": "jasmin",
+    "name": "Jasmin",
+    "normalizedName": "jasmin",
+    "latitude": 48.852504,
+    "longitude": 2.268177,
+    "coords": [
+      2.268177,
+      48.852504
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "michel_ange_auteuil",
+      "ranelagh"
+    ]
+  },
+  "ranelagh": {
+    "id": "ranelagh",
+    "name": "Ranelagh",
+    "normalizedName": "ranelagh",
+    "latitude": 48.855485,
+    "longitude": 2.270109,
+    "coords": [
+      2.270109,
+      48.855485
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "jasmin",
+      "la_muette"
+    ]
+  },
+  "la_muette": {
+    "id": "la_muette",
+    "name": "La Muette",
+    "normalizedName": "lamuette",
+    "latitude": 48.858046,
+    "longitude": 2.274155,
+    "coords": [
+      2.274155,
+      48.858046
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "ranelagh",
+      "rue_de_la_pompe"
+    ]
+  },
+  "rue_de_la_pompe": {
+    "id": "rue_de_la_pompe",
+    "name": "Rue de la Pompe",
+    "normalizedName": "ruedelapompe",
+    "latitude": 48.86394,
+    "longitude": 2.278442,
+    "coords": [
+      2.278442,
+      48.86394
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "la_muette",
+      "trocadero"
+    ]
+  },
+  "iena": {
+    "id": "iena",
+    "name": "Iéna",
+    "normalizedName": "iena",
+    "latitude": 48.864794,
+    "longitude": 2.294162,
+    "coords": [
+      2.294162,
+      48.864794
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "alma_marceau",
+      "trocadero"
+    ]
+  },
+  "alma_marceau": {
+    "id": "alma_marceau",
+    "name": "Alma-Marceau",
+    "normalizedName": "almamarceau",
+    "latitude": 48.864767,
+    "longitude": 2.300991,
+    "coords": [
+      2.300991,
+      48.864767
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "franklin_d_roosevelt",
+      "iena"
+    ]
+  },
+  "saint_philippe_du_roule": {
+    "id": "saint_philippe_du_roule",
+    "name": "Saint-Philippe du Roule",
+    "normalizedName": "saintphilippeduroule",
+    "latitude": 48.872046,
+    "longitude": 2.310019,
+    "coords": [
+      2.310019,
+      48.872046
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "franklin_d_roosevelt",
+      "miromesnil"
+    ]
+  },
+  "miromesnil": {
+    "id": "miromesnil",
+    "name": "Miromesnil",
+    "normalizedName": "miromesnil",
+    "latitude": 48.87377,
+    "longitude": 2.314456,
+    "coords": [
+      2.314456,
+      48.87377
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9",
+      "13"
+    ],
+    "neighbors": [
+      "champs_elysees_clemenceau",
+      "saint_augustin",
+      "saint_lazare",
+      "saint_philippe_du_roule"
+    ]
+  },
+  "saint_augustin": {
+    "id": "saint_augustin",
+    "name": "Saint-Augustin",
+    "normalizedName": "saintaugustin",
+    "latitude": 48.874476,
+    "longitude": 2.322002,
+    "coords": [
+      2.322002,
+      48.874476
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "havre_caumartin",
+      "miromesnil"
+    ]
+  },
+  "saint_ambroise": {
+    "id": "saint_ambroise",
+    "name": "Saint-Ambroise",
+    "normalizedName": "saintambroise",
+    "latitude": 48.861476,
+    "longitude": 2.373944,
+    "coords": [
+      2.373944,
+      48.861476
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "oberkampf",
+      "voltaire"
+    ]
+  },
+  "voltaire": {
+    "id": "voltaire",
+    "name": "Voltaire",
+    "normalizedName": "voltaire",
+    "latitude": 48.857878,
+    "longitude": 2.380021,
+    "coords": [
+      2.380021,
+      48.857878
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "charonne",
+      "saint_ambroise"
+    ]
+  },
+  "charonne": {
+    "id": "charonne",
+    "name": "Charonne",
+    "normalizedName": "charonne",
+    "latitude": 48.855094,
+    "longitude": 2.3847,
+    "coords": [
+      2.3847,
+      48.855094
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "rue_des_boulets",
+      "voltaire"
+    ]
+  },
+  "rue_des_boulets": {
+    "id": "rue_des_boulets",
+    "name": "Rue des Boulets",
+    "normalizedName": "ruedesboulets",
+    "latitude": 48.852168,
+    "longitude": 2.389626,
+    "coords": [
+      2.389626,
+      48.852168
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "charonne",
+      "nation"
+    ]
+  },
+  "buzenval": {
+    "id": "buzenval",
+    "name": "Buzenval",
+    "normalizedName": "buzenval",
+    "latitude": 48.851975,
+    "longitude": 2.401927,
+    "coords": [
+      2.401927,
+      48.851975
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "maraichers",
+      "nation"
+    ]
+  },
+  "maraichers": {
+    "id": "maraichers",
+    "name": "Maraîchers",
+    "normalizedName": "maraichers",
+    "latitude": 48.852725,
+    "longitude": 2.406089,
+    "coords": [
+      2.406089,
+      48.852725
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "buzenval",
+      "porte_de_montreuil"
+    ]
+  },
+  "porte_de_montreuil": {
+    "id": "porte_de_montreuil",
+    "name": "Porte de Montreuil",
+    "normalizedName": "portedemontreuil",
+    "latitude": 48.853773,
+    "longitude": 2.411895,
+    "coords": [
+      2.411895,
+      48.853773
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "maraichers",
+      "robespierre"
+    ]
+  },
+  "robespierre": {
+    "id": "robespierre",
+    "name": "Robespierre",
+    "normalizedName": "robespierre",
+    "latitude": 48.855726,
+    "longitude": 2.422983,
+    "coords": [
+      2.422983,
+      48.855726
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "croix_de_chavaux",
+      "porte_de_montreuil"
+    ]
+  },
+  "croix_de_chavaux": {
+    "id": "croix_de_chavaux",
+    "name": "Croix de Chavaux",
+    "normalizedName": "croixdechavaux",
+    "latitude": 48.857784,
+    "longitude": 2.434538,
+    "coords": [
+      2.434538,
+      48.857784
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "mairie_de_montreuil",
+      "robespierre"
+    ]
+  },
+  "mairie_de_montreuil": {
+    "id": "mairie_de_montreuil",
+    "name": "Mairie de Montreuil",
+    "normalizedName": "mairiedemontreuil",
+    "latitude": 48.862299,
+    "longitude": 2.441522,
+    "coords": [
+      2.441522,
+      48.862299
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "9"
+    ],
+    "neighbors": [
+      "croix_de_chavaux"
+    ]
+  },
+  "boulogne_pont_de_saint_cloud": {
+    "id": "boulogne_pont_de_saint_cloud",
+    "name": "Boulogne - Pont de Saint-Cloud",
+    "normalizedName": "boulognepontdesaintcloud",
+    "latitude": 48.840745,
+    "longitude": 2.228537,
+    "coords": [
+      2.228537,
+      48.840745
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "boulogne_jean_jaures"
+    ]
+  },
+  "boulogne_jean_jaures": {
+    "id": "boulogne_jean_jaures",
+    "name": "Boulogne - Jean Jaurès",
+    "normalizedName": "boulognejeanjaures",
+    "latitude": 48.842005,
+    "longitude": 2.238887,
+    "coords": [
+      2.238887,
+      48.842005
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "boulogne_pont_de_saint_cloud",
+      "porte_d_auteuil"
+    ]
+  },
+  "porte_d_auteuil": {
+    "id": "porte_d_auteuil",
+    "name": "Porte d'Auteuil",
+    "normalizedName": "portedauteuil",
+    "latitude": 48.847972,
+    "longitude": 2.257745,
+    "coords": [
+      2.257745,
+      48.847972
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "boulogne_jean_jaures",
+      "michel_ange_auteuil"
+    ]
+  },
+  "chardon_lagache": {
+    "id": "chardon_lagache",
+    "name": "Chardon Lagache",
+    "normalizedName": "chardonlagache",
+    "latitude": 48.845205,
+    "longitude": 2.266442,
+    "coords": [
+      2.266442,
+      48.845205
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "michel_ange_molitor",
+      "mirabeau"
+    ]
+  },
+  "mirabeau": {
+    "id": "mirabeau",
+    "name": "Mirabeau",
+    "normalizedName": "mirabeau",
+    "latitude": 48.847131,
+    "longitude": 2.272764,
+    "coords": [
+      2.272764,
+      48.847131
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "chardon_lagache",
+      "eglise_d_auteuil"
+    ]
+  },
+  "eglise_d_auteuil": {
+    "id": "eglise_d_auteuil",
+    "name": "Église d'Auteuil",
+    "normalizedName": "eglisedauteuil",
+    "latitude": 48.84715,
+    "longitude": 2.269136,
+    "coords": [
+      2.269136,
+      48.84715
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "javel_andre_citroen",
+      "mirabeau"
+    ]
+  },
+  "javel_andre_citroen": {
+    "id": "javel_andre_citroen",
+    "name": "Javel - André Citroën",
+    "normalizedName": "javelandrecitroen",
+    "latitude": 48.846157,
+    "longitude": 2.2784,
+    "coords": [
+      2.2784,
+      48.846157
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "charles_michels",
+      "eglise_d_auteuil"
+    ]
+  },
+  "charles_michels": {
+    "id": "charles_michels",
+    "name": "Charles Michels",
+    "normalizedName": "charlesmichels",
+    "latitude": 48.846535,
+    "longitude": 2.285999,
+    "coords": [
+      2.285999,
+      48.846535
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "avenue_emile_zola",
+      "javel_andre_citroen"
+    ]
+  },
+  "avenue_emile_zola": {
+    "id": "avenue_emile_zola",
+    "name": "Avenue Émile Zola",
+    "normalizedName": "avenueemilezola",
+    "latitude": 48.846997,
+    "longitude": 2.295019,
+    "coords": [
+      2.295019,
+      48.846997
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "charles_michels",
+      "la_motte_picquet_grenelle"
+    ]
+  },
+  "segur": {
+    "id": "segur",
+    "name": "Ségur",
+    "normalizedName": "segur",
+    "latitude": 48.847066,
+    "longitude": 2.307402,
+    "coords": [
+      2.307402,
+      48.847066
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "duroc",
+      "la_motte_picquet_grenelle"
+    ]
+  },
+  "duroc": {
+    "id": "duroc",
+    "name": "Duroc",
+    "normalizedName": "duroc",
+    "latitude": 48.846989,
+    "longitude": 2.317005,
+    "coords": [
+      2.317005,
+      48.846989
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10",
+      "13"
+    ],
+    "neighbors": [
+      "montparnasse_bienvenue",
+      "saint_francois_xavier",
+      "segur",
+      "vaneau"
+    ]
+  },
+  "vaneau": {
+    "id": "vaneau",
+    "name": "Vaneau",
+    "normalizedName": "vaneau",
+    "latitude": 48.848816,
+    "longitude": 2.321258,
+    "coords": [
+      2.321258,
+      48.848816
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "duroc",
+      "sevres_babylone"
+    ]
+  },
+  "sevres_babylone": {
+    "id": "sevres_babylone",
+    "name": "Sèvres-Babylone",
+    "normalizedName": "sevresbabylone",
+    "latitude": 48.851032,
+    "longitude": 2.326102,
+    "coords": [
+      2.326102,
+      48.851032
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10",
+      "12"
+    ],
+    "neighbors": [
+      "mabillon",
+      "rennes",
+      "rue_du_bac",
+      "vaneau"
+    ]
+  },
+  "mabillon": {
+    "id": "mabillon",
+    "name": "Mabillon",
+    "normalizedName": "mabillon",
+    "latitude": 48.853017,
+    "longitude": 2.335502,
+    "coords": [
+      2.335502,
+      48.853017
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "odeon",
+      "sevres_babylone"
+    ]
+  },
+  "cluny_la_sorbonne": {
+    "id": "cluny_la_sorbonne",
+    "name": "Cluny-La Sorbonne",
+    "normalizedName": "clunylasorbonne",
+    "latitude": 48.85105,
+    "longitude": 2.344273,
+    "coords": [
+      2.344273,
+      48.85105
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "maubert_mutualite",
+      "odeon"
+    ]
+  },
+  "maubert_mutualite": {
+    "id": "maubert_mutualite",
+    "name": "Maubert-Mutualité",
+    "normalizedName": "maubertmutualite",
+    "latitude": 48.85009,
+    "longitude": 2.348209,
+    "coords": [
+      2.348209,
+      48.85009
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "cardinal_lemoine",
+      "cluny_la_sorbonne"
+    ]
+  },
+  "cardinal_lemoine": {
+    "id": "cardinal_lemoine",
+    "name": "Cardinal Lemoine",
+    "normalizedName": "cardinallemoine",
+    "latitude": 48.846657,
+    "longitude": 2.351623,
+    "coords": [
+      2.351623,
+      48.846657
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "10"
+    ],
+    "neighbors": [
+      "jussieu",
+      "maubert_mutualite"
+    ]
+  },
+  "rambuteau": {
+    "id": "rambuteau",
+    "name": "Rambuteau",
+    "normalizedName": "rambuteau",
+    "latitude": 48.861205,
+    "longitude": 2.353496,
+    "coords": [
+      2.353496,
+      48.861205
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "arts_et_metiers",
+      "hotel_de_ville"
+    ]
+  },
+  "goncourt": {
+    "id": "goncourt",
+    "name": "Goncourt",
+    "normalizedName": "goncourt",
+    "latitude": 48.869958,
+    "longitude": 2.371095,
+    "coords": [
+      2.371095,
+      48.869958
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "belleville",
+      "republique"
+    ]
+  },
+  "pyrenees": {
+    "id": "pyrenees",
+    "name": "Pyrénées",
+    "normalizedName": "pyrenees",
+    "latitude": 48.873882,
+    "longitude": 2.385316,
+    "coords": [
+      2.385316,
+      48.873882
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "belleville",
+      "jourdain"
+    ]
+  },
+  "jourdain": {
+    "id": "jourdain",
+    "name": "Jourdain",
+    "normalizedName": "jourdain",
+    "latitude": 48.875112,
+    "longitude": 2.389415,
+    "coords": [
+      2.389415,
+      48.875112
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "place_des_fetes",
+      "pyrenees"
+    ]
+  },
+  "telegraphe": {
+    "id": "telegraphe",
+    "name": "Télégraphe",
+    "normalizedName": "telegraphe",
+    "latitude": 48.875474,
+    "longitude": 2.398868,
+    "coords": [
+      2.398868,
+      48.875474
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "place_des_fetes",
+      "porte_des_lilas"
+    ]
+  },
+  "mairie_des_lilas": {
+    "id": "mairie_des_lilas",
+    "name": "Mairie des Lilas",
+    "normalizedName": "mairiedeslilas",
+    "latitude": 48.879761,
+    "longitude": 2.41648,
+    "coords": [
+      2.41648,
+      48.879761
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "porte_des_lilas",
+      "serge_gainsbourg"
+    ]
+  },
+  "serge_gainsbourg": {
+    "id": "serge_gainsbourg",
+    "name": "Serge Gainsbourg",
+    "normalizedName": "sergegainsbourg",
+    "latitude": 48.881316,
+    "longitude": 2.427186,
+    "coords": [
+      2.427186,
+      48.881316
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "mairie_des_lilas",
+      "romainville_carnot"
+    ]
+  },
+  "romainville_carnot": {
+    "id": "romainville_carnot",
+    "name": "Romainville - Carnot",
+    "normalizedName": "romainvillecarnot",
+    "latitude": 48.883136,
+    "longitude": 2.440822,
+    "coords": [
+      2.440822,
+      48.883136
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "montreuil_hopital",
+      "serge_gainsbourg"
+    ]
+  },
+  "montreuil_hopital": {
+    "id": "montreuil_hopital",
+    "name": "Montreuil - Hôpital",
+    "normalizedName": "montreuilhopital",
+    "latitude": 48.878337,
+    "longitude": 2.454714,
+    "coords": [
+      2.454714,
+      48.878337
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "la_dhuys",
+      "romainville_carnot"
+    ]
+  },
+  "la_dhuys": {
+    "id": "la_dhuys",
+    "name": "La Dhuys",
+    "normalizedName": "ladhuys",
+    "latitude": 48.877993,
+    "longitude": 2.465472,
+    "coords": [
+      2.465472,
+      48.877993
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "coteaux_beauclair",
+      "montreuil_hopital"
+    ]
+  },
+  "coteaux_beauclair": {
+    "id": "coteaux_beauclair",
+    "name": "Coteaux Beauclair",
+    "normalizedName": "coteauxbeauclair",
+    "latitude": 48.882244,
+    "longitude": 2.467356,
+    "coords": [
+      2.467356,
+      48.882244
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "la_dhuys",
+      "rosny_bois_perrier"
+    ]
+  },
+  "rosny_bois_perrier": {
+    "id": "rosny_bois_perrier",
+    "name": "Rosny-Bois-Perrier",
+    "normalizedName": "rosnyboisperrier",
+    "latitude": 48.882752,
+    "longitude": 2.480511,
+    "coords": [
+      2.480511,
+      48.882752
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "11"
+    ],
+    "neighbors": [
+      "coteaux_beauclair"
+    ]
+  },
+  "mairie_d_aubervilliers": {
+    "id": "mairie_d_aubervilliers",
+    "name": "Mairie d'Aubervilliers",
+    "normalizedName": "mairiedaubervilliers",
+    "latitude": 48.913711,
+    "longitude": 2.380736,
+    "coords": [
+      2.380736,
+      48.913711
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "aime_cesaire"
+    ]
+  },
+  "aime_cesaire": {
+    "id": "aime_cesaire",
+    "name": "Aimé Césaire",
+    "normalizedName": "aimecesaire",
+    "latitude": 48.908082,
+    "longitude": 2.377741,
+    "coords": [
+      2.377741,
+      48.908082
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "front_populaire",
+      "mairie_d_aubervilliers"
+    ]
+  },
+  "front_populaire": {
+    "id": "front_populaire",
+    "name": "Front Populaire",
+    "normalizedName": "frontpopulaire",
+    "latitude": 48.906567,
+    "longitude": 2.36592,
+    "coords": [
+      2.36592,
+      48.906567
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "aime_cesaire",
+      "porte_de_la_chapelle"
+    ]
+  },
+  "porte_de_la_chapelle": {
+    "id": "porte_de_la_chapelle",
+    "name": "Porte de la Chapelle",
+    "normalizedName": "portedelachapelle",
+    "latitude": 48.897245,
+    "longitude": 2.359508,
+    "coords": [
+      2.359508,
+      48.897245
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "front_populaire",
+      "marx_dormoy"
+    ]
+  },
+  "marx_dormoy": {
+    "id": "marx_dormoy",
+    "name": "Marx Dormoy",
+    "normalizedName": "marxdormoy",
+    "latitude": 48.890485,
+    "longitude": 2.359996,
+    "coords": [
+      2.359996,
+      48.890485
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "marcadet_poissonniers",
+      "porte_de_la_chapelle"
+    ]
+  },
+  "jules_joffrin": {
+    "id": "jules_joffrin",
+    "name": "Jules Joffrin",
+    "normalizedName": "julesjoffrin",
+    "latitude": 48.892419,
+    "longitude": 2.344765,
+    "coords": [
+      2.344765,
+      48.892419
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "lamarck_caulaincourt",
+      "marcadet_poissonniers"
+    ]
+  },
+  "lamarck_caulaincourt": {
+    "id": "lamarck_caulaincourt",
+    "name": "Lamarck-Caulaincourt",
+    "normalizedName": "lamarckcaulaincourt",
+    "latitude": 48.889674,
+    "longitude": 2.338761,
+    "coords": [
+      2.338761,
+      48.889674
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "abbesses",
+      "jules_joffrin"
+    ]
+  },
+  "abbesses": {
+    "id": "abbesses",
+    "name": "Abbesses",
+    "normalizedName": "abbesses",
+    "latitude": 48.884594,
+    "longitude": 2.33795,
+    "coords": [
+      2.33795,
+      48.884594
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "lamarck_caulaincourt",
+      "pigalle"
+    ]
+  },
+  "saint_georges": {
+    "id": "saint_georges",
+    "name": "Saint-Georges",
+    "normalizedName": "saintgeorges",
+    "latitude": 48.878173,
+    "longitude": 2.337858,
+    "coords": [
+      2.337858,
+      48.878173
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "notre_dame_de_lorette",
+      "pigalle"
+    ]
+  },
+  "notre_dame_de_lorette": {
+    "id": "notre_dame_de_lorette",
+    "name": "Notre-Dame-de-Lorette",
+    "normalizedName": "notredamedelorette",
+    "latitude": 48.876047,
+    "longitude": 2.337496,
+    "coords": [
+      2.337496,
+      48.876047
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "saint_georges",
+      "trinite_d_estienne_d_orves"
+    ]
+  },
+  "trinite_d_estienne_d_orves": {
+    "id": "trinite_d_estienne_d_orves",
+    "name": "Trinité d'Estienne d'Orves",
+    "normalizedName": "trinitedestiennedorves",
+    "latitude": 48.87633,
+    "longitude": 2.333109,
+    "coords": [
+      2.333109,
+      48.87633
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "notre_dame_de_lorette",
+      "saint_lazare"
+    ]
+  },
+  "assemblee_nationale": {
+    "id": "assemblee_nationale",
+    "name": "Assemblée Nationale",
+    "normalizedName": "assembleenationale",
+    "latitude": 48.860787,
+    "longitude": 2.320998,
+    "coords": [
+      2.320998,
+      48.860787
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "concorde",
+      "solferino"
+    ]
+  },
+  "solferino": {
+    "id": "solferino",
+    "name": "Solférino",
+    "normalizedName": "solferino",
+    "latitude": 48.858499,
+    "longitude": 2.323168,
+    "coords": [
+      2.323168,
+      48.858499
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "assemblee_nationale",
+      "rue_du_bac"
+    ]
+  },
+  "rue_du_bac": {
+    "id": "rue_du_bac",
+    "name": "Rue du Bac",
+    "normalizedName": "ruedubac",
+    "latitude": 48.855196,
+    "longitude": 2.325816,
+    "coords": [
+      2.325816,
+      48.855196
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "sevres_babylone",
+      "solferino"
+    ]
+  },
+  "rennes": {
+    "id": "rennes",
+    "name": "Rennes",
+    "normalizedName": "rennes",
+    "latitude": 48.848458,
+    "longitude": 2.327782,
+    "coords": [
+      2.327782,
+      48.848458
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "notre_dame_des_champs",
+      "sevres_babylone"
+    ]
+  },
+  "notre_dame_des_champs": {
+    "id": "notre_dame_des_champs",
+    "name": "Notre-Dame-des-Champs",
+    "normalizedName": "notredamedeschamps",
+    "latitude": 48.844943,
+    "longitude": 2.328778,
+    "coords": [
+      2.328778,
+      48.844943
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "montparnasse_bienvenue",
+      "rennes"
+    ]
+  },
+  "falguiere": {
+    "id": "falguiere",
+    "name": "Falguière",
+    "normalizedName": "falguiere",
+    "latitude": 48.84447,
+    "longitude": 2.317853,
+    "coords": [
+      2.317853,
+      48.84447
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "montparnasse_bienvenue",
+      "pasteur"
+    ]
+  },
+  "volontaires": {
+    "id": "volontaires",
+    "name": "Volontaires",
+    "normalizedName": "volontaires",
+    "latitude": 48.841506,
+    "longitude": 2.307949,
+    "coords": [
+      2.307949,
+      48.841506
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "pasteur",
+      "vaugirard"
+    ]
+  },
+  "vaugirard": {
+    "id": "vaugirard",
+    "name": "Vaugirard",
+    "normalizedName": "vaugirard",
+    "latitude": 48.839517,
+    "longitude": 2.301108,
+    "coords": [
+      2.301108,
+      48.839517
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "convention",
+      "volontaires"
+    ]
+  },
+  "convention": {
+    "id": "convention",
+    "name": "Convention",
+    "normalizedName": "convention",
+    "latitude": 48.837099,
+    "longitude": 2.296231,
+    "coords": [
+      2.296231,
+      48.837099
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "porte_de_versailles",
+      "vaugirard"
+    ]
+  },
+  "porte_de_versailles": {
+    "id": "porte_de_versailles",
+    "name": "Porte de Versailles",
+    "normalizedName": "portedeversailles",
+    "latitude": 48.832449,
+    "longitude": 2.288022,
+    "coords": [
+      2.288022,
+      48.832449
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "convention",
+      "corentin_celton"
+    ]
+  },
+  "corentin_celton": {
+    "id": "corentin_celton",
+    "name": "Corentin Celton",
+    "normalizedName": "corentincelton",
+    "latitude": 48.827085,
+    "longitude": 2.279412,
+    "coords": [
+      2.279412,
+      48.827085
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "mairie_d_issy",
+      "porte_de_versailles"
+    ]
+  },
+  "mairie_d_issy": {
+    "id": "mairie_d_issy",
+    "name": "Mairie d'Issy",
+    "normalizedName": "mairiedissy",
+    "latitude": 48.824309,
+    "longitude": 2.273666,
+    "coords": [
+      2.273666,
+      48.824309
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "12"
+    ],
+    "neighbors": [
+      "corentin_celton"
+    ]
+  },
+  "les_courtilles": {
+    "id": "les_courtilles",
+    "name": "Les Courtilles",
+    "normalizedName": "lescourtilles",
+    "latitude": 48.930757,
+    "longitude": 2.284174,
+    "coords": [
+      2.284174,
+      48.930757
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "les_agnettes"
+    ]
+  },
+  "les_agnettes": {
+    "id": "les_agnettes",
+    "name": "Les Agnettes",
+    "normalizedName": "lesagnettes",
+    "latitude": 48.923104,
+    "longitude": 2.28628,
+    "coords": [
+      2.28628,
+      48.923104
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "gabriel_peri",
+      "les_courtilles"
+    ]
+  },
+  "gabriel_peri": {
+    "id": "gabriel_peri",
+    "name": "Gabriel Péri",
+    "normalizedName": "gabrielperi",
+    "latitude": 48.916382,
+    "longitude": 2.294685,
+    "coords": [
+      2.294685,
+      48.916382
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "les_agnettes",
+      "mairie_de_clichy"
+    ]
+  },
+  "mairie_de_clichy": {
+    "id": "mairie_de_clichy",
+    "name": "Mairie de Clichy",
+    "normalizedName": "mairiedeclichy",
+    "latitude": 48.903234,
+    "longitude": 2.306011,
+    "coords": [
+      2.306011,
+      48.903234
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "gabriel_peri",
+      "porte_de_clichy"
+    ]
+  },
+  "porte_de_clichy": {
+    "id": "porte_de_clichy",
+    "name": "Porte de Clichy",
+    "normalizedName": "portedeclichy",
+    "latitude": 48.894981,
+    "longitude": 2.312792,
+    "coords": [
+      2.312792,
+      48.894981
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13",
+      "14"
+    ],
+    "neighbors": [
+      "brochant",
+      "mairie_de_clichy",
+      "pont_cardinet",
+      "saint_ouen"
+    ]
+  },
+  "brochant": {
+    "id": "brochant",
+    "name": "Brochant",
+    "normalizedName": "brochant",
+    "latitude": 48.890587,
+    "longitude": 2.320175,
+    "coords": [
+      2.320175,
+      48.890587
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "la_fourche",
+      "porte_de_clichy"
+    ]
+  },
+  "saint_denis_universite": {
+    "id": "saint_denis_universite",
+    "name": "Saint-Denis - Université",
+    "normalizedName": "saintdenisuniversite",
+    "latitude": 48.945867,
+    "longitude": 2.364636,
+    "coords": [
+      2.364636,
+      48.945867
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "basilique_de_saint_denis"
+    ]
+  },
+  "basilique_de_saint_denis": {
+    "id": "basilique_de_saint_denis",
+    "name": "Basilique de Saint-Denis",
+    "normalizedName": "basiliquedesaintdenis",
+    "latitude": 48.936777,
+    "longitude": 2.359366,
+    "coords": [
+      2.359366,
+      48.936777
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "saint_denis_porte_de_paris",
+      "saint_denis_universite"
+    ]
+  },
+  "saint_denis_porte_de_paris": {
+    "id": "saint_denis_porte_de_paris",
+    "name": "Saint-Denis - Porte de Paris",
+    "normalizedName": "saintdenisportedeparis",
+    "latitude": 48.929936,
+    "longitude": 2.356036,
+    "coords": [
+      2.356036,
+      48.929936
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "basilique_de_saint_denis",
+      "carrefour_pleyel"
+    ]
+  },
+  "carrefour_pleyel": {
+    "id": "carrefour_pleyel",
+    "name": "Carrefour Pleyel",
+    "normalizedName": "carrefourpleyel",
+    "latitude": 48.919008,
+    "longitude": 2.342608,
+    "coords": [
+      2.342608,
+      48.919008
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "mairie_de_saint_ouen",
+      "saint_denis_porte_de_paris"
+    ]
+  },
+  "mairie_de_saint_ouen": {
+    "id": "mairie_de_saint_ouen",
+    "name": "Mairie de Saint-Ouen",
+    "normalizedName": "mairiedesaintouen",
+    "latitude": 48.913202,
+    "longitude": 2.334663,
+    "coords": [
+      2.334663,
+      48.913202
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13",
+      "14"
+    ],
+    "neighbors": [
+      "carrefour_pleyel",
+      "garibaldi",
+      "saint_denis_pleyel",
+      "saint_ouen"
+    ]
+  },
+  "garibaldi": {
+    "id": "garibaldi",
+    "name": "Garibaldi",
+    "normalizedName": "garibaldi",
+    "latitude": 48.906094,
+    "longitude": 2.331831,
+    "coords": [
+      2.331831,
+      48.906094
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "mairie_de_saint_ouen",
+      "porte_de_saint_ouen"
+    ]
+  },
+  "porte_de_saint_ouen": {
+    "id": "porte_de_saint_ouen",
+    "name": "Porte de Saint-Ouen",
+    "normalizedName": "portedesaintouen",
+    "latitude": 48.897375,
+    "longitude": 2.328943,
+    "coords": [
+      2.328943,
+      48.897375
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "garibaldi",
+      "guy_moquet"
+    ]
+  },
+  "guy_moquet": {
+    "id": "guy_moquet",
+    "name": "Guy Môquet",
+    "normalizedName": "guymoquet",
+    "latitude": 48.892207,
+    "longitude": 2.32722,
+    "coords": [
+      2.32722,
+      48.892207
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "la_fourche",
+      "porte_de_saint_ouen"
+    ]
+  },
+  "la_fourche": {
+    "id": "la_fourche",
+    "name": "La Fourche",
+    "normalizedName": "lafourche",
+    "latitude": 48.887184,
+    "longitude": 2.32578,
+    "coords": [
+      2.32578,
+      48.887184
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "brochant",
+      "guy_moquet",
+      "place_de_clichy"
+    ]
+  },
+  "liege": {
+    "id": "liege",
+    "name": "Liège",
+    "normalizedName": "liege",
+    "latitude": 48.879635,
+    "longitude": 2.327022,
+    "coords": [
+      2.327022,
+      48.879635
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "place_de_clichy",
+      "saint_lazare"
+    ]
+  },
+  "varenne": {
+    "id": "varenne",
+    "name": "Varenne",
+    "normalizedName": "varenne",
+    "latitude": 48.856871,
+    "longitude": 2.315057,
+    "coords": [
+      2.315057,
+      48.856871
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "invalides",
+      "saint_francois_xavier"
+    ]
+  },
+  "saint_francois_xavier": {
+    "id": "saint_francois_xavier",
+    "name": "Saint-François-Xavier",
+    "normalizedName": "saintfrancoisxavier",
+    "latitude": 48.851442,
+    "longitude": 2.314408,
+    "coords": [
+      2.314408,
+      48.851442
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "duroc",
+      "varenne"
+    ]
+  },
+  "gaite": {
+    "id": "gaite",
+    "name": "Gaîté",
+    "normalizedName": "gaite",
+    "latitude": 48.838632,
+    "longitude": 2.322492,
+    "coords": [
+      2.322492,
+      48.838632
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "montparnasse_bienvenue",
+      "pernety"
+    ]
+  },
+  "pernety": {
+    "id": "pernety",
+    "name": "Pernety",
+    "normalizedName": "pernety",
+    "latitude": 48.834226,
+    "longitude": 2.318616,
+    "coords": [
+      2.318616,
+      48.834226
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "gaite",
+      "plaisance"
+    ]
+  },
+  "plaisance": {
+    "id": "plaisance",
+    "name": "Plaisance",
+    "normalizedName": "plaisance",
+    "latitude": 48.831826,
+    "longitude": 2.314122,
+    "coords": [
+      2.314122,
+      48.831826
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "pernety",
+      "porte_de_vanves"
+    ]
+  },
+  "porte_de_vanves": {
+    "id": "porte_de_vanves",
+    "name": "Porte de Vanves",
+    "normalizedName": "portedevanves",
+    "latitude": 48.827796,
+    "longitude": 2.305535,
+    "coords": [
+      2.305535,
+      48.827796
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "malakoff_plateau_de_vanves",
+      "plaisance"
+    ]
+  },
+  "malakoff_plateau_de_vanves": {
+    "id": "malakoff_plateau_de_vanves",
+    "name": "Malakoff - Plateau de Vanves",
+    "normalizedName": "malakoffplateaudevanves",
+    "latitude": 48.822584,
+    "longitude": 2.298464,
+    "coords": [
+      2.298464,
+      48.822584
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "malakoff_rue_etienne_dolet",
+      "porte_de_vanves"
+    ]
+  },
+  "malakoff_rue_etienne_dolet": {
+    "id": "malakoff_rue_etienne_dolet",
+    "name": "Malakoff - Rue Étienne Dolet",
+    "normalizedName": "malakoffrueetiennedolet",
+    "latitude": 48.815308,
+    "longitude": 2.297078,
+    "coords": [
+      2.297078,
+      48.815308
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "chatillon_montrouge",
+      "malakoff_plateau_de_vanves"
+    ]
+  },
+  "chatillon_montrouge": {
+    "id": "chatillon_montrouge",
+    "name": "Châtillon-Montrouge",
+    "normalizedName": "chatillonmontrouge",
+    "latitude": 48.810746,
+    "longitude": 2.301679,
+    "coords": [
+      2.301679,
+      48.810746
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "13"
+    ],
+    "neighbors": [
+      "malakoff_rue_etienne_dolet"
+    ]
+  },
+  "saint_denis_pleyel": {
+    "id": "saint_denis_pleyel",
+    "name": "Saint-Denis Pleyel",
+    "normalizedName": "saintdenispleyel",
+    "latitude": 48.917469,
+    "longitude": 2.346545,
+    "coords": [
+      2.346545,
+      48.917469
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "mairie_de_saint_ouen"
+    ]
+  },
+  "saint_ouen": {
+    "id": "saint_ouen",
+    "name": "Saint-Ouen",
+    "normalizedName": "saintouen",
+    "latitude": 48.904496,
+    "longitude": 2.321744,
+    "coords": [
+      2.321744,
+      48.904496
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "mairie_de_saint_ouen",
+      "porte_de_clichy"
+    ]
+  },
+  "pont_cardinet": {
+    "id": "pont_cardinet",
+    "name": "Pont Cardinet",
+    "normalizedName": "pontcardinet",
+    "latitude": 48.889561,
+    "longitude": 2.315177,
+    "coords": [
+      2.315177,
+      48.889561
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "porte_de_clichy",
+      "saint_lazare"
+    ]
+  },
+  "cour_saint_emilion": {
+    "id": "cour_saint_emilion",
+    "name": "Cour Saint-Émilion",
+    "normalizedName": "coursaintemilion",
+    "latitude": 48.833339,
+    "longitude": 2.386632,
+    "coords": [
+      2.386632,
+      48.833339
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "bercy",
+      "bibliotheque_francois_mitterrand"
+    ]
+  },
+  "bibliotheque_francois_mitterrand": {
+    "id": "bibliotheque_francois_mitterrand",
+    "name": "Bibliothèque François Mitterrand",
+    "normalizedName": "bibliothequefrancoismitterrand",
+    "latitude": 48.829907,
+    "longitude": 2.376666,
+    "coords": [
+      2.376666,
+      48.829907
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "cour_saint_emilion",
+      "olympiades"
+    ]
+  },
+  "olympiades": {
+    "id": "olympiades",
+    "name": "Olympiades",
+    "normalizedName": "olympiades",
+    "latitude": 48.827164,
+    "longitude": 2.367173,
+    "coords": [
+      2.367173,
+      48.827164
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "bibliotheque_francois_mitterrand",
+      "maison_blanche"
+    ]
+  },
+  "hopital_bicetre": {
+    "id": "hopital_bicetre",
+    "name": "Hôpital Bicêtre​",
+    "normalizedName": "hopitalbicetre",
+    "latitude": 48.80981,
+    "longitude": 2.34975,
+    "coords": [
+      2.34975,
+      48.80981
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "maison_blanche",
+      "villejuif_gustave_roussy"
+    ]
+  },
+  "villejuif_gustave_roussy": {
+    "id": "villejuif_gustave_roussy",
+    "name": "Villejuif - Gustave Roussy​",
+    "normalizedName": "villejuifgustaveroussy",
+    "latitude": 48.793055,
+    "longitude": 2.349365,
+    "coords": [
+      2.349365,
+      48.793055
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "hopital_bicetre",
+      "l_hay_les_roses"
+    ]
+  },
+  "l_hay_les_roses": {
+    "id": "l_hay_les_roses",
+    "name": "L’Haÿ-les-Roses​",
+    "normalizedName": "lhaylesroses",
+    "latitude": 48.775314,
+    "longitude": 2.354365,
+    "coords": [
+      2.354365,
+      48.775314
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "chevilly_larue",
+      "villejuif_gustave_roussy"
+    ]
+  },
+  "chevilly_larue": {
+    "id": "chevilly_larue",
+    "name": "Chevilly-Larue",
+    "normalizedName": "chevillylarue",
+    "latitude": 48.75955,
+    "longitude": 2.366485,
+    "coords": [
+      2.366485,
+      48.75955
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "l_hay_les_roses",
+      "thiais_orly"
+    ]
+  },
+  "thiais_orly": {
+    "id": "thiais_orly",
+    "name": "Thiais - Orly",
+    "normalizedName": "thiaisorly",
+    "latitude": 48.746979,
+    "longitude": 2.37284,
+    "coords": [
+      2.37284,
+      48.746979
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "aeroport_d_orly",
+      "chevilly_larue"
+    ]
+  },
+  "aeroport_d_orly": {
+    "id": "aeroport_d_orly",
+    "name": "Aéroport d’Orly​",
+    "normalizedName": "aeroportdorly",
+    "latitude": 48.728083,
+    "longitude": 2.362591,
+    "coords": [
+      2.362591,
+      48.728083
+    ],
+    "continentOrRegion": "Île-de-France",
+    "capitalOrChefLieu": "Paris",
+    "lines": [
+      "14"
+    ],
+    "neighbors": [
+      "thiais_orly"
+    ]
+  }
+}

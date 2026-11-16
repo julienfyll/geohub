@@ -1,4 +1,4 @@
-export type BorderPathPack = "monde" | "europe" | "france_departements" | "ameriques" | "afrique";
+export type BorderPathPack = "monde" | "europe" | "france_departements" | "ameriques" | "afrique" | "metro_paris";
 
 export type BorderPathMode = "daily" | "free" | "rush";
 

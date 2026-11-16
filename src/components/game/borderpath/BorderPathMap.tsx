@@ -45,6 +45,7 @@ export const PACK_CENTERS: Record<
   ameriques: { center: [-75.0, 10.0], zoom: 2.5, maxZoom: 5.5 },
   afrique: { center: [18.0, 2.0], zoom: 3.0, maxZoom: 5.5 },
   monde: { center: [20.0, 25.0], zoom: 2.2, maxZoom: 5.5 },
+  metro_paris: { center: [2.3488, 48.8534], zoom: 12.0, maxZoom: 16.5 },
 };
 
 export const PACK_BOUNDS: Record<BorderPathPack, [[number, number], [number, number]]> = {
@@ -67,6 +68,10 @@ export const PACK_BOUNDS: Record<BorderPathPack, [[number, number], [number, num
   monde: [
     [-130.0, -50.0],
     [150.0, 70.0],
+  ],
+  metro_paris: [
+    [2.18, 48.72],
+    [2.52, 48.96],
   ],
 };
 

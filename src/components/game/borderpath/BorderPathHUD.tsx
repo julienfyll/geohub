@@ -52,23 +52,24 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
     france_departements: { name: "France — 96 Départements", shortName: "France Dép.", icon: "🇫🇷" },
     ameriques: { name: "Amériques", shortName: "Amériques", icon: "🌎" },
     afrique: { name: "Afrique", shortName: "Afrique", icon: "🌍" },
+    metro_paris: { name: "Métro de Paris", shortName: "Métro Paris", icon: "🚇" },
   };
 
   const currentPackMeta = packMetaMap[pack] || packMetaMap.monde;
 
   return (
     <header className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-4 h-14 bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 shadow-md">
-      {/* Left: QuickMenuDrawer + Back to Hub + Game Branding */}
+      {/* Left: QuickMenuDrawer + Back to Lobby + Game Branding */}
       <div className="flex items-center gap-2 shrink-0">
         <QuickMenuDrawer />
 
         <Link
           href="/play/borderpath"
-          className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
           title="Retour au Lobby de sélection BorderPath"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Lobby</span>
+          <span className="hidden sm:inline">Lobby</span>
         </Link>
 
         <div className="flex items-center gap-2">
