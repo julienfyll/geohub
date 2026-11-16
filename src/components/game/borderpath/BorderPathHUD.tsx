@@ -52,6 +52,7 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
     france_departements: { name: "France — 96 Départements", shortName: "France Dép.", icon: "🇫🇷" },
     ameriques: { name: "Amériques", shortName: "Amériques", icon: "🌎" },
     afrique: { name: "Afrique", shortName: "Afrique", icon: "🌍" },
+    metro_paris: { name: "Métro de Paris", shortName: "Métro Paris", icon: "🚇" },
   };
 
   const currentPackMeta = packMetaMap[pack] || packMetaMap.monde;

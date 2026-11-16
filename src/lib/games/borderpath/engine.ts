@@ -9,9 +9,11 @@ import {
 } from "./types";
 import worldBordersData from "./data/world_borders.json";
 import franceBordersData from "./data/france_borders.json";
+import metroParisData from "./data/metro_paris.json";
 
 const worldGraph = worldBordersData as BorderPathGraph;
 const franceGraph = franceBordersData as BorderPathGraph;
+const metroParisGraph = metroParisData as BorderPathGraph;
 
 /**
  * Normalizes text for search (lowercased, accents removed, trimmed)
@@ -53,6 +55,10 @@ export function createRng(seedInt: number) {
  * Returns the relevant subgraph for the requested pack
  */
 export function getPackGraph(pack: BorderPathPack): BorderPathGraph {
+  if (pack === "metro_paris") {
+    return metroParisGraph;
+  }
+
   if (pack === "france_departements") {
     return franceGraph;
   }

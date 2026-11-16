@@ -40,6 +40,7 @@ import { BorderPathSummaryModal } from "@/components/game/borderpath/BorderPathS
 import { BorderPathRulesModal } from "@/components/game/borderpath/BorderPathRulesModal";
 import { BorderPathPackModal } from "@/components/game/borderpath/BorderPathPackModal";
 import { BorderPathSettingsModal } from "@/components/game/borderpath/BorderPathSettingsModal";
+import { BorderPathMetroActiveGame } from "@/components/game/borderpath/metro/BorderPathMetroActiveGame";
 import { RestartConfirmModal } from "@/components/game/RestartConfirmModal";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
@@ -92,6 +93,14 @@ const BORDERPATH_PACKS: {
     icon: "🌍",
     countLabel: "54 pays africains",
     description: "Traversez le Sahara, le Sahel et l'Afrique australe de frontière en frontière.",
+  },
+  {
+    id: "metro_paris",
+    name: "Métro de Paris",
+    badge: "16 lignes",
+    icon: "🚇",
+    countLabel: "16 lignes • 321 stations",
+    description: "Naviguez d'une station à une autre à travers le réseau RATP et ses correspondances.",
   },
 ];
 
@@ -183,7 +192,7 @@ function BorderPathLobby({
             <span className="text-[11px] text-slate-400 font-mono">Tirages uniques du jour</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-1">
             {/* Monde */}
             <button
               type="button"
@@ -258,6 +267,31 @@ function BorderPathLobby({
                 </span>
               </div>
             </button>
+
+            {/* Métro Paris */}
+            <button
+              type="button"
+              onClick={() => onStartGame("metro_paris", "daily")}
+              className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-cyan-500/60 transition-all group flex flex-col justify-between text-left cursor-pointer shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+            >
+              <div>
+                <span className="text-xs font-bold text-white block group-hover:text-cyan-300">
+                  🚇 Métro de Paris
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  16 lignes • 321 stations
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-sm">
+                  <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+                  <span>Nouveau</span>
+                </span>
+                <span className="text-xs font-bold text-cyan-400 group-hover:translate-x-0.5 transition-transform">
+                  Jouer →
+                </span>
+              </div>
+            </button>
           </div>
         </section>
 
@@ -281,7 +315,7 @@ function BorderPathLobby({
             <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
               Déclinaison / Terrain
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
               {BORDERPATH_PACKS.map((p) => {
                 const isSelected = selectedPack === p.id;
                 return (
@@ -758,6 +792,21 @@ function BorderPathGame() {
           onToggleHideBorders={() => setHideBorders((prev) => !prev)}
         />
       </>
+    );
+  }
+
+  if (pack === "metro_paris") {
+    return (
+      <BorderPathMetroActiveGame
+        key={`game-metro-${mode}-${rawSeed || "session"}`}
+        pack={pack}
+        mode={mode}
+        seed={rawSeed || "metro_daily"}
+        theme={theme}
+        setTheme={setTheme}
+        hideBorders={hideBorders}
+        setHideBorders={setHideBorders}
+      />
     );
   }
 
