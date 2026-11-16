@@ -19,6 +19,7 @@ import {
   METRO_LINES_MAP,
   generateMetroChallenge,
   validateMetroHop,
+  getLineSegment,
 } from "@/lib/games/borderpath/metroEngine";
 import { BASEMAP_STYLES } from "../BorderPathMap";
 import { MetroLineDrawer } from "./MetroLineDrawer";
@@ -31,6 +32,8 @@ import {
   Train,
   Compass,
   RotateCcw,
+  Sparkles,
+  ChevronDown,
 } from "lucide-react";
 import metroTopologyData from "@/../public/data/geo/metro_paris_topology.json";
 
@@ -114,6 +117,82 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return (R * c).toFixed(1);
   }, [currentStation, targetStation]);
+
+  // Solution Reveal State
+  const [showOptimalSolution, setShowOptimalSolution] = useState(false);
+  const [optimalTab, setOptimalTab] = useState<"lines" | "stations">("lines");
+
+  // Helper to compute optimal hops (min lines)
+  const optimalHops = useMemo(() => {
+    if (!optimal || !optimal.linesUsed || !optimal.stationHops) return [];
+    const res: { lineId: string; fromId: string; toId: string; stationsCount: number }[] = [];
+    for (let i = 0; i < optimal.linesUsed.length; i++) {
+      const lineId = optimal.linesUsed[i];
+      const fromId = optimal.stationHops[i];
+      const toId = optimal.stationHops[i + 1];
+      if (!lineId || !fromId || !toId) continue;
+      const seg = getLineSegment(lineId, fromId, toId);
+      res.push({
+        lineId,
+        fromId,
+        toId,
+        stationsCount: seg ? Math.max(1, seg.length - 1) : 1,
+      });
+    }
+    return res;
+  }, [optimal]);
+
+  // Helper to compute shortest physical stations hops
+  const shortestStationsHops = useMemo(() => {
+    if (!optimal || !optimal.physicalStationPath || optimal.physicalStationPath.length < 2) return [];
+    const path = optimal.physicalStationPath;
+    const res: { lineId: string; fromId: string; toId: string; stationsCount: number }[] = [];
+    let currLine: string | null = null;
+    let segStart = path[0];
+    let segCount = 0;
+
+    for (let i = 0; i < path.length - 1; i++) {
+      const u = path[i];
+      const v = path[i + 1];
+      const stU = METRO_STATIONS_MAP[u];
+      const stV = METRO_STATIONS_MAP[v];
+      if (!stU || !stV) continue;
+      const common = stU.lines.filter((l) => stV.lines.includes(l));
+      let nextLine = common[0];
+      if (currLine && common.includes(currLine)) {
+        nextLine = currLine;
+      }
+      if (!currLine) {
+        currLine = nextLine;
+        segStart = u;
+        segCount = 1;
+      } else if (currLine === nextLine) {
+        segCount++;
+      } else {
+        res.push({ lineId: currLine, fromId: segStart, toId: u, stationsCount: segCount });
+        currLine = nextLine;
+        segStart = u;
+        segCount = 1;
+      }
+    }
+    if (currLine && segStart) {
+      res.push({ lineId: currLine, fromId: segStart, toId: path[path.length - 1], stationsCount: segCount });
+    }
+    return res;
+  }, [optimal]);
+
+  const minLinesTotalStations = useMemo(() => {
+    return optimalHops.reduce((sum, h) => sum + h.stationsCount, 0);
+  }, [optimalHops]);
+
+  const hasDifferentPhysicalShortest = useMemo(() => {
+    return optimal.minPhysicalStations > 0 && optimal.minPhysicalStations < minLinesTotalStations;
+  }, [optimal.minPhysicalStations, minLinesTotalStations]);
+
+  const displayedOptimalHops =
+    optimalTab === "stations" && hasDifferentPhysicalShortest
+      ? shortestStationsHops
+      : optimalHops;
 
   // Build GeoJSON features for the entire phantom network
   const phantomNetworkGeoJSON = useMemo(() => {
@@ -573,7 +652,11 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
         onChangeMode={(newMode) => {
           router.push(`/play/borderpath?pack=metro_paris&mode=${newMode}&play=1`);
         }}
-        onGiveUp={() => {}}
+        onGiveUp={() => {
+          setIsComplete(true);
+          setShowVictoryModal(true);
+          setShowOptimalSolution(true);
+        }}
         onRestart={() => setShowRestartModal(true)}
       />
 
@@ -703,24 +786,37 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
         onSelectDestination={handleSelectDestination}
       />
 
-      {/* Victory Summary Modal */}
+      {/* Victory / Summary Modal */}
       {showVictoryModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-md bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col items-center text-center gap-5 text-white">
+          <div className="relative w-full max-w-md bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col items-center text-center gap-5 text-white max-h-[92vh] overflow-y-auto">
             <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border-2 border-amber-500/40 flex items-center justify-center text-3xl shadow-xl shadow-amber-500/10 animate-bounce">
-              🚇
+              {currentStationId === targetStation.id ? "🚇" : "🏳️"}
             </div>
 
             <div>
               <span className="text-xs font-black uppercase tracking-widest text-amber-400">
-                Terminus, tout le monde descend !
+                {currentStationId === targetStation.id
+                  ? "Terminus, tout le monde descend !"
+                  : "Mission interrompue"}
               </span>
               <h2 className="text-2xl font-black text-white mt-1">
-                Liaison Métropolitaine Réussie
+                {currentStationId === targetStation.id
+                  ? "Liaison Métropolitaine Réussie"
+                  : "Abandon du Défi Métro"}
               </h2>
               <p className="text-xs text-slate-400 mt-1">
-                Vous avez relié <strong className="text-white">{startStation.name}</strong> à{" "}
-                <strong className="text-white">{targetStation.name}</strong>.
+                {currentStationId === targetStation.id ? (
+                  <>
+                    Vous avez relié <strong className="text-white">{startStation.name}</strong> à{" "}
+                    <strong className="text-white">{targetStation.name}</strong>.
+                  </>
+                ) : (
+                  <>
+                    Liaison inachevée entre <strong className="text-white">{startStation.name}</strong> et{" "}
+                    <strong className="text-white">{targetStation.name}</strong>.
+                  </>
+                )}
               </p>
             </div>
 
@@ -746,6 +842,104 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
                 </div>
               </div>
             </div>
+
+            {/* Bouton Révéler la solution optimale (au-dessus de Votre itinéraire) */}
+            <div className="w-full">
+              <button
+                type="button"
+                onClick={() => setShowOptimalSolution((prev) => !prev)}
+                className="w-full py-2.5 px-4 rounded-2xl bg-cyan-950/50 hover:bg-cyan-900/60 border border-cyan-500/50 hover:border-cyan-400 text-cyan-300 hover:text-white font-extrabold text-xs flex items-center justify-between transition-all cursor-pointer shadow-lg shadow-cyan-950/40 group"
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+                  <span>
+                    {showOptimalSolution
+                      ? "Masquer la solution optimale"
+                      : "Révéler la solution optimale"}
+                  </span>
+                </div>
+                <ChevronDown
+                  className={`w-4 h-4 text-cyan-400 transition-transform duration-200 ${
+                    showOptimalSolution ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* Compartiment de la solution optimale révélée */}
+            {showOptimalSolution && (
+              <div className="w-full text-left space-y-2 p-3.5 rounded-2xl bg-slate-950/90 border border-cyan-500/40 shadow-inner animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <span className="text-[11px] font-black uppercase tracking-wider text-cyan-300">
+                      Solution optimale
+                    </span>
+                  </div>
+
+                  {hasDifferentPhysicalShortest && (
+                    <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-[10px]">
+                      <button
+                        type="button"
+                        onClick={() => setOptimalTab("lines")}
+                        className={`px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer ${
+                          optimalTab === "lines"
+                            ? "bg-cyan-600 text-white shadow-xs"
+                            : "text-slate-400 hover:text-slate-200"
+                        }`}
+                        title="Chemin avec le minimum de correspondances"
+                      >
+                        {optimal.minLines} {optimal.minLines > 1 ? "lignes" : "ligne"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setOptimalTab("stations")}
+                        className={`px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer ${
+                          optimalTab === "stations"
+                            ? "bg-cyan-600 text-white shadow-xs"
+                            : "text-slate-400 hover:text-slate-200"
+                        }`}
+                        title="Chemin traversant le moins de stations physiques"
+                      >
+                        {optimal.minPhysicalStations} st.
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                  {displayedOptimalHops.map((h, i) => {
+                    const line = METRO_LINES_MAP[h.lineId];
+                    const fromSt = METRO_STATIONS_MAP[h.fromId];
+                    const toSt = METRO_STATIONS_MAP[h.toId];
+                    return (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between p-2 rounded-xl bg-slate-900/80 border border-slate-800 text-xs hover:border-cyan-500/30 transition-colors"
+                      >
+                        <div className="flex items-center gap-2 truncate">
+                          <span
+                            className="w-4 h-4 rounded-full flex items-center justify-center font-black text-[9px] shrink-0 shadow-xs"
+                            style={{
+                              backgroundColor: line?.bg || "#fff",
+                              color: line?.text || "#000",
+                            }}
+                          >
+                            {line?.num || h.lineId}
+                          </span>
+                          <span className="truncate text-slate-200 font-medium">
+                            {fromSt?.name} → {toSt?.name}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-cyan-400 shrink-0 font-mono font-bold">
+                          +{h.stationsCount} st.
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Line Hops recap */}
             <div className="w-full text-left space-y-1.5 max-h-36 overflow-y-auto pr-1">
