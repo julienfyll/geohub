@@ -29,12 +29,8 @@ import { BorderPathSettingsModal } from "../BorderPathSettingsModal";
 import { RestartConfirmModal } from "../../RestartConfirmModal";
 import {
   Train,
-  Target,
   Compass,
   RotateCcw,
-  Navigation,
-  ChevronRight,
-  CheckCircle2,
 } from "lucide-react";
 import metroTopologyData from "@/../public/data/geo/metro_paris_topology.json";
 
@@ -178,6 +174,89 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     };
   }, []);
 
+  // Render station markers on map (Start/Current station with clickable line pastilles, intermediate visited stations)
+  // Target station marker is deliberately NOT rendered on map per user requirement
+  const renderMarkers = useCallback(
+    (map: maplibregl.Map) => {
+      // Clear existing markers
+      markersRef.current.forEach((m) => m.remove());
+      markersRef.current.clear();
+
+      // 1. Visited Intermediate Stations (small clean dots)
+      visitedStationIds.forEach((id) => {
+        if (id === currentStationId) return;
+        const st = METRO_STATIONS_MAP[id];
+        if (!st) return;
+
+        const interEl = document.createElement("div");
+        interEl.className =
+          "group relative cursor-pointer select-none flex items-center justify-center";
+        interEl.innerHTML = `
+          <div class="w-3.5 h-3.5 rounded-full bg-slate-900 border-2 border-white/90 shadow-md transition-transform group-hover:scale-150"></div>
+          <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[10px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+            ${st.name}
+          </div>
+        `;
+        const interMarker = new maplibregl.Marker({ element: interEl, anchor: "center" })
+          .setLngLat(st.coords)
+          .addTo(map);
+        markersRef.current.set(id, interMarker);
+      });
+
+      // 2. Current / Departure Station Marker (With CLICKABLE LINE PASTILLES)
+      const currentEl = document.createElement("div");
+      currentEl.className = "flex flex-col items-center cursor-pointer select-none group z-40";
+
+      const pillsHtml = currentStation.lines
+        .map((lineId) => {
+          const line = METRO_LINES_MAP[lineId];
+          return `
+            <button data-line-id="${lineId}" class="line-badge-btn w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] shadow-md transition-transform hover:scale-125 cursor-pointer" style="background-color: ${line?.bg || "#fff"}; color: ${line?.text || "#000"};">
+              ${line?.num || lineId}
+            </button>
+          `;
+        })
+        .join("");
+
+      currentEl.innerHTML = `
+        <div class="px-2.5 py-1 rounded-xl bg-slate-900/95 text-white font-black text-xs shadow-2xl flex items-center gap-2 border-2 border-cyan-400">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <span>${currentStation.name}</span>
+          <div class="flex items-center gap-1 pl-1 border-l border-slate-700">
+            ${pillsHtml}
+          </div>
+        </div>
+        <div class="w-2.5 h-2.5 bg-cyan-400 rotate-45 -mt-1 shadow-md"></div>
+      `;
+
+      // Add click listeners to line badge buttons
+      currentEl.querySelectorAll(".line-badge-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const lineId = btn.getAttribute("data-line-id");
+          if (lineId) {
+            setSelectedDrawerLineId(lineId);
+            setIsDrawerOpen(true);
+          }
+        });
+      });
+
+      // Clicking anywhere on the bubble opens drawer
+      currentEl.addEventListener("click", () => {
+        setIsDrawerOpen(true);
+      });
+
+      const currentMarker = new maplibregl.Marker({ element: currentEl, anchor: "bottom" })
+        .setLngLat(currentStation.coords)
+        .addTo(map);
+      markersRef.current.set(currentStation.id, currentMarker);
+    },
+    [currentStation, visitedStationIds, currentStationId]
+  );
+
+  const renderMarkersRef = useRef(renderMarkers);
+  renderMarkersRef.current = renderMarkers;
+
   // Initialize MapLibre
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -187,8 +266,8 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
       style: styleUrl,
-      center: [2.3488, 48.8534], // Paris Notre-Dame
-      zoom: 12.2,
+      center: currentStation.coords, // Center directly on departure station
+      zoom: 13.0,
       minZoom: 10.5,
       maxZoom: 17,
       attributionControl: false,
@@ -273,17 +352,11 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
         });
       }
 
-      // Fit map to show both start and target
-      const bounds = new maplibregl.LngLatBounds();
-      bounds.extend(startStation.coords);
-      bounds.extend(targetStation.coords);
-      map.fitBounds(bounds, {
-        padding: { top: 90, bottom: 130, left: 90, right: 90 },
-        maxZoom: 13.5,
-      });
+      // Immediately render markers upon map ready
+      renderMarkersRef.current(map);
     });
 
-    // Resize observer to prevent zero-dimension canvas
+    // Resize observer to ensure full dimensions
     const resizeObserver = new ResizeObserver(() => {
       map.resize();
     });
@@ -297,7 +370,14 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
       mapRef.current = null;
       isMapLoadedRef.current = false;
     };
-  }, [startStation, targetStation, phantomNetworkGeoJSON, phantomStationsGeoJSON]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [phantomNetworkGeoJSON, phantomStationsGeoJSON]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Re-render markers whenever current station or visited stations change
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !isMapLoadedRef.current) return;
+    renderMarkers(map);
+  }, [renderMarkers]);
 
   // Handle Theme Switching
   useEffect(() => {
@@ -307,7 +387,6 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     map.setStyle(styleUrl);
 
     map.once("styledata", () => {
-      // Re-add sources and layers on style reload
       if (!map.getSource("metro-phantom-network")) {
         map.addSource("metro-phantom-network", {
           type: "geojson",
@@ -372,6 +451,8 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
           },
         });
       }
+
+      renderMarkersRef.current(map);
     });
   }, [theme, phantomNetworkGeoJSON, phantomStationsGeoJSON]);
 
@@ -405,102 +486,6 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
       features,
     });
   }, [visitedSegments]);
-
-  // Update Map Markers (Start/Current, Target, and Intermediate stations)
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-
-    // Clear existing markers
-    markersRef.current.forEach((m) => m.remove());
-    markersRef.current.clear();
-
-    // 1. Target Station Marker (AMBER TARGET PIN, NO line pills)
-    const targetEl = document.createElement("div");
-    targetEl.className = "flex flex-col items-center cursor-pointer select-none group";
-    targetEl.innerHTML = `
-      <div class="px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-xl flex items-center gap-1.5 border-2 border-white animate-bounce">
-        <span>🎯</span>
-        <span>${targetStation.name}</span>
-      </div>
-      <div class="w-2.5 h-2.5 bg-amber-400 rotate-45 -mt-1 shadow-md"></div>
-    `;
-    const targetMarker = new maplibregl.Marker({ element: targetEl, anchor: "bottom" })
-      .setLngLat(targetStation.coords)
-      .addTo(map);
-    markersRef.current.set(targetStation.id, targetMarker);
-
-    // 2. Visited Intermediate Stations (small clean dots)
-    visitedStationIds.forEach((id) => {
-      if (id === currentStationId || id === targetStation.id) return;
-      const st = METRO_STATIONS_MAP[id];
-      if (!st) return;
-
-      const interEl = document.createElement("div");
-      interEl.className =
-        "group relative cursor-pointer select-none flex items-center justify-center";
-      interEl.innerHTML = `
-        <div class="w-3.5 h-3.5 rounded-full bg-slate-900 border-2 border-white/90 shadow-md transition-transform group-hover:scale-150"></div>
-        <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[10px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-          ${st.name}
-        </div>
-      `;
-      const interMarker = new maplibregl.Marker({ element: interEl, anchor: "center" })
-        .setLngLat(st.coords)
-        .addTo(map);
-      markersRef.current.set(id, interMarker);
-    });
-
-    // 3. Current / Active Station Marker (With CLICKABLE LINE PASTILLES)
-    const currentEl = document.createElement("div");
-    currentEl.className = "flex flex-col items-center cursor-pointer select-none group z-40";
-
-    const pillsHtml = currentStation.lines
-      .map((lineId) => {
-        const line = METRO_LINES_MAP[lineId];
-        return `
-          <button data-line-id="${lineId}" class="line-badge-btn w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] shadow-md transition-transform hover:scale-125 cursor-pointer" style="background-color: ${line?.bg || "#fff"}; color: ${line?.text || "#000"};">
-            ${line?.num || lineId}
-          </button>
-        `;
-      })
-      .join("");
-
-    currentEl.innerHTML = `
-      <div class="px-2.5 py-1 rounded-xl bg-slate-900/95 text-white font-black text-xs shadow-2xl flex items-center gap-2 border-2 border-cyan-400">
-        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-        <span>${currentStation.name}</span>
-        <div class="flex items-center gap-1 pl-1 border-l border-slate-700">
-          ${pillsHtml}
-        </div>
-      </div>
-      <div class="w-2.5 h-2.5 bg-cyan-400 rotate-45 -mt-1 shadow-md"></div>
-    `;
-
-    // Add click listeners to line badge buttons
-    currentEl.querySelectorAll(".line-badge-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const lineId = btn.getAttribute("data-line-id");
-        if (lineId) {
-          setSelectedDrawerLineId(lineId);
-          setIsDrawerOpen(true);
-        }
-      });
-    });
-
-    // Clicking anywhere on the bubble opens drawer
-    currentEl.addEventListener("click", () => {
-      if (!isDrawerOpen) {
-        setIsDrawerOpen(true);
-      }
-    });
-
-    const currentMarker = new maplibregl.Marker({ element: currentEl, anchor: "bottom" })
-      .setLngLat(currentStation.coords)
-      .addTo(map);
-    markersRef.current.set(currentStation.id, currentMarker);
-  }, [currentStation, targetStation, visitedStationIds, currentStationId, isDrawerOpen]);
 
   // Execute station hop
   const handleSelectDestination = useCallback(
@@ -551,7 +536,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
       if (nextSt && mapRef.current) {
         mapRef.current.easeTo({
           center: nextSt.coords,
-          zoom: Math.max(mapRef.current.getZoom(), 12.5),
+          zoom: Math.max(mapRef.current.getZoom(), 12.8),
           duration: 1200,
         });
       }
@@ -564,7 +549,6 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
           setShowVictoryModal(true);
         }, 800);
       } else {
-        // Automatically default next drawer line to lines passing through destId
         if (nextSt && nextSt.lines.length > 0) {
           if (!nextSt.lines.includes(selectedDrawerLineId)) {
             setSelectedDrawerLineId(nextSt.lines[0]);
@@ -709,7 +693,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
         )}
       </div>
 
-      {/* Vertical Station Selection Drawer */}
+      {/* Vertical Station Selection Drawer: Starts at top-14 under the top HUD */}
       <MetroLineDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
