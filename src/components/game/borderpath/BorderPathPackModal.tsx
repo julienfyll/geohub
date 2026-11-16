@@ -63,6 +63,13 @@ export const BorderPathPackModal: React.FC<BorderPathPackModalProps> = ({
       flag: "🌍",
       count: "48 pays",
     },
+    {
+      id: "metro_paris",
+      title: "Métro de Paris",
+      description: "Reliez deux stations à travers les 16 lignes et correspondances RATP",
+      flag: "🚇",
+      count: "16 lignes • 321 stations",
+    },
   ];
 
   return (
