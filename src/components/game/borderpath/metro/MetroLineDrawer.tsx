@@ -355,29 +355,22 @@ const StationRow: React.FC<StationRowProps> = ({
       className="group relative flex items-stretch justify-between px-2.5 rounded-xl hover:bg-slate-800/80 transition-all cursor-pointer select-none"
     >
       {/* Continuous Timeline Track Column: Never cuts off regardless of scroll position */}
-      <div className="relative flex flex-col items-center justify-center w-6 shrink-0 self-stretch mr-2.5">
-        {/* Top Track Segment */}
+      <div className="relative flex items-center justify-center w-6 shrink-0 self-stretch mr-2.5">
+        {/* Continuous Solid Track Line */}
         <div
-          className="w-1 flex-1 transition-opacity"
+          className={`absolute w-1 rounded-full ${
+            isFirst ? "top-1/2 bottom-0" : isLast ? "top-0 bottom-1/2" : "top-0 bottom-0"
+          }`}
           style={{
             backgroundColor: activeLine.bg,
-            opacity: isFirst ? 0 : 0.45,
+            opacity: 0.95,
           }}
         />
 
         {/* Station Node Dot */}
         <div
-          className="w-3.5 h-3.5 rounded-full border-2 bg-slate-900 group-hover:scale-125 transition-transform shrink-0 z-10 shadow-sm"
+          className="relative z-10 w-3.5 h-3.5 rounded-full border-2 bg-slate-900 group-hover:scale-125 group-hover:bg-white transition-all shrink-0 shadow-sm"
           style={{ borderColor: activeLine.bg }}
-        />
-
-        {/* Bottom Track Segment */}
-        <div
-          className="w-1 flex-1 transition-opacity"
-          style={{
-            backgroundColor: activeLine.bg,
-            opacity: isLast ? 0 : 0.45,
-          }}
         />
       </div>
 

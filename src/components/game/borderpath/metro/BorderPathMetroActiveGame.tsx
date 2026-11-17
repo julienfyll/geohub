@@ -253,36 +253,15 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     };
   }, []);
 
-  // Render station markers on map (Start/Current station with clickable line pastilles, intermediate visited stations)
-  // Target station marker is deliberately NOT rendered on map per user requirement
+  // Render current/departure station marker on map (With clickable line pastilles)
+  // Intermediate visited stations are rendered natively on the WebGL canvas via MapLibre GeoJSON layer
   const renderMarkers = useCallback(
     (map: maplibregl.Map) => {
       // Clear existing markers
       markersRef.current.forEach((m) => m.remove());
       markersRef.current.clear();
 
-      // 1. Visited Intermediate Stations (small clean dots)
-      visitedStationIds.forEach((id) => {
-        if (id === currentStationId) return;
-        const st = METRO_STATIONS_MAP[id];
-        if (!st) return;
-
-        const interEl = document.createElement("div");
-        interEl.className =
-          "group relative cursor-pointer select-none flex items-center justify-center";
-        interEl.innerHTML = `
-          <div class="w-3.5 h-3.5 rounded-full bg-slate-900 border-2 border-white/90 shadow-md transition-transform group-hover:scale-150"></div>
-          <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 px-2 py-0.5 rounded-md bg-slate-900/95 border border-slate-700 text-white text-[10px] font-bold whitespace-nowrap shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-            ${st.name}
-          </div>
-        `;
-        const interMarker = new maplibregl.Marker({ element: interEl, anchor: "center" })
-          .setLngLat(st.coords)
-          .addTo(map);
-        markersRef.current.set(id, interMarker);
-      });
-
-      // 2. Current / Departure Station Marker (With CLICKABLE LINE PASTILLES)
+      // Current / Departure Station Marker (With CLICKABLE LINE PASTILLES)
       const currentEl = document.createElement("div");
       currentEl.className = "flex flex-col items-center cursor-pointer select-none group z-40";
 
@@ -330,7 +309,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
         .addTo(map);
       markersRef.current.set(currentStation.id, currentMarker);
     },
-    [currentStation, visitedStationIds, currentStationId]
+    [currentStation]
   );
 
   const renderMarkersRef = useRef(renderMarkers);
@@ -430,6 +409,64 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
           },
         });
       }
+
+      // 4. Add Visited Stations Layer (Outer Ring + Inner Core, 100% attached to traversed tracks in WebGL space)
+      if (!map.getSource("metro-visited-stations")) {
+        map.addSource("metro-visited-stations", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+
+        map.addLayer({
+          id: "metro-visited-dots-outer",
+          type: "circle",
+          source: "metro-visited-stations",
+          paint: {
+            "circle-radius": 6.5,
+            "circle-color": "#ffffff",
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#0f172a",
+          },
+        });
+
+        map.addLayer({
+          id: "metro-visited-dots-inner",
+          type: "circle",
+          source: "metro-visited-stations",
+          paint: {
+            "circle-radius": 3.5,
+            "circle-color": "#0f172a",
+          },
+        });
+      }
+
+      // Station Hover Tooltip
+      const stationHoverPopup = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: 10,
+      });
+
+      map.on("mouseenter", "metro-visited-dots-outer", (e) => {
+        map.getCanvas().style.cursor = "pointer";
+        const feat = e.features?.[0];
+        if (!feat || !feat.geometry || feat.geometry.type !== "Point") return;
+        const coords = (feat.geometry as GeoJSON.Point).coordinates.slice() as [number, number];
+        const name = feat.properties?.name;
+        if (name) {
+          stationHoverPopup
+            .setLngLat(coords)
+            .setHTML(
+              `<div class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-white text-[10px] font-bold shadow-md">${name}</div>`
+            )
+            .addTo(map);
+        }
+      });
+
+      map.on("mouseleave", "metro-visited-dots-outer", () => {
+        map.getCanvas().style.cursor = "";
+        stationHoverPopup.remove();
+      });
 
       // Immediately render markers upon map ready
       renderMarkersRef.current(map);
@@ -531,40 +568,93 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
         });
       }
 
+      if (!map.getSource("metro-visited-stations")) {
+        map.addSource("metro-visited-stations", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+
+        map.addLayer({
+          id: "metro-visited-dots-outer",
+          type: "circle",
+          source: "metro-visited-stations",
+          paint: {
+            "circle-radius": 6.5,
+            "circle-color": "#ffffff",
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#0f172a",
+          },
+        });
+
+        map.addLayer({
+          id: "metro-visited-dots-inner",
+          type: "circle",
+          source: "metro-visited-stations",
+          paint: {
+            "circle-radius": 3.5,
+            "circle-color": "#0f172a",
+          },
+        });
+      }
+
       renderMarkersRef.current(map);
     });
   }, [theme, phantomNetworkGeoJSON, phantomStationsGeoJSON]);
 
-  // Update track polylines whenever visitedSegments change
+  // Update track polylines and visited station dots whenever visitedSegments or visitedStationIds change
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !map.isStyleLoaded()) return;
 
-    const source = map.getSource("metro-traversed-tracks") as maplibregl.GeoJSONSource | undefined;
-    if (!source) return;
+    // 1. Update Traversed Tracks
+    const trackSource = map.getSource("metro-traversed-tracks") as maplibregl.GeoJSONSource | undefined;
+    if (trackSource) {
+      const features: GeoJSON.Feature[] = visitedSegments.map((seg) => {
+        const stU = METRO_STATIONS_MAP[seg.u];
+        const stV = METRO_STATIONS_MAP[seg.v];
+        const line = METRO_LINES_MAP[seg.lineId];
+        return {
+          type: "Feature",
+          properties: {
+            lineId: seg.lineId,
+            color: line ? line.bg : "#3b82f6",
+          },
+          geometry: {
+            type: "LineString",
+            coordinates: [stU.coords, stV.coords],
+          },
+        };
+      });
 
-    const features: GeoJSON.Feature[] = visitedSegments.map((seg) => {
-      const stU = METRO_STATIONS_MAP[seg.u];
-      const stV = METRO_STATIONS_MAP[seg.v];
-      const line = METRO_LINES_MAP[seg.lineId];
-      return {
-        type: "Feature",
-        properties: {
-          lineId: seg.lineId,
-          color: line ? line.bg : "#3b82f6",
-        },
-        geometry: {
-          type: "LineString",
-          coordinates: [stU.coords, stV.coords],
-        },
-      };
-    });
+      trackSource.setData({
+        type: "FeatureCollection",
+        features,
+      });
+    }
 
-    source.setData({
-      type: "FeatureCollection",
-      features,
-    });
-  }, [visitedSegments]);
+    // 2. Update Visited Intermediate Stations (100% attached to traversed tracks)
+    const stationsSource = map.getSource("metro-visited-stations") as maplibregl.GeoJSONSource | undefined;
+    if (stationsSource) {
+      const dotFeatures: GeoJSON.Feature[] = visitedStationIds
+        .filter((id) => id !== currentStationId)
+        .map((id) => {
+          const st = METRO_STATIONS_MAP[id];
+          return {
+            type: "Feature",
+            properties: { id, name: st?.name || "" },
+            geometry: {
+              type: "Point",
+              coordinates: st ? st.coords : [0, 0],
+            },
+          };
+        });
+
+      stationsSource.setData({
+        type: "FeatureCollection",
+        features: dotFeatures,
+      });
+    }
+  }, [visitedSegments, visitedStationIds, currentStationId]);
 
   // Execute station hop
   const handleSelectDestination = useCallback(
