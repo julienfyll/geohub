@@ -1,0 +1,2037 @@
+[
+  {
+    "id": "AFG",
+    "name": "Afghanistan",
+    "capital": "Kaboul",
+    "aliases": [
+      "Kaboul",
+      "Kabul"
+    ],
+    "flag": "🇦🇫",
+    "continent": "Asia",
+    "latitude": 33,
+    "longitude": 65
+  },
+  {
+    "id": "AGO",
+    "name": "Angola",
+    "capital": "Luanda",
+    "aliases": [
+      "Luanda"
+    ],
+    "flag": "🇦🇴",
+    "continent": "Africa",
+    "latitude": -12.5,
+    "longitude": 18.5
+  },
+  {
+    "id": "ALB",
+    "name": "Albanie",
+    "capital": "Tirana",
+    "aliases": [
+      "Tirana"
+    ],
+    "flag": "🇦🇱",
+    "continent": "Europe",
+    "latitude": 41,
+    "longitude": 20
+  },
+  {
+    "id": "AND",
+    "name": "Andorre",
+    "capital": "Andorra la Vella",
+    "aliases": [
+      "Andorra la Vella"
+    ],
+    "flag": "🇦🇩",
+    "continent": "Europe",
+    "latitude": 42.5,
+    "longitude": 1.5
+  },
+  {
+    "id": "ARE",
+    "name": "Émirats arabes unis",
+    "capital": "Abou Dabi",
+    "aliases": [
+      "Abou Dabi",
+      "Abu Dhabi"
+    ],
+    "flag": "🇦🇪",
+    "continent": "Asia",
+    "latitude": 24,
+    "longitude": 54
+  },
+  {
+    "id": "ARG",
+    "name": "Argentine",
+    "capital": "Buenos Aires",
+    "aliases": [
+      "Buenos Aires"
+    ],
+    "flag": "🇦🇷",
+    "continent": "Americas",
+    "latitude": -34,
+    "longitude": -64
+  },
+  {
+    "id": "ARM",
+    "name": "Arménie",
+    "capital": "Yerevan",
+    "aliases": [
+      "Yerevan"
+    ],
+    "flag": "🇦🇲",
+    "continent": "Asia",
+    "latitude": 40,
+    "longitude": 45
+  },
+  {
+    "id": "AUT",
+    "name": "Autriche",
+    "capital": "Vienne",
+    "aliases": [
+      "Vienne",
+      "Vienna"
+    ],
+    "flag": "🇦🇹",
+    "continent": "Europe",
+    "latitude": 47.33333333,
+    "longitude": 13.33333333
+  },
+  {
+    "id": "AZE",
+    "name": "Azerbaïdjan",
+    "capital": "Baku",
+    "aliases": [
+      "Baku"
+    ],
+    "flag": "🇦🇿",
+    "continent": "Asia",
+    "latitude": 40.5,
+    "longitude": 47.5
+  },
+  {
+    "id": "BDI",
+    "name": "Burundi",
+    "capital": "Gitega",
+    "aliases": [
+      "Gitega"
+    ],
+    "flag": "🇧🇮",
+    "continent": "Africa",
+    "latitude": -3.5,
+    "longitude": 30
+  },
+  {
+    "id": "BEL",
+    "name": "Belgique",
+    "capital": "Bruxelles",
+    "aliases": [
+      "Bruxelles",
+      "Brussels"
+    ],
+    "flag": "🇧🇪",
+    "continent": "Europe",
+    "latitude": 50.83333333,
+    "longitude": 4
+  },
+  {
+    "id": "BEN",
+    "name": "Bénin",
+    "capital": "Porto-Novo",
+    "aliases": [
+      "Porto-Novo",
+      "Porto Novo"
+    ],
+    "flag": "🇧🇯",
+    "continent": "Africa",
+    "latitude": 9.5,
+    "longitude": 2.25
+  },
+  {
+    "id": "BFA",
+    "name": "Burkina Faso",
+    "capital": "Ouagadougou",
+    "aliases": [
+      "Ouagadougou"
+    ],
+    "flag": "🇧🇫",
+    "continent": "Africa",
+    "latitude": 13,
+    "longitude": -2
+  },
+  {
+    "id": "BGD",
+    "name": "Bangladesh",
+    "capital": "Dacca",
+    "aliases": [
+      "Dacca",
+      "Dhaka"
+    ],
+    "flag": "🇧🇩",
+    "continent": "Asia",
+    "latitude": 24,
+    "longitude": 90
+  },
+  {
+    "id": "BGR",
+    "name": "Bulgarie",
+    "capital": "Sofia",
+    "aliases": [
+      "Sofia"
+    ],
+    "flag": "🇧🇬",
+    "continent": "Europe",
+    "latitude": 43,
+    "longitude": 25
+  },
+  {
+    "id": "BHR",
+    "name": "Bahreïn",
+    "capital": "Manama",
+    "aliases": [
+      "Manama"
+    ],
+    "flag": "🇧🇭",
+    "continent": "Asia",
+    "latitude": 26,
+    "longitude": 50.55
+  },
+  {
+    "id": "BIH",
+    "name": "Bosnie-Herzégovine",
+    "capital": "Sarajevo",
+    "aliases": [
+      "Sarajevo"
+    ],
+    "flag": "🇧🇦",
+    "continent": "Europe",
+    "latitude": 44,
+    "longitude": 18
+  },
+  {
+    "id": "BLR",
+    "name": "Biélorussie",
+    "capital": "Minsk",
+    "aliases": [
+      "Minsk"
+    ],
+    "flag": "🇧🇾",
+    "continent": "Europe",
+    "latitude": 53,
+    "longitude": 28
+  },
+  {
+    "id": "BLZ",
+    "name": "Belize",
+    "capital": "Belmopan",
+    "aliases": [
+      "Belmopan"
+    ],
+    "flag": "🇧🇿",
+    "continent": "Americas",
+    "latitude": 17.25,
+    "longitude": -88.75
+  },
+  {
+    "id": "BOL",
+    "name": "Bolivie",
+    "capital": "Sucre",
+    "aliases": [
+      "Sucre"
+    ],
+    "flag": "🇧🇴",
+    "continent": "Americas",
+    "latitude": -17,
+    "longitude": -65
+  },
+  {
+    "id": "BRA",
+    "name": "Brésil",
+    "capital": "Brasília",
+    "aliases": [
+      "Brasília"
+    ],
+    "flag": "🇧🇷",
+    "continent": "Americas",
+    "latitude": -10,
+    "longitude": -55
+  },
+  {
+    "id": "BRN",
+    "name": "Brunei",
+    "capital": "Bandar Seri Begawan",
+    "aliases": [
+      "Bandar Seri Begawan"
+    ],
+    "flag": "🇧🇳",
+    "continent": "Asia",
+    "latitude": 4.5,
+    "longitude": 114.66666666
+  },
+  {
+    "id": "BTN",
+    "name": "Bhoutan",
+    "capital": "Thimphou",
+    "aliases": [
+      "Thimphou",
+      "Thimphu"
+    ],
+    "flag": "🇧🇹",
+    "continent": "Asia",
+    "latitude": 27.5,
+    "longitude": 90.5
+  },
+  {
+    "id": "BWA",
+    "name": "Botswana",
+    "capital": "Gaborone",
+    "aliases": [
+      "Gaborone"
+    ],
+    "flag": "🇧🇼",
+    "continent": "Africa",
+    "latitude": -22,
+    "longitude": 24
+  },
+  {
+    "id": "CAF",
+    "name": "République centrafricaine",
+    "capital": "Bangui",
+    "aliases": [
+      "Bangui"
+    ],
+    "flag": "🇨🇫",
+    "continent": "Africa",
+    "latitude": 7,
+    "longitude": 21
+  },
+  {
+    "id": "CAN",
+    "name": "Canada",
+    "capital": "Ottawa",
+    "aliases": [
+      "Ottawa"
+    ],
+    "flag": "🇨🇦",
+    "continent": "Americas",
+    "latitude": 60,
+    "longitude": -95
+  },
+  {
+    "id": "CHE",
+    "name": "Suisse",
+    "capital": "Berne",
+    "aliases": [
+      "Berne",
+      "Bern"
+    ],
+    "flag": "🇨🇭",
+    "continent": "Europe",
+    "latitude": 47,
+    "longitude": 8
+  },
+  {
+    "id": "CHL",
+    "name": "Chili",
+    "capital": "Santiago",
+    "aliases": [
+      "Santiago"
+    ],
+    "flag": "🇨🇱",
+    "continent": "Americas",
+    "latitude": -30,
+    "longitude": -71
+  },
+  {
+    "id": "CHN",
+    "name": "Chine",
+    "capital": "Pékin",
+    "aliases": [
+      "Pékin",
+      "Beijing"
+    ],
+    "flag": "🇨🇳",
+    "continent": "Asia",
+    "latitude": 35,
+    "longitude": 105
+  },
+  {
+    "id": "CIV",
+    "name": "Côte d'Ivoire",
+    "capital": "Yamoussoukro",
+    "aliases": [
+      "Yamoussoukro"
+    ],
+    "flag": "🇨🇮",
+    "continent": "Africa",
+    "latitude": 8,
+    "longitude": -5
+  },
+  {
+    "id": "CMR",
+    "name": "Cameroun",
+    "capital": "Yaoundé",
+    "aliases": [
+      "Yaoundé"
+    ],
+    "flag": "🇨🇲",
+    "continent": "Africa",
+    "latitude": 6,
+    "longitude": 12
+  },
+  {
+    "id": "COD",
+    "name": "Congo (Rép. dém.)",
+    "capital": "Kinshasa",
+    "aliases": [
+      "Kinshasa"
+    ],
+    "flag": "🇨🇩",
+    "continent": "Africa",
+    "latitude": 0,
+    "longitude": 25
+  },
+  {
+    "id": "COG",
+    "name": "Congo",
+    "capital": "Brazzaville",
+    "aliases": [
+      "Brazzaville"
+    ],
+    "flag": "🇨🇬",
+    "continent": "Africa",
+    "latitude": -1,
+    "longitude": 15
+  },
+  {
+    "id": "COL",
+    "name": "Colombie",
+    "capital": "Bogotá",
+    "aliases": [
+      "Bogotá"
+    ],
+    "flag": "🇨🇴",
+    "continent": "Americas",
+    "latitude": 4,
+    "longitude": -72
+  },
+  {
+    "id": "CRI",
+    "name": "Costa Rica",
+    "capital": "San José",
+    "aliases": [
+      "San José"
+    ],
+    "flag": "🇨🇷",
+    "continent": "Americas",
+    "latitude": 10,
+    "longitude": -84
+  },
+  {
+    "id": "CZE",
+    "name": "Tchéquie",
+    "capital": "Prague",
+    "aliases": [
+      "Prague"
+    ],
+    "flag": "🇨🇿",
+    "continent": "Europe",
+    "latitude": 49.75,
+    "longitude": 15.5
+  },
+  {
+    "id": "DEU",
+    "name": "Allemagne",
+    "capital": "Berlin",
+    "aliases": [
+      "Berlin"
+    ],
+    "flag": "🇩🇪",
+    "continent": "Europe",
+    "latitude": 51,
+    "longitude": 9
+  },
+  {
+    "id": "DJI",
+    "name": "Djibouti",
+    "capital": "Djibouti",
+    "aliases": [
+      "Djibouti"
+    ],
+    "flag": "🇩🇯",
+    "continent": "Africa",
+    "latitude": 11.5,
+    "longitude": 43
+  },
+  {
+    "id": "DNK",
+    "name": "Danemark",
+    "capital": "Copenhague",
+    "aliases": [
+      "Copenhague",
+      "Copenhagen"
+    ],
+    "flag": "🇩🇰",
+    "continent": "Europe",
+    "latitude": 56,
+    "longitude": 10
+  },
+  {
+    "id": "DOM",
+    "name": "République dominicaine",
+    "capital": "Saint-Domingue",
+    "aliases": [
+      "Saint-Domingue",
+      "Santo Domingo",
+      "Saint Domingue"
+    ],
+    "flag": "🇩🇴",
+    "continent": "Americas",
+    "latitude": 19,
+    "longitude": -70.66666666
+  },
+  {
+    "id": "DZA",
+    "name": "Algérie",
+    "capital": "Alger",
+    "aliases": [
+      "Alger",
+      "Algiers"
+    ],
+    "flag": "🇩🇿",
+    "continent": "Africa",
+    "latitude": 28,
+    "longitude": 3
+  },
+  {
+    "id": "ECU",
+    "name": "Équateur",
+    "capital": "Quito",
+    "aliases": [
+      "Quito"
+    ],
+    "flag": "🇪🇨",
+    "continent": "Americas",
+    "latitude": -2,
+    "longitude": -77.5
+  },
+  {
+    "id": "EGY",
+    "name": "Égypte",
+    "capital": "Le Caire",
+    "aliases": [
+      "Le Caire",
+      "Cairo",
+      "Caire"
+    ],
+    "flag": "🇪🇬",
+    "continent": "Africa",
+    "latitude": 27,
+    "longitude": 30
+  },
+  {
+    "id": "ERI",
+    "name": "Érythrée",
+    "capital": "Asmara",
+    "aliases": [
+      "Asmara"
+    ],
+    "flag": "🇪🇷",
+    "continent": "Africa",
+    "latitude": 15,
+    "longitude": 39
+  },
+  {
+    "id": "ESH",
+    "name": "Sahara Occidental",
+    "capital": "El Aaiún",
+    "aliases": [
+      "El Aaiún"
+    ],
+    "flag": "🇪🇭",
+    "continent": "Africa",
+    "latitude": 24.5,
+    "longitude": -13
+  },
+  {
+    "id": "ESP",
+    "name": "Espagne",
+    "capital": "Madrid",
+    "aliases": [
+      "Madrid"
+    ],
+    "flag": "🇪🇸",
+    "continent": "Europe",
+    "latitude": 40,
+    "longitude": -4
+  },
+  {
+    "id": "EST",
+    "name": "Estonie",
+    "capital": "Tallinn",
+    "aliases": [
+      "Tallinn"
+    ],
+    "flag": "🇪🇪",
+    "continent": "Europe",
+    "latitude": 59,
+    "longitude": 26
+  },
+  {
+    "id": "ETH",
+    "name": "Éthiopie",
+    "capital": "Addis-Abeba",
+    "aliases": [
+      "Addis-Abeba",
+      "Addis Ababa",
+      "Addis Abeba"
+    ],
+    "flag": "🇪🇹",
+    "continent": "Africa",
+    "latitude": 8,
+    "longitude": 38
+  },
+  {
+    "id": "FIN",
+    "name": "Finlande",
+    "capital": "Helsinki",
+    "aliases": [
+      "Helsinki"
+    ],
+    "flag": "🇫🇮",
+    "continent": "Europe",
+    "latitude": 64,
+    "longitude": 26
+  },
+  {
+    "id": "FRA",
+    "name": "France",
+    "capital": "Paris",
+    "aliases": [
+      "Paris"
+    ],
+    "flag": "🇫🇷",
+    "continent": "Europe",
+    "latitude": 46,
+    "longitude": 2
+  },
+  {
+    "id": "GAB",
+    "name": "Gabon",
+    "capital": "Libreville",
+    "aliases": [
+      "Libreville"
+    ],
+    "flag": "🇬🇦",
+    "continent": "Africa",
+    "latitude": -1,
+    "longitude": 11.75
+  },
+  {
+    "id": "GBR",
+    "name": "Royaume-Uni",
+    "capital": "Londres",
+    "aliases": [
+      "Londres",
+      "London"
+    ],
+    "flag": "🇬🇧",
+    "continent": "Europe",
+    "latitude": 54,
+    "longitude": -2
+  },
+  {
+    "id": "GEO",
+    "name": "Géorgie",
+    "capital": "Tbilisi",
+    "aliases": [
+      "Tbilisi"
+    ],
+    "flag": "🇬🇪",
+    "continent": "Asia",
+    "latitude": 42,
+    "longitude": 43.5
+  },
+  {
+    "id": "GHA",
+    "name": "Ghana",
+    "capital": "Accra",
+    "aliases": [
+      "Accra"
+    ],
+    "flag": "🇬🇭",
+    "continent": "Africa",
+    "latitude": 8,
+    "longitude": -2
+  },
+  {
+    "id": "GIB",
+    "name": "Gibraltar",
+    "capital": "Gibraltar",
+    "aliases": [
+      "Gibraltar"
+    ],
+    "flag": "🇬🇮",
+    "continent": "Europe",
+    "latitude": 36.13333333,
+    "longitude": -5.35
+  },
+  {
+    "id": "GIN",
+    "name": "Guinée",
+    "capital": "Conakry",
+    "aliases": [
+      "Conakry"
+    ],
+    "flag": "🇬🇳",
+    "continent": "Africa",
+    "latitude": 11,
+    "longitude": -10
+  },
+  {
+    "id": "GMB",
+    "name": "Gambie",
+    "capital": "Banjul",
+    "aliases": [
+      "Banjul"
+    ],
+    "flag": "🇬🇲",
+    "continent": "Africa",
+    "latitude": 13.46666666,
+    "longitude": -16.56666666
+  },
+  {
+    "id": "GNB",
+    "name": "Guinée-Bissau",
+    "capital": "Bissau",
+    "aliases": [
+      "Bissau"
+    ],
+    "flag": "🇬🇼",
+    "continent": "Africa",
+    "latitude": 12,
+    "longitude": -15
+  },
+  {
+    "id": "GNQ",
+    "name": "Guinée équatoriale",
+    "capital": "Ciudad de la Paz",
+    "aliases": [
+      "Ciudad de la Paz"
+    ],
+    "flag": "🇬🇶",
+    "continent": "Africa",
+    "latitude": 2,
+    "longitude": 10
+  },
+  {
+    "id": "GRC",
+    "name": "Grèce",
+    "capital": "Athènes",
+    "aliases": [
+      "Athènes",
+      "Athens"
+    ],
+    "flag": "🇬🇷",
+    "continent": "Europe",
+    "latitude": 39,
+    "longitude": 22
+  },
+  {
+    "id": "GTM",
+    "name": "Guatemala",
+    "capital": "Guatemala",
+    "aliases": [
+      "Guatemala",
+      "Guatemala City"
+    ],
+    "flag": "🇬🇹",
+    "continent": "Americas",
+    "latitude": 15.5,
+    "longitude": -90.25
+  },
+  {
+    "id": "GUF",
+    "name": "Guyane",
+    "capital": "Cayenne",
+    "aliases": [
+      "Cayenne"
+    ],
+    "flag": "🇬🇫",
+    "continent": "Americas",
+    "latitude": 4,
+    "longitude": -53
+  },
+  {
+    "id": "GUY",
+    "name": "Guyana",
+    "capital": "Georgetown",
+    "aliases": [
+      "Georgetown"
+    ],
+    "flag": "🇬🇾",
+    "continent": "Americas",
+    "latitude": 5,
+    "longitude": -59
+  },
+  {
+    "id": "HKG",
+    "name": "Hong Kong",
+    "capital": "City of Victoria",
+    "aliases": [
+      "City of Victoria"
+    ],
+    "flag": "🇭🇰",
+    "continent": "Asia",
+    "latitude": 22.267,
+    "longitude": 114.188
+  },
+  {
+    "id": "HND",
+    "name": "Honduras",
+    "capital": "Tegucigalpa",
+    "aliases": [
+      "Tegucigalpa"
+    ],
+    "flag": "🇭🇳",
+    "continent": "Americas",
+    "latitude": 15,
+    "longitude": -86.5
+  },
+  {
+    "id": "HRV",
+    "name": "Croatie",
+    "capital": "Zagreb",
+    "aliases": [
+      "Zagreb"
+    ],
+    "flag": "🇭🇷",
+    "continent": "Europe",
+    "latitude": 45.16666666,
+    "longitude": 15.5
+  },
+  {
+    "id": "HTI",
+    "name": "Haïti",
+    "capital": "Port-au-Prince",
+    "aliases": [
+      "Port-au-Prince",
+      "Port au Prince"
+    ],
+    "flag": "🇭🇹",
+    "continent": "Americas",
+    "latitude": 19,
+    "longitude": -72.41666666
+  },
+  {
+    "id": "HUN",
+    "name": "Hongrie",
+    "capital": "Budapest",
+    "aliases": [
+      "Budapest"
+    ],
+    "flag": "🇭🇺",
+    "continent": "Europe",
+    "latitude": 47,
+    "longitude": 20
+  },
+  {
+    "id": "IDN",
+    "name": "Indonésie",
+    "capital": "Jakarta",
+    "aliases": [
+      "Jakarta"
+    ],
+    "flag": "🇮🇩",
+    "continent": "Asia",
+    "latitude": -5,
+    "longitude": 120
+  },
+  {
+    "id": "IND",
+    "name": "Inde",
+    "capital": "New Delhi",
+    "aliases": [
+      "New Delhi"
+    ],
+    "flag": "🇮🇳",
+    "continent": "Asia",
+    "latitude": 20,
+    "longitude": 77
+  },
+  {
+    "id": "IRL",
+    "name": "Irlande",
+    "capital": "Dublin",
+    "aliases": [
+      "Dublin"
+    ],
+    "flag": "🇮🇪",
+    "continent": "Europe",
+    "latitude": 53,
+    "longitude": -8
+  },
+  {
+    "id": "IRN",
+    "name": "Iran",
+    "capital": "Téhéran",
+    "aliases": [
+      "Téhéran",
+      "Tehran"
+    ],
+    "flag": "🇮🇷",
+    "continent": "Asia",
+    "latitude": 32,
+    "longitude": 53
+  },
+  {
+    "id": "IRQ",
+    "name": "Irak",
+    "capital": "Bagdad",
+    "aliases": [
+      "Bagdad",
+      "Baghdad"
+    ],
+    "flag": "🇮🇶",
+    "continent": "Asia",
+    "latitude": 33,
+    "longitude": 44
+  },
+  {
+    "id": "ISR",
+    "name": "Israël",
+    "capital": "Jérusalem",
+    "aliases": [
+      "Jérusalem",
+      "Jerusalem"
+    ],
+    "flag": "🇮🇱",
+    "continent": "Asia",
+    "latitude": 31.47,
+    "longitude": 35.13
+  },
+  {
+    "id": "ITA",
+    "name": "Italie",
+    "capital": "Rome",
+    "aliases": [
+      "Rome"
+    ],
+    "flag": "🇮🇹",
+    "continent": "Europe",
+    "latitude": 42.83333333,
+    "longitude": 12.83333333
+  },
+  {
+    "id": "JOR",
+    "name": "Jordanie",
+    "capital": "Amman",
+    "aliases": [
+      "Amman"
+    ],
+    "flag": "🇯🇴",
+    "continent": "Asia",
+    "latitude": 31,
+    "longitude": 36
+  },
+  {
+    "id": "KAZ",
+    "name": "Kazakhstan",
+    "capital": "Astana",
+    "aliases": [
+      "Astana"
+    ],
+    "flag": "🇰🇿",
+    "continent": "Asia",
+    "latitude": 48,
+    "longitude": 68
+  },
+  {
+    "id": "KEN",
+    "name": "Kenya",
+    "capital": "Nairobi",
+    "aliases": [
+      "Nairobi"
+    ],
+    "flag": "🇰🇪",
+    "continent": "Africa",
+    "latitude": 1,
+    "longitude": 38
+  },
+  {
+    "id": "KGZ",
+    "name": "Kirghizistan",
+    "capital": "Bishkek",
+    "aliases": [
+      "Bishkek"
+    ],
+    "flag": "🇰🇬",
+    "continent": "Asia",
+    "latitude": 41,
+    "longitude": 75
+  },
+  {
+    "id": "KHM",
+    "name": "Cambodge",
+    "capital": "Phnom Penh",
+    "aliases": [
+      "Phnom Penh"
+    ],
+    "flag": "🇰🇭",
+    "continent": "Asia",
+    "latitude": 13,
+    "longitude": 105
+  },
+  {
+    "id": "KOR",
+    "name": "Corée du Sud",
+    "capital": "Séoul",
+    "aliases": [
+      "Séoul",
+      "Seoul"
+    ],
+    "flag": "🇰🇷",
+    "continent": "Asia",
+    "latitude": 37,
+    "longitude": 127.5
+  },
+  {
+    "id": "UNK",
+    "name": "Kosovo",
+    "capital": "Pristina",
+    "aliases": [
+      "Pristina"
+    ],
+    "flag": "🇽🇰",
+    "continent": "Europe",
+    "latitude": 42.666667,
+    "longitude": 21.166667
+  },
+  {
+    "id": "KWT",
+    "name": "Koweït",
+    "capital": "Koweït",
+    "aliases": [
+      "Koweït",
+      "Kuwait City",
+      "Kuwait"
+    ],
+    "flag": "🇰🇼",
+    "continent": "Asia",
+    "latitude": 29.5,
+    "longitude": 45.75
+  },
+  {
+    "id": "LAO",
+    "name": "Laos",
+    "capital": "Vientiane",
+    "aliases": [
+      "Vientiane"
+    ],
+    "flag": "🇱🇦",
+    "continent": "Asia",
+    "latitude": 18,
+    "longitude": 105
+  },
+  {
+    "id": "LBN",
+    "name": "Liban",
+    "capital": "Beyrouth",
+    "aliases": [
+      "Beyrouth",
+      "Beirut"
+    ],
+    "flag": "🇱🇧",
+    "continent": "Asia",
+    "latitude": 33.83333333,
+    "longitude": 35.83333333
+  },
+  {
+    "id": "LBR",
+    "name": "Liberia",
+    "capital": "Monrovia",
+    "aliases": [
+      "Monrovia"
+    ],
+    "flag": "🇱🇷",
+    "continent": "Africa",
+    "latitude": 6.5,
+    "longitude": -9.5
+  },
+  {
+    "id": "LBY",
+    "name": "Libye",
+    "capital": "Tripoli",
+    "aliases": [
+      "Tripoli"
+    ],
+    "flag": "🇱🇾",
+    "continent": "Africa",
+    "latitude": 25,
+    "longitude": 17
+  },
+  {
+    "id": "LIE",
+    "name": "Liechtenstein",
+    "capital": "Vaduz",
+    "aliases": [
+      "Vaduz"
+    ],
+    "flag": "🇱🇮",
+    "continent": "Europe",
+    "latitude": 47.26666666,
+    "longitude": 9.53333333
+  },
+  {
+    "id": "LKA",
+    "name": "Sri Lanka",
+    "capital": "Colombo",
+    "aliases": [
+      "Colombo"
+    ],
+    "flag": "🇱🇰",
+    "continent": "Asia",
+    "latitude": 7,
+    "longitude": 81
+  },
+  {
+    "id": "LSO",
+    "name": "Lesotho",
+    "capital": "Maseru",
+    "aliases": [
+      "Maseru"
+    ],
+    "flag": "🇱🇸",
+    "continent": "Africa",
+    "latitude": -29.5,
+    "longitude": 28.5
+  },
+  {
+    "id": "LTU",
+    "name": "Lituanie",
+    "capital": "Vilnius",
+    "aliases": [
+      "Vilnius"
+    ],
+    "flag": "🇱🇹",
+    "continent": "Europe",
+    "latitude": 56,
+    "longitude": 24
+  },
+  {
+    "id": "LUX",
+    "name": "Luxembourg",
+    "capital": "Luxembourg",
+    "aliases": [
+      "Luxembourg"
+    ],
+    "flag": "🇱🇺",
+    "continent": "Europe",
+    "latitude": 49.75,
+    "longitude": 6.16666666
+  },
+  {
+    "id": "LVA",
+    "name": "Lettonie",
+    "capital": "Riga",
+    "aliases": [
+      "Riga"
+    ],
+    "flag": "🇱🇻",
+    "continent": "Europe",
+    "latitude": 57,
+    "longitude": 25
+  },
+  {
+    "id": "MAF",
+    "name": "Saint-Martin",
+    "capital": "Marigot",
+    "aliases": [
+      "Marigot"
+    ],
+    "flag": "🇲🇫",
+    "continent": "Americas",
+    "latitude": 18.08333333,
+    "longitude": -63.95
+  },
+  {
+    "id": "MAR",
+    "name": "Maroc",
+    "capital": "Rabat",
+    "aliases": [
+      "Rabat"
+    ],
+    "flag": "🇲🇦",
+    "continent": "Africa",
+    "latitude": 32,
+    "longitude": -5
+  },
+  {
+    "id": "MCO",
+    "name": "Monaco",
+    "capital": "Monaco",
+    "aliases": [
+      "Monaco"
+    ],
+    "flag": "🇲🇨",
+    "continent": "Europe",
+    "latitude": 43.73333333,
+    "longitude": 7.4
+  },
+  {
+    "id": "MDA",
+    "name": "Moldavie",
+    "capital": "Chișinău",
+    "aliases": [
+      "Chișinău"
+    ],
+    "flag": "🇲🇩",
+    "continent": "Europe",
+    "latitude": 47,
+    "longitude": 29
+  },
+  {
+    "id": "MEX",
+    "name": "Mexique",
+    "capital": "Mexico",
+    "aliases": [
+      "Mexico",
+      "Mexico City"
+    ],
+    "flag": "🇲🇽",
+    "continent": "Americas",
+    "latitude": 23,
+    "longitude": -102
+  },
+  {
+    "id": "MKD",
+    "name": "Macédoine du Nord",
+    "capital": "Skopje",
+    "aliases": [
+      "Skopje"
+    ],
+    "flag": "🇲🇰",
+    "continent": "Europe",
+    "latitude": 41.83333333,
+    "longitude": 22
+  },
+  {
+    "id": "MLI",
+    "name": "Mali",
+    "capital": "Bamako",
+    "aliases": [
+      "Bamako"
+    ],
+    "flag": "🇲🇱",
+    "continent": "Africa",
+    "latitude": 17,
+    "longitude": -4
+  },
+  {
+    "id": "MMR",
+    "name": "Birmanie",
+    "capital": "Naypyidaw",
+    "aliases": [
+      "Naypyidaw"
+    ],
+    "flag": "🇲🇲",
+    "continent": "Asia",
+    "latitude": 22,
+    "longitude": 98
+  },
+  {
+    "id": "MNE",
+    "name": "Monténégro",
+    "capital": "Podgorica",
+    "aliases": [
+      "Podgorica"
+    ],
+    "flag": "🇲🇪",
+    "continent": "Europe",
+    "latitude": 42.5,
+    "longitude": 19.3
+  },
+  {
+    "id": "MNG",
+    "name": "Mongolie",
+    "capital": "Ulan Bator",
+    "aliases": [
+      "Ulan Bator"
+    ],
+    "flag": "🇲🇳",
+    "continent": "Asia",
+    "latitude": 46,
+    "longitude": 105
+  },
+  {
+    "id": "MOZ",
+    "name": "Mozambique",
+    "capital": "Maputo",
+    "aliases": [
+      "Maputo"
+    ],
+    "flag": "🇲🇿",
+    "continent": "Africa",
+    "latitude": -18.25,
+    "longitude": 35
+  },
+  {
+    "id": "MRT",
+    "name": "Mauritanie",
+    "capital": "Nouakchott",
+    "aliases": [
+      "Nouakchott"
+    ],
+    "flag": "🇲🇷",
+    "continent": "Africa",
+    "latitude": 20,
+    "longitude": -12
+  },
+  {
+    "id": "MWI",
+    "name": "Malawi",
+    "capital": "Lilongwe",
+    "aliases": [
+      "Lilongwe"
+    ],
+    "flag": "🇲🇼",
+    "continent": "Africa",
+    "latitude": -13.5,
+    "longitude": 34
+  },
+  {
+    "id": "MYS",
+    "name": "Malaisie",
+    "capital": "Kuala Lumpur",
+    "aliases": [
+      "Kuala Lumpur"
+    ],
+    "flag": "🇲🇾",
+    "continent": "Asia",
+    "latitude": 2.5,
+    "longitude": 112.5
+  },
+  {
+    "id": "NAM",
+    "name": "Namibie",
+    "capital": "Windhoek",
+    "aliases": [
+      "Windhoek"
+    ],
+    "flag": "🇳🇦",
+    "continent": "Africa",
+    "latitude": -22,
+    "longitude": 17
+  },
+  {
+    "id": "NER",
+    "name": "Niger",
+    "capital": "Niamey",
+    "aliases": [
+      "Niamey"
+    ],
+    "flag": "🇳🇪",
+    "continent": "Africa",
+    "latitude": 16,
+    "longitude": 8
+  },
+  {
+    "id": "NGA",
+    "name": "Nigéria",
+    "capital": "Abuja",
+    "aliases": [
+      "Abuja"
+    ],
+    "flag": "🇳🇬",
+    "continent": "Africa",
+    "latitude": 10,
+    "longitude": 8
+  },
+  {
+    "id": "NIC",
+    "name": "Nicaragua",
+    "capital": "Managua",
+    "aliases": [
+      "Managua"
+    ],
+    "flag": "🇳🇮",
+    "continent": "Americas",
+    "latitude": 13,
+    "longitude": -85
+  },
+  {
+    "id": "NLD",
+    "name": "Pays-Bas",
+    "capital": "Amsterdam",
+    "aliases": [
+      "Amsterdam"
+    ],
+    "flag": "🇳🇱",
+    "continent": "Europe",
+    "latitude": 52.5,
+    "longitude": 5.75
+  },
+  {
+    "id": "NOR",
+    "name": "Norvège",
+    "capital": "Oslo",
+    "aliases": [
+      "Oslo"
+    ],
+    "flag": "🇳🇴",
+    "continent": "Europe",
+    "latitude": 62,
+    "longitude": 10
+  },
+  {
+    "id": "NPL",
+    "name": "Népal",
+    "capital": "Katmandou",
+    "aliases": [
+      "Katmandou",
+      "Kathmandu"
+    ],
+    "flag": "🇳🇵",
+    "continent": "Asia",
+    "latitude": 28,
+    "longitude": 84
+  },
+  {
+    "id": "OMN",
+    "name": "Oman",
+    "capital": "Mascate",
+    "aliases": [
+      "Mascate",
+      "Muscat"
+    ],
+    "flag": "🇴🇲",
+    "continent": "Asia",
+    "latitude": 21,
+    "longitude": 57
+  },
+  {
+    "id": "PAK",
+    "name": "Pakistan",
+    "capital": "Islamabad",
+    "aliases": [
+      "Islamabad"
+    ],
+    "flag": "🇵🇰",
+    "continent": "Asia",
+    "latitude": 30,
+    "longitude": 70
+  },
+  {
+    "id": "PAN",
+    "name": "Panama",
+    "capital": "Panama",
+    "aliases": [
+      "Panama",
+      "Panama City"
+    ],
+    "flag": "🇵🇦",
+    "continent": "Americas",
+    "latitude": 9,
+    "longitude": -80
+  },
+  {
+    "id": "PER",
+    "name": "Pérou",
+    "capital": "Lima",
+    "aliases": [
+      "Lima"
+    ],
+    "flag": "🇵🇪",
+    "continent": "Americas",
+    "latitude": -10,
+    "longitude": -76
+  },
+  {
+    "id": "PNG",
+    "name": "Papouasie-Nouvelle-Guinée",
+    "capital": "Port Moresby",
+    "aliases": [
+      "Port Moresby"
+    ],
+    "flag": "🇵🇬",
+    "continent": "Oceania",
+    "latitude": -6,
+    "longitude": 147
+  },
+  {
+    "id": "POL",
+    "name": "Pologne",
+    "capital": "Varsovie",
+    "aliases": [
+      "Varsovie",
+      "Warsaw"
+    ],
+    "flag": "🇵🇱",
+    "continent": "Europe",
+    "latitude": 52,
+    "longitude": 20
+  },
+  {
+    "id": "PRK",
+    "name": "Corée du Nord",
+    "capital": "Pyongyang",
+    "aliases": [
+      "Pyongyang"
+    ],
+    "flag": "🇰🇵",
+    "continent": "Asia",
+    "latitude": 40,
+    "longitude": 127
+  },
+  {
+    "id": "PRT",
+    "name": "Portugal",
+    "capital": "Lisbonne",
+    "aliases": [
+      "Lisbonne",
+      "Lisbon"
+    ],
+    "flag": "🇵🇹",
+    "continent": "Europe",
+    "latitude": 39.5,
+    "longitude": -8
+  },
+  {
+    "id": "PRY",
+    "name": "Paraguay",
+    "capital": "Asunción",
+    "aliases": [
+      "Asunción"
+    ],
+    "flag": "🇵🇾",
+    "continent": "Americas",
+    "latitude": -23,
+    "longitude": -58
+  },
+  {
+    "id": "PSE",
+    "name": "Palestine",
+    "capital": "Ramallah",
+    "aliases": [
+      "Ramallah"
+    ],
+    "flag": "🇵🇸",
+    "continent": "Asia",
+    "latitude": 31.9,
+    "longitude": 35.2
+  },
+  {
+    "id": "QAT",
+    "name": "Qatar",
+    "capital": "Doha",
+    "aliases": [
+      "Doha"
+    ],
+    "flag": "🇶🇦",
+    "continent": "Asia",
+    "latitude": 25.5,
+    "longitude": 51.25
+  },
+  {
+    "id": "ROU",
+    "name": "Roumanie",
+    "capital": "Bucarest",
+    "aliases": [
+      "Bucarest",
+      "Bucharest"
+    ],
+    "flag": "🇷🇴",
+    "continent": "Europe",
+    "latitude": 46,
+    "longitude": 25
+  },
+  {
+    "id": "RUS",
+    "name": "Russie",
+    "capital": "Moscou",
+    "aliases": [
+      "Moscou",
+      "Moscow"
+    ],
+    "flag": "🇷🇺",
+    "continent": "Europe",
+    "latitude": 60,
+    "longitude": 100
+  },
+  {
+    "id": "RWA",
+    "name": "Rwanda",
+    "capital": "Kigali",
+    "aliases": [
+      "Kigali"
+    ],
+    "flag": "🇷🇼",
+    "continent": "Africa",
+    "latitude": -2,
+    "longitude": 30
+  },
+  {
+    "id": "SAU",
+    "name": "Arabie Saoudite",
+    "capital": "Riyad",
+    "aliases": [
+      "Riyad",
+      "Riyadh"
+    ],
+    "flag": "🇸🇦",
+    "continent": "Asia",
+    "latitude": 25,
+    "longitude": 45
+  },
+  {
+    "id": "SDN",
+    "name": "Soudan",
+    "capital": "Khartoum",
+    "aliases": [
+      "Khartoum"
+    ],
+    "flag": "🇸🇩",
+    "continent": "Africa",
+    "latitude": 15,
+    "longitude": 30
+  },
+  {
+    "id": "SEN",
+    "name": "Sénégal",
+    "capital": "Dakar",
+    "aliases": [
+      "Dakar"
+    ],
+    "flag": "🇸🇳",
+    "continent": "Africa",
+    "latitude": 14,
+    "longitude": -14
+  },
+  {
+    "id": "SGP",
+    "name": "Singapour",
+    "capital": "Singapour",
+    "aliases": [
+      "Singapour",
+      "Singapore"
+    ],
+    "flag": "🇸🇬",
+    "continent": "Asia",
+    "latitude": 1.36666666,
+    "longitude": 103.8
+  },
+  {
+    "id": "SLE",
+    "name": "Sierra Leone",
+    "capital": "Freetown",
+    "aliases": [
+      "Freetown"
+    ],
+    "flag": "🇸🇱",
+    "continent": "Africa",
+    "latitude": 8.5,
+    "longitude": -11.5
+  },
+  {
+    "id": "SLV",
+    "name": "Salvador",
+    "capital": "San Salvador",
+    "aliases": [
+      "San Salvador"
+    ],
+    "flag": "🇸🇻",
+    "continent": "Americas",
+    "latitude": 13.83333333,
+    "longitude": -88.91666666
+  },
+  {
+    "id": "SMR",
+    "name": "Saint-Marin",
+    "capital": "City of San Marino",
+    "aliases": [
+      "City of San Marino"
+    ],
+    "flag": "🇸🇲",
+    "continent": "Europe",
+    "latitude": 43.76666666,
+    "longitude": 12.41666666
+  },
+  {
+    "id": "SOM",
+    "name": "Somalie",
+    "capital": "Mogadiscio",
+    "aliases": [
+      "Mogadiscio",
+      "Mogadishu"
+    ],
+    "flag": "🇸🇴",
+    "continent": "Africa",
+    "latitude": 10,
+    "longitude": 49
+  },
+  {
+    "id": "SRB",
+    "name": "Serbie",
+    "capital": "Belgrade",
+    "aliases": [
+      "Belgrade"
+    ],
+    "flag": "🇷🇸",
+    "continent": "Europe",
+    "latitude": 44,
+    "longitude": 21
+  },
+  {
+    "id": "SSD",
+    "name": "Soudan du Sud",
+    "capital": "Juba",
+    "aliases": [
+      "Juba"
+    ],
+    "flag": "🇸🇸",
+    "continent": "Africa",
+    "latitude": 7,
+    "longitude": 30
+  },
+  {
+    "id": "SUR",
+    "name": "Surinam",
+    "capital": "Paramaribo",
+    "aliases": [
+      "Paramaribo"
+    ],
+    "flag": "🇸🇷",
+    "continent": "Americas",
+    "latitude": 4,
+    "longitude": -56
+  },
+  {
+    "id": "SVK",
+    "name": "Slovaquie",
+    "capital": "Bratislava",
+    "aliases": [
+      "Bratislava"
+    ],
+    "flag": "🇸🇰",
+    "continent": "Europe",
+    "latitude": 48.66666666,
+    "longitude": 19.5
+  },
+  {
+    "id": "SVN",
+    "name": "Slovénie",
+    "capital": "Ljubljana",
+    "aliases": [
+      "Ljubljana"
+    ],
+    "flag": "🇸🇮",
+    "continent": "Europe",
+    "latitude": 46.11666666,
+    "longitude": 14.81666666
+  },
+  {
+    "id": "SWE",
+    "name": "Suède",
+    "capital": "Stockholm",
+    "aliases": [
+      "Stockholm"
+    ],
+    "flag": "🇸🇪",
+    "continent": "Europe",
+    "latitude": 62,
+    "longitude": 15
+  },
+  {
+    "id": "SWZ",
+    "name": "Eswatini",
+    "capital": "Lobamba",
+    "aliases": [
+      "Lobamba"
+    ],
+    "flag": "🇸🇿",
+    "continent": "Africa",
+    "latitude": -26.5,
+    "longitude": 31.5
+  },
+  {
+    "id": "SXM",
+    "name": "Saint-Martin",
+    "capital": "Philipsburg",
+    "aliases": [
+      "Philipsburg"
+    ],
+    "flag": "🇸🇽",
+    "continent": "Americas",
+    "latitude": 18.033333,
+    "longitude": -63.05
+  },
+  {
+    "id": "SYR",
+    "name": "Syrie",
+    "capital": "Damas",
+    "aliases": [
+      "Damas",
+      "Damascus"
+    ],
+    "flag": "🇸🇾",
+    "continent": "Asia",
+    "latitude": 35,
+    "longitude": 38
+  },
+  {
+    "id": "TCD",
+    "name": "Tchad",
+    "capital": "N'Djamena",
+    "aliases": [
+      "N'Djamena"
+    ],
+    "flag": "🇹🇩",
+    "continent": "Africa",
+    "latitude": 15,
+    "longitude": 19
+  },
+  {
+    "id": "TGO",
+    "name": "Togo",
+    "capital": "Lomé",
+    "aliases": [
+      "Lomé"
+    ],
+    "flag": "🇹🇬",
+    "continent": "Africa",
+    "latitude": 8,
+    "longitude": 1.16666666
+  },
+  {
+    "id": "THA",
+    "name": "Thaïlande",
+    "capital": "Bangkok",
+    "aliases": [
+      "Bangkok"
+    ],
+    "flag": "🇹🇭",
+    "continent": "Asia",
+    "latitude": 15,
+    "longitude": 100
+  },
+  {
+    "id": "TJK",
+    "name": "Tadjikistan",
+    "capital": "Dushanbe",
+    "aliases": [
+      "Dushanbe"
+    ],
+    "flag": "🇹🇯",
+    "continent": "Asia",
+    "latitude": 39,
+    "longitude": 71
+  },
+  {
+    "id": "TKM",
+    "name": "Turkménistan",
+    "capital": "Ashgabat",
+    "aliases": [
+      "Ashgabat"
+    ],
+    "flag": "🇹🇲",
+    "continent": "Asia",
+    "latitude": 40,
+    "longitude": 60
+  },
+  {
+    "id": "TLS",
+    "name": "Timor oriental",
+    "capital": "Dili",
+    "aliases": [
+      "Dili"
+    ],
+    "flag": "🇹🇱",
+    "continent": "Asia",
+    "latitude": -8.83333333,
+    "longitude": 125.91666666
+  },
+  {
+    "id": "TUN",
+    "name": "Tunisie",
+    "capital": "Tunis",
+    "aliases": [
+      "Tunis"
+    ],
+    "flag": "🇹🇳",
+    "continent": "Africa",
+    "latitude": 34,
+    "longitude": 9
+  },
+  {
+    "id": "TUR",
+    "name": "Turquie",
+    "capital": "Ankara",
+    "aliases": [
+      "Ankara"
+    ],
+    "flag": "🇹🇷",
+    "continent": "Asia",
+    "latitude": 39,
+    "longitude": 35
+  },
+  {
+    "id": "TZA",
+    "name": "Tanzanie",
+    "capital": "Dodoma",
+    "aliases": [
+      "Dodoma"
+    ],
+    "flag": "🇹🇿",
+    "continent": "Africa",
+    "latitude": -6,
+    "longitude": 35
+  },
+  {
+    "id": "UGA",
+    "name": "Ouganda",
+    "capital": "Kampala",
+    "aliases": [
+      "Kampala"
+    ],
+    "flag": "🇺🇬",
+    "continent": "Africa",
+    "latitude": 1,
+    "longitude": 32
+  },
+  {
+    "id": "UKR",
+    "name": "Ukraine",
+    "capital": "Kiev",
+    "aliases": [
+      "Kiev",
+      "Kyiv"
+    ],
+    "flag": "🇺🇦",
+    "continent": "Europe",
+    "latitude": 49,
+    "longitude": 32
+  },
+  {
+    "id": "URY",
+    "name": "Uruguay",
+    "capital": "Montevideo",
+    "aliases": [
+      "Montevideo"
+    ],
+    "flag": "🇺🇾",
+    "continent": "Americas",
+    "latitude": -33,
+    "longitude": -56
+  },
+  {
+    "id": "USA",
+    "name": "États-Unis",
+    "capital": "Washington D.C.",
+    "aliases": [
+      "Washington D.C."
+    ],
+    "flag": "🇺🇸",
+    "continent": "Americas",
+    "latitude": 38,
+    "longitude": -97
+  },
+  {
+    "id": "UZB",
+    "name": "Ouzbékistan",
+    "capital": "Tashkent",
+    "aliases": [
+      "Tashkent"
+    ],
+    "flag": "🇺🇿",
+    "continent": "Asia",
+    "latitude": 41,
+    "longitude": 64
+  },
+  {
+    "id": "VAT",
+    "name": "Cité du Vatican",
+    "capital": "Vatican City",
+    "aliases": [
+      "Vatican City",
+      "Vatican"
+    ],
+    "flag": "🇻🇦",
+    "continent": "Europe",
+    "latitude": 41.9,
+    "longitude": 12.45
+  },
+  {
+    "id": "VEN",
+    "name": "Venezuela",
+    "capital": "Caracas",
+    "aliases": [
+      "Caracas"
+    ],
+    "flag": "🇻🇪",
+    "continent": "Americas",
+    "latitude": 8,
+    "longitude": -66
+  },
+  {
+    "id": "VNM",
+    "name": "Viêt Nam",
+    "capital": "Hanoï",
+    "aliases": [
+      "Hanoï",
+      "Hanoi"
+    ],
+    "flag": "🇻🇳",
+    "continent": "Asia",
+    "latitude": 16.16666666,
+    "longitude": 107.83333333
+  },
+  {
+    "id": "YEM",
+    "name": "Yémen",
+    "capital": "Sana'a",
+    "aliases": [
+      "Sana'a"
+    ],
+    "flag": "🇾🇪",
+    "continent": "Asia",
+    "latitude": 15,
+    "longitude": 48
+  },
+  {
+    "id": "ZAF",
+    "name": "Afrique du Sud",
+    "capital": "Pretoria",
+    "aliases": [
+      "Pretoria"
+    ],
+    "flag": "🇿🇦",
+    "continent": "Africa",
+    "latitude": -29,
+    "longitude": 24
+  },
+  {
+    "id": "ZMB",
+    "name": "Zambie",
+    "capital": "Lusaka",
+    "aliases": [
+      "Lusaka"
+    ],
+    "flag": "🇿🇲",
+    "continent": "Africa",
+    "latitude": -15,
+    "longitude": 30
+  },
+  {
+    "id": "ZWE",
+    "name": "Zimbabwe",
+    "capital": "Harare",
+    "aliases": [
+      "Harare"
+    ],
+    "flag": "🇿🇼",
+    "continent": "Africa",
+    "latitude": -20,
+    "longitude": 30
+  }
+]

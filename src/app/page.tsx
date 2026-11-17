@@ -248,45 +248,53 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Game 4 : Capital Blitz (Coming Soon) */}
-          <div className="relative bg-slate-900/40 border border-slate-800/80 rounded-3xl p-7 flex flex-col justify-between opacity-75">
+          {/* Game 4 : Capital Blitz */}
+          <Link
+            href="/play/capitalblitz"
+            className="relative group bg-slate-900/90 border-2 border-amber-500/50 hover:border-amber-400 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden cursor-pointer hover:shadow-amber-500/10 hover:scale-[1.01]"
+          >
+            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+              <Zap className="w-32 h-32 text-amber-400" />
+            </div>
+
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-medium uppercase tracking-wider">
-                  Sprint 3 • Bientôt
+                <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Zap className="w-3 h-3" />
+                  <span>★ Sprint & Capitales</span>
                 </span>
-                <span className="text-xs text-slate-500 font-mono">Contre-la-montre</span>
+                <span className="text-xs text-slate-400 font-mono">60s Chrono • Combos ×3</span>
               </div>
 
-              <h3 className="text-2xl font-bold text-slate-300 mb-2">
-                Capital Blitz — Contre-la-montre
+              <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">
+                Capital Blitz — Sprint des Capitales
               </h3>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                60 secondes pour identifier un maximum de capitales, drapeaux et silhouettes nationales. Combo multiplicateur pour les séries sans faute.
+                Trouvez un maximum de capitales mondiales en 60 secondes chrono. Le pays cible s'illumine en direct sur le globe, enchaînez les séries sans faute pour booster vos combos !
               </p>
 
               <div className="grid grid-cols-2 gap-2.5 mb-6">
-                <div className="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
-                  <span className="text-xs font-bold text-slate-400">⚡ Sprint 60s</span>
-                  <span className="text-[11px] text-slate-500 leading-tight">
-                    Multiplicateurs & combos
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-200">⚡ Sprint 60s & Combos</span>
+                  <span className="text-[11px] text-slate-400 leading-tight">
+                    Multiplicateur dynamique jusqu'à ×3.0
                   </span>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-slate-800/30 border border-slate-800 flex flex-col gap-1">
-                  <span className="text-xs font-bold text-slate-400">🏁 Capitales & Drapeaux</span>
-                  <span className="text-[11px] text-slate-500 leading-tight">
-                    195 nations reconnues
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-200">🌍 Monde & Continents</span>
+                  <span className="text-[11px] text-slate-400 leading-tight">
+                    166 capitales • Saisie rapide & Espace pour passer
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-slate-800/60 text-slate-500 font-semibold text-sm border border-slate-700/50 cursor-not-allowed">
-              <span>En cours de développement</span>
-              <Clock className="w-4 h-4 text-slate-600" />
+            <div className="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 group-hover:from-amber-400 group-hover:to-orange-500 text-white font-semibold text-sm transition-all shadow-lg shadow-amber-500/25">
+              <span>Configurer & Jouer à Capital Blitz</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
-          </div>
+          </Link>
         </div>
       </section>
 

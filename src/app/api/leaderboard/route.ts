@@ -176,6 +176,28 @@ export async function GET(request: Request) {
 
       // 3. Earliest finish
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    } else if (game === "capitalblitz") {
+      // 1. Score DESC
+      if (b.score !== a.score) return b.score - a.score;
+
+      // 2. Accuracy DESC
+      const accA = a.accuracy_percent ?? 0;
+      const accB = b.accuracy_percent ?? 0;
+      if (accB !== accA) return accB - accA;
+
+      // 3. Earliest finish
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    } else if (game === "borderpath") {
+      // 1. Score DESC
+      if (b.score !== a.score) return b.score - a.score;
+
+      // 2. Errors ASC
+      const errA = a.summary_data?.errorCount ?? 99;
+      const errB = b.summary_data?.errorCount ?? 99;
+      if (errA !== errB) return errA - errB;
+
+      // 3. Earliest finish
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     } else {
       // Blind Point:
       // 1. Score DESC (out of 25000)
@@ -200,6 +222,14 @@ export async function GET(request: Request) {
       const total = session.total_rings ?? 5;
       const tries = session.summary_data?.totalTriesUsed;
       detail = tries ? `${rings}/${total} anneaux (${tries} coups)` : `${rings}/${total} anneaux`;
+    } else if (game === "capitalblitz") {
+      const correct = session.summary_data?.correctCount ?? 0;
+      const maxCombo = session.summary_data?.maxCombo;
+      detail = maxCombo ? `${session.score} pts • ${correct} trouvées (combo ×${maxCombo})` : `${session.score} pts • ${correct} trouvées`;
+    } else if (game === "borderpath") {
+      const steps = session.summary_data?.totalAttempts ?? session.score;
+      const errors = session.summary_data?.errorCount ?? 0;
+      detail = `${steps} étapes (${errors} erreurs)`;
     } else {
       const distKm = session.distance_km;
       detail = distKm !== null && distKm !== undefined
@@ -213,7 +243,7 @@ export async function GET(request: Request) {
       username: prof?.username || "Joueur",
       avatarUrl: prof?.avatar_url || null,
       score: session.score,
-      maxScore: session.max_score ?? (game === "georings" ? 5 : 25000),
+      maxScore: session.max_score ?? (game === "georings" ? 5 : game === "borderpath" ? 10000 : game === "capitalblitz" ? 5000 : 25000),
       detailText: detail,
       accuracyPercent: session.accuracy_percent ? Number(session.accuracy_percent) : undefined,
       createdAt: session.created_at,

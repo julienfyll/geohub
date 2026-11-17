@@ -12,7 +12,7 @@ export interface LeaderboardEntry {
 }
 
 export interface LeaderboardResponse {
-  gameMode: "georings" | "blindpoint";
+  gameMode: "georings" | "blindpoint" | "borderpath" | "capitalblitz";
   variant: string;
   scope: "daily" | "streaks";
   date: string;

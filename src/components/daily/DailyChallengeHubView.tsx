@@ -26,14 +26,14 @@ import { UserNav } from "@/components/navigation/UserNav";
 
 interface ChallengeDef {
   id: string;
-  game: "georings" | "blindpoint" | "borderpath";
+  game: "georings" | "blindpoint" | "borderpath" | "capitalblitz";
   title: string;
   subtitle: string;
   badge: string;
   icon: string;
   linkUrl: string;
   isGeoRings: boolean;
-  theme: "blue" | "sky" | "emerald" | "indigo";
+  theme: "blue" | "sky" | "emerald" | "indigo" | "amber";
 }
 
 const DAILY_CHALLENGES: ChallengeDef[] = [
@@ -207,12 +207,25 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     isGeoRings: false,
     theme: "indigo",
   },
+
+  // CAPITAL BLITZ (1)
+  {
+    id: "capitalblitz_sprint_daily",
+    game: "capitalblitz",
+    title: "Sprint Mondial",
+    subtitle: "60s • 166 capitales mondiales",
+    badge: "Sprint 60s",
+    icon: "⚡",
+    linkUrl: "/play/capitalblitz?mode=daily&play=1",
+    isGeoRings: false,
+    theme: "amber",
+  },
 ];
 
 export const DailyChallengeHubView: React.FC = () => {
   const { statusMap, loading } = useDailyChallenges();
   const [statusFilter, setStatusFilter] = useState<"all" | "todo" | "done">("all");
-  const [gameFilter, setGameFilter] = useState<"all" | "georings" | "blindpoint" | "borderpath">("all");
+  const [gameFilter, setGameFilter] = useState<"all" | "georings" | "blindpoint" | "borderpath" | "capitalblitz">("all");
   const [copiedShare, setCopiedShare] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<string>("");
 
@@ -301,6 +314,10 @@ export const DailyChallengeHubView: React.FC = () => {
     return filteredChallenges.filter((c) => c.game === "borderpath");
   }, [filteredChallenges]);
 
+  const capitalblitzList = useMemo(() => {
+    return filteredChallenges.filter((c) => c.game === "capitalblitz");
+  }, [filteredChallenges]);
+
   // Share daily summary to clipboard
   const handleShare = () => {
     const text = `🏆 Mes Défis du Jour GeoHub (${new Date().toLocaleDateString("fr-FR")}) :\n` +
@@ -318,7 +335,9 @@ export const DailyChallengeHubView: React.FC = () => {
     const isDone = !!status?.completed;
 
     const playBtnClass =
-      item.theme === "emerald"
+      item.theme === "amber"
+        ? "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-amber-500/20"
+        : item.theme === "emerald"
         ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20"
         : item.theme === "indigo"
         ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/25"
@@ -569,12 +588,12 @@ export const DailyChallengeHubView: React.FC = () => {
                 </strong>
               </span>
               <span className="text-slate-400 text-[11px]">
-                5 GeoRings • 5 Blind Point • 5 BorderPath
+                5 GeoRings • 5 Blind Point • 5 BorderPath • 1 Capital Blitz
               </span>
             </div>
 
-            {/* 15 Pastilles d'état */}
-            <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-1.5">
+            {/* 16 Pastilles d'état */}
+            <div className="grid grid-cols-4 sm:grid-cols-8 md:grid-cols-[repeat(16,minmax(0,1fr))] gap-1.5">
               {DAILY_CHALLENGES.map((challenge, idx) => {
                 const isCompleted = !!statusMap[challenge.id]?.completed;
                 const isGr = challenge.game === "georings";
@@ -695,6 +714,18 @@ export const DailyChallengeHubView: React.FC = () => {
           >
             <span>🗺️</span>
             <span>BorderPath</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setGameFilter("capitalblitz")}
+            className={`px-2.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1 whitespace-nowrap ${
+              gameFilter === "capitalblitz"
+                ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>⚡</span>
+            <span>Capital Blitz</span>
           </button>
         </div>
       </section>
@@ -817,6 +848,44 @@ export const DailyChallengeHubView: React.FC = () => {
                 <Link
                   href="/play/borderpath"
                   className="text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1 transition-colors"
+                >
+                  <span>Page Dédiée</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* PANEL 4 : CAPITAL BLITZ */}
+          {capitalblitzList.length > 0 && (
+            <div className="p-6 rounded-3xl bg-slate-900/90 border border-amber-500/30 flex flex-col justify-between shadow-xl relative overflow-hidden">
+              <div className="space-y-4">
+                {/* Header */}
+                <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+                  <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-bold text-lg shadow-sm">
+                    ⚡
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-white leading-tight truncate">
+                      Capital Blitz
+                    </h3>
+                    <span className="text-xs text-slate-400 block truncate">
+                      Sprint 60 secondes • Réflexes mondiaux
+                    </span>
+                  </div>
+                </div>
+
+                {/* List of Capital Blitz Challenges */}
+                <div className="space-y-2">
+                  {capitalblitzList.map(renderChallengeItem)}
+                </div>
+              </div>
+
+              <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span className="text-slate-500 text-[11px]">Sprint libre</span>
+                <Link
+                  href="/play/capitalblitz"
+                  className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition-colors"
                 >
                   <span>Page Dédiée</span>
                   <ChevronRight className="w-3.5 h-3.5" />

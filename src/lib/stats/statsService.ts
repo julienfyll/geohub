@@ -282,6 +282,8 @@ export async function getAggregatedStats(userId?: string | null): Promise<UserSu
   const totalGames = sessions.length;
   const georingsGames = sessions.filter((s) => s.game_mode === "georings").length;
   const blindpointGames = sessions.filter((s) => s.game_mode === "blindpoint").length;
+  const borderpathGames = sessions.filter((s) => s.game_mode === "borderpath").length;
+  const capitalblitzGames = sessions.filter((s) => s.game_mode === "capitalblitz").length;
 
   const perfectGames = sessions.filter((s) => {
     if (s.game_mode === "georings") {
@@ -304,6 +306,8 @@ export async function getAggregatedStats(userId?: string | null): Promise<UserSu
     totalGames,
     georingsGames,
     blindpointGames,
+    borderpathGames,
+    capitalblitzGames,
     perfectGames,
     averageScore,
     currentStreak: streak.current_streak || 0,

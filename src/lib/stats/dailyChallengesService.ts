@@ -80,6 +80,10 @@ export function getChallengeKeyForSession(session: GameSessionRecord): string | 
     if (pack === "afrique") return "borderpath_afrique";
   }
 
+  if (session.game_mode === "capitalblitz") {
+    return "capitalblitz_sprint_daily";
+  }
+
   return null;
 }
 
@@ -137,6 +141,8 @@ export async function getDailyChallengesStatus(
         ? 25000
         : s.game_mode === "borderpath"
         ? 10000
+        : s.game_mode === "capitalblitz"
+        ? 5000
         : s.rings_completed ?? 5);
 
     // If first entry or better score, record it

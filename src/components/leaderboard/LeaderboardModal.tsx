@@ -17,6 +17,7 @@ import {
   Target,
   Sparkles,
   Layers,
+  Zap,
 } from "lucide-react";
 import { LeaderboardEntry, LeaderboardResponse } from "@/lib/leaderboard/types";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -24,7 +25,7 @@ import { useAuth } from "@/lib/auth/AuthContext";
 interface LeaderboardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialGame?: "georings" | "blindpoint" | "borderpath";
+  initialGame?: "georings" | "blindpoint" | "borderpath" | "capitalblitz";
   initialVariant?: string;
 }
 
@@ -35,9 +36,9 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   initialVariant,
 }) => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"georings" | "blindpoint" | "borderpath" | "streaks">(initialGame);
+  const [activeTab, setActiveTab] = useState<"georings" | "blindpoint" | "borderpath" | "capitalblitz" | "streaks">(initialGame);
   const [activeVariant, setActiveVariant] = useState<string>(
-    initialVariant || (initialGame === "georings" ? "cities" : initialGame === "borderpath" ? "monde" : "villes_france")
+    initialVariant || (initialGame === "georings" ? "cities" : initialGame === "borderpath" ? "monde" : initialGame === "capitalblitz" ? "all" : "villes_france")
   );
   const [dateOffset, setDateOffset] = useState<0 | 1>(0); // 0 = today, 1 = yesterday
   const [loading, setLoading] = useState(true);
@@ -81,10 +82,15 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       !["monde", "europe", "france_departements", "ameriques", "afrique"].includes(activeVariant)
     ) {
       setActiveVariant("monde");
+    } else if (
+      activeTab === "capitalblitz" &&
+      !["all", "Europe", "Africa", "Americas", "Asia"].includes(activeVariant)
+    ) {
+      setActiveVariant("all");
     }
   }, [activeTab, activeVariant]);
 
-  const handleTabChange = (tab: "georings" | "blindpoint" | "borderpath" | "streaks") => {
+  const handleTabChange = (tab: "georings" | "blindpoint" | "borderpath" | "capitalblitz" | "streaks") => {
     setActiveTab(tab);
     if (tab === "georings") {
       setActiveVariant("cities");
@@ -92,6 +98,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       setActiveVariant("villes_france");
     } else if (tab === "borderpath") {
       setActiveVariant("monde");
+    } else if (tab === "capitalblitz") {
+      setActiveVariant("all");
     }
   };
 
@@ -134,6 +142,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       ? "text-emerald-400"
       : activeTab === "borderpath"
       ? "text-indigo-400"
+      : activeTab === "capitalblitz"
+      ? "text-amber-400"
       : activeTab === "streaks"
       ? "text-amber-400"
       : "text-blue-400";
@@ -143,6 +153,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       ? "bg-emerald-600/20 border-emerald-500/50 shadow-sm"
       : activeTab === "borderpath"
       ? "bg-indigo-600/20 border-indigo-500/50 shadow-sm"
+      : activeTab === "capitalblitz"
+      ? "bg-amber-600/20 border-amber-500/50 shadow-sm"
       : activeTab === "streaks"
       ? "bg-amber-600/20 border-amber-500/50 shadow-sm"
       : "bg-blue-600/20 border-blue-500/50 shadow-sm";
@@ -152,6 +164,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       ? "bg-emerald-600"
       : activeTab === "borderpath"
       ? "bg-indigo-600"
+      : activeTab === "capitalblitz"
+      ? "bg-amber-600"
       : activeTab === "streaks"
       ? "bg-amber-600"
       : "bg-blue-600";
@@ -161,6 +175,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       ? "text-emerald-300 font-bold"
       : activeTab === "borderpath"
       ? "text-indigo-300 font-bold"
+      : activeTab === "capitalblitz"
+      ? "text-amber-300 font-bold"
       : activeTab === "streaks"
       ? "text-amber-300 font-bold"
       : "text-blue-300 font-bold";
@@ -237,6 +253,18 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             >
               <Layers className="w-3.5 h-3.5" />
               <span>BorderPath</span>
+            </button>
+
+            <button
+              onClick={() => handleTabChange("capitalblitz")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                activeTab === "capitalblitz"
+                  ? "bg-amber-600 text-white shadow-md shadow-amber-600/30"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>Capital Blitz</span>
             </button>
 
             <button
@@ -362,6 +390,59 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                   }`}
                 >
                   🌍 Afrique
+                </button>
+              </>
+            ) : activeTab === "capitalblitz" ? (
+              <>
+                <button
+                  onClick={() => setActiveVariant("all")}
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
+                    activeVariant === "all"
+                      ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                  }`}
+                >
+                  ⚡ Sprint Mondial
+                </button>
+                <button
+                  onClick={() => setActiveVariant("Europe")}
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
+                    activeVariant === "Europe"
+                      ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                  }`}
+                >
+                  🇪🇺 Europe
+                </button>
+                <button
+                  onClick={() => setActiveVariant("Africa")}
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
+                    activeVariant === "Africa"
+                      ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                  }`}
+                >
+                  🌍 Afrique
+                </button>
+                <button
+                  onClick={() => setActiveVariant("Americas")}
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
+                    activeVariant === "Americas"
+                      ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                  }`}
+                >
+                  🌎 Amériques
+                </button>
+                <button
+                  onClick={() => setActiveVariant("Asia")}
+                  className={`px-2.5 py-1 rounded-lg font-semibold border transition-colors ${
+                    activeVariant === "Asia"
+                      ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+                      : "border-transparent bg-slate-800/60 hover:bg-slate-800 text-slate-300"
+                  }`}
+                >
+                  🌏 Asie
                 </button>
               </>
             ) : (
