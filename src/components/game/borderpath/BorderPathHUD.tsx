@@ -17,6 +17,7 @@ import {
   Flag,
   HelpCircle,
   Zap,
+  Trophy,
 } from "lucide-react";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
 import { UserNav } from "@/components/navigation/UserNav";
@@ -26,6 +27,8 @@ interface BorderPathHUDProps {
   mode: BorderPathMode;
   startEntity: BorderPathEntity;
   targetEntity: BorderPathEntity;
+  isComplete?: boolean;
+  onOpenSummary?: () => void;
   onOpenRules: () => void;
   onOpenSettings: () => void;
   onOpenPackModal: () => void;
@@ -39,6 +42,8 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
   mode,
   startEntity,
   targetEntity,
+  isComplete = false,
+  onOpenSummary,
   onOpenRules,
   onOpenSettings,
   onOpenPackModal,
@@ -166,6 +171,20 @@ export const BorderPathHUD: React.FC<BorderPathHUDProps> = ({
         >
           <Flag className="w-4 h-4 text-rose-400" />
         </button>
+
+        {/* Results / Summary Button when complete */}
+        {isComplete && onOpenSummary && (
+          <button
+            type="button"
+            onClick={onOpenSummary}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold border border-emerald-400/40 transition-all text-xs shadow-lg shadow-emerald-950/40 cursor-pointer animate-pulse"
+            title="Afficher le tableau des résultats"
+            aria-label="Résultats"
+          >
+            <Trophy className="w-3.5 h-3.5 text-amber-300" />
+            <span className="hidden sm:inline">Résultats</span>
+          </button>
+        )}
 
         {/* Settings Button (Roue crantée standard GeoHub) */}
         <button

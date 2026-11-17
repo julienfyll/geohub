@@ -15,6 +15,7 @@ import {
   Zap,
   Play,
   CheckCircle2,
+  Trophy,
 } from "lucide-react";
 import {
   BorderPathEntity,
@@ -645,6 +646,8 @@ function BorderPathActiveGame({
         mode={mode}
         startEntity={session.startEntity}
         targetEntity={session.targetEntity}
+        isComplete={isComplete}
+        onOpenSummary={() => setShowSummaryModal(true)}
         onOpenRules={() => setShowRulesModal(true)}
         onOpenSettings={() => setShowSettingsModal(true)}
         onOpenPackModal={() => setShowPackModal(true)}
@@ -665,18 +668,29 @@ function BorderPathActiveGame({
         entityLabel={pack === "france_departements" ? "départements" : "pays"}
       />
 
-      {/* 100% Keyboard Input at Bottom */}
+      {/* 100% Keyboard Input at Bottom OR Floating Button to Reopen Summary */}
       <div className="absolute bottom-8 sm:bottom-10 left-0 right-0 z-30 pointer-events-none">
-        <div className="pointer-events-auto">
-          <BorderPathInput
-            headA={headA}
-            headB={headB}
-            graph={graph}
-            visitedIds={visitedIds}
-            isComplete={isComplete}
-            onSelectCandidate={handleSelectCandidate}
-            feedbackMessage={feedbackMessage}
-          />
+        <div className="pointer-events-auto flex justify-center px-4">
+          {isComplete ? (
+            <button
+              type="button"
+              onClick={() => setShowSummaryModal(true)}
+              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-bold text-sm sm:text-base shadow-2xl shadow-blue-900/50 border border-white/20 transition-all transform hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+            >
+              <Trophy className="w-5 h-5 text-amber-300 animate-bounce" />
+              <span>Voir le tableau de fin de partie</span>
+            </button>
+          ) : (
+            <BorderPathInput
+              headA={headA}
+              headB={headB}
+              graph={graph}
+              visitedIds={visitedIds}
+              isComplete={isComplete}
+              onSelectCandidate={handleSelectCandidate}
+              feedbackMessage={feedbackMessage}
+            />
+          )}
         </div>
       </div>
 
