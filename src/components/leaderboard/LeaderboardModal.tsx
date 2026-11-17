@@ -17,6 +17,7 @@ import {
   Target,
   Sparkles,
   Layers,
+  Zap,
 } from "lucide-react";
 import { LeaderboardEntry, LeaderboardResponse } from "@/lib/leaderboard/types";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -40,6 +41,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     initialVariant || (initialGame === "georings" ? "cities" : initialGame === "borderpath" ? "monde" : "villes_france")
   );
   const [timeframe, setTimeframe] = useState<"today" | "yesterday" | "week" | "alltime">("today");
+  const [scoringMode, setScoringMode] = useState<"best_run" | "championship">("best_run");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<LeaderboardResponse | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -121,7 +123,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
     }
 
     const game = activeTab === "streaks" ? "georings" : activeTab;
-    const url = `/api/leaderboard?game=${game}&variant=${activeVariant}&scope=${scope}${dateStr ? `&date=${dateStr}` : ""}`;
+    const url = `/api/leaderboard?game=${game}&variant=${activeVariant}&scope=${scope}&scoringMode=${scoringMode}${dateStr ? `&date=${dateStr}` : ""}`;
 
     fetch(url)
       .then((res) => res.json())
@@ -133,7 +135,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         setData(null);
       })
       .finally(() => setLoading(false));
-  }, [isOpen, activeTab, activeVariant, timeframe]);
+  }, [isOpen, activeTab, activeVariant, timeframe, scoringMode]);
 
   if (!isOpen || !mounted) return null;
 
@@ -311,12 +313,45 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
           )}
         </div>
 
-        {/* Secondary Variant Filters */}
+        {/* Secondary Filters: Format (Meilleur Run / Championnat) & Déclinaison */}
         {activeTab !== "streaks" && (
-          <div className="px-5 py-2.5 bg-slate-950/20 border-b border-slate-800/40 flex items-center gap-2 overflow-x-auto text-xs">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
-              Déclinaison :
-            </span>
+          <div className="px-5 py-2.5 bg-slate-950/20 border-b border-slate-800/40 flex flex-wrap items-center justify-between gap-3 text-xs">
+            {/* Format (Scoring Mode) */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
+                Format :
+              </span>
+              <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs">
+                <button
+                  onClick={() => setScoringMode("best_run")}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-all ${
+                    scoringMode === "best_run"
+                      ? "bg-slate-800 text-white shadow-sm border border-slate-700/80"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Meilleur Run</span>
+                </button>
+                <button
+                  onClick={() => setScoringMode("championship")}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-all ${
+                    scoringMode === "championship"
+                      ? "bg-amber-500/20 text-amber-300 shadow-sm border border-amber-500/40"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Championnat</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Variant Filters */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
+                Déclinaison :
+              </span>
 
             {activeTab === "georings" ? (
               <>
@@ -450,6 +485,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 </button>
               </>
             )}
+            </div>
           </div>
         )}
 
@@ -465,8 +501,10 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
               <Sparkles className="w-8 h-8 text-amber-400 mx-auto mb-2 opacity-60" />
               <h4 className="text-sm font-bold text-slate-300">Aucune partie enregistrée</h4>
               <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                {timeframe === "week"
-                  ? "Soyez le premier à inscrire un score sur cette semaine !"
+                {scoringMode === "championship"
+                  ? "Aucun score cumulé enregistré sur cette période. Participez aux défis pour grimper au classement !"
+                  : timeframe === "week"
+                  ? "Soyez le premier à inscrire un record sur cette semaine !"
                   : timeframe === "alltime"
                   ? "Aucun record historique enregistré pour le moment."
                   : timeframe === "yesterday"
@@ -493,9 +531,25 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                     <span className="text-xs font-bold text-white mt-1.5 truncate max-w-full">
                       {top3[1].username}
                     </span>
-                    <span className={`text-[11px] font-extrabold ${accentText} mt-0.5`}>
-                      {top3[1].detailText}
+                    {/* C1: Primary */}
+                    <span className={`text-xs font-extrabold ${accentText} mt-0.5`}>
+                      {top3[1].primaryCriterion}
                     </span>
+                    {/* C2: Secondary */}
+                    <span className="text-[10.5px] font-semibold text-slate-300 leading-tight">
+                      {top3[1].secondaryCriterion}
+                    </span>
+                    {/* C3: Tie-breaker */}
+                    {top3[1].isTieBroken ? (
+                      <span className="mt-1 px-1.5 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-500/25 text-amber-300 border border-amber-500/40 flex items-center gap-0.5 shadow-sm">
+                        <span>⚖️</span>
+                        <span>{top3[1].tieBreakerCriterion || "Au chrono"}</span>
+                      </span>
+                    ) : top3[1].tieBreakerCriterion ? (
+                      <span className="text-[10px] text-slate-400/80 mt-0.5 flex items-center gap-1 font-mono">
+                        {top3[1].tieBreakerCriterion}
+                      </span>
+                    ) : null}
                   </div>
                 )}
 
@@ -514,9 +568,25 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                     <span className="text-xs font-extrabold text-amber-200 mt-1.5 truncate max-w-full">
                       {top3[0].username}
                     </span>
+                    {/* C1: Primary */}
                     <span className="text-xs font-black text-amber-400 mt-0.5">
-                      {top3[0].detailText}
+                      {top3[0].primaryCriterion}
                     </span>
+                    {/* C2: Secondary */}
+                    <span className="text-[11px] font-semibold text-slate-200 leading-tight">
+                      {top3[0].secondaryCriterion}
+                    </span>
+                    {/* C3: Tie-breaker */}
+                    {top3[0].isTieBroken ? (
+                      <span className="mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/35 text-amber-300 border border-amber-500/60 flex items-center gap-1 shadow-sm animate-pulse">
+                        <span>⚖️</span>
+                        <span>{top3[0].tieBreakerCriterion || "Au chrono"}</span>
+                      </span>
+                    ) : top3[0].tieBreakerCriterion ? (
+                      <span className="text-[10px] text-slate-400/80 mt-0.5 flex items-center gap-1 font-mono">
+                        {top3[0].tieBreakerCriterion}
+                      </span>
+                    ) : null}
                   </div>
                 )}
 
@@ -535,9 +605,25 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                     <span className="text-xs font-bold text-white mt-1.5 truncate max-w-full">
                       {top3[2].username}
                     </span>
+                    {/* C1: Primary */}
                     <span className={`text-[11px] font-extrabold ${accentText} mt-0.5`}>
-                      {top3[2].detailText}
+                      {top3[2].primaryCriterion}
                     </span>
+                    {/* C2: Secondary */}
+                    <span className="text-[10.5px] font-semibold text-slate-300 leading-tight">
+                      {top3[2].secondaryCriterion}
+                    </span>
+                    {/* C3: Tie-breaker */}
+                    {top3[2].isTieBroken ? (
+                      <span className="mt-1 px-1.5 py-0.5 rounded-full text-[9.5px] font-bold bg-amber-500/25 text-amber-300 border border-amber-500/40 flex items-center gap-0.5 shadow-sm">
+                        <span>⚖️</span>
+                        <span>{top3[2].tieBreakerCriterion || "Au chrono"}</span>
+                      </span>
+                    ) : top3[2].tieBreakerCriterion ? (
+                      <span className="text-[10px] text-slate-400/80 mt-0.5 flex items-center gap-1 font-mono">
+                        {top3[2].tieBreakerCriterion}
+                      </span>
+                    ) : null}
                   </div>
                 )}
               </div>
@@ -558,8 +644,8 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                           : "bg-slate-800/40 border-slate-800 hover:bg-slate-800/70"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono font-bold text-slate-400 w-6 text-center">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="font-mono font-bold text-slate-400 w-6 text-center shrink-0">
                           #{entry.rank}
                         </span>
 
@@ -572,15 +658,30 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                           )}
                         </div>
 
-                        <span className={`font-semibold truncate max-w-[140px] sm:max-w-[200px] ${entry.isCurrentUser ? userTextColor : "text-white"}`}>
+                        <span className={`font-semibold truncate max-w-[130px] sm:max-w-[200px] ${entry.isCurrentUser ? userTextColor : "text-white"}`}>
                           {entry.username} {entry.isCurrentUser && "(Vous)"}
                         </span>
                       </div>
 
-                      <div className="text-right">
-                        <span className={`font-bold ${accentText} font-mono`}>
-                          {entry.detailText}
-                        </span>
+                      <div className="text-right shrink-0 flex flex-col items-end gap-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`font-bold ${accentText} font-mono text-xs`}>
+                            {entry.primaryCriterion}
+                          </span>
+                          <span className="text-slate-300 text-[11px] font-medium">
+                            • {entry.secondaryCriterion}
+                          </span>
+                        </div>
+                        {entry.isTieBroken ? (
+                          <span className="px-1.5 py-0.2 rounded-md text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
+                            <span>⚖️ Départage :</span>
+                            <span className="font-mono">{entry.tieBreakerCriterion || "Au chrono"}</span>
+                          </span>
+                        ) : entry.tieBreakerCriterion ? (
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            {entry.tieBreakerCriterion}
+                          </span>
+                        ) : null}
                       </div>
                     </div>
                   ))}
@@ -598,12 +699,19 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 #{data.currentUserRank.rank}
               </span>
               <span className="text-slate-300">
-                Votre classement du jour ({data.currentUserRank.entry.username})
+                Votre classement {scoringMode === "championship" ? "général" : "du jour"} ({data.currentUserRank.entry.username})
               </span>
             </div>
-            <span className={`font-mono ${accentText} font-bold`}>
-              {data.currentUserRank.entry.detailText}
-            </span>
+            <div className="flex items-center gap-2 text-right">
+              <span className={`font-mono ${accentText} font-bold`}>
+                {data.currentUserRank.entry.primaryCriterion} • {data.currentUserRank.entry.secondaryCriterion}
+              </span>
+              {data.currentUserRank.entry.isTieBroken && (
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                  ⚖️ {data.currentUserRank.entry.tieBreakerCriterion || "Départagé"}
+                </span>
+              )}
+            </div>
           </div>
         )}
       </div>
