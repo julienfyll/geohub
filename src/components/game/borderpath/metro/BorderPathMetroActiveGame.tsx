@@ -783,12 +783,12 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath?pack=metro_paris`;
     }
   }, [startStation]);
 
-  // New random challenge
+  // New random challenge (always in free mode)
   const handleNewChallenge = useCallback(() => {
     const newSeed = Math.random().toString(36).substring(2, 8);
-    router.push(`/play/borderpath?pack=metro_paris&mode=${mode}&seed=${newSeed}&play=1`);
+    router.push(`/play/borderpath?pack=metro_paris&mode=free&seed=${newSeed}&play=1`);
     setShowVictoryModal(false);
-  }, [mode, router]);
+  }, [router]);
 
   // Return to BorderPath Hub
   const handleReturnHub = useCallback(() => {

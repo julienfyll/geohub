@@ -603,9 +603,11 @@ function BorderPathActiveGame({
     setShowRestartModal(false);
   };
 
-  // New random challenge in current pack
+  // New random challenge in current pack (switches to free mode if in daily)
   const handleNewChallenge = () => {
-    initGameSession(pack, "free");
+    setShowSummaryModal(false);
+    const newSeed = Math.random().toString(36).substring(2, 8);
+    router.push(`/play/borderpath?pack=${pack}&mode=free&seed=${newSeed}&play=1`);
   };
 
   // Toggle Hide Borders
@@ -712,7 +714,7 @@ function BorderPathActiveGame({
         onNewChallenge={handleNewChallenge}
         onReturnHub={() => {
           setShowSummaryModal(false);
-          router.push("/");
+          router.push("/play/borderpath");
         }}
       />
 
@@ -812,12 +814,15 @@ function BorderPathGame() {
   }
 
   if (pack === "metro_paris") {
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const resolvedSeed =
+      rawSeed || (mode === "daily" ? `metro_daily_${todayStr}` : `metro_${Date.now()}`);
     return (
       <BorderPathMetroActiveGame
-        key={`game-metro-${mode}-${rawSeed || "session"}`}
+        key={`game-metro-${mode}-${resolvedSeed}`}
         pack={pack}
         mode={mode}
-        seed={rawSeed || "metro_daily"}
+        seed={resolvedSeed}
         theme={theme}
         setTheme={setTheme}
         hideBorders={hideBorders}

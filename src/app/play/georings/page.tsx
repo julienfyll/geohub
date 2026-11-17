@@ -648,6 +648,16 @@ function GeoRingsGame() {
     }
   };
 
+  // Start new random game from game over (switches to free mode if in daily)
+  const handleGameOverRestart = () => {
+    setShowGameOverModal(false);
+    if (mode === "daily") {
+      router.push(`/play/georings?metric=${metric}&scale=${scale}&mode=free`);
+    } else {
+      initGame();
+    }
+  };
+
   useEffect(() => {
     if (!isLobby) {
       initGame();
@@ -1681,7 +1691,7 @@ function GeoRingsGame() {
           }
           rings={rings}
           customShareUrl={getCustomShareUrl()}
-          onRestart={initGame}
+          onRestart={handleGameOverRestart}
           onClose={() => setShowGameOverModal(false)}
         />
       )}

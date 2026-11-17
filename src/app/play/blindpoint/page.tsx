@@ -1232,6 +1232,10 @@ function BlindPointGame() {
         customShareUrl={getCustomShareUrl()}
         rounds={roundsHistory}
         onRestartGame={handleRestartCurrentGame}
+        onNewFreeGame={() => {
+          setShowSummaryModal(false);
+          router.push(`/play/blindpoint?pack=${pack}&difficulty=${difficulty}&mode=free&seed=${Date.now()}&play=1`);
+        }}
         onCloseToMap={() => setShowSummaryModal(false)}
         onBackToLobby={handleBackToLobby}
       />
