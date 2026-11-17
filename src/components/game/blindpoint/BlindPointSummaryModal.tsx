@@ -36,6 +36,7 @@ interface BlindPointSummaryModalProps {
   customShareUrl?: string;
   rounds: BlindPointRoundResult[];
   onRestartGame: () => void;
+  onNewFreeGame?: () => void;
   onCloseToMap: () => void;
   onBackToLobby?: () => void;
 }
@@ -51,6 +52,7 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
   customShareUrl,
   rounds,
   onRestartGame,
+  onNewFreeGame,
   onCloseToMap,
   onBackToLobby,
 }) => {
@@ -402,25 +404,48 @@ export const BlindPointSummaryModal: React.FC<BlindPointSummaryModalProps> = ({
           </div>
 
           {/* Secondary buttons */}
-          <div className="flex gap-2.5">
+          <div className="flex flex-col sm:flex-row gap-2.5">
             {onBackToLobby ? (
               <button
                 type="button"
                 onClick={onBackToLobby}
-                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors cursor-pointer"
+                className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors cursor-pointer text-center"
               >
                 <span>Changer de mode</span>
               </button>
             ) : null}
 
-            <button
-              type="button"
-              onClick={onRestartGame}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-lg shadow-blue-600/30 cursor-pointer"
-            >
-              <RotateCcw className="w-4 h-4 text-white" />
-              <span>Rejouer</span>
-            </button>
+            {mode === "daily" && onNewFreeGame ? (
+              <>
+                <button
+                  type="button"
+                  onClick={onRestartGame}
+                  className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                  title="Rejouer ce même défi du jour"
+                >
+                  <RotateCcw className="w-4 h-4 text-cyan-400" />
+                  <span>Rejouer</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={onNewFreeGame}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs transition-colors shadow-lg shadow-blue-600/30 cursor-pointer"
+                  title="Lancer une partie aléatoire en mode libre"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <span>Partie Rapide</span>
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={onRestartGame}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-lg shadow-blue-600/30 cursor-pointer"
+              >
+                <RotateCcw className="w-4 h-4 text-white" />
+                <span>Rejouer</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

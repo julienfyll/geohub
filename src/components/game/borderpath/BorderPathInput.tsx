@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   BorderPathEntity,
   BorderPathGraph,
+  BorderPathPack,
 } from "@/lib/games/borderpath/types";
 import { searchEntities } from "@/lib/games/borderpath/engine";
 import { Search, CornerDownLeft, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -14,6 +15,7 @@ interface BorderPathInputProps {
   graph: BorderPathGraph;
   visitedIds: string[];
   isComplete: boolean;
+  pack?: BorderPathPack;
   onSelectCandidate: (entity: BorderPathEntity) => void;
   feedbackMessage?: { text: string; type: "error" | "success" | "info" } | null;
 }
@@ -24,6 +26,7 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
   graph,
   visitedIds,
   isComplete,
+  pack,
   onSelectCandidate,
   feedbackMessage,
 }) => {
@@ -117,8 +120,8 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
     }
   };
 
-  const isFrance = headA.id.match(/^\d+$/);
-  const placeholderText = isFrance
+  const isDepartements = pack === "france_departements" || (headA?.id ? /^\d+$/.test(headA.id) : false);
+  const placeholderText = isDepartements
     ? "Rechercher un département limitrophe..."
     : "Rechercher un pays limitrophe...";
 
@@ -243,6 +246,9 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
           <span>
             <strong className="text-slate-400">Échap</strong> effacer
           </span>
+        </div>
+        <div className="hidden sm:flex items-center gap-1 text-slate-400 font-medium">
+          <span>🔗 N&apos;importe quel {isDepartements ? "département" : "pays"} limitrophe</span>
         </div>
       </div>
     </div>
