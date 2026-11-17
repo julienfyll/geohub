@@ -106,9 +106,9 @@ export async function GET(request: Request) {
   }
 
   // -------------------------------------------------------------------
-  // 2. SCOPE: DAILY CHALLENGE (Défi du jour)
+  // 2. SCOPES: DAILY, WEEK, ALLTIME
   // -------------------------------------------------------------------
-  const { data: sessionRows, error: sessionErr } = await supabase
+  let sessionQuery = supabase
     .from("game_sessions")
     .select(`
       id,
@@ -132,17 +132,47 @@ export async function GET(request: Request) {
       )
     `)
     .eq("game_mode", game)
-    .eq("variant", variant)
-    .gte("created_at", startOfDay)
-    .lte("created_at", endOfDay)
-    .order("created_at", { ascending: true }); // chronological to take 1st attempt
+    .eq("variant", variant);
+
+  if (scope === "week") {
+    // Current ISO week: Monday 00:00:00 UTC to Sunday 23:59:59 UTC
+    const refDate = new Date(dateParam || new Date());
+    const dayOfWeek = (refDate.getUTCDay() + 6) % 7; // Monday = 0, Sunday = 6
+    const monday = new Date(refDate);
+    monday.setUTCDate(refDate.getUTCDate() - dayOfWeek);
+    monday.setUTCHours(0, 0, 0, 0);
+    const startOfWeek = monday.toISOString();
+
+    const sunday = new Date(monday);
+    sunday.setUTCDate(monday.getUTCDate() + 6);
+    sunday.setUTCHours(23, 59, 59, 999);
+    const endOfWeek = sunday.toISOString();
+
+    sessionQuery = sessionQuery
+      .gte("created_at", startOfWeek)
+      .lte("created_at", endOfWeek)
+      .order("created_at", { ascending: false });
+  } else if (scope === "alltime") {
+    // All-time: fetch highest-scoring sessions (limit 1000)
+    sessionQuery = sessionQuery
+      .order("score", { ascending: false })
+      .limit(1000);
+  } else {
+    // Daily: 1 day range, chronological to pick 1st official attempt
+    sessionQuery = sessionQuery
+      .gte("created_at", startOfDay)
+      .lte("created_at", endOfDay)
+      .order("created_at", { ascending: true });
+  }
+
+  const { data: sessionRows, error: sessionErr } = await sessionQuery;
 
   if (sessionErr || !sessionRows) {
     console.error("Session leaderboard err:", sessionErr);
     return NextResponse.json({
       gameMode: game as any,
       variant,
-      scope: "daily",
+      scope: scope as any,
       date: targetDateStr,
       totalPlayers: 0,
       entries: [],
@@ -150,75 +180,111 @@ export async function GET(request: Request) {
     });
   }
 
-  // Filter for daily mode and keep ONLY the 1st attempt per user for fairness
-  const userFirstAttempts = new Map<string, any>();
-  for (const session of sessionRows) {
-    const isDaily = session.summary_data?.mode === "daily";
-    if (!isDaily) continue;
+  // Helper comparator: returns true if candidate is better than currentBest
+  function isBetterSession(a: any, b: any, targetGame: string): boolean {
+    if (!b) return true;
+    if (!a) return false;
 
-    if (!userFirstAttempts.has(session.user_id)) {
-      userFirstAttempts.set(session.user_id, session);
-    }
-  }
-
-  const uniqueSessions = Array.from(userFirstAttempts.values());
-
-  // Sort logic
-  uniqueSessions.sort((a, b) => {
-    if (game === "georings") {
+    if (targetGame === "georings") {
       // 1. Rings completed DESC
       const ringsA = a.rings_completed ?? a.score ?? 0;
       const ringsB = b.rings_completed ?? b.score ?? 0;
-      if (ringsB !== ringsA) return ringsB - ringsA;
+      if (ringsA !== ringsB) return ringsA > ringsB;
 
-      // 2. Tries used ASC (if stored in summary)
+      // 2. Tries used ASC
       const triesA = a.summary_data?.totalTriesUsed ?? 15;
       const triesB = b.summary_data?.totalTriesUsed ?? 15;
-      if (triesA !== triesB) return triesA - triesB;
+      if (triesA !== triesB) return triesA < triesB;
 
-      // 3. Earliest finish
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    } else if (game === "borderpath") {
-      // BorderPath:
-      // 1. Score DESC (won/completed games first)
-      if (b.score !== a.score) return b.score - a.score;
-
-      // 2. Total attempts ASC (fewer attempts = better)
-      const attemptsA = a.summary_data?.totalAttempts ?? 999;
-      const attemptsB = b.summary_data?.totalAttempts ?? 999;
-      if (attemptsA !== attemptsB) return attemptsA - attemptsB;
-
-      // 3. Errors ASC
-      const errorsA = a.summary_data?.errorCount ?? 999;
-      const errorsB = b.summary_data?.errorCount ?? 999;
-      if (errorsA !== errorsB) return errorsA - errorsB;
+      // 3. Time spent ASC (faster is better)
+      const timeA = a.time_spent_seconds ?? 99999;
+      const timeB = b.time_spent_seconds ?? 99999;
+      if (timeA !== timeB) return timeA < timeB;
 
       // 4. Earliest finish
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      return new Date(a.created_at).getTime() < new Date(b.created_at).getTime();
+    } else if (targetGame === "borderpath") {
+      // 1. Score DESC (won/completed games first)
+      if (b.score !== a.score) return a.score > b.score;
+
+      // 2. Total attempts ASC (fewer attempts = better)
+      const attA = a.summary_data?.totalAttempts ?? 999;
+      const attB = b.summary_data?.totalAttempts ?? 999;
+      if (attA !== attB) return attA < attB;
+
+      // 3. Errors ASC
+      const errA = a.summary_data?.errorCount ?? 999;
+      const errB = b.summary_data?.errorCount ?? 999;
+      if (errA !== errB) return errA < errB;
+
+      // 4. Time spent ASC
+      const timeA = a.time_spent_seconds ?? 99999;
+      const timeB = b.time_spent_seconds ?? 99999;
+      if (timeA !== timeB) return timeA < timeB;
+
+      // 5. Earliest finish
+      return new Date(a.created_at).getTime() < new Date(b.created_at).getTime();
     } else {
       // Blind Point:
       // 1. Score DESC (out of 25000)
-      if (b.score !== a.score) return b.score - a.score;
+      if (b.score !== a.score) return a.score > b.score;
 
       // 2. Distance KM ASC (lower distance error is better)
       const distA = a.distance_km ?? 99999;
       const distB = b.distance_km ?? 99999;
-      if (distA !== distB) return distA - distB;
+      if (distA !== distB) return distA < distB;
 
-      // 3. Earliest finish
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      // 3. Time spent ASC
+      const timeA = a.time_spent_seconds ?? 99999;
+      const timeB = b.time_spent_seconds ?? 99999;
+      if (timeA !== timeB) return timeA < timeB;
+
+      // 4. Earliest finish
+      return new Date(a.created_at).getTime() < new Date(b.created_at).getTime();
     }
-  });
+  }
+
+  // Filter for daily mode sessions
+  // For daily: pick 1st official attempt
+  // For week and alltime: pick best performance per user
+  const userFilteredSessions = new Map<string, any>();
+  for (const session of sessionRows) {
+    const isDaily = session.summary_data?.mode === "daily";
+    if (!isDaily) continue;
+
+    if (scope === "daily") {
+      if (!userFilteredSessions.has(session.user_id)) {
+        userFilteredSessions.set(session.user_id, session);
+      }
+    } else {
+      // week or alltime: keep the user's best session
+      const existing = userFilteredSessions.get(session.user_id);
+      if (!existing || isBetterSession(session, existing, game)) {
+        userFilteredSessions.set(session.user_id, session);
+      }
+    }
+  }
+
+  const uniqueSessions = Array.from(userFilteredSessions.values());
+
+  // Sort ranked entries
+  uniqueSessions.sort((a, b) => (isBetterSession(a, b, game) ? -1 : 1));
 
   const allEntries: LeaderboardEntry[] = uniqueSessions.map((session, idx) => {
     const prof = Array.isArray(session.profiles) ? session.profiles[0] : session.profiles;
     let detail = "";
+    const timeSec = session.time_spent_seconds;
+    const timeStr = timeSec && timeSec > 0
+      ? ` • ${Math.floor(timeSec / 60)}m${(timeSec % 60).toString().padStart(2, "0")}s`
+      : "";
 
     if (game === "georings") {
       const rings = session.rings_completed ?? session.score ?? 0;
       const total = session.total_rings ?? 5;
       const tries = session.summary_data?.totalTriesUsed;
-      detail = tries ? `${rings}/${total} anneaux (${tries} coups)` : `${rings}/${total} anneaux`;
+      detail = tries
+        ? `${rings}/${total} anneaux (${tries} coups${timeStr})`
+        : `${rings}/${total} anneaux${timeStr}`;
     } else if (game === "borderpath") {
       const attempts = session.summary_data?.totalAttempts;
       const corridor = session.summary_data?.corridorCount;
@@ -226,15 +292,17 @@ export async function GET(request: Request) {
       if (session.score === 0) {
         detail = "Abandon";
       } else if (attempts) {
-        detail = `${attempts} coups${corridor ? ` • ${corridor} étapes` : ""}${errors > 0 ? ` (${errors} err.)` : ""}`;
+        detail = `${attempts} coups${corridor ? ` • ${corridor} ét.` : ""}${errors > 0 ? ` (${errors} err.)` : ""}${timeStr}`;
       } else {
-        detail = `${session.score} pts`;
+        detail = `${session.score} pts${timeStr}`;
       }
     } else {
       const distKm = session.distance_km;
       detail = distKm !== null && distKm !== undefined
-        ? distKm < 1 ? `${Math.round(distKm * 1000)} m d'écart` : `${Math.round(distKm)} km d'écart`
-        : `${session.score} pts`;
+        ? distKm < 1
+          ? `${Math.round(distKm * 1000)} m d'écart${timeStr}`
+          : `${Math.round(distKm)} km d'écart${timeStr}`
+        : `${session.score} pts${timeStr}`;
     }
 
     return {
@@ -246,6 +314,7 @@ export async function GET(request: Request) {
       maxScore: session.max_score ?? (game === "georings" ? 5 : game === "borderpath" ? 10000 : 25000),
       detailText: detail,
       accuracyPercent: session.accuracy_percent ? Number(session.accuracy_percent) : undefined,
+      timeSpentSeconds: session.time_spent_seconds ? Number(session.time_spent_seconds) : undefined,
       createdAt: session.created_at,
       isCurrentUser: currentUserId === session.user_id,
     };
@@ -256,7 +325,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     gameMode: game as any,
     variant,
-    scope: "daily",
+    scope: scope as any,
     date: targetDateStr,
     totalPlayers: allEntries.length,
     entries: allEntries.slice(0, 50),

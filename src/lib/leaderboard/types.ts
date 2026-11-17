@@ -7,6 +7,7 @@ export interface LeaderboardEntry {
   maxScore?: number;
   detailText: string;
   accuracyPercent?: number;
+  timeSpentSeconds?: number;
   createdAt: string;
   isCurrentUser?: boolean;
 }
@@ -14,7 +15,7 @@ export interface LeaderboardEntry {
 export interface LeaderboardResponse {
   gameMode: "georings" | "blindpoint" | "borderpath";
   variant: string;
-  scope: "daily" | "streaks";
+  scope: "daily" | "week" | "alltime" | "streaks";
   date: string;
   totalPlayers: number;
   entries: LeaderboardEntry[];

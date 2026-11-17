@@ -39,7 +39,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
   const [activeVariant, setActiveVariant] = useState<string>(
     initialVariant || (initialGame === "georings" ? "cities" : initialGame === "borderpath" ? "monde" : "villes_france")
   );
-  const [dateOffset, setDateOffset] = useState<0 | 1>(0); // 0 = today, 1 = yesterday
+  const [timeframe, setTimeframe] = useState<"today" | "yesterday" | "week" | "alltime">("today");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<LeaderboardResponse | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -101,15 +101,27 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
     setLoading(true);
 
-    const targetDate = new Date();
-    if (dateOffset === 1) {
-      targetDate.setDate(targetDate.getDate() - 1);
-    }
-    const dateStr = targetDate.toISOString().split("T")[0];
+    let scope: "daily" | "week" | "alltime" | "streaks" = activeTab === "streaks" ? "streaks" : "daily";
+    let dateStr = "";
 
-    const scope = activeTab === "streaks" ? "streaks" : "daily";
+    if (activeTab !== "streaks") {
+      if (timeframe === "today") {
+        scope = "daily";
+        dateStr = new Date().toISOString().split("T")[0];
+      } else if (timeframe === "yesterday") {
+        scope = "daily";
+        const y = new Date();
+        y.setDate(y.getDate() - 1);
+        dateStr = y.toISOString().split("T")[0];
+      } else if (timeframe === "week") {
+        scope = "week";
+      } else if (timeframe === "alltime") {
+        scope = "alltime";
+      }
+    }
+
     const game = activeTab === "streaks" ? "georings" : activeTab;
-    const url = `/api/leaderboard?game=${game}&variant=${activeVariant}&scope=${scope}&date=${dateStr}`;
+    const url = `/api/leaderboard?game=${game}&variant=${activeVariant}&scope=${scope}${dateStr ? `&date=${dateStr}` : ""}`;
 
     fetch(url)
       .then((res) => res.json())
@@ -121,7 +133,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         setData(null);
       })
       .finally(() => setLoading(false));
-  }, [isOpen, activeTab, activeVariant, dateOffset]);
+  }, [isOpen, activeTab, activeVariant, timeframe]);
 
   if (!isOpen || !mounted) return null;
 
@@ -252,13 +264,13 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             </button>
           </div>
 
-          {/* Date Toggle (Today / Yesterday) */}
+          {/* Timeframe Toggle (Today / Yesterday / Week / All-time) */}
           {activeTab !== "streaks" && (
-            <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs">
+            <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs shrink-0 overflow-x-auto no-scrollbar">
               <button
-                onClick={() => setDateOffset(0)}
-                className={`px-2.5 py-1 rounded-lg font-semibold transition-colors ${
-                  dateOffset === 0
+                onClick={() => setTimeframe("today")}
+                className={`px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-colors ${
+                  timeframe === "today"
                     ? "bg-slate-800 text-white shadow-sm"
                     : "text-slate-400 hover:text-white"
                 }`}
@@ -266,14 +278,34 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 Aujourd'hui
               </button>
               <button
-                onClick={() => setDateOffset(1)}
-                className={`px-2.5 py-1 rounded-lg font-semibold transition-colors ${
-                  dateOffset === 1
+                onClick={() => setTimeframe("yesterday")}
+                className={`px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-colors ${
+                  timeframe === "yesterday"
                     ? "bg-slate-800 text-white shadow-sm"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
                 Hier
+              </button>
+              <button
+                onClick={() => setTimeframe("week")}
+                className={`px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-colors ${
+                  timeframe === "week"
+                    ? "bg-slate-800 text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Semaine
+              </button>
+              <button
+                onClick={() => setTimeframe("alltime")}
+                className={`px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-colors ${
+                  timeframe === "alltime"
+                    ? "bg-slate-800 text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Tous les temps
               </button>
             </div>
           )}
@@ -433,7 +465,13 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
               <Sparkles className="w-8 h-8 text-amber-400 mx-auto mb-2 opacity-60" />
               <h4 className="text-sm font-bold text-slate-300">Aucune partie enregistrée</h4>
               <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                Soyez le premier à relever ce défi quotidien et prenez la tête du classement !
+                {timeframe === "week"
+                  ? "Soyez le premier à inscrire un score sur cette semaine !"
+                  : timeframe === "alltime"
+                  ? "Aucun record historique enregistré pour le moment."
+                  : timeframe === "yesterday"
+                  ? "Aucune partie enregistrée pour le défi d'hier."
+                  : "Soyez le premier à relever ce défi quotidien et prenez la tête du classement !"}
               </p>
             </div>
           ) : (
