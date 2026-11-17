@@ -29,6 +29,7 @@ import {
   getPackGraph,
   generateChallenge,
   validateBidirectionalStep,
+  computeConnectedComponents,
   findShortestPath,
   findMinDistanceBetweenSets,
   findShortestPathWithinSet,
@@ -413,13 +414,8 @@ function BorderPathActiveGame({
     generateChallenge({ pack, mode, seed })
   );
 
-  // Bidirectional branches: Branch A (from Start) and Branch B (from Target)
-  const [branchAEntities, setBranchAEntities] = useState<BorderPathEntity[]>(() => [
-    session.startEntity,
-  ]);
-  const [branchBEntities, setBranchBEntities] = useState<BorderPathEntity[]>(() => [
-    session.targetEntity,
-  ]);
+  // Placed entities by the user (excluding initial start and target)
+  const [placedEntities, setPlacedEntities] = useState<BorderPathEntity[]>([]);
   const [fullConnectedPath, setFullConnectedPath] = useState<BorderPathEntity[]>([]);
   const [failedAttempts, setFailedAttempts] = useState<BorderPathEntity[]>([]);
 
@@ -435,6 +431,30 @@ function BorderPathActiveGame({
   const graph = useMemo<BorderPathGraph>(() => {
     return getPackGraph(pack);
   }, [pack]);
+
+  // Compute connected components dynamically among all placed entities
+  const components = useMemo(() => {
+    const placedIds = placedEntities.map((e) => e.id);
+    return computeConnectedComponents(
+      session.startEntity.id,
+      session.targetEntity.id,
+      placedIds,
+      graph
+    );
+  }, [session.startEntity.id, session.targetEntity.id, placedEntities, graph]);
+
+  // Dynamic branches and intermediates derived from real graph connectivity
+  const branchAEntities = useMemo<BorderPathEntity[]>(() => {
+    return components.compA.map((id) => graph[id]).filter(Boolean);
+  }, [components.compA, graph]);
+
+  const branchBEntities = useMemo<BorderPathEntity[]>(() => {
+    return components.compB.map((id) => graph[id]).filter(Boolean);
+  }, [components.compB, graph]);
+
+  const intermediateEntities = useMemo<BorderPathEntity[]>(() => {
+    return components.intermediates.map((id) => graph[id]).filter(Boolean);
+  }, [components.intermediates, graph]);
 
   // Active heads for each front
   const headA = useMemo<BorderPathEntity>(() => {
@@ -454,8 +474,7 @@ function BorderPathActiveGame({
       });
 
       setSession(newSession);
-      setBranchAEntities([newSession.startEntity]);
-      setBranchBEntities([newSession.targetEntity]);
+      setPlacedEntities([]);
       setFullConnectedPath([]);
       setFailedAttempts([]);
       setInvalidFlashId(null);
@@ -468,79 +487,38 @@ function BorderPathActiveGame({
     []
   );
 
-  // Remaining BFS distance between Side A and Side B
+  // Remaining BFS distance between Front A and Front B
   const remainingSteps = useMemo(() => {
     if (isComplete) return 0;
-    const branchAIds = branchAEntities.map((e) => e.id);
-    const branchBIds = branchBEntities.map((e) => e.id);
-    return findMinDistanceBetweenSets(branchAIds, branchBIds, graph);
-  }, [branchAEntities, branchBEntities, graph, isComplete]);
+    return findMinDistanceBetweenSets(components.compA, components.compB, graph);
+  }, [components.compA, components.compB, graph, isComplete]);
 
-  // Auto-complete immediately if Side A and Side B touch each other
-  useEffect(() => {
-    if (isComplete || gaveUp) return;
-    const branchAIds = branchAEntities.map((e) => e.id);
-    const branchBIds = branchBEntities.map((e) => e.id);
-    const areTouching = branchAIds.some((aId) =>
-      branchBIds.some((bId) => graph[aId]?.neighbors.includes(bId))
-    );
-    if (areTouching && branchAIds.length > 0 && branchBIds.length > 0) {
-      const allPlacedSet = new Set([...branchAIds, ...branchBIds]);
-      const connectedPath = findShortestPathWithinSet(
-        session.startEntity.id,
-        session.targetEntity.id,
-        allPlacedSet,
-        graph
-      );
-      if (connectedPath) {
-        setIsComplete(true);
-        const fullEntities = connectedPath.map((id) => graph[id]).filter(Boolean);
-        setFullConnectedPath(fullEntities);
-        setFeedbackMessage({
-          text: "🎯 Jonction réussie ! Les deux côtés se touchent !",
-          type: "success",
-        });
-        setTimeout(() => setShowSummaryModal(true), 1200);
-      }
-    }
-  }, [
-    branchAEntities,
-    branchBEntities,
-    graph,
-    isComplete,
-    gaveUp,
-    session.startEntity.id,
-    session.targetEntity.id,
-  ]);
-
-  // Total unique countries placed so far
+  // Total unique countries placed on map (Start + Target + placed)
   const uniquePlacedCount = useMemo(() => {
-    const set = new Set([
-      ...branchAEntities.map((e) => e.id),
-      ...branchBEntities.map((e) => e.id),
-    ]);
-    return set.size;
-  }, [branchAEntities, branchBEntities]);
+    return 2 + placedEntities.length;
+  }, [placedEntities]);
 
-  const totalAttempts = uniquePlacedCount + failedAttempts.length;
+  const totalAttempts = placedEntities.length + failedAttempts.length;
 
-  // Handle player candidate selection (Bidirectional)
+  // Handle player candidate selection (Free Placement)
   const handleSelectCandidate = (candidate: BorderPathEntity) => {
     if (isComplete || gaveUp) return;
 
-    const branchAIds = branchAEntities.map((e) => e.id);
-    const branchBIds = branchBEntities.map((e) => e.id);
+    const branchAIds = components.compA;
+    const branchBIds = components.compB;
+    const intermediateIds = components.intermediates;
 
     const result = validateBidirectionalStep(
       candidate.id,
       branchAIds,
       branchBIds,
-      graph
+      graph,
+      intermediateIds
     );
 
     if (!result.valid) {
       setFeedbackMessage({
-        text: result.message || "Mouvement impossible",
+        text: result.message || "Saisie impossible",
         type: "error",
       });
       setFailedAttempts((prev) => [...prev, candidate]);
@@ -549,14 +527,8 @@ function BorderPathActiveGame({
       return;
     }
 
-    // Candidate is valid
-    if (result.attachedTo === "branchA") {
-      setBranchAEntities((prev) => [...prev, candidate]);
-    } else if (result.attachedTo === "branchB") {
-      setBranchBEntities((prev) => [...prev, candidate]);
-    } else if (result.attachedTo === "bridge") {
-      setBranchAEntities((prev) => [...prev, candidate]);
-    }
+    // Add candidate to placedEntities
+    setPlacedEntities((prev) => [...prev, candidate]);
 
     if (result.isComplete && result.fullConnectedPath) {
       setIsComplete(true);
@@ -573,7 +545,7 @@ function BorderPathActiveGame({
       }, 1200);
     } else {
       setFeedbackMessage({
-        text: result.message || `Maillon posé : ${candidate.name}`,
+        text: result.message || `Jalon posé : ${candidate.name}`,
         type: "info",
       });
       setTimeout(() => setFeedbackMessage(null), 3500);
@@ -591,8 +563,7 @@ function BorderPathActiveGame({
 
   // Replay exactly the same challenge
   const handleReplaySameChallenge = () => {
-    setBranchAEntities([session.startEntity]);
-    setBranchBEntities([session.targetEntity]);
+    setPlacedEntities([]);
     setFullConnectedPath([]);
     setFailedAttempts([]);
     setInvalidFlashId(null);
@@ -622,8 +593,9 @@ function BorderPathActiveGame({
   };
 
   const visitedIds = [
-    ...branchAEntities.map((e) => e.id),
-    ...branchBEntities.map((e) => e.id),
+    session.startEntity.id,
+    session.targetEntity.id,
+    ...placedEntities.map((e) => e.id),
   ];
 
   return (
@@ -637,6 +609,7 @@ function BorderPathActiveGame({
         targetEntity={session.targetEntity}
         branchAEntities={branchAEntities}
         branchBEntities={branchBEntities}
+        intermediateEntities={intermediateEntities}
         fullConnectedPathEntities={fullConnectedPath}
         isComplete={isComplete}
         invalidFlashId={invalidFlashId}

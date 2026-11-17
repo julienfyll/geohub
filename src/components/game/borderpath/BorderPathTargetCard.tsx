@@ -82,7 +82,7 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
                   errorCount > 0 ? "bg-rose-400" : "bg-slate-600"
                 }`}
               />
-              <span className="text-xs">Erreurs (non limitrophes) :</span>
+              <span className="text-xs">Saisies refusées (doublons) :</span>
             </div>
             <span
               className={`font-mono font-bold text-xs px-2 py-0.5 rounded ${
@@ -108,7 +108,7 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
         {/* Dynamic network hint */}
         <div className="text-[10.5px] text-slate-400/90 text-center flex items-center justify-center gap-1">
           <span>💡</span>
-          <span>Tout {isDepartements ? "département" : "pays"} limitrophe du réseau est accepté</span>
+          <span>Pose libre : placez vos jalons n'importe où, le chemin optimal sera extrait à la jonction</span>
         </div>
 
         {/* Footer: Remaining BFS distance hint or Connected status */}

@@ -330,18 +330,93 @@ export function findMinDistanceBetweenSets(
   return -1;
 }
 
+export interface ConnectedComponentsResult {
+  compA: string[];
+  compB: string[];
+  intermediates: string[];
+  isConnected: boolean;
+}
+
 /**
- * Validates a candidate step in bidirectional mode (growing from Start A and/or Target B)
- * Completes as soon as ANY country from side A touches ANY country from side B.
+ * Computes connected components among all placed nodes:
+ * - compA: nodes connected to startId
+ * - compB: nodes connected to targetId
+ * - intermediates: placed nodes not yet connected to either
+ * - isConnected: true if a continuous path exists between startId and targetId
+ */
+export function computeConnectedComponents(
+  startId: string,
+  targetId: string,
+  placedIds: string[],
+  graph: BorderPathGraph
+): ConnectedComponentsResult {
+  const allNodes = new Set([startId, targetId, ...placedIds]);
+
+  // BFS from startId
+  const compA = new Set<string>([startId]);
+  const qA: string[] = [startId];
+  while (qA.length > 0) {
+    const u = qA.shift()!;
+    for (const v of graph[u]?.neighbors || []) {
+      if (allNodes.has(v) && !compA.has(v)) {
+        compA.add(v);
+        qA.push(v);
+      }
+    }
+  }
+
+  if (compA.has(targetId)) {
+    return {
+      compA: Array.from(compA),
+      compB: Array.from(compA),
+      intermediates: [],
+      isConnected: true,
+    };
+  }
+
+  // BFS from targetId
+  const compB = new Set<string>([targetId]);
+  const qB: string[] = [targetId];
+  while (qB.length > 0) {
+    const u = qB.shift()!;
+    for (const v of graph[u]?.neighbors || []) {
+      if (allNodes.has(v) && !compB.has(v)) {
+        compB.add(v);
+        qB.push(v);
+      }
+    }
+  }
+
+  const intermediates: string[] = [];
+  for (const id of allNodes) {
+    if (!compA.has(id) && !compB.has(id)) {
+      intermediates.push(id);
+    }
+  }
+
+  return {
+    compA: Array.from(compA),
+    compB: Array.from(compB),
+    intermediates,
+    isConnected: false,
+  };
+}
+
+/**
+ * Validates a candidate step in Free Placement mode.
+ * The player can place ANY territory from the pack at any time.
+ * As soon as ANY continuous path of borders connects Start and Target,
+ * the game concludes and extracts the shortest traced path within all placed entities.
  */
 export function validateBidirectionalStep(
   candidateId: string,
   branchAIds: string[],
   branchBIds: string[],
-  graph: BorderPathGraph
+  graph: BorderPathGraph,
+  intermediateIds: string[] = []
 ): {
   valid: boolean;
-  attachedTo?: "branchA" | "branchB" | "bridge";
+  attachedTo?: "branchA" | "branchB" | "bridge" | "intermediate";
   alreadyVisited: boolean;
   isComplete: boolean;
   newHeadAId: string;
@@ -349,110 +424,101 @@ export function validateBidirectionalStep(
   minRemainingDistance: number;
   totalAttempts: number;
   fullConnectedPath?: string[];
+  components: ConnectedComponentsResult;
   message?: string;
 } {
   const candidate = graph[candidateId];
   const startId = branchAIds[0];
   const targetId = branchBIds[0];
-  const headAId = branchAIds[branchAIds.length - 1];
-  const headBId = branchBIds[branchBIds.length - 1];
+  const headAId = branchAIds[branchAIds.length - 1] || startId;
+  const headBId = branchBIds[branchBIds.length - 1] || targetId;
 
-  const currentAttempts = branchAIds.length + branchBIds.length - 2;
+  const currentPlacedIds = Array.from(
+    new Set([
+      ...branchAIds.filter((id) => id !== startId),
+      ...branchBIds.filter((id) => id !== targetId),
+      ...intermediateIds,
+    ])
+  );
+  const currentAttempts = currentPlacedIds.length;
 
   if (!candidate) {
+    const comps = computeConnectedComponents(startId, targetId, currentPlacedIds, graph);
     return {
       valid: false,
       alreadyVisited: false,
       isComplete: false,
       newHeadAId: headAId,
       newHeadBId: headBId,
-      minRemainingDistance: -1,
+      minRemainingDistance: findMinDistanceBetweenSets(comps.compA, comps.compB, graph),
       totalAttempts: currentAttempts,
-      message: "Entité inconnue",
+      components: comps,
+      message: "Entité inconnue dans ce pack.",
     };
   }
 
-  const allVisited = new Set([...branchAIds, ...branchBIds]);
+  const allVisited = new Set([startId, targetId, ...currentPlacedIds]);
   if (allVisited.has(candidateId)) {
+    const comps = computeConnectedComponents(startId, targetId, currentPlacedIds, graph);
     return {
       valid: false,
       alreadyVisited: true,
       isComplete: false,
       newHeadAId: headAId,
       newHeadBId: headBId,
-      minRemainingDistance: findMinDistanceBetweenSets(branchAIds, branchBIds, graph),
+      minRemainingDistance: findMinDistanceBetweenSets(comps.compA, comps.compB, graph),
       totalAttempts: currentAttempts,
-      message: `${candidate.name} a déjà été placé dans votre parcours !`,
+      components: comps,
+      message: `${candidate.name} a déjà été placé sur la carte !`,
     };
   }
 
-  // Check if candidate borders ANY country in Branch A, and/or ANY country in Branch B
-  const touchesA = branchAIds.some((id) => graph[id]?.neighbors.includes(candidateId));
-  const touchesB = branchBIds.some((id) => graph[id]?.neighbors.includes(candidateId));
-
-  if (!touchesA && !touchesB) {
-    const isDept = /^\d+$/.test(candidateId);
-    const entityType = isDept ? "département" : "pays";
-    return {
-      valid: false,
-      alreadyVisited: false,
-      isComplete: false,
-      newHeadAId: headAId,
-      newHeadBId: headBId,
-      minRemainingDistance: findMinDistanceBetweenSets(branchAIds, branchBIds, graph),
-      totalAttempts: currentAttempts,
-      message: `${candidate.name} n'est limitrophe d'aucun ${entityType} déjà placé sur la carte.`,
-    };
-  }
-
-  let newBranchA = [...branchAIds];
-  let newBranchB = [...branchBIds];
-  let attachedTo: "branchA" | "branchB" | "bridge" = "branchA";
-  let newHeadA = headAId;
-  let newHeadB = headBId;
-
-  if (touchesA && touchesB) {
-    newBranchA.push(candidateId);
-    attachedTo = "bridge";
-    newHeadA = candidateId;
-  } else if (touchesA) {
-    newBranchA.push(candidateId);
-    attachedTo = "branchA";
-    newHeadA = candidateId;
-  } else {
-    newBranchB.push(candidateId);
-    attachedTo = "branchB";
-    newHeadB = candidateId;
-  }
-
+  // VALID PLACEMENT! (Any entity in the graph is accepted)
+  const updatedPlacedIds = [...currentPlacedIds, candidateId];
   const updatedAttempts = currentAttempts + 1;
-  const allPlacedSet = new Set([...newBranchA, ...newBranchB]);
+  const allNodesSet = new Set([startId, targetId, ...updatedPlacedIds]);
 
-  // Two sides touch as soon as any country in side A shares a border with any country in side B
-  const areTouching =
-    touchesA && touchesB
-      ? true
-      : newBranchA.some((aId) =>
-          newBranchB.some((bId) => graph[aId]?.neighbors.includes(bId))
-        );
+  const comps = computeConnectedComponents(startId, targetId, updatedPlacedIds, graph);
 
-  if (areTouching) {
-    const connectedPath = findShortestPathWithinSet(startId, targetId, allPlacedSet, graph);
+  if (comps.isConnected) {
+    const shortestPath = findShortestPathWithinSet(startId, targetId, allNodesSet, graph);
+    const finalPath = shortestPath || [startId, ...updatedPlacedIds, targetId];
+
     return {
       valid: true,
-      attachedTo,
+      attachedTo: "bridge",
       alreadyVisited: false,
       isComplete: true,
-      newHeadAId: newHeadA,
-      newHeadBId: newHeadB,
+      newHeadAId: candidateId,
+      newHeadBId: candidateId,
       minRemainingDistance: 0,
       totalAttempts: updatedAttempts,
-      fullConnectedPath: connectedPath || [...newBranchA, ...newBranchB.slice().reverse()],
-      message: `🎯 Jonction réussie ! Le chemin le plus court tracé (${connectedPath ? connectedPath.length : allPlacedSet.size} territoires) a été retenu !`,
+      components: comps,
+      fullConnectedPath: finalPath,
+      message: `🎯 Jonction réussie ! Le chemin le plus court (${finalPath.length} territoires) a été retenu !`,
     };
   }
 
-  const remaining = findMinDistanceBetweenSets(newBranchA, newBranchB, graph);
+  // Not connected yet
+  let attachedTo: "branchA" | "branchB" | "intermediate" = "intermediate";
+  let newHeadA = headAId;
+  let newHeadB = headBId;
+  let message = `Jalon posé : ${candidate.name}`;
+
+  if (comps.compA.includes(candidateId)) {
+    attachedTo = "branchA";
+    newHeadA = candidateId;
+    message = `📍 ${candidate.name} agrandit le front de départ !`;
+  } else if (comps.compB.includes(candidateId)) {
+    attachedTo = "branchB";
+    newHeadB = candidateId;
+    message = `🎯 ${candidate.name} agrandit le front d'arrivée !`;
+  } else {
+    attachedTo = "intermediate";
+    message = `🏝️ Jalon posé : ${candidate.name} (en attente de jonction)`;
+  }
+
+  const remaining = findMinDistanceBetweenSets(comps.compA, comps.compB, graph);
 
   return {
     valid: true,
@@ -463,7 +529,8 @@ export function validateBidirectionalStep(
     newHeadBId: newHeadB,
     minRemainingDistance: remaining,
     totalAttempts: updatedAttempts,
-    message: `Maillon posé : ${candidate.name}`,
+    components: comps,
+    message,
   };
 }
 

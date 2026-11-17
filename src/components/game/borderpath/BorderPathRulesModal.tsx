@@ -63,9 +63,9 @@ export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
           <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
             <div>
-              <strong className="text-white block mb-0.5">2. Liberté Frontalière Totale</strong>
+              <strong className="text-white block mb-0.5">2. Pose Libre &amp; Jalons</strong>
               <span>
-                Vous pouvez renseigner <strong>n&apos;importe quel pays (ou département) limitrophe</strong> d&apos;un territoire déjà présent sur la carte (au départ, à l&apos;arrivée, ou le long de votre réseau). Vous êtes libre d&apos;explorer et d&apos;avancer à votre rythme.
+                Vous pouvez renseigner <strong>n&apos;importe quel pays (ou département)</strong> à tout moment, poser des jalons ou îlots intermédiaires n&apos;importe où sur la carte, et les relier ensuite à votre rythme.
               </span>
             </div>
           </div>

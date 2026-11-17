@@ -122,8 +122,8 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
 
   const isDepartements = pack === "france_departements" || (headA?.id ? /^\d+$/.test(headA.id) : false);
   const placeholderText = isDepartements
-    ? "Rechercher un département limitrophe..."
-    : "Rechercher un pays limitrophe...";
+    ? "Rechercher un département..."
+    : "Rechercher un pays...";
 
   return (
     <div className="relative w-full max-w-xl mx-auto px-4 z-30">
@@ -248,7 +248,7 @@ export const BorderPathInput: React.FC<BorderPathInputProps> = ({
           </span>
         </div>
         <div className="hidden sm:flex items-center gap-1 text-slate-400 font-medium">
-          <span>🔗 N&apos;importe quel {isDepartements ? "département" : "pays"} limitrophe</span>
+          <span>🔗 Pose libre : n&apos;importe quel {isDepartements ? "département" : "pays"} peut être posé</span>
         </div>
       </div>
     </div>

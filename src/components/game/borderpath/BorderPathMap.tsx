@@ -96,6 +96,7 @@ interface BorderPathMapProps {
   targetEntity: BorderPathEntity;
   branchAEntities: BorderPathEntity[];
   branchBEntities: BorderPathEntity[];
+  intermediateEntities?: BorderPathEntity[];
   fullConnectedPathEntities?: BorderPathEntity[];
   isComplete: boolean;
   invalidFlashId?: string | null;
@@ -110,6 +111,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
   targetEntity,
   branchAEntities = [],
   branchBEntities = [],
+  intermediateEntities = [],
   fullConnectedPathEntities = [],
   isComplete,
   invalidFlashId,
@@ -142,6 +144,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
 
       const setA = new Set(branchAEntities.map((e) => e.id));
       const setB = new Set(branchBEntities.map((e) => e.id));
+      const setInter = new Set(intermediateEntities.map((e) => e.id));
       const fullSet = new Set(fullConnectedPathEntities?.map((e) => e.id) || []);
 
       const lastInvalid = prevInvalidIdRef.current;
@@ -153,6 +156,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
           targetEntity.id,
           ...branchAEntities.map((e) => e.id),
           ...branchBEntities.map((e) => e.id),
+          ...intermediateEntities.map((e) => e.id),
           ...(fullConnectedPathEntities?.map((e) => e.id) || []),
           invalidFlashId,
         ].filter(Boolean) as string[]
@@ -181,6 +185,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
         const isConn = isComplete && fullSet.has(id);
         const inA = !isConn && setA.has(id);
         const inB = !isConn && setB.has(id);
+        const isInter = !isConn && setInter.has(id);
         const isHeadA = !isComplete && id === headA.id;
         const isHeadB = !isComplete && id === headB.id;
         const isInvalid = id === invalidFlashId;
@@ -192,6 +197,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               isComplete: isConn,
               inBranchA: inA,
               inBranchB: inB,
+              isIntermediate: isInter,
               isHeadA,
               isHeadB,
               isInvalid,
@@ -207,6 +213,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       targetEntity.id,
       branchAEntities,
       branchBEntities,
+      intermediateEntities,
       fullConnectedPathEntities,
       headA.id,
       headB.id,
@@ -215,7 +222,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
     ]
   );
 
-  // Compute bounds for both branches
+  // Compute bounds for all fronts and intermediate stepping stones
   const fitToCorridor = useCallback(() => {
     const map = mapRef.current;
     if (!map || !startEntity || !targetEntity) return;
@@ -225,6 +232,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       [targetEntity.longitude, targetEntity.latitude],
       ...branchAEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
       ...branchBEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
+      ...intermediateEntities.map((e) => [e.longitude, e.latitude] as [number, number]),
     ];
 
     const coords: [number, number][] = rawCoords.filter(
@@ -256,7 +264,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
       maxZoom: packConfig.maxZoom,
       duration: 1000,
     });
-  }, [startEntity, targetEntity, branchAEntities, branchBEntities, pack]);
+  }, [startEntity, targetEntity, branchAEntities, branchBEntities, intermediateEntities, pack]);
 
   // Update HTML overlay markers
   const updateMarkers = useCallback(
@@ -313,10 +321,18 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               <span>${entity.name}</span>
             </div>
           `;
-        } else {
+        } else if (type === "stepB") {
           el.innerHTML = `
             <div class="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-900/80 border border-amber-500/40 text-amber-300 text-[10px] font-medium shadow-sm backdrop-blur-sm">
               <span>${entity.flagEmoji || "●"}</span>
+              <span>${entity.name}</span>
+            </div>
+          `;
+        } else {
+          // Intermediate stepping stones / islands
+          el.innerHTML = `
+            <div class="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-purple-950/85 border border-purple-500/50 text-purple-300 text-[10px] font-medium shadow-sm backdrop-blur-sm">
+              <span>${entity.flagEmoji || "🏝️"}</span>
               <span>${entity.name}</span>
             </div>
           `;
@@ -378,8 +394,13 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
           addMarker(entity, "stepB");
         }
       });
+
+      // Intermediate islands / stepping stones
+      intermediateEntities.forEach((entity) => {
+        addMarker(entity, "intermediate" as any);
+      });
     },
-    [branchAEntities, branchBEntities, fullConnectedPathEntities, isComplete]
+    [branchAEntities, branchBEntities, intermediateEntities, fullConnectedPathEntities, isComplete]
   );
 
   // Fresh mutable refs to avoid stale closures in MapLibre async event handlers
@@ -420,6 +441,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               "#0284c7", // Sky blue for Branch A
               ["boolean", ["feature-state", "inBranchB"], false],
               "#d97706", // Amber 600 for Branch B
+              ["boolean", ["feature-state", "isIntermediate"], false],
+              "#8b5cf6", // Purple/Indigo for intermediate islands
               "#0f172a", // Default dark tint
             ],
             "fill-opacity": [
@@ -435,6 +458,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               ["boolean", ["feature-state", "inBranchA"], false],
               0.45,
               ["boolean", ["feature-state", "inBranchB"], false],
+              0.45,
+              ["boolean", ["feature-state", "isIntermediate"], false],
               0.45,
               theme === "satellite" ? 0 : 0.08,
             ],
@@ -465,6 +490,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               "#38bdf8",
               ["boolean", ["feature-state", "inBranchB"], false],
               "#fcd34d",
+              ["boolean", ["feature-state", "isIntermediate"], false],
+              "#c084fc", // Bright lilac outline for intermediate islands
               hideBorders ? "rgba(0,0,0,0)" : theme === "voyager" ? "#cbd5e1" : "#334155",
             ],
             "line-width": [
@@ -478,6 +505,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               ["boolean", ["feature-state", "inBranchA"], false],
               1.8,
               ["boolean", ["feature-state", "inBranchB"], false],
+              1.8,
+              ["boolean", ["feature-state", "isIntermediate"], false],
               1.8,
               hideBorders ? 0 : 0.8,
             ],
@@ -494,6 +523,8 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
               ["boolean", ["feature-state", "inBranchA"], false],
               1,
               ["boolean", ["feature-state", "inBranchB"], false],
+              1,
+              ["boolean", ["feature-state", "isIntermediate"], false],
               1,
               hideBorders ? 0 : 0.85,
             ],
