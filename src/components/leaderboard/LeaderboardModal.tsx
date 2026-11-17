@@ -122,8 +122,10 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
       }
     }
 
+    const isMultiDay = timeframe === "week" || timeframe === "alltime";
+    const effectiveScoringMode = isMultiDay ? scoringMode : "best_run";
     const game = activeTab === "streaks" ? "georings" : activeTab;
-    const url = `/api/leaderboard?game=${game}&variant=${activeVariant}&scope=${scope}&scoringMode=${scoringMode}${dateStr ? `&date=${dateStr}` : ""}`;
+    const url = `/api/leaderboard?game=${game}&variant=${activeVariant}&scope=${scope}&scoringMode=${effectiveScoringMode}${dateStr ? `&date=${dateStr}` : ""}`;
 
     fetch(url)
       .then((res) => res.json())
@@ -316,36 +318,38 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
         {/* Secondary Filters: Format (Meilleur Run / Championnat) & Déclinaison */}
         {activeTab !== "streaks" && (
           <div className="px-5 py-2.5 bg-slate-950/20 border-b border-slate-800/40 flex flex-wrap items-center justify-between gap-3 text-xs">
-            {/* Format (Scoring Mode) */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
-                Format :
-              </span>
-              <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs">
-                <button
-                  onClick={() => setScoringMode("best_run")}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-all ${
-                    scoringMode === "best_run"
-                      ? "bg-slate-800 text-white shadow-sm border border-slate-700/80"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  <Zap className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Meilleur Run</span>
-                </button>
-                <button
-                  onClick={() => setScoringMode("championship")}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-all ${
-                    scoringMode === "championship"
-                      ? "bg-amber-500/20 text-amber-300 shadow-sm border border-amber-500/40"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Championnat</span>
-                </button>
+            {/* Format (Scoring Mode) - Visible uniquement pour Semaine et Tous les temps */}
+            {(timeframe === "week" || timeframe === "alltime") && (
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
+                  Format :
+                </span>
+                <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs">
+                  <button
+                    onClick={() => setScoringMode("best_run")}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-all ${
+                      scoringMode === "best_run"
+                        ? "bg-slate-800 text-white shadow-sm border border-slate-700/80"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    <Zap className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Meilleur Run</span>
+                  </button>
+                  <button
+                    onClick={() => setScoringMode("championship")}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-semibold whitespace-nowrap transition-all ${
+                      scoringMode === "championship"
+                        ? "bg-amber-500/20 text-amber-300 shadow-sm border border-amber-500/40"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Championnat</span>
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Variant Filters */}
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
@@ -699,7 +703,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 #{data.currentUserRank.rank}
               </span>
               <span className="text-slate-300">
-                Votre classement {scoringMode === "championship" ? "général" : "du jour"} ({data.currentUserRank.entry.username})
+                Votre classement {(timeframe === "week" || timeframe === "alltime") && scoringMode === "championship" ? "général" : "du jour"} ({data.currentUserRank.entry.username})
               </span>
             </div>
             <div className="flex items-center gap-2 text-right">

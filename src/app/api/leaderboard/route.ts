@@ -20,6 +20,22 @@ function formatTime(seconds?: number | null): string {
   return `${mins}m${secs.toString().padStart(2, "0")}s`;
 }
 
+function formatDateShort(isoDate?: string | null): string {
+  if (!isoDate) return "";
+  try {
+    const d = new Date(isoDate);
+    if (isNaN(d.getTime())) return "";
+    const day = d.getDate();
+    const months = [
+      "janv.", "févr.", "mars", "avr.", "mai", "juin",
+      "juil.", "août", "sept.", "oct.", "nov.", "déc."
+    ];
+    return `${day} ${months[d.getMonth()]}`;
+  } catch (e) {
+    return "";
+  }
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const game = searchParams.get("game") || "georings";
@@ -579,7 +595,8 @@ export async function GET(request: Request) {
     if (tiedWithPrev || tiedWithNext) {
       current.isTieBroken = true;
       if (!current.tieBreakerCriterion) {
-        current.tieBreakerCriterion = "Date d'obtention";
+        const dateStr = formatDateShort(current.createdAt);
+        current.tieBreakerCriterion = dateStr ? `Établi le ${dateStr}` : "Antériorité";
       }
     }
   }
