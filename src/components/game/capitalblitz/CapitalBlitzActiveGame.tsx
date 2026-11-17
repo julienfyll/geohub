@@ -140,9 +140,10 @@ export const CapitalBlitzActiveGame: React.FC<CapitalBlitzActiveGameProps> = ({
       setHighlightedIndex(-1);
       return;
     }
-    const results = searchCapitals(inputText, 4);
+    const results = searchCapitals(inputText, 5);
     setSuggestions(results);
-    setHighlightedIndex(-1);
+    // Pre-highlight the first result immediately so Enter picks it
+    setHighlightedIndex(results.length > 0 ? 0 : -1);
   }, [inputText]);
 
   // Handle game over when timer expires
@@ -206,7 +207,13 @@ export const CapitalBlitzActiveGame: React.FC<CapitalBlitzActiveGameProps> = ({
   const handleSubmitGuess = (submittedCapital?: string) => {
     if (!currentQuestion || !isRunning) return;
 
-    const guess = (submittedCapital || inputText).trim();
+    // Pick submitted parameter, or active suggestion, or first suggestion, or raw input text
+    const activeSuggestion =
+      highlightedIndex >= 0 && suggestions[highlightedIndex]
+        ? suggestions[highlightedIndex]
+        : suggestions[0];
+
+    const guess = (submittedCapital || activeSuggestion || inputText).trim();
     if (!guess) return;
 
     const isCorrect = checkCapital(guess, currentQuestion);
@@ -287,25 +294,35 @@ export const CapitalBlitzActiveGame: React.FC<CapitalBlitzActiveGameProps> = ({
     }, 450);
   };
 
-  // Global Keyboard Navigation (Enter, Escape, Space to skip, Arrows for suggestions)
+  // Global Keyboard Navigation (Enter, Tab, Escape, Space to skip, Arrows for suggestions)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
+      if (suggestions.length === 0) return;
       setHighlightedIndex((prev) =>
         prev < suggestions.length - 1 ? prev + 1 : 0
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
+      if (suggestions.length === 0) return;
       setHighlightedIndex((prev) =>
         prev > 0 ? prev - 1 : suggestions.length - 1
       );
-    } else if (e.key === "Enter") {
+    } else if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
-      if (highlightedIndex >= 0 && suggestions[highlightedIndex]) {
-        handleSubmitGuess(suggestions[highlightedIndex]);
+      const choice =
+        highlightedIndex >= 0 && suggestions[highlightedIndex]
+          ? suggestions[highlightedIndex]
+          : suggestions[0];
+
+      if (choice) {
+        handleSubmitGuess(choice);
       } else {
         handleSubmitGuess();
       }
+    } else if (e.key === "Escape") {
+      setSuggestions([]);
+      setHighlightedIndex(-1);
     }
   };
 
@@ -459,23 +476,42 @@ export const CapitalBlitzActiveGame: React.FC<CapitalBlitzActiveGameProps> = ({
 
               {/* Autocomplete Suggestions Dropdown */}
               {suggestions.length > 0 && (
-                <div className="absolute left-0 right-0 bottom-full mb-2 bg-slate-900/95 border border-slate-700/80 rounded-2xl p-1.5 shadow-2xl backdrop-blur-xl flex flex-col gap-1 z-50">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 px-2 py-0.5">
-                    Suggestions (Flèches ↑↓ + Entrée)
-                  </span>
+                <div className="absolute left-0 right-0 bottom-full mb-2 bg-slate-900/95 border border-slate-700/80 rounded-2xl p-1.5 shadow-2xl backdrop-blur-xl flex flex-col gap-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="flex items-center justify-between px-2 py-0.5">
+                    <span className="text-[10px] uppercase font-bold text-slate-400">
+                      Suggestions
+                    </span>
+                    <span className="text-[10px] font-mono text-amber-400 font-bold">
+                      Entrée ↵ valide la 1ère
+                    </span>
+                  </div>
                   {suggestions.map((suggestion, idx) => (
                     <button
                       key={suggestion}
                       type="button"
+                      onMouseEnter={() => setHighlightedIndex(idx)}
                       onClick={() => handleSubmitGuess(suggestion)}
-                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-between ${
+                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-between ${
                         idx === highlightedIndex
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                          : "text-slate-200 hover:bg-slate-800 hover:text-white"
+                          ? "bg-amber-500/25 text-amber-200 border border-amber-500/50 shadow-sm"
+                          : "text-slate-300 hover:bg-slate-800/80 hover:text-white border border-transparent"
                       }`}
                     >
-                      <span>{suggestion}</span>
-                      <span className="text-[10px] text-slate-500">Choisir ↵</span>
+                      <div className="flex items-center gap-2">
+                        {idx === highlightedIndex && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                        )}
+                        <span>{suggestion}</span>
+                      </div>
+                      <span
+                        className={`text-[10px] font-mono ${
+                          idx === highlightedIndex
+                            ? "text-amber-300 font-bold"
+                            : "text-slate-500"
+                        }`}
+                      >
+                        {idx === highlightedIndex ? "Entrée ↵" : "↵"}
+                      </span>
                     </button>
                   ))}
                 </div>

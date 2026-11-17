@@ -34,24 +34,35 @@ export function checkCapital(guess: string, item: CapitalItem): boolean {
 /**
  * High-speed autocomplete suggestions for capitals
  */
-export function searchCapitals(query: string, limit = 6): string[] {
+export function searchCapitals(query: string, limit = 5): string[] {
   const norm = normalizeText(query);
   if (!norm) return [];
 
-  const exactStarts: string[] = [];
-  const contains: string[] = [];
+  const exactStarts = new Set<string>();
+  const contains = new Set<string>();
 
-  for (const name of ALL_UNIQUE_CAPITAL_NAMES) {
-    const normName = normalizeText(name);
-    if (normName.startsWith(norm)) {
-      exactStarts.push(name);
-    } else if (normName.includes(norm)) {
-      contains.push(name);
+  for (const item of ALL_CAPITALS) {
+    const normCapital = normalizeText(item.capital);
+    const starts =
+      normCapital.startsWith(norm) ||
+      item.aliases.some((a) => normalizeText(a).startsWith(norm));
+
+    if (starts) {
+      exactStarts.add(item.capital);
+    } else {
+      const inside =
+        normCapital.includes(norm) ||
+        item.aliases.some((a) => normalizeText(a).includes(norm));
+      if (inside) {
+        contains.add(item.capital);
+      }
     }
-    if (exactStarts.length >= limit) break;
   }
 
-  return [...exactStarts, ...contains].slice(0, limit);
+  const sortedStarts = Array.from(exactStarts).sort((a, b) => a.localeCompare(b, "fr"));
+  const sortedContains = Array.from(contains).sort((a, b) => a.localeCompare(b, "fr"));
+
+  return [...sortedStarts, ...sortedContains].slice(0, limit);
 }
 
 /**
