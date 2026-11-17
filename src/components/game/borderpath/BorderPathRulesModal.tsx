@@ -63,9 +63,9 @@ export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
           <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
             <div>
-              <strong className="text-white block mb-0.5">2. Progression Bidirectionnelle (Deux Fronts)</strong>
+              <strong className="text-white block mb-0.5">2. Liberté Frontalière Totale</strong>
               <span>
-                Vous pouvez avancer depuis le <strong>Départ</strong> (en Cyan) OU remonter depuis l&apos;<strong>Arrivée</strong> (en Ambre) ! Dès que les deux fronts se rejoignent ou qu&apos;un pays scelle la jonction, le parcours est gagné.
+                Vous pouvez renseigner <strong>n&apos;importe quel pays (ou département) limitrophe</strong> d&apos;un territoire déjà présent sur la carte (au départ, à l&apos;arrivée, ou le long de votre réseau). Vous êtes libre d&apos;explorer et d&apos;avancer à votre rythme.
               </span>
             </div>
           </div>
@@ -73,9 +73,9 @@ export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
           <div className="p-3.5 rounded-2xl bg-slate-800/50 border border-slate-700/50 flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <strong className="text-white block mb-0.5">3. 100% au Clavier</strong>
+              <strong className="text-white block mb-0.5">3. Le Chemin le Plus Court Tracé</strong>
               <span>
-                Tapez le nom d&apos;un pays limitrophe de l&apos;un des deux fronts. Utilisez <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">↑</kbd> et <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">↓</kbd> pour naviguer dans l&apos;autocomplétion, puis <kbd className="px-1.5 py-0.5 rounded bg-slate-700 text-white font-mono text-xs">Entrée</kbd> pour valider.
+                Dès que le départ et l&apos;arrivée sont connectés, le jeu extrait automatiquement <strong>le chemin le plus court tracé</strong> parmi tous les territoires que vous avez validés sur la carte !
               </span>
             </div>
           </div>
@@ -85,7 +85,7 @@ export const BorderPathRulesModal: React.FC<BorderPathRulesModalProps> = ({
             <div>
               <strong className="text-white block mb-0.5">4. Calcul du Score &amp; Optimal (BFS)</strong>
               <span>
-                Votre score est calculé en comparant le nombre de pays tentés au nombre minimal de pays du trajet optimal BFS. Moins vous faites de détours, plus vous maximisez vos points (jusqu&apos;à 10 000 pts) !
+                Votre score est calculé en comparant la longueur du chemin le plus court tracé au trajet minimal direct absolu. Zéro erreur et tracé optimal = <strong>10 000 pts</strong> !
               </span>
             </div>
           </div>

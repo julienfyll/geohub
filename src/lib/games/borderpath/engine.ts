@@ -391,6 +391,8 @@ export function validateBidirectionalStep(
   const touchesB = branchBIds.some((id) => graph[id]?.neighbors.includes(candidateId));
 
   if (!touchesA && !touchesB) {
+    const isDept = /^\d+$/.test(candidateId);
+    const entityType = isDept ? "département" : "pays";
     return {
       valid: false,
       alreadyVisited: false,
@@ -399,7 +401,7 @@ export function validateBidirectionalStep(
       newHeadBId: headBId,
       minRemainingDistance: findMinDistanceBetweenSets(branchAIds, branchBIds, graph),
       totalAttempts: currentAttempts,
-      message: `${candidate.name} n'est limitrophe d'aucun pays déjà placé.`,
+      message: `${candidate.name} n'est limitrophe d'aucun ${entityType} déjà placé sur la carte.`,
     };
   }
 
@@ -446,7 +448,7 @@ export function validateBidirectionalStep(
       minRemainingDistance: 0,
       totalAttempts: updatedAttempts,
       fullConnectedPath: connectedPath || [...newBranchA, ...newBranchB.slice().reverse()],
-      message: `🎯 Jonction réussie ! Les deux côtés se touchent grâce à ${candidate.name} !`,
+      message: `🎯 Jonction réussie ! Le chemin le plus court tracé (${connectedPath ? connectedPath.length : allPlacedSet.size} territoires) a été retenu !`,
     };
   }
 

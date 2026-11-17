@@ -60,22 +60,24 @@ export const BorderPathSummaryModal: React.FC<BorderPathSummaryModalProps> = ({
   const { user } = useAuth();
 
   const optimalCountries = minOptimalSteps + 1;
-  const corridorCount = fullConnectedPath.length;
+  const isDepartements = pack === "france_departements" || /^\d+$/.test(startEntity.id);
+  const entityLabel = isDepartements ? "départements" : "pays";
+  const corridorCount = fullConnectedPath.length > 0 ? fullConnectedPath.length : totalCountriesPlaced;
   const errorCount = failedAttempts.length;
   // Detours = valid countries placed that are not in the main connecting corridor
   const detourCount = Math.max(0, totalCountriesPlaced - corridorCount);
-  const totalAttempts = totalCountriesPlaced + errorCount;
-  const delta = totalAttempts - optimalCountries;
+  const totalAttempts = corridorCount + errorCount;
+  const delta = corridorCount - optimalCountries;
   const isPerfect = !gaveUp && delta === 0 && errorCount === 0;
 
   // Score calculation:
   // Perfect = 10 000 pts
-  // Otherwise scaled by optimalCountries / totalAttempts, capped between 100 and 10000, 0 if gaveUp
+  // Based on the shortest path traced + errors
   const calculatedScore = gaveUp
     ? 0
     : Math.max(
         100,
-        Math.round(10000 * (optimalCountries / Math.max(optimalCountries, totalAttempts)))
+        Math.round(10000 * (optimalCountries / Math.max(optimalCountries, corridorCount + errorCount)))
       );
 
   // Record session automatically once when modal opens
@@ -201,8 +203,8 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
             {gaveUp
               ? "Vous n'avez pas terminé la jonction."
               : isPerfect
-              ? `Performance parfaite ! Jonction en ${optimalCountries} pays sans aucune erreur ni détour.`
-              : `Vous avez relié ${startEntity.name} et ${targetEntity.name} en ${totalAttempts} tentatives.`}
+              ? `Performance parfaite ! Chemin le plus court tracé optimal en ${optimalCountries} ${entityLabel} sans aucune erreur.`
+              : `Vous avez relié ${startEntity.name} et ${targetEntity.name} avec un chemin tracé de ${corridorCount} ${entityLabel}.`}
           </p>
 
           {!gaveUp && (
@@ -215,15 +217,15 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
                 }`}
               >
                 {isPerfect
-                  ? `🏆 Parcours Optimal : ${optimalCountries} pays (sans faute)`
-                  : `${totalAttempts} coups • Idéal : ${optimalCountries} (+${delta} de trop)`}
+                  ? `🏆 Chemin le plus court tracé : ${optimalCountries} ${entityLabel} (optimal)`
+                  : `Chemin le plus court : ${corridorCount} ${entityLabel} • Idéal : ${optimalCountries}${delta > 0 ? ` (+${delta})` : ""}`}
               </div>
               <span className="text-[11px] text-slate-400">
                 {isPerfect
-                  ? "Zéro erreur • Zéro détour"
+                  ? "Zéro erreur • Trajet direct absolu"
                   : `${errorCount > 0 ? `${errorCount} erreur${errorCount > 1 ? "s" : ""}` : ""}${
                       errorCount > 0 && detourCount > 0 ? " • " : ""
-                    }${detourCount > 0 ? `${detourCount} détour${detourCount > 1 ? "s" : ""}` : ""}`}
+                    }${detourCount > 0 ? `${detourCount} détour${detourCount > 1 ? "s" : ""} exploré${detourCount > 1 ? "s" : ""}` : ""}`}
               </span>
             </div>
           )}
@@ -233,10 +235,10 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
         <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/60 text-center">
           <div className="flex flex-col items-center">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Coups joués
+              Chemin retenu
             </span>
             <span className="text-2xl font-mono font-extrabold text-white mt-0.5">
-              {gaveUp ? "—" : totalAttempts}
+              {gaveUp ? "—" : `${corridorCount}`}
             </span>
             <span className="text-[10px] text-slate-500 mt-0.5">
               {gaveUp ? "" : errorCount > 0 ? `${errorCount} err.` : "sans faute"}
@@ -251,7 +253,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
               {optimalCountries}
             </span>
             <span className="text-[10px] text-emerald-500/80 mt-0.5">
-              pays minimum
+              {entityLabel} minimum
             </span>
           </div>
 
@@ -273,7 +275,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
               {gaveUp ? "—" : isPerfect ? "0 (Idéal)" : `+${delta}`}
             </span>
             <span className="text-[10px] text-slate-500 mt-0.5">
-              {gaveUp ? "" : isPerfect ? "Sans déchet" : `${delta} coup${delta > 1 ? "s" : ""} de trop`}
+              {gaveUp ? "" : isPerfect ? "Sans déchet" : `${delta} ${entityLabel} de trop`}
             </span>
           </div>
         </div>
@@ -282,18 +284,18 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
         {!gaveUp && (
           <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-col gap-2 text-xs">
             <div className="flex items-center justify-between text-slate-300">
-              <span className="text-slate-400">Pays du corridor principal :</span>
-              <span className="font-bold font-mono text-white">{corridorCount} pays</span>
+              <span className="text-slate-400">{isDepartements ? "Départements" : "Pays"} du corridor le plus court :</span>
+              <span className="font-bold font-mono text-white">{corridorCount} {entityLabel}</span>
             </div>
             {detourCount > 0 && (
               <div className="flex items-center justify-between text-slate-300">
-                <span className="text-amber-400/90">Détours (pays posés hors corridor) :</span>
-                <span className="font-bold font-mono text-amber-400">+{detourCount}</span>
+                <span className="text-amber-400/90">Détours explorés (hors corridor retenu) :</span>
+                <span className="font-bold font-mono text-amber-400">+{detourCount} {entityLabel}</span>
               </div>
             )}
             <div className="flex items-center justify-between text-slate-300">
               <span className={errorCount > 0 ? "text-red-400 font-semibold" : "text-slate-400"}>
-                Erreurs (pays non limitrophes) :
+                Erreurs (territoires non limitrophes) :
               </span>
               <span
                 className={`font-bold font-mono ${
@@ -305,7 +307,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
             </div>
             {errorCount > 0 && (
               <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-800">
-                <span className="text-[11px] text-slate-400">Pays refusés :</span>
+                <span className="text-[11px] text-slate-400">Territoires refusés :</span>
                 {failedAttempts.map((f, i) => (
                   <span
                     key={`failed-${f.id}-${i}`}
@@ -323,7 +325,7 @@ Défie-moi sur GeoHub : https://geohub.fr/play/borderpath`;
         {!gaveUp && fullConnectedPath.length > 0 && (
           <div className="flex flex-col gap-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Votre corridor réussi ({fullConnectedPath.length} pays) :
+              Votre corridor réussi (le plus court tracé — {fullConnectedPath.length} {entityLabel}) :
             </span>
             <div className="p-3.5 rounded-2xl bg-slate-800/40 border border-slate-800 flex flex-wrap items-center gap-1.5 text-xs">
               {fullConnectedPath.map((e, idx) => (

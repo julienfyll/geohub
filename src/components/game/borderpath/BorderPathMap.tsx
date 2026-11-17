@@ -294,34 +294,30 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
           `;
         } else if (type === "headA") {
           el.innerHTML = `
-            <div class="relative flex items-center justify-center">
-              <div class="absolute w-9 h-9 rounded-full bg-cyan-500/40 animate-ping"></div>
-              <div class="px-2 py-0.5 rounded-full bg-cyan-600 border-2 border-white text-white font-bold text-xs shadow-xl flex items-center gap-1">
-                <span>${entity.flagEmoji || "🏁"}</span>
-                <span>${entity.name}</span>
-              </div>
+            <div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-cyan-900/90 border border-cyan-400 text-cyan-200 font-bold text-xs shadow-md backdrop-blur-md">
+              <span>${entity.flagEmoji || "📍"}</span>
+              <span>${entity.name}</span>
             </div>
           `;
         } else if (type === "headB") {
           el.innerHTML = `
-            <div class="relative flex items-center justify-center">
-              <div class="absolute w-9 h-9 rounded-full bg-amber-500/40 animate-ping"></div>
-              <div class="px-2 py-0.5 rounded-full bg-amber-600 border-2 border-white text-white font-bold text-xs shadow-xl flex items-center gap-1">
-                <span>${entity.flagEmoji || "🎯"}</span>
-                <span>${entity.name}</span>
-              </div>
+            <div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-900/90 border border-amber-400 text-amber-200 font-bold text-xs shadow-md backdrop-blur-md">
+              <span>${entity.flagEmoji || "📍"}</span>
+              <span>${entity.name}</span>
             </div>
           `;
         } else if (type === "stepA") {
           el.innerHTML = `
-            <div class="w-5 h-5 rounded-full bg-cyan-800 border border-cyan-300 text-cyan-100 flex items-center justify-center font-bold text-[9px] shadow-sm">
-              ●
+            <div class="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-900/80 border border-cyan-500/40 text-cyan-300 text-[10px] font-medium shadow-sm backdrop-blur-sm">
+              <span>${entity.flagEmoji || "●"}</span>
+              <span>${entity.name}</span>
             </div>
           `;
         } else {
           el.innerHTML = `
-            <div class="w-5 h-5 rounded-full bg-amber-800 border border-amber-300 text-amber-100 flex items-center justify-center font-bold text-[9px] shadow-sm">
-              ●
+            <div class="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-900/80 border border-amber-500/40 text-amber-300 text-[10px] font-medium shadow-sm backdrop-blur-sm">
+              <span>${entity.flagEmoji || "●"}</span>
+              <span>${entity.name}</span>
             </div>
           `;
         }
@@ -332,6 +328,32 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
 
         markersRef.current.push(marker);
       };
+
+      // If path is complete, showcase the winning shortest path with numbered badges!
+      if (isComplete && fullConnectedPathEntities && fullConnectedPathEntities.length > 0) {
+        fullConnectedPathEntities.forEach((entity, idx) => {
+          if (idx === 0) {
+            addMarker(entity, "start");
+          } else if (idx === fullConnectedPathEntities.length - 1) {
+            addMarker(entity, "target");
+          } else {
+            const el = document.createElement("div");
+            el.className =
+              "borderpath-marker transform -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none";
+            el.innerHTML = `
+              <div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-400 text-emerald-300 font-bold text-[11px] shadow-lg backdrop-blur-md">
+                <span class="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-black">${idx + 1}</span>
+                <span>${entity.flagEmoji || ""} ${entity.name}</span>
+              </div>
+            `;
+            const marker = new maplibregl.Marker({ element: el })
+              .setLngLat([entity.longitude, entity.latitude])
+              .addTo(map);
+            markersRef.current.push(marker);
+          }
+        });
+        return;
+      }
 
       // Branch A markers
       branchAEntities.forEach((entity, idx) => {
@@ -357,7 +379,7 @@ export const BorderPathMap: React.FC<BorderPathMapProps> = ({
         }
       });
     },
-    [branchAEntities, branchBEntities, isComplete]
+    [branchAEntities, branchBEntities, fullConnectedPathEntities, isComplete]
   );
 
   // Fresh mutable refs to avoid stale closures in MapLibre async event handlers

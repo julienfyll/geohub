@@ -687,6 +687,7 @@ function BorderPathActiveGame({
               graph={graph}
               visitedIds={visitedIds}
               isComplete={isComplete}
+              pack={pack}
               onSelectCandidate={handleSelectCandidate}
               feedbackMessage={feedbackMessage}
             />

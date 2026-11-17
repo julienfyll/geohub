@@ -105,6 +105,12 @@ export const BorderPathTargetCard: React.FC<BorderPathTargetCardProps> = ({
           )}
         </div>
 
+        {/* Dynamic network hint */}
+        <div className="text-[10.5px] text-slate-400/90 text-center flex items-center justify-center gap-1">
+          <span>💡</span>
+          <span>Tout {isDepartements ? "département" : "pays"} limitrophe du réseau est accepté</span>
+        </div>
+
         {/* Footer: Remaining BFS distance hint or Connected status */}
         <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
           {remainingSteps > 0 ? (
