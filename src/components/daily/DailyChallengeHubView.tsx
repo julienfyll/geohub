@@ -893,11 +893,6 @@ export const DailyChallengeHubView: React.FC = () => {
               </div>
             </div>
           )}
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
