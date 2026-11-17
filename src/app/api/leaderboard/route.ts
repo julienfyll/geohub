@@ -288,6 +288,22 @@ export async function GET(request: Request) {
 
       // 5. Earliest finish
       return new Date(a.created_at).getTime() < new Date(b.created_at).getTime();
+    } else if (targetGame === "capitalblitz") {
+      // 1. Score DESC
+      if (b.score !== a.score) return a.score > b.score;
+
+      // 2. Accuracy DESC
+      const accA = a.accuracy_percent ?? 0;
+      const accB = b.accuracy_percent ?? 0;
+      if (accA !== accB) return accA > accB;
+
+      // 3. Time spent ASC
+      const timeA = a.time_spent_seconds && a.time_spent_seconds > 0 ? Number(a.time_spent_seconds) : 99999;
+      const timeB = b.time_spent_seconds && b.time_spent_seconds > 0 ? Number(b.time_spent_seconds) : 99999;
+      if (timeA !== timeB) return timeA < timeB;
+
+      // 4. Earliest finish
+      return new Date(a.created_at).getTime() < new Date(b.created_at).getTime();
     } else {
       // Blind Point:
       // 1. Score DESC
@@ -358,6 +374,16 @@ export async function GET(request: Request) {
         return a.totalTimeSeconds < b.totalTimeSeconds;
       }
       // 5. Challenges count DESC
+      if (a.challengesCount !== b.challengesCount) return a.challengesCount > b.challengesCount;
+      return new Date(a.lastCreatedAt).getTime() < new Date(b.lastCreatedAt).getTime();
+    } else if (targetGame === "capitalblitz") {
+      // 1. Total score DESC
+      if (a.totalScore !== b.totalScore) return a.totalScore > b.totalScore;
+      // 2. Total time ASC
+      if (a.hasTimeRecorded && b.hasTimeRecorded && a.totalTimeSeconds !== b.totalTimeSeconds) {
+        return a.totalTimeSeconds < b.totalTimeSeconds;
+      }
+      // 3. Challenges count DESC
       if (a.challengesCount !== b.challengesCount) return a.challengesCount > b.challengesCount;
       return new Date(a.lastCreatedAt).getTime() < new Date(b.lastCreatedAt).getTime();
     } else {
@@ -466,6 +492,10 @@ export async function GET(request: Request) {
         ]
           .filter(Boolean)
           .join(" • ");
+      } else if (game === "capitalblitz") {
+        primaryCriterion = `${agg.totalScore.toLocaleString("fr-FR")} pts`;
+        secondaryCriterion = `${agg.challengesCount} ${agg.challengesCount > 1 ? "sprints" : "sprint"}`;
+        tieBreakerCriterion = timeFormatted ? `⏱️ ${timeFormatted}` : "";
       } else {
         // Blind Point
         primaryCriterion = `${agg.totalScore.toLocaleString("fr-FR")} pts`;
@@ -542,6 +572,17 @@ export async function GET(request: Request) {
         ]
           .filter(Boolean)
           .join(" • ");
+      } else if (game === "capitalblitz") {
+        const correct = session.summary_data?.correctCount ?? 0;
+        const maxCombo = session.summary_data?.maxCombo;
+        primaryCriterion = `${session.score.toLocaleString("fr-FR")} pts`;
+        secondaryCriterion = `${correct} trouvées`;
+        tieBreakerCriterion = [
+          maxCombo ? `Combo ×${maxCombo}` : null,
+          timeFormatted ? `⏱️ ${timeFormatted}` : null,
+        ]
+          .filter(Boolean)
+          .join(" • ");
       } else {
         // Blind Point
         const distKm = session.distance_km;
@@ -558,7 +599,7 @@ export async function GET(request: Request) {
         username: prof?.username || "Joueur",
         avatarUrl: prof?.avatar_url || null,
         score: session.score,
-        maxScore: session.max_score ?? (game === "georings" ? 5 : game === "borderpath" ? 10000 : 25000),
+        maxScore: session.max_score ?? (game === "georings" ? 5 : game === "borderpath" ? 10000 : game === "capitalblitz" ? 5000 : 25000),
         primaryCriterion,
         secondaryCriterion,
         tieBreakerCriterion,

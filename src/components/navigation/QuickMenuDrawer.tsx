@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Trophy,
   Layers,
+  Zap,
 } from "lucide-react";
 import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 
@@ -125,7 +126,7 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                     <span>Défis du Jour</span>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono font-bold">
-                    15 défis
+                    16 défis
                   </span>
                 </button>
 
@@ -293,6 +294,62 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                   >
                     <span className="text-xs font-bold text-slate-200 block">🇫🇷 Départements</span>
                     <span className="text-[10px] text-slate-500">96 métropolitains</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Game 4 : Capital Blitz */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5" /> Capital Blitz
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/capitalblitz")}
+                    className="text-[10px] text-slate-400 hover:text-white transition-colors font-semibold"
+                  >
+                    Lobby
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/capitalblitz?mode=daily&play=1")}
+                    className="p-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-amber-200 flex items-center gap-1">
+                      <Zap className="w-3 h-3 text-amber-400" /> Sprint 60s
+                    </span>
+                    <span className="text-[10px] text-amber-400/80">Défi du Jour</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/capitalblitz?continent=all&play=1")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🌍 Monde</span>
+                    <span className="text-[10px] text-slate-500">166 capitales</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/capitalblitz?continent=Europe&play=1")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🇪🇺 Europe</span>
+                    <span className="text-[10px] text-slate-500">46 capitales</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/capitalblitz?continent=Africa&play=1")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🌍 Afrique</span>
+                    <span className="text-[10px] text-slate-500">51 capitales</span>
                   </button>
                 </div>
               </div>

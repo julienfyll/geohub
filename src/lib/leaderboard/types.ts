@@ -18,7 +18,7 @@ export interface LeaderboardEntry {
 }
 
 export interface LeaderboardResponse {
-  gameMode: "georings" | "blindpoint" | "borderpath";
+  gameMode: "georings" | "blindpoint" | "borderpath" | "capitalblitz";
   variant: string;
   scope: "daily" | "week" | "alltime" | "streaks";
   scoringMode: "best_run" | "championship";
