@@ -34,6 +34,11 @@ import {
   RotateCcw,
   Sparkles,
   ChevronDown,
+  Share2,
+  Check,
+  Home,
+  X,
+  Trophy,
 } from "lucide-react";
 import metroTopologyData from "@/../public/data/geo/metro_paris_topology.json";
 
@@ -64,6 +69,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showRestartModal, setShowRestartModal] = useState(false);
   const [showVictoryModal, setShowVictoryModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Challenge Session
   const [challenge] = useState(() => generateMetroChallenge(seed));
@@ -728,14 +734,93 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
     [currentStationId, targetStation.id, selectedDrawerLineId]
   );
 
+  // Share result to clipboard
+  const handleShare = useCallback(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const gaveUp = currentStationId !== targetStation.id;
+    const text = `BorderPath Métro Paris #${today} 🚇
+🏁 ${startStation.name} ➔ 🎯 ${targetStation.name}
+${
+  gaveUp
+    ? "Partie abandonnée"
+    : `Liaison réussie ! ${distinctLinesCount} lignes empruntées (${optimal.minLines} optimal) • ${totalStationsTraversed} stations traversées (${optimal.minPhysicalStations} min)`
+}
+
+Défie-moi sur GeoHub : https://geohub.fr/play/borderpath?pack=metro_paris`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  }, [
+    currentStationId,
+    targetStation.id,
+    targetStation.name,
+    startStation.name,
+    distinctLinesCount,
+    optimal.minLines,
+    totalStationsTraversed,
+    optimal.minPhysicalStations,
+  ]);
+
+  // Replay exactly the same challenge
+  const handleReplaySame = useCallback(() => {
+    setCurrentStationId(startStation.id);
+    setHops([]);
+    setVisitedSegments([]);
+    setVisitedStationIds([startStation.id]);
+    setIsComplete(false);
+    setShowVictoryModal(false);
+    setIsDrawerOpen(false);
+    setShowOptimalSolution(false);
+    if (mapRef.current) {
+      mapRef.current.easeTo({
+        center: startStation.coords,
+        zoom: 12.8,
+        duration: 1000,
+      });
+    }
+  }, [startStation]);
+
+  // New random challenge
+  const handleNewChallenge = useCallback(() => {
+    const newSeed = Math.random().toString(36).substring(2, 8);
+    router.push(`/play/borderpath?pack=metro_paris&mode=${mode}&seed=${newSeed}&play=1`);
+    setShowVictoryModal(false);
+  }, [mode, router]);
+
+  // Return to BorderPath Hub
+  const handleReturnHub = useCallback(() => {
+    router.push("/play/borderpath");
+  }, [router]);
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-slate-950 font-sans select-none">
       {/* Top HUD with Navigation & Mission Info (Zero Predictive Objective Badges) */}
       <BorderPathHUD
         pack={pack}
         mode={mode}
-        startEntity={startStation as unknown as any}
-        targetEntity={targetStation as unknown as any}
+        startEntity={{
+          id: startStation.id,
+          name: startStation.name,
+          normalizedName: startStation.name.toLowerCase(),
+          latitude: startStation.latitude,
+          longitude: startStation.longitude,
+          neighbors: [],
+          flagEmoji: "🚇",
+        }}
+        targetEntity={{
+          id: targetStation.id,
+          name: targetStation.name,
+          normalizedName: targetStation.name.toLowerCase(),
+          latitude: targetStation.latitude,
+          longitude: targetStation.longitude,
+          neighbors: [],
+          flagEmoji: "🏁",
+        }}
+        isComplete={isComplete}
+        onOpenSummary={() => setShowVictoryModal(true)}
         onOpenRules={() => setShowRulesModal(true)}
         onOpenPackModal={() => setShowPackModal(true)}
         onOpenSettings={() => setShowSettingsModal(true)}
@@ -838,7 +923,7 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
 
       {/* Bottom Center Floating Action Button */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
-        {!isComplete && (
+        {!isComplete ? (
           <button
             type="button"
             onClick={() => setIsDrawerOpen(true)}
@@ -863,6 +948,15 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
               })}
             </div>
           </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShowVictoryModal(true)}
+            className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white font-bold text-sm sm:text-base shadow-2xl shadow-blue-900/50 border border-white/20 transition-all transform hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md"
+          >
+            <Trophy className="w-5 h-5 text-amber-300 animate-bounce" />
+            <span>Voir le tableau de fin de partie</span>
+          </button>
         )}
       </div>
 
@@ -878,8 +972,24 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
 
       {/* Victory / Summary Modal */}
       {showVictoryModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-md bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col items-center text-center gap-5 text-white max-h-[92vh] overflow-y-auto">
+        <div
+          onClick={() => setShowVictoryModal(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg bg-slate-900 border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col items-center text-center gap-5 text-white max-h-[92vh] overflow-y-auto"
+          >
+            {/* Close cross top-right */}
+            <button
+              type="button"
+              onClick={() => setShowVictoryModal(false)}
+              className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              title="Fermer et observer la carte"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
             <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border-2 border-amber-500/40 flex items-center justify-center text-3xl shadow-xl shadow-amber-500/10 animate-bounce">
               {currentStationId === targetStation.id ? "🚇" : "🏳️"}
             </div>
@@ -1064,27 +1174,67 @@ export const BorderPathMetroActiveGame: React.FC<BorderPathMetroActiveGameProps>
               })}
             </div>
 
-            {/* Action buttons */}
-            <div className="w-full flex items-center gap-2 pt-2">
+            {/* Action buttons (Strict parity with BorderPathSummaryModal) */}
+            <div className="w-full flex flex-col gap-3 pt-1">
+              {/* Share button */}
               <button
                 type="button"
-                onClick={() => {
-                  const newSeed = Math.random().toString(36).substring(2, 8);
-                  router.push(`/play/borderpath?pack=metro_paris&mode=free&seed=${newSeed}&play=1`);
-                  setShowVictoryModal(false);
-                }}
-                className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold text-xs sm:text-sm text-white transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                onClick={handleShare}
+                className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-blue-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
-                <RotateCcw className="w-4 h-4" />
-                <span>Nouvelle partie</span>
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-300" />
+                    <span>Résultat copié dans le presse-papier !</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4" />
+                    <span>Partager mon résultat avec mes amis</span>
+                  </>
+                )}
               </button>
 
+              {/* 3-button redirection grid */}
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={handleReplaySame}
+                  className="py-3 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
+                  title="Réessayer exactement cette même liaison"
+                >
+                  <RotateCcw className="w-4 h-4 shrink-0 text-cyan-400" />
+                  <span>Rejouer la même</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleNewChallenge}
+                  className="py-3 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
+                  title="Générer une nouvelle paire de stations"
+                >
+                  <Sparkles className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span>Nouveau défi</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleReturnHub}
+                  className="py-3 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 flex flex-col sm:flex-row items-center justify-center gap-1.5 transition-colors cursor-pointer text-center"
+                  title="Retourner au Hub de sélection BorderPath"
+                >
+                  <Home className="w-4 h-4 shrink-0 text-indigo-400" />
+                  <span>Retour Hub</span>
+                </button>
+              </div>
+
+              {/* Observer la carte */}
               <button
                 type="button"
                 onClick={() => setShowVictoryModal(false)}
-                className="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-colors cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700/60 transition-colors cursor-pointer"
               >
-                Voir la carte
+                Observer la carte
               </button>
             </div>
           </div>
