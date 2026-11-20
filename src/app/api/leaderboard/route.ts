@@ -288,7 +288,7 @@ export async function GET(request: Request) {
 
       // 5. Earliest finish
       return new Date(a.created_at).getTime() < new Date(b.created_at).getTime();
-    } else if (targetGame === "capitalblitz") {
+    } else if (targetGame === "capitalblitz" || targetGame === "flagpie") {
       // 1. Score DESC
       if (b.score !== a.score) return a.score > b.score;
 
@@ -376,7 +376,7 @@ export async function GET(request: Request) {
       // 5. Challenges count DESC
       if (a.challengesCount !== b.challengesCount) return a.challengesCount > b.challengesCount;
       return new Date(a.lastCreatedAt).getTime() < new Date(b.lastCreatedAt).getTime();
-    } else if (targetGame === "capitalblitz") {
+    } else if (targetGame === "capitalblitz" || targetGame === "flagpie") {
       // 1. Total score DESC
       if (a.totalScore !== b.totalScore) return a.totalScore > b.totalScore;
       // 2. Total time ASC
@@ -496,6 +496,10 @@ export async function GET(request: Request) {
         primaryCriterion = `${agg.totalScore.toLocaleString("fr-FR")} pts`;
         secondaryCriterion = `${agg.challengesCount} ${agg.challengesCount > 1 ? "sprints" : "sprint"}`;
         tieBreakerCriterion = timeFormatted ? `⏱️ ${timeFormatted}` : "";
+      } else if (game === "flagpie") {
+        primaryCriterion = `${agg.totalScore.toLocaleString("fr-FR")} pts`;
+        secondaryCriterion = `${agg.challengesCount} ${agg.challengesCount > 1 ? "parties" : "partie"}`;
+        tieBreakerCriterion = timeFormatted ? `⏱️ ${timeFormatted}` : "";
       } else {
         // Blind Point
         primaryCriterion = `${agg.totalScore.toLocaleString("fr-FR")} pts`;
@@ -583,6 +587,11 @@ export async function GET(request: Request) {
         ]
           .filter(Boolean)
           .join(" • ");
+      } else if (game === "flagpie") {
+        const correct = session.summary_data?.correctCount ?? 0;
+        primaryCriterion = `${session.score.toLocaleString("fr-FR")} pts`;
+        secondaryCriterion = `${correct}/5 réussis`;
+        tieBreakerCriterion = timeFormatted ? `⏱️ ${timeFormatted}` : "";
       } else {
         // Blind Point
         const distKm = session.distance_km;

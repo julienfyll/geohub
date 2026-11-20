@@ -26,14 +26,14 @@ import { UserNav } from "@/components/navigation/UserNav";
 
 interface ChallengeDef {
   id: string;
-  game: "georings" | "blindpoint" | "borderpath" | "capitalblitz";
+  game: "georings" | "blindpoint" | "borderpath" | "capitalblitz" | "flagpie";
   title: string;
   subtitle: string;
   badge: string;
   icon: string;
   linkUrl: string;
   isGeoRings: boolean;
-  theme: "blue" | "sky" | "emerald" | "indigo" | "amber";
+  theme: "blue" | "sky" | "emerald" | "indigo" | "amber" | "violet";
 }
 
 const DAILY_CHALLENGES: ChallengeDef[] = [
@@ -220,12 +220,25 @@ const DAILY_CHALLENGES: ChallengeDef[] = [
     isGeoRings: false,
     theme: "amber",
   },
+
+  // FLAGPIE (1)
+  {
+    id: "flagpie_daily_monde",
+    game: "flagpie",
+    title: "Camembert du Jour",
+    subtitle: "5 drapeaux mystères • 3 essais",
+    badge: "5 manches",
+    icon: "🥧",
+    linkUrl: "/play/flagpie?pack=monde&mode=daily&play=1",
+    isGeoRings: false,
+    theme: "violet",
+  },
 ];
 
 export const DailyChallengeHubView: React.FC = () => {
   const { statusMap, loading } = useDailyChallenges();
   const [statusFilter, setStatusFilter] = useState<"all" | "todo" | "done">("all");
-  const [gameFilter, setGameFilter] = useState<"all" | "georings" | "blindpoint" | "borderpath" | "capitalblitz">("all");
+  const [gameFilter, setGameFilter] = useState<"all" | "georings" | "blindpoint" | "borderpath" | "capitalblitz" | "flagpie">("all");
   const [copiedShare, setCopiedShare] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<string>("");
 
@@ -316,6 +329,10 @@ export const DailyChallengeHubView: React.FC = () => {
 
   const capitalblitzList = useMemo(() => {
     return filteredChallenges.filter((c) => c.game === "capitalblitz");
+  }, [filteredChallenges]);
+
+  const flagpieList = useMemo(() => {
+    return filteredChallenges.filter((c) => c.game === "flagpie");
   }, [filteredChallenges]);
 
   // Share daily summary to clipboard
@@ -727,6 +744,18 @@ export const DailyChallengeHubView: React.FC = () => {
             <span>⚡</span>
             <span>Capital Blitz</span>
           </button>
+          <button
+            type="button"
+            onClick={() => setGameFilter("flagpie")}
+            className={`px-2.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1 whitespace-nowrap ${
+              gameFilter === "flagpie"
+                ? "bg-violet-600 text-white shadow-md shadow-violet-600/30"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>🥧</span>
+            <span>FlagPie</span>
+          </button>
         </div>
       </section>
 
@@ -886,6 +915,44 @@ export const DailyChallengeHubView: React.FC = () => {
                 <Link
                   href="/play/capitalblitz"
                   className="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition-colors"
+                >
+                  <span>Page Dédiée</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* PANEL 5 : FLAGPIE */}
+          {flagpieList.length > 0 && (
+            <div className="p-6 rounded-3xl bg-slate-900/90 border border-violet-500/30 flex flex-col justify-between shadow-xl relative overflow-hidden">
+              <div className="space-y-4">
+                {/* Header */}
+                <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+                  <div className="w-10 h-10 rounded-2xl bg-violet-600/20 border border-violet-500/40 text-violet-400 flex items-center justify-center font-bold text-lg shadow-sm">
+                    🥧
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-white leading-tight truncate">
+                      FlagPie
+                    </h3>
+                    <span className="text-xs text-slate-400 block truncate">
+                      Proportions chromatiques • 5 manches
+                    </span>
+                  </div>
+                </div>
+
+                {/* List of FlagPie Challenges */}
+                <div className="space-y-2">
+                  {flagpieList.map(renderChallengeItem)}
+                </div>
+              </div>
+
+              <div className="pt-3 mt-3.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span className="text-slate-500 text-[11px]">Entraînement libre</span>
+                <Link
+                  href="/play/flagpie"
+                  className="text-violet-400 hover:text-violet-300 font-bold flex items-center gap-1 transition-colors"
                 >
                   <span>Page Dédiée</span>
                   <ChevronRight className="w-3.5 h-3.5" />

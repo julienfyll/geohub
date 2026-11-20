@@ -7,7 +7,7 @@ import { LeaderboardModal } from "./LeaderboardModal";
 interface LeaderboardTriggerButtonProps {
   className?: string;
   label?: string;
-  initialGame?: "georings" | "blindpoint" | "borderpath" | "capitalblitz";
+  initialGame?: "georings" | "blindpoint" | "borderpath" | "capitalblitz" | "flagpie";
   initialVariant?: string;
 }
 

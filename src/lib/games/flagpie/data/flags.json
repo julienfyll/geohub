@@ -1,0 +1,3085 @@
+[
+  {
+    "id": "FRA",
+    "name": "France",
+    "aliases": [
+      "republique francaise",
+      "la france"
+    ],
+    "flag": "🇫🇷",
+    "continent": "Europe",
+    "capital": "Paris",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#0055A4",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#EF4135",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Le blanc de la monarchie entouré du bleu et du rouge de la ville de Paris, officialisé en 1794."
+  },
+  {
+    "id": "DEU",
+    "name": "Allemagne",
+    "aliases": [
+      "germany",
+      "deutschland"
+    ],
+    "flag": "🇩🇪",
+    "continent": "Europe",
+    "capital": "Berlin",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#DD0000",
+        "percentage": 33.33
+      },
+      {
+        "color": "Or",
+        "hex": "#FFCE00",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Les couleurs proviennent des uniformes du corps franc de Lützow lors des guerres napoléoniennes."
+  },
+  {
+    "id": "ITA",
+    "name": "Italie",
+    "aliases": [
+      "italy",
+      "italia"
+    ],
+    "flag": "🇮🇹",
+    "continent": "Europe",
+    "capital": "Rome",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#009246",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#F1F2F1",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE2B37",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Inspiré du drapeau tricolore français, le vert remplace le bleu en hommage à la milice citoyenne de Milan."
+  },
+  {
+    "id": "ESP",
+    "name": "Espagne",
+    "aliases": [
+      "spain",
+      "espana"
+    ],
+    "flag": "🇪🇸",
+    "continent": "Europe",
+    "capital": "Madrid",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#AA151B",
+        "percentage": 50.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#F1BF00",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "La 'Rojigualda' possède une bande jaune centrale deux fois plus large que chaque bande rouge."
+  },
+  {
+    "id": "BEL",
+    "name": "Belgique",
+    "aliases": [
+      "belgium",
+      "belgie"
+    ],
+    "flag": "🇧🇪",
+    "continent": "Europe",
+    "capital": "Bruxelles",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFE936",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#FF0F21",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Couleurs issues des armoiries du duché de Brabant : lion d'or sur champ de sable aux griffes rouges."
+  },
+  {
+    "id": "NLD",
+    "name": "Pays-Bas",
+    "aliases": [
+      "hollande",
+      "netherlands",
+      "nederland"
+    ],
+    "flag": "🇳🇱",
+    "continent": "Europe",
+    "capital": "Amsterdam",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#AE1C28",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#21468B",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Initialement orange, blanc et bleu (Prinsenvlag), la bande orange est devenue rouge vers 1630 pour être plus visible en mer."
+  },
+  {
+    "id": "PRT",
+    "name": "Portugal",
+    "aliases": [
+      "portuguese republic"
+    ],
+    "flag": "🇵🇹",
+    "continent": "Europe",
+    "capital": "Lisbonne",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#006600",
+        "percentage": 40.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#FF0000",
+        "percentage": 60.0
+      }
+    ],
+    "trivia": "Le vert symbolise l'espoir de la nation et le rouge le sang versé par les combattants de la République."
+  },
+  {
+    "id": "GBR",
+    "name": "Royaume-Uni",
+    "aliases": [
+      "angleterre",
+      "grande bretagne",
+      "uk",
+      "united kingdom"
+    ],
+    "flag": "🇬🇧",
+    "continent": "Europe",
+    "capital": "Londres",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#012169",
+        "percentage": 50.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 30.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#C8102E",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "L'Union Jack fusionne la croix de Saint-Georges (Angleterre), Saint-André (Écosse) et Saint-Patrick (Irlande)."
+  },
+  {
+    "id": "IRL",
+    "name": "Irlande",
+    "aliases": [
+      "ireland",
+      "eire"
+    ],
+    "flag": "🇮🇪",
+    "continent": "Europe",
+    "capital": "Dublin",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#169B62",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Orange",
+        "hex": "#FF883E",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Le vert catholique et l'orange protestant sont unis par le blanc, symbole de paix durable."
+  },
+  {
+    "id": "SWE",
+    "name": "Suède",
+    "aliases": [
+      "sweden",
+      "sverige"
+    ],
+    "flag": "🇸🇪",
+    "continent": "Europe",
+    "capital": "Stockholm",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#006AA7",
+        "percentage": 70.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FECC00",
+        "percentage": 30.0
+      }
+    ],
+    "trivia": "Croix scandinave jaune sur fond bleu ciel inspirée du blason royal aux trois couronnes."
+  },
+  {
+    "id": "DNK",
+    "name": "Danemark",
+    "aliases": [
+      "denmark",
+      "danmark"
+    ],
+    "flag": "🇩🇰",
+    "continent": "Europe",
+    "capital": "Copenhague",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#C60C30",
+        "percentage": 72.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 28.0
+      }
+    ],
+    "trivia": "Le Dannebrog est considéré comme le plus vieux drapeau national toujours en usage officiel au monde (1219)."
+  },
+  {
+    "id": "NOR",
+    "name": "Norvège",
+    "aliases": [
+      "norway",
+      "norge"
+    ],
+    "flag": "🇳🇴",
+    "continent": "Europe",
+    "capital": "Oslo",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#BA0C2F",
+        "percentage": 54.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 18.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#00205B",
+        "percentage": 28.0
+      }
+    ],
+    "trivia": "Créé en 1821 par Frederik Meltzer, il ajoute une croix bleue dans la croix blanche danoise."
+  },
+  {
+    "id": "FIN",
+    "name": "Finlande",
+    "aliases": [
+      "finland",
+      "suomi"
+    ],
+    "flag": "🇫🇮",
+    "continent": "Europe",
+    "capital": "Helsinki",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 72.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#003580",
+        "percentage": 28.0
+      }
+    ],
+    "trivia": "Le poète Zacharias Topelius a défini les couleurs : le bleu des mille lacs et le blanc des neiges hivernales."
+  },
+  {
+    "id": "ISL",
+    "name": "Islande",
+    "aliases": [
+      "iceland",
+      "island"
+    ],
+    "flag": "🇮🇸",
+    "continent": "Europe",
+    "capital": "Reykjavik",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#02529C",
+        "percentage": 54.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 18.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#DC1E35",
+        "percentage": 28.0
+      }
+    ],
+    "trivia": "Le bleu de l'océan Atlantique, le blanc des glaciers et le rouge du feu des volcans actifs."
+  },
+  {
+    "id": "POL",
+    "name": "Pologne",
+    "aliases": [
+      "poland",
+      "polska"
+    ],
+    "flag": "🇵🇱",
+    "continent": "Europe",
+    "capital": "Varsovie",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#DC143C",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "Tiré des armoiries royales : l'Aigle blanc posé sur un bouclier rouge écarlate."
+  },
+  {
+    "id": "UKR",
+    "name": "Ukraine",
+    "aliases": [
+      "ukraina"
+    ],
+    "flag": "🇺🇦",
+    "continent": "Europe",
+    "capital": "Kiev",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#0057B7",
+        "percentage": 50.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFDD00",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "Le bleu du ciel infini au-dessus des vastes champs de blé doré ukrainiens."
+  },
+  {
+    "id": "CHE",
+    "name": "Suisse",
+    "aliases": [
+      "switzerland",
+      "schweiz",
+      "confederation suisse"
+    ],
+    "flag": "🇨🇭",
+    "continent": "Europe",
+    "capital": "Berne",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#D52B1E",
+        "percentage": 84.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 16.0
+      }
+    ],
+    "trivia": "L'un des deux seuls drapeaux nationaux carrés au monde avec celui du Vatican."
+  },
+  {
+    "id": "AUT",
+    "name": "Autriche",
+    "aliases": [
+      "austria",
+      "osterreich"
+    ],
+    "flag": "🇦🇹",
+    "continent": "Europe",
+    "capital": "Vienne",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#ED2939",
+        "percentage": 66.67
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      }
+    ],
+    "trivia": "La légende raconte que la tunique blanche du duc Léopold V était trempée de sang après la bataille de Saint-Jean-d'Acre, sauf sous sa ceinture."
+  },
+  {
+    "id": "GRC",
+    "name": "Grèce",
+    "aliases": [
+      "greece",
+      "hellas"
+    ],
+    "flag": "🇬🇷",
+    "continent": "Europe",
+    "capital": "Athènes",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#0D5EAF",
+        "percentage": 55.56
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 44.44
+      }
+    ],
+    "trivia": "Les neuf bandes correspondent aux neuf syllabes de la devise 'Elefthería í Thánatos' (La liberté ou la mort)."
+  },
+  {
+    "id": "RUS",
+    "name": "Russie",
+    "aliases": [
+      "russia",
+      "federation de russie"
+    ],
+    "flag": "🇷🇺",
+    "continent": "Europe",
+    "capital": "Moscou",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0039A6",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D52B1E",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Introduit par Pierre le Grand en 1696, il est à l'origine des couleurs panslaves de nombreux pays d'Europe de l'Est."
+  },
+  {
+    "id": "HUN",
+    "name": "Hongrie",
+    "aliases": [
+      "hungary",
+      "magyarorszag"
+    ],
+    "flag": "🇭🇺",
+    "continent": "Europe",
+    "capital": "Budapest",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#CE2939",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Vert",
+        "hex": "#477050",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Rouge pour la force, blanc pour la fidélité et vert pour l'espoir de la terre magyare."
+  },
+  {
+    "id": "ROU",
+    "name": "Roumanie",
+    "aliases": [
+      "romania"
+    ],
+    "flag": "🇷🇴",
+    "continent": "Europe",
+    "capital": "Bucarest",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#002B7F",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Identique au drapeau du Tchad à une nuance de bleu près (légèrement plus clair en Roumanie)."
+  },
+  {
+    "id": "CZE",
+    "name": "Tchéquie",
+    "aliases": [
+      "republique tcheque",
+      "czech republic",
+      "czechia"
+    ],
+    "flag": "🇨🇿",
+    "continent": "Europe",
+    "capital": "Prague",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 40.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D7141A",
+        "percentage": 40.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#11457E",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "La Tchéquie a conservé le drapeau historique de la Tchécoslovaquie après la dissolution pacifique de 1993."
+  },
+  {
+    "id": "SVK",
+    "name": "Slovaquie",
+    "aliases": [
+      "slovakia"
+    ],
+    "flag": "🇸🇰",
+    "continent": "Europe",
+    "capital": "Bratislava",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0B4EA2",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#EE1C25",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Pour éviter la confusion avec le drapeau russe, la Slovaquie a ajouté ses armoiries avec la double croix sur trois monts."
+  },
+  {
+    "id": "HRV",
+    "name": "Croatie",
+    "aliases": [
+      "croatia",
+      "hrvatska"
+    ],
+    "flag": "🇭🇷",
+    "continent": "Europe",
+    "capital": "Zagreb",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#FF0000",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#171796",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Son centre arbore le damier rouge et blanc historique surmonté d'une couronne de cinq blasons régionaux."
+  },
+  {
+    "id": "SRB",
+    "name": "Serbie",
+    "aliases": [
+      "serbia"
+    ],
+    "flag": "🇷🇸",
+    "continent": "Europe",
+    "capital": "Belgrade",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#C6363C",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0C4076",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Tricolore panslave inversé par rapport à la Russie, surmonté de l'aigle bicéphale blanc des Nemanjić."
+  },
+  {
+    "id": "BGR",
+    "name": "Bulgarie",
+    "aliases": [
+      "bulgaria"
+    ],
+    "flag": "🇧🇬",
+    "continent": "Europe",
+    "capital": "Sofia",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Vert",
+        "hex": "#00966E",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D62612",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Le bleu panslave a été remplacé par le vert pour symboliser l'agriculture et les forêts bulgares."
+  },
+  {
+    "id": "MCO",
+    "name": "Monaco",
+    "aliases": [
+      "principauté de monaco"
+    ],
+    "flag": "🇲🇨",
+    "continent": "Europe",
+    "capital": "Monaco",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 50.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "Couleurs des armoiries de la maison Grimaldi attestées depuis 1339, avec une proportion officielle de 4:5."
+  },
+  {
+    "id": "MLT",
+    "name": "Malte",
+    "aliases": [
+      "malta"
+    ],
+    "flag": "🇲🇹",
+    "continent": "Europe",
+    "capital": "La Valette",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CF142B",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "Porte la George Cross britannique décernée à l'île entière en 1942 pour son héroïsme durant la Seconde Guerre mondiale."
+  },
+  {
+    "id": "ALB",
+    "name": "Albanie",
+    "aliases": [
+      "albania",
+      "shqiperia"
+    ],
+    "flag": "🇦🇱",
+    "continent": "Europe",
+    "capital": "Tirana",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#DA291C",
+        "percentage": 88.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 12.0
+      }
+    ],
+    "trivia": "L'aigle bicéphale noir sur champ rouge était le sceau du héros national Gjergj Kastrioti Skanderbeg au XVe siècle."
+  },
+  {
+    "id": "EST",
+    "name": "Estonie",
+    "aliases": [
+      "estonia",
+      "eesti"
+    ],
+    "flag": "🇪🇪",
+    "continent": "Europe",
+    "capital": "Tallinn",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#0072CE",
+        "percentage": 33.33
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Le bleu du ciel, le noir de la terre nourricière et le blanc de la neige et de la quête de liberté."
+  },
+  {
+    "id": "LVA",
+    "name": "Lettonie",
+    "aliases": [
+      "latvia",
+      "latvija"
+    ],
+    "flag": "🇱🇻",
+    "continent": "Europe",
+    "capital": "Riga",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Carmin",
+        "hex": "#9E3039",
+        "percentage": 80.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "Utilise une nuance unique de rouge carmin letton (rouge bordeaux), mentionnée dès 1279 dans la Chronique rimée de Livonie."
+  },
+  {
+    "id": "LTU",
+    "name": "Lituanie",
+    "aliases": [
+      "lithuania",
+      "lietuva"
+    ],
+    "flag": "🇱🇹",
+    "continent": "Europe",
+    "capital": "Vilnius",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Jaune",
+        "hex": "#FDB913",
+        "percentage": 33.33
+      },
+      {
+        "color": "Vert",
+        "hex": "#006A44",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#C1272D",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Jaune pour le soleil et le blé, vert pour les forêts et rouge pour le courage et le sang versé."
+  },
+  {
+    "id": "LUX",
+    "name": "Luxembourg",
+    "aliases": [
+      "grand-duche de luxembourg"
+    ],
+    "flag": "🇱🇺",
+    "continent": "Europe",
+    "capital": "Luxembourg",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#EA141D",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu ciel",
+        "hex": "#00A1DE",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Se distingue du drapeau néerlandais par sa nuance bleu ciel très clair et son ratio plus allongé."
+  },
+  {
+    "id": "SVN",
+    "name": "Slovénie",
+    "aliases": [
+      "slovenia"
+    ],
+    "flag": "🇸🇮",
+    "continent": "Europe",
+    "capital": "Ljubljana",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#005CE6",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#ED1C24",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Son écusson représente le mont Triglav, plus haut sommet du pays, surmonté de trois étoiles d'or des comtes de Celje."
+  },
+  {
+    "id": "MKD",
+    "name": "Macédoine du Nord",
+    "aliases": [
+      "macedoine",
+      "north macedonia"
+    ],
+    "flag": "🇲🇰",
+    "continent": "Europe",
+    "capital": "Skopje",
+    "difficulty": 3,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#D20000",
+        "percentage": 68.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFE600",
+        "percentage": 32.0
+      }
+    ],
+    "trivia": "Le soleil d'or aux huit rayons divergents symbolise le 'nouveau soleil de la liberté' cité dans l'hymne national."
+  },
+  {
+    "id": "BIH",
+    "name": "Bosnie-Herzégovine",
+    "aliases": [
+      "bosnie",
+      "bosnia"
+    ],
+    "flag": "🇧🇦",
+    "continent": "Europe",
+    "capital": "Sarajevo",
+    "difficulty": 3,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#002395",
+        "percentage": 65.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FECB00",
+        "percentage": 25.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 10.0
+      }
+    ],
+    "trivia": "Le triangle jaune représente la forme géographique du pays et les trois communautés (Bosniaques, Croates, Serbes)."
+  },
+  {
+    "id": "USA",
+    "name": "États-Unis",
+    "aliases": [
+      "usa",
+      "united states",
+      "etats unis d'amerique",
+      "amerique"
+    ],
+    "flag": "🇺🇸",
+    "continent": "Americas",
+    "capital": "Washington",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#B22234",
+        "percentage": 40.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 40.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#3C3B6E",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "Les 'Stars and Stripes' comptent 13 bandes pour les colonies originelles et 50 étoiles pour les États actuels."
+  },
+  {
+    "id": "CAN",
+    "name": "Canada",
+    "aliases": [
+      "dominion du canada"
+    ],
+    "flag": "🇨🇦",
+    "continent": "Americas",
+    "capital": "Ottawa",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#FF0000",
+        "percentage": 50.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "L'unifolié adopté en 1965 met à l'honneur la feuille d'érable stylisée à 11 pointes."
+  },
+  {
+    "id": "BRA",
+    "name": "Brésil",
+    "aliases": [
+      "brazil",
+      "brasil"
+    ],
+    "flag": "🇧🇷",
+    "continent": "Americas",
+    "capital": "Brasilia",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#009B3A",
+        "percentage": 66.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FEDF01",
+        "percentage": 26.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#002776",
+        "percentage": 7.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 1.0
+      }
+    ],
+    "trivia": "Le globe bleu montre le ciel de Rio de Janeiro le 15 novembre 1889, date de proclamation de la République."
+  },
+  {
+    "id": "ARG",
+    "name": "Argentine",
+    "aliases": [
+      "argentina"
+    ],
+    "flag": "🇦🇷",
+    "continent": "Americas",
+    "capital": "Buenos Aires",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu ciel",
+        "hex": "#75AADB",
+        "percentage": 66.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCBF49",
+        "percentage": 1.0
+      }
+    ],
+    "trivia": "Le soleil de mai ('Sol de Mayo') avec son visage humain commémore la révolution de mai 1810 contre l'Espagne."
+  },
+  {
+    "id": "MEX",
+    "name": "Mexique",
+    "aliases": [
+      "mexico",
+      "etats unis mexicains"
+    ],
+    "flag": "🇲🇽",
+    "continent": "Americas",
+    "capital": "Mexico",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#006847",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Les armoiries centrales illustrent la légende aztèque de l'aigle posé sur un nopal dévorant un serpent."
+  },
+  {
+    "id": "COL",
+    "name": "Colombie",
+    "aliases": [
+      "colombia"
+    ],
+    "flag": "🇨🇴",
+    "continent": "Americas",
+    "capital": "Bogota",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 50.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#003893",
+        "percentage": 25.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 25.0
+      }
+    ],
+    "trivia": "Drapeau mirandais hérité de la Grande Colombie : le jaune occupe la moitié supérieure."
+  },
+  {
+    "id": "CHL",
+    "name": "Chili",
+    "aliases": [
+      "chile"
+    ],
+    "flag": "🇨🇱",
+    "continent": "Americas",
+    "capital": "Santiago",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#D52B1E",
+        "percentage": 50.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 35.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0039A6",
+        "percentage": 15.0
+      }
+    ],
+    "trivia": "Surnommé 'La Estrella Solitaria', l'étoile blanche guide le progrès et l'honneur de la nation."
+  },
+  {
+    "id": "PER",
+    "name": "Pérou",
+    "aliases": [
+      "peru"
+    ],
+    "flag": "🇵🇪",
+    "continent": "Americas",
+    "capital": "Lima",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#D91023",
+        "percentage": 66.67
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      }
+    ],
+    "trivia": "Le général San Martín se serait inspiré du vol d'un vol de flamants roses au poitrail blanc et aux ailes rouges."
+  },
+  {
+    "id": "VEN",
+    "name": "Venezuela",
+    "aliases": [
+      "republique bolivarienne du venezuela"
+    ],
+    "flag": "🇻🇪",
+    "continent": "Americas",
+    "capital": "Caracas",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Jaune",
+        "hex": "#FCE300",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#00247D",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CF142B",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Ses huit étoiles blanches en arc de cercle représentent les huit provinces historiques de la déclaration d'indépendance."
+  },
+  {
+    "id": "CUB",
+    "name": "Cuba",
+    "aliases": [
+      "republique de cuba"
+    ],
+    "flag": "🇨🇺",
+    "continent": "Americas",
+    "capital": "La Havane",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#002A8F",
+        "percentage": 60.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 20.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CF142B",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "Le triangle rouge symbolise les idéaux républicains de liberté, égalité et fraternité."
+  },
+  {
+    "id": "JAM",
+    "name": "Jamaïque",
+    "aliases": [
+      "jamaica"
+    ],
+    "flag": "🇯🇲",
+    "continent": "Americas",
+    "capital": "Kingston",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#007749",
+        "percentage": 40.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 40.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFB81C",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "Seul drapeau national au monde ne contenant ni rouge, ni blanc, ni bleu."
+  },
+  {
+    "id": "URY",
+    "name": "Uruguay",
+    "aliases": [
+      "republique orientale de l'uruguay"
+    ],
+    "flag": "🇺🇾",
+    "continent": "Americas",
+    "capital": "Montevideo",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 55.56
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0038A8",
+        "percentage": 44.44
+      }
+    ],
+    "trivia": "Ses neuf bandes bleues et blanches rappellent les neuf départements fondateurs du pays en 1830."
+  },
+  {
+    "id": "BOL",
+    "name": "Bolivie",
+    "aliases": [
+      "bolivia"
+    ],
+    "flag": "🇧🇴",
+    "continent": "Americas",
+    "capital": "Sucre",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#DA291C",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#F4E400",
+        "percentage": 33.33
+      },
+      {
+        "color": "Vert",
+        "hex": "#007A3D",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Le rouge pour la bravoure des héros, le jaune pour les richesses minières et le vert pour la fertilité végétale."
+  },
+  {
+    "id": "ECU",
+    "name": "Équateur",
+    "aliases": [
+      "ecuador"
+    ],
+    "flag": "🇪🇨",
+    "continent": "Americas",
+    "capital": "Quito",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Jaune",
+        "hex": "#FFDD00",
+        "percentage": 50.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#034EA2",
+        "percentage": 25.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#ED1C24",
+        "percentage": 25.0
+      }
+    ],
+    "trivia": "Le condor des Andes qui couronne les armoiries symbolise le pouvoir, la grandeur et la force de la nation."
+  },
+  {
+    "id": "CRI",
+    "name": "Costa Rica",
+    "aliases": [],
+    "flag": "🇨🇷",
+    "continent": "Americas",
+    "capital": "San José",
+    "difficulty": 3,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#002B7F",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Inspiré du drapeau français par Pacífica Fernández Oreamuno en 1848, avec une bande rouge centrale doublée."
+  },
+  {
+    "id": "JPN",
+    "name": "Japon",
+    "aliases": [
+      "japan",
+      "nippon"
+    ],
+    "flag": "🇯🇵",
+    "continent": "Asia",
+    "capital": "Tokyo",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 80.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#BC002D",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "Le disque solaire rouge au centre du champ blanc représente Amaterasu, la déesse du Soleil fondatrice de la lignée impériale."
+  },
+  {
+    "id": "CHN",
+    "name": "Chine",
+    "aliases": [
+      "china",
+      "republique populaire de chine"
+    ],
+    "flag": "🇨🇳",
+    "continent": "Asia",
+    "capital": "Pékin",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#EE1C25",
+        "percentage": 97.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFFF00",
+        "percentage": 3.0
+      }
+    ],
+    "trivia": "Le grand astre jaune représente le Parti communiste, entouré par quatre petites étoiles symbolisant les quatre classes sociales."
+  },
+  {
+    "id": "IND",
+    "name": "Inde",
+    "aliases": [
+      "india",
+      "bharat"
+    ],
+    "flag": "🇮🇳",
+    "continent": "Asia",
+    "capital": "New Delhi",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Safran",
+        "hex": "#FF9933",
+        "percentage": 33.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#138808",
+        "percentage": 33.0
+      },
+      {
+        "color": "Bleu marine",
+        "hex": "#000080",
+        "percentage": 1.0
+      }
+    ],
+    "trivia": "La roue centrale (Ashoka Chakra) possède 24 rayons représentant les 24 heures du jour et la justice éternelle."
+  },
+  {
+    "id": "KOR",
+    "name": "Corée du Sud",
+    "aliases": [
+      "coree",
+      "south korea",
+      "republique de coree"
+    ],
+    "flag": "🇰🇷",
+    "continent": "Asia",
+    "capital": "Séoul",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 70.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CD2E3A",
+        "percentage": 12.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0047A0",
+        "percentage": 12.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 6.0
+      }
+    ],
+    "trivia": "Le Taegeuk central symbolise l'harmonie universelle du Yin (bleu) et du Yang (rouge), entouré de quatre trigrammes noirs."
+  },
+  {
+    "id": "AUS",
+    "name": "Australie",
+    "aliases": [
+      "australia",
+      "commonwealth d'australie"
+    ],
+    "flag": "🇦🇺",
+    "continent": "Oceania",
+    "capital": "Canberra",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#012169",
+        "percentage": 80.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 12.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#C8102E",
+        "percentage": 8.0
+      }
+    ],
+    "trivia": "Il arbore l'Union Jack britannique et les étoiles de la constellation de la Croix du Sud, visible dans l'hémisphère Sud."
+  },
+  {
+    "id": "NZL",
+    "name": "Nouvelle-Zélande",
+    "aliases": [
+      "new zealand",
+      "aotearoa"
+    ],
+    "flag": "🇳🇿",
+    "continent": "Oceania",
+    "capital": "Wellington",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#012169",
+        "percentage": 80.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CC142B",
+        "percentage": 10.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 10.0
+      }
+    ],
+    "trivia": "Ses quatre étoiles rouges bordées de blanc figurent la Croix du Sud (sans la cinquième étoile présente chez l'Australie)."
+  },
+  {
+    "id": "TUR",
+    "name": "Turquie",
+    "aliases": [
+      "turkey",
+      "turkiye"
+    ],
+    "flag": "🇹🇷",
+    "continent": "Asia",
+    "capital": "Ankara",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#E30A17",
+        "percentage": 88.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 12.0
+      }
+    ],
+    "trivia": "Le croissant et l'étoile blanche sur fond rouge ottoman remontent au sultanat d'Osman Ier."
+  },
+  {
+    "id": "SAU",
+    "name": "Arabie Saoudite",
+    "aliases": [
+      "saudi arabia"
+    ],
+    "flag": "🇸🇦",
+    "continent": "Asia",
+    "capital": "Riyad",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#006C35",
+        "percentage": 90.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 10.0
+      }
+    ],
+    "trivia": "Porte la chahada islamique au-dessus d'un sabre arabe. Le drapeau ne doit jamais être mis en berne."
+  },
+  {
+    "id": "ISR",
+    "name": "Israël",
+    "aliases": [
+      "israel"
+    ],
+    "flag": "🇮🇱",
+    "continent": "Asia",
+    "capital": "Jérusalem",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 75.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0038B8",
+        "percentage": 25.0
+      }
+    ],
+    "trivia": "Inspiré du châle de prière traditionnel juif (le talit), il place en son cœur l'Étoile de David (Magen David)."
+  },
+  {
+    "id": "VNM",
+    "name": "Viêt Nam",
+    "aliases": [
+      "vietnam"
+    ],
+    "flag": "🇻🇳",
+    "continent": "Asia",
+    "capital": "Hanoï",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#DA251D",
+        "percentage": 92.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFFF00",
+        "percentage": 8.0
+      }
+    ],
+    "trivia": "L'étoile jaune à cinq branches représente l'union des ouvriers, paysans, soldats, intellectuels et commerçants."
+  },
+  {
+    "id": "THA",
+    "name": "Thaïlande",
+    "aliases": [
+      "thailand",
+      "siam"
+    ],
+    "flag": "🇹🇭",
+    "continent": "Asia",
+    "capital": "Bangkok",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#A51931",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#F4F5F8",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#2D2A4A",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Appelé le 'Trairanga' (tricolore), la bande bleue centrale est deux fois plus large que chaque autre bande."
+  },
+  {
+    "id": "IDN",
+    "name": "Indonésie",
+    "aliases": [
+      "indonesia"
+    ],
+    "flag": "🇮🇩",
+    "continent": "Asia",
+    "capital": "Jakarta",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#FF0000",
+        "percentage": 50.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "Le 'Sang Saka Merah-Putih' reprend les couleurs sacrées de l'empire Majapahit du XIIIe siècle (ratio 2:3)."
+  },
+  {
+    "id": "IRN",
+    "name": "Iran",
+    "aliases": [
+      "republique islamique d'iran",
+      "perse"
+    ],
+    "flag": "🇮🇷",
+    "continent": "Asia",
+    "capital": "Téhéran",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#239F40",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#DA0000",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "La phrase 'Allahu Akbar' est répétée 22 fois en écriture coufique le long des bordures des bandes verte et rouge."
+  },
+  {
+    "id": "PAK",
+    "name": "Pakistan",
+    "aliases": [
+      "republique islamique du pakistan"
+    ],
+    "flag": "🇵🇰",
+    "continent": "Asia",
+    "capital": "Islamabad",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#01411C",
+        "percentage": 75.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 25.0
+      }
+    ],
+    "trivia": "Le vert foncé représente la majorité musulmane, tandis que la bande blanche verticale symbolise les minorités religieuses."
+  },
+  {
+    "id": "SGP",
+    "name": "Singapour",
+    "aliases": [
+      "singapore"
+    ],
+    "flag": "🇸🇬",
+    "continent": "Asia",
+    "capital": "Singapour",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#ED2939",
+        "percentage": 50.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      }
+    ],
+    "trivia": "Le croissant de lune incarne une jeune nation en ascension et les cinq étoiles représentent démocratie, paix, progrès, justice et égalité."
+  },
+  {
+    "id": "LBN",
+    "name": "Liban",
+    "aliases": [
+      "lebanon"
+    ],
+    "flag": "🇱🇧",
+    "continent": "Asia",
+    "capital": "Beyrouth",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#ED1C24",
+        "percentage": 42.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#00A651",
+        "percentage": 8.0
+      }
+    ],
+    "trivia": "Le cèdre vert du mont Liban est le symbole biblique d'immortalité, de sainteté et de résilience du peuple libanais."
+  },
+  {
+    "id": "ZAF",
+    "name": "Afrique du Sud",
+    "aliases": [
+      "south africa"
+    ],
+    "flag": "🇿🇦",
+    "continent": "Africa",
+    "capital": "Pretoria",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#007A4D",
+        "percentage": 28.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#DE3831",
+        "percentage": 19.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#002395",
+        "percentage": 18.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 17.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFB612",
+        "percentage": 9.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 9.0
+      }
+    ],
+    "trivia": "Adopté en 1994 pour clore l'apartheid, son 'Y' horizontal illustre la convergence des diversités sud-africaines."
+  },
+  {
+    "id": "EGY",
+    "name": "Égypte",
+    "aliases": [
+      "egypt"
+    ],
+    "flag": "🇪🇬",
+    "continent": "Africa",
+    "capital": "Le Caire",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#C8102E",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "L'Aigle doré de Saladin au centre veille sur les trois bandes du panarabisme triomphant."
+  },
+  {
+    "id": "MAR",
+    "name": "Maroc",
+    "aliases": [
+      "morocco"
+    ],
+    "flag": "🇲🇦",
+    "continent": "Africa",
+    "capital": "Rabat",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#C1272D",
+        "percentage": 95.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#006233",
+        "percentage": 5.0
+      }
+    ],
+    "trivia": "Le pentagramme vert entrelacé au centre représente le sceau de Salomon et les 5 piliers de l'islam."
+  },
+  {
+    "id": "DZA",
+    "name": "Algérie",
+    "aliases": [
+      "algeria"
+    ],
+    "flag": "🇩🇿",
+    "continent": "Africa",
+    "capital": "Alger",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#006633",
+        "percentage": 48.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 48.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D21034",
+        "percentage": 4.0
+      }
+    ],
+    "trivia": "Le vert de la nature et le blanc de la pureté sont unis autour du croissant et de l'étoile rouge du sang des martyrs."
+  },
+  {
+    "id": "TUN",
+    "name": "Tunisie",
+    "aliases": [
+      "tunisia"
+    ],
+    "flag": "🇹🇳",
+    "continent": "Africa",
+    "capital": "Tunis",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#E70013",
+        "percentage": 85.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 15.0
+      }
+    ],
+    "trivia": "Créé en 1827 par le bey Hussein II, le disque blanc central illumine le croissant et l'étoile rouges ottomans."
+  },
+  {
+    "id": "SEN",
+    "name": "Sénégal",
+    "aliases": [
+      "senegal"
+    ],
+    "flag": "🇸🇳",
+    "continent": "Africa",
+    "capital": "Dakar",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#00853F",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FDEF42",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#E31B23",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "L'étoile verte à cinq branches au cœur de la bande jaune d'or rappelle les cinq continents du monde."
+  },
+  {
+    "id": "CMR",
+    "name": "Cameroun",
+    "aliases": [
+      "cameroon"
+    ],
+    "flag": "🇨🇲",
+    "continent": "Africa",
+    "capital": "Yaoundé",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#007A5E",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Surnommé 'l'Étoile de l'Unité', l'astre doré trône au milieu de la bande rouge centrale."
+  },
+  {
+    "id": "NGA",
+    "name": "Nigéria",
+    "aliases": [
+      "nigeria"
+    ],
+    "flag": "🇳🇬",
+    "continent": "Africa",
+    "capital": "Abuja",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#008751",
+        "percentage": 66.67
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      }
+    ],
+    "trivia": "Dessiné par l'étudiant Michael Taiwo Akinkunmi en 1959 : le vert pour les richesses agricoles et le blanc pour l'unité et la paix."
+  },
+  {
+    "id": "CIV",
+    "name": "Côte d'Ivoire",
+    "aliases": [
+      "cote d ivoire",
+      "ivory coast"
+    ],
+    "flag": "🇨🇮",
+    "continent": "Africa",
+    "capital": "Yamoussoukro",
+    "difficulty": 1,
+    "slices": [
+      {
+        "color": "Orange",
+        "hex": "#F77F00",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Vert",
+        "hex": "#009E60",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Miroir du drapeau irlandais : l'orange représente la savane du Nord et le vert la forêt tropicale du Sud."
+  },
+  {
+    "id": "GHA",
+    "name": "Ghana",
+    "aliases": [],
+    "flag": "🇬🇭",
+    "continent": "Africa",
+    "capital": "Accra",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#EF3340",
+        "percentage": 33.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFD100",
+        "percentage": 33.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#009739",
+        "percentage": 33.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 1.0
+      }
+    ],
+    "trivia": "L'étoile noire africaine (Black Star) a été conçue par Theodosia Okoh pour symboliser l'émancipation du continent."
+  },
+  {
+    "id": "KEN",
+    "name": "Kenya",
+    "aliases": [],
+    "flag": "🇰🇪",
+    "continent": "Africa",
+    "capital": "Nairobi",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 30.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#BB0000",
+        "percentage": 30.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#006600",
+        "percentage": 30.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 10.0
+      }
+    ],
+    "trivia": "Le bouclier masaï traditionnel et ses deux lances croisées rappellent la défense farouche de la liberté."
+  },
+  {
+    "id": "SYC",
+    "name": "Seychelles",
+    "aliases": [],
+    "flag": "🇸🇨",
+    "continent": "Africa",
+    "capital": "Victoria",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#003D88",
+        "percentage": 20.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD856",
+        "percentage": 20.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D62828",
+        "percentage": 20.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 20.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#007A3D",
+        "percentage": 20.0
+      }
+    ],
+    "trivia": "Les cinq rayons dynamiques jaillissant du coin inférieur gauche symbolisent un pays jeune et tourné vers l'avenir."
+  },
+  {
+    "id": "MDG",
+    "name": "Madagascar",
+    "aliases": [
+      "republique de madagascar"
+    ],
+    "flag": "🇲🇬",
+    "continent": "Africa",
+    "capital": "Antananarivo",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#FC3D32",
+        "percentage": 33.33
+      },
+      {
+        "color": "Vert",
+        "hex": "#007E3A",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Le rouge et le blanc rappellent les couleurs du royaume Merina, tandis que le vert rend hommage aux paysans de la côte."
+  },
+  {
+    "id": "ETH",
+    "name": "Éthiopie",
+    "aliases": [
+      "ethiopia"
+    ],
+    "flag": "🇪🇹",
+    "continent": "Africa",
+    "capital": "Addis-Abeba",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#078930",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCDD09",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#DA121A",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Berceau historique des couleurs panafricaines, l'Éthiopie étant l'un des rares États africains à n'avoir jamais été colonisé."
+  },
+  {
+    "id": "COD",
+    "name": "RD Congo",
+    "aliases": [
+      "congo kinshasa",
+      "republique democratique du congo"
+    ],
+    "flag": "🇨🇩",
+    "continent": "Africa",
+    "capital": "Kinshasa",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu ciel",
+        "hex": "#007FFF",
+        "percentage": 68.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 20.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 12.0
+      }
+    ],
+    "trivia": "La bande rouge bordée de jaune d'or traverse la diagonale d'un ciel bleu céleste orné d'une étoile d'or."
+  },
+  {
+    "id": "MYS",
+    "name": "Malaisie",
+    "aliases": [
+      "malaysia"
+    ],
+    "flag": "🇲🇾",
+    "continent": "Asia",
+    "capital": "Kuala Lumpur",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#CC0000",
+        "percentage": 35.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 35.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#000066",
+        "percentage": 25.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFCC00",
+        "percentage": 5.0
+      }
+    ],
+    "trivia": "Le Jalur Gemilang possède 14 bandes et une étoile à 14 branches pour les 13 États et le district fédéral."
+  },
+  {
+    "id": "PHL",
+    "name": "Philippines",
+    "aliases": [
+      "republique des philippines"
+    ],
+    "flag": "🇵🇭",
+    "continent": "Asia",
+    "capital": "Manille",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#0038A8",
+        "percentage": 40.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 40.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 16.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 4.0
+      }
+    ],
+    "trivia": "Fait unique : en temps de guerre, le drapeau est hissé à l'envers, la bande rouge vers le haut."
+  },
+  {
+    "id": "ARE",
+    "name": "Émirats Arabes Unis",
+    "aliases": [
+      "eau",
+      "uae",
+      "emirats"
+    ],
+    "flag": "🇦🇪",
+    "continent": "Asia",
+    "capital": "Abou Dabi",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#00732F",
+        "percentage": 25.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 25.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 25.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#FF0000",
+        "percentage": 25.0
+      }
+    ],
+    "trivia": "Réunit les 4 couleurs panarabes immortalisées par le poète Safi al-Din al-Hilli."
+  },
+  {
+    "id": "QAT",
+    "name": "Qatar",
+    "aliases": [],
+    "flag": "🇶🇦",
+    "continent": "Asia",
+    "capital": "Doha",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Marron bordeaux",
+        "hex": "#8D1B3D",
+        "percentage": 72.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 28.0
+      }
+    ],
+    "trivia": "Sa teinte pourpre bordeaux unique provient des coquillages murex de l'île de Jazirat al Khor."
+  },
+  {
+    "id": "KWT",
+    "name": "Koweït",
+    "aliases": [
+      "kuwait"
+    ],
+    "flag": "🇰🇼",
+    "continent": "Asia",
+    "capital": "Koweït",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#007A3D",
+        "percentage": 30.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 30.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 30.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 10.0
+      }
+    ],
+    "trivia": "Le trapèze noir symbolise les batailles affrontées par la nation."
+  },
+  {
+    "id": "JOR",
+    "name": "Jordanie",
+    "aliases": [
+      "jordan"
+    ],
+    "flag": "🇯🇴",
+    "continent": "Asia",
+    "capital": "Amman",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 30.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 30.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#007A3D",
+        "percentage": 30.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 10.0
+      }
+    ],
+    "trivia": "L'étoile blanche à sept branches symbolise les sept versets de la première sourate du Coran (Al-Fatiha)."
+  },
+  {
+    "id": "NPL",
+    "name": "Népal",
+    "aliases": [
+      "nepal"
+    ],
+    "flag": "🇳🇵",
+    "continent": "Asia",
+    "capital": "Katmandou",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Carmin",
+        "hex": "#DC143C",
+        "percentage": 70.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#003893",
+        "percentage": 20.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 10.0
+      }
+    ],
+    "trivia": "Le seul drapeau national au monde non rectangulaire et non quadrilatère (deux fanions superposés)."
+  },
+  {
+    "id": "KAZ",
+    "name": "Kazakhstan",
+    "aliases": [],
+    "flag": "🇰🇿",
+    "continent": "Asia",
+    "capital": "Astana",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu turquoise",
+        "hex": "#00AFCA",
+        "percentage": 92.0
+      },
+      {
+        "color": "Jaune or",
+        "hex": "#FEC50C",
+        "percentage": 8.0
+      }
+    ],
+    "trivia": "L'aigle des steppes plane sous un soleil d'or à 32 rayons dans un ciel sans nuage."
+  },
+  {
+    "id": "MNG",
+    "name": "Mongolie",
+    "aliases": [
+      "mongolia"
+    ],
+    "flag": "🇲🇳",
+    "continent": "Asia",
+    "capital": "Oulan-Bator",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#DA2032",
+        "percentage": 66.67
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0066B3",
+        "percentage": 33.33
+      }
+    ],
+    "trivia": "La bande rouge de gauche arbore le symbole national du Soyombo, allégorie mystique de liberté."
+  },
+  {
+    "id": "MLI",
+    "name": "Mali",
+    "aliases": [],
+    "flag": "🇲🇱",
+    "continent": "Africa",
+    "capital": "Bamako",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#14B53A",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 33.33
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Le vert pour l'espérance et les prairies, l'or pour le sous-sol et le rouge pour le sang versé."
+  },
+  {
+    "id": "GIN",
+    "name": "Guinée",
+    "aliases": [
+      "guinee conakry"
+    ],
+    "flag": "🇬🇳",
+    "continent": "Africa",
+    "capital": "Conakry",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 33.33
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 33.33
+      },
+      {
+        "color": "Vert",
+        "hex": "#009460",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Exact inversé du drapeau malien : commence par le rouge du sacrifice anticolonial."
+  },
+  {
+    "id": "BEN",
+    "name": "Bénin",
+    "aliases": [
+      "benin"
+    ],
+    "flag": "🇧🇯",
+    "continent": "Africa",
+    "capital": "Porto-Novo",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#008751",
+        "percentage": 40.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 30.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#E8112D",
+        "percentage": 30.0
+      }
+    ],
+    "trivia": "Bande verte verticale le long du mât et deux bandes horizontales jaune et rouge."
+  },
+  {
+    "id": "TGO",
+    "name": "Togo",
+    "aliases": [],
+    "flag": "🇹🇬",
+    "continent": "Africa",
+    "capital": "Lomé",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#006A4E",
+        "percentage": 50.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFCE00",
+        "percentage": 36.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D21034",
+        "percentage": 12.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 2.0
+      }
+    ],
+    "trivia": "Cinq bandes alternées vert et jaune dominées par un canton rouge à étoile blanche."
+  },
+  {
+    "id": "BWA",
+    "name": "Botswana",
+    "aliases": [],
+    "flag": "🇧🇼",
+    "continent": "Africa",
+    "capital": "Gaborone",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu ciel",
+        "hex": "#75AADB",
+        "percentage": 68.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 18.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 14.0
+      }
+    ],
+    "trivia": "Le bleu symbolise la pluie précieuse (Pula), le noir et blanc l'harmonie raciale et les zèbres du pays."
+  },
+  {
+    "id": "NAM",
+    "name": "Namibie",
+    "aliases": [
+      "namibia"
+    ],
+    "flag": "🇳🇦",
+    "continent": "Africa",
+    "capital": "Windhoek",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu",
+        "hex": "#003580",
+        "percentage": 34.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#009543",
+        "percentage": 34.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D21034",
+        "percentage": 24.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 5.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFCE00",
+        "percentage": 3.0
+      }
+    ],
+    "trivia": "Le soleil doré à 12 rayons symbolise l'énergie, la vie et la chaleur du désert du Namib."
+  },
+  {
+    "id": "RWA",
+    "name": "Rwanda",
+    "aliases": [],
+    "flag": "🇷🇼",
+    "continent": "Africa",
+    "capital": "Kigali",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu ciel",
+        "hex": "#00A1DE",
+        "percentage": 50.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FAD201",
+        "percentage": 25.0
+      },
+      {
+        "color": "Vert",
+        "hex": "#20603D",
+        "percentage": 25.0
+      }
+    ],
+    "trivia": "Adopté en 2001 pour marquer la réconciliation nationale, avec un soleil d'or à 24 rayons."
+  },
+  {
+    "id": "TZA",
+    "name": "Tanzanie",
+    "aliases": [
+      "tanzania"
+    ],
+    "flag": "🇹🇿",
+    "continent": "Africa",
+    "capital": "Dodoma",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Vert",
+        "hex": "#1EB53A",
+        "percentage": 35.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#00A3DD",
+        "percentage": 35.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 22.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 8.0
+      }
+    ],
+    "trivia": "Fusionne les couleurs du Tanganyika (vert, noir, jaune) et de Zanzibar (bleu, noir, vert)."
+  },
+  {
+    "id": "PAN",
+    "name": "Panama",
+    "aliases": [],
+    "flag": "🇵🇦",
+    "continent": "Americas",
+    "capital": "Panama",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 50.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#005293",
+        "percentage": 25.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#D21034",
+        "percentage": 25.0
+      }
+    ],
+    "trivia": "Divisé en quatre quartiers : le rouge des Libéraux, le bleu des Conservateurs et le blanc de la paix."
+  },
+  {
+    "id": "GTM",
+    "name": "Guatemala",
+    "aliases": [],
+    "flag": "🇬🇹",
+    "continent": "Americas",
+    "capital": "Guatemala",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu ciel",
+        "hex": "#4997D0",
+        "percentage": 66.67
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      }
+    ],
+    "trivia": "Les deux bandes bleu ciel entourent la terre ferme entre l'océan Pacifique et la mer des Caraïbes."
+  },
+  {
+    "id": "PRY",
+    "name": "Paraguay",
+    "aliases": [],
+    "flag": "🇵🇾",
+    "continent": "Americas",
+    "capital": "Asuncion",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#D52B1E",
+        "percentage": 33.33
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 33.33
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0038A8",
+        "percentage": 33.34
+      }
+    ],
+    "trivia": "Fait exceptionnel : l'avers et le revers portent deux écussons différents."
+  },
+  {
+    "id": "BHS",
+    "name": "Bahamas",
+    "aliases": [],
+    "flag": "🇧🇸",
+    "continent": "Americas",
+    "capital": "Nassau",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu aigue-marine",
+        "hex": "#00778B",
+        "percentage": 55.0
+      },
+      {
+        "color": "Jaune or",
+        "hex": "#FFC72C",
+        "percentage": 27.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 18.0
+      }
+    ],
+    "trivia": "L'aigue-marine évoque les eaux caribéennes splendides et le jaune le sable chaud des îles."
+  },
+  {
+    "id": "TTO",
+    "name": "Trinité-et-Tobago",
+    "aliases": [
+      "trinidad et tobago"
+    ],
+    "flag": "🇹🇹",
+    "continent": "Americas",
+    "capital": "Port-d'Espagne",
+    "difficulty": 3,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#DA121A",
+        "percentage": 70.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 22.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 8.0
+      }
+    ],
+    "trivia": "Une large diagonale noire bordée de blanc traverse le champ rouge ardent."
+  },
+  {
+    "id": "FJI",
+    "name": "Fidji",
+    "aliases": [
+      "fiji"
+    ],
+    "flag": "🇫🇯",
+    "continent": "Oceania",
+    "capital": "Suva",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Bleu ciel",
+        "hex": "#68BFE5",
+        "percentage": 72.0
+      },
+      {
+        "color": "Rouge",
+        "hex": "#C8102E",
+        "percentage": 14.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 14.0
+      }
+    ],
+    "trivia": "Le fond bleu ciel azur pacifique accueille l'Union Jack et l'écu royal orné d'un lion et d'une colombe."
+  },
+  {
+    "id": "PNG",
+    "name": "Papouasie-Nouvelle-Guinée",
+    "aliases": [
+      "papouasie"
+    ],
+    "flag": "🇵🇬",
+    "continent": "Oceania",
+    "capital": "Port Moresby",
+    "difficulty": 2,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#D21034",
+        "percentage": 47.0
+      },
+      {
+        "color": "Noir",
+        "hex": "#000000",
+        "percentage": 47.0
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFCD00",
+        "percentage": 4.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 2.0
+      }
+    ],
+    "trivia": "Dessiné par Susan Karike, une écolière de 15 ans : le paradisier raggiana d'or plane sur la diagonale rouge."
+  },
+  {
+    "id": "WSM",
+    "name": "Samoa",
+    "aliases": [],
+    "flag": "🇼🇸",
+    "continent": "Oceania",
+    "capital": "Apia",
+    "difficulty": 3,
+    "slices": [
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 75.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#002B7F",
+        "percentage": 23.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 2.0
+      }
+    ],
+    "trivia": "Le canton bleu abrite les cinq étoiles blanches de la Croix du Sud sur fond rouge courage."
+  }
+]

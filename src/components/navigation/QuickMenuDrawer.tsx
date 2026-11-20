@@ -16,6 +16,7 @@ import {
   Trophy,
   Layers,
   Zap,
+  PieChart,
 } from "lucide-react";
 import { LeaderboardModal } from "@/components/leaderboard/LeaderboardModal";
 
@@ -350,6 +351,62 @@ export const QuickMenuDrawer: React.FC<QuickMenuDrawerProps> = () => {
                   >
                     <span className="text-xs font-bold text-slate-200 block">🌍 Afrique</span>
                     <span className="text-[10px] text-slate-500">51 capitales</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Game 5 : FlagPie */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
+                    <PieChart className="w-3.5 h-3.5" /> FlagPie
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/flagpie")}
+                    className="text-[10px] text-slate-400 hover:text-white transition-colors font-semibold"
+                  >
+                    Lobby
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/flagpie?pack=monde&mode=daily&play=1")}
+                    className="p-2.5 rounded-xl bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/30 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-violet-200 flex items-center gap-1">
+                      <PieChart className="w-3 h-3 text-violet-400" /> Camembert
+                    </span>
+                    <span className="text-[10px] text-violet-400/80">Défi du Jour</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/flagpie?pack=monde&mode=free&play=1")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🌍 Monde</span>
+                    <span className="text-[10px] text-slate-500">108 drapeaux</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/flagpie?pack=europe&mode=free&play=1")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🇪🇺 Europe</span>
+                    <span className="text-[10px] text-slate-500">37 drapeaux</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleNav("/play/flagpie?pack=afrique&mode=free&play=1")}
+                    className="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-slate-800 text-left transition-colors"
+                  >
+                    <span className="text-xs font-bold text-slate-200 block">🌍 Afrique</span>
+                    <span className="text-[10px] text-slate-500">25 drapeaux</span>
                   </button>
                 </div>
               </div>

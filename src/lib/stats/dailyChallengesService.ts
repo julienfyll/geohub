@@ -84,6 +84,10 @@ export function getChallengeKeyForSession(session: GameSessionRecord): string | 
     return "capitalblitz_sprint_daily";
   }
 
+  if (session.game_mode === "flagpie") {
+    return "flagpie_daily_monde";
+  }
+
   return null;
 }
 

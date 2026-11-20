@@ -10,6 +10,7 @@ import {
   Clock,
   Play,
   Zap,
+  PieChart,
 } from "lucide-react";
 import { UserNav } from "@/components/navigation/UserNav";
 import { QuickMenuDrawer } from "@/components/navigation/QuickMenuDrawer";
@@ -292,6 +293,54 @@ export default function Home() {
 
             <div className="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 group-hover:from-amber-400 group-hover:to-orange-500 text-white font-semibold text-sm transition-all shadow-lg shadow-amber-500/25">
               <span>Configurer & Jouer à Capital Blitz</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Game 5 : FlagPie */}
+          <Link
+            href="/play/flagpie"
+            className="relative group bg-slate-900/90 border border-slate-800 hover:border-violet-500 rounded-3xl p-7 shadow-2xl transition-all flex flex-col justify-between overflow-hidden cursor-pointer hover:shadow-violet-500/10 hover:scale-[1.01]"
+          >
+            <div className="absolute top-0 right-0 p-6 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity">
+              <PieChart className="w-32 h-32 text-violet-400" />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="px-3 py-1 rounded-full bg-violet-500/15 text-violet-400 border border-violet-500/30 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <PieChart className="w-3 h-3" />
+                  <span>★ Vexillologie & Couleurs</span>
+                </span>
+                <span className="text-xs text-slate-400 font-mono">108 drapeaux • 3 essais</span>
+              </div>
+
+              <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-violet-300 transition-colors">
+                FlagPie — Le Camembert des Drapeaux
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                Reconstituez l&apos;identité des nations à travers les proportions chromatiques exactes de leurs drapeaux. 3 essais par manche avec déblocage progressif du continent et de la première lettre !
+              </p>
+
+              <div className="grid grid-cols-2 gap-2.5 mb-6">
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-200">🥧 Camembert Vectoriel</span>
+                  <span className="text-[11px] text-slate-400 leading-tight">
+                    Proportions exactes • Mode sans % hardcore
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col gap-1">
+                  <span className="text-xs font-bold text-slate-200">🌍 5 Packs Continentaux</span>
+                  <span className="text-[11px] text-slate-400 leading-tight">
+                    Monde, Europe, Afrique, Amériques, Asie
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between py-3.5 px-5 rounded-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 group-hover:from-violet-500 group-hover:to-indigo-500 text-white font-semibold text-sm transition-all shadow-lg shadow-violet-600/25">
+              <span>Configurer & Jouer à FlagPie</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
