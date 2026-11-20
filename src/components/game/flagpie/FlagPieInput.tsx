@@ -109,7 +109,7 @@ export const FlagPieInput: React.FC<FlagPieInputProps> = ({
   };
 
   return (
-    <div className="relative w-full max-w-md mx-auto px-2 z-30">
+    <div className="w-full max-w-md mx-auto px-2 z-30">
       {/* Feedback Toast Banner */}
       {feedbackMessage && (
         <div
@@ -130,95 +130,97 @@ export const FlagPieInput: React.FC<FlagPieInputProps> = ({
         </div>
       )}
 
-      {/* Main Input Box */}
-      <div
-        className={`relative flex items-center bg-slate-900 border-2 rounded-2xl shadow-xl transition-all ${
-          isShaking
-            ? "border-red-500 animate-shake ring-4 ring-red-500/20"
-            : isOpen
-            ? "border-violet-500 ring-4 ring-violet-500/20"
-            : "border-slate-800 hover:border-slate-700"
-        }`}
-      >
-        <div className="pl-4 text-slate-500">
-          <Search className="w-5 h-5 text-violet-400" />
-        </div>
+      {/* Input container with relative positioning for popup above */}
+      <div className="relative">
+        {/* Autocomplete Dropdown (positionné AU-DESSUS de la barre, sans les drapeaux) */}
+        {isOpen && suggestions.length > 0 && (
+          <ul className="absolute bottom-full left-0 right-0 mb-2 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden divide-y divide-slate-800/80 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+            {suggestions.map((country, idx) => {
+              const isSelected = idx === selectedIndex;
+              return (
+                <li
+                  key={country.id}
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                  onClick={() => handleSelect(country)}
+                  className={`px-4 py-3 flex items-center justify-between cursor-pointer text-sm transition-colors ${
+                    isSelected
+                      ? "bg-violet-600/30 text-white font-bold"
+                      : "text-slate-300 hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-semibold text-slate-100">{country.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-mono text-slate-400">
+                      {country.continent}
+                    </span>
+                    {isSelected && (
+                      <CornerDownLeft className="w-3.5 h-3.5 text-violet-400" />
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          disabled={disabled}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Entrez le nom du pays..."
-          className="w-full bg-transparent px-3 py-3.5 text-sm sm:text-base font-semibold text-white placeholder-slate-500 focus:outline-none"
-        />
+        {/* Main Input Box */}
+        <div
+          className={`flex items-center bg-slate-900 border-2 rounded-2xl shadow-xl transition-all ${
+            isShaking
+              ? "border-red-500 animate-shake ring-4 ring-red-500/20"
+              : isOpen
+              ? "border-violet-500 ring-4 ring-violet-500/20"
+              : "border-slate-800 hover:border-slate-700"
+          }`}
+        >
+          <div className="pl-4 text-slate-500">
+            <Search className="w-5 h-5 text-violet-400" />
+          </div>
 
-        <div className="pr-3 flex items-center gap-2">
-          {query.trim() && (
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            disabled={disabled}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Entrez le nom du pays..."
+            className="w-full bg-transparent px-3 py-3.5 text-sm sm:text-base font-semibold text-white placeholder-slate-500 focus:outline-none"
+          />
+
+          <div className="pr-3 flex items-center gap-2">
+            {query.trim() && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (isOpen && suggestions.length > 0) {
+                    handleSelect(suggestions[selectedIndex] || suggestions[0]);
+                  } else {
+                    onGuess(query.trim());
+                    setQuery("");
+                  }
+                }}
+                className="px-2.5 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
+              >
+                <span>Valider</span>
+                <CornerDownLeft className="w-3.5 h-3.5" />
+              </button>
+            )}
+
             <button
               type="button"
-              onClick={() => {
-                if (isOpen && suggestions.length > 0) {
-                  handleSelect(suggestions[selectedIndex] || suggestions[0]);
-                } else {
-                  onGuess(query.trim());
-                  setQuery("");
-                }
-              }}
-              className="px-2.5 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs flex items-center gap-1 shadow-md transition-all cursor-pointer"
+              onClick={onSkip}
+              disabled={disabled}
+              className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
+              title="Passer cette manche"
             >
-              <span>Valider</span>
-              <CornerDownLeft className="w-3.5 h-3.5" />
+              <FastForward className="w-4 h-4" />
             </button>
-          )}
-
-          <button
-            type="button"
-            onClick={onSkip}
-            disabled={disabled}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Passer cette manche"
-          >
-            <FastForward className="w-4 h-4" />
-          </button>
+          </div>
         </div>
       </div>
-
-      {/* Autocomplete Dropdown */}
-      {isOpen && suggestions.length > 0 && (
-        <ul className="absolute top-full left-2 right-2 mt-2 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden divide-y divide-slate-800/80 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-          {suggestions.map((country, idx) => {
-            const isSelected = idx === selectedIndex;
-            return (
-              <li
-                key={country.id}
-                onMouseEnter={() => setSelectedIndex(idx)}
-                onClick={() => handleSelect(country)}
-                className={`px-4 py-3 flex items-center justify-between cursor-pointer text-sm transition-colors ${
-                  isSelected
-                    ? "bg-violet-600/30 text-white font-bold"
-                    : "text-slate-300 hover:bg-slate-800/60"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-xl select-none">{country.flag}</span>
-                  <span className="font-semibold">{country.name}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono text-slate-400">
-                    {country.continent}
-                  </span>
-                  {isSelected && (
-                    <CornerDownLeft className="w-3.5 h-3.5 text-violet-400" />
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      )}
 
       {/* Helper text */}
       <div className="flex items-center justify-between mt-2 px-2 text-[11px] text-slate-500 select-none">
