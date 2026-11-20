@@ -104,15 +104,30 @@
       {
         "color": "Rouge",
         "hex": "#AA151B",
-        "percentage": 50.0
+        "percentage": 50.8
       },
       {
         "color": "Jaune",
         "hex": "#F1BF00",
-        "percentage": 50.0
+        "percentage": 46.2
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 1.5
+      },
+      {
+        "color": "Or",
+        "hex": "#D4AF37",
+        "percentage": 1.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#002B7F",
+        "percentage": 0.5
       }
     ],
-    "trivia": "La 'Rojigualda' possède une bande jaune centrale deux fois plus large que chaque bande rouge."
+    "trivia": "Les bandes rouge et jaune (1:2:1) portent les armoiries royales d'Espagne, entourées des célèbres Colonnes d'Hercule et de la devise 'Plus Ultra'."
   },
   {
     "id": "BEL",
@@ -187,17 +202,32 @@
     "difficulty": 1,
     "slices": [
       {
-        "color": "Vert",
-        "hex": "#006600",
-        "percentage": 40.0
+        "color": "Rouge",
+        "hex": "#DE0000",
+        "percentage": 56.5
       },
       {
-        "color": "Rouge",
-        "hex": "#FF0000",
-        "percentage": 60.0
+        "color": "Vert",
+        "hex": "#006600",
+        "percentage": 34.5
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFD100",
+        "percentage": 5.5
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 2.3
+      },
+      {
+        "color": "Bleu",
+        "hex": "#003399",
+        "percentage": 1.2
       }
     ],
-    "trivia": "Le vert symbolise l'espoir de la nation et le rouge le sang versé par les combattants de la République."
+    "trivia": "Le champ est divisé en 2:3 (vert côté mât, rouge flottant), surmonté de la sphère armillaire manuéline dorée et de l'écu aux 5 quinas bleues."
   },
   {
     "id": "GBR",
@@ -685,20 +715,30 @@
       {
         "color": "Rouge",
         "hex": "#FF0000",
-        "percentage": 33.33
+        "percentage": 33.0
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0000FF",
+        "percentage": 33.0
       },
       {
         "color": "Blanc",
         "hex": "#FFFFFF",
-        "percentage": 33.33
+        "percentage": 31.8
       },
       {
-        "color": "Bleu",
-        "hex": "#171796",
-        "percentage": 33.34
+        "color": "Bleu ciel",
+        "hex": "#418FDE",
+        "percentage": 1.2
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFD100",
+        "percentage": 1.0
       }
     ],
-    "trivia": "Son centre arbore le damier rouge et blanc historique surmonté d'une couronne de cinq blasons régionaux."
+    "trivia": "Le damier central croate (Šahovnica) à 25 cases rouges et blanches est surmonté d'une couronne ornée des cinq écussons historiques du pays."
   },
   {
     "id": "SRB",
@@ -714,20 +754,25 @@
       {
         "color": "Rouge",
         "hex": "#C6363C",
-        "percentage": 33.33
-      },
-      {
-        "color": "Bleu",
-        "hex": "#0C4076",
-        "percentage": 33.33
+        "percentage": 34.0
       },
       {
         "color": "Blanc",
         "hex": "#FFFFFF",
-        "percentage": 33.34
+        "percentage": 33.8
+      },
+      {
+        "color": "Bleu",
+        "hex": "#0C4076",
+        "percentage": 30.0
+      },
+      {
+        "color": "Or",
+        "hex": "#FFD100",
+        "percentage": 2.2
       }
     ],
-    "trivia": "Tricolore panslave inversé par rapport à la Russie, surmonté de l'aigle bicéphale blanc des Nemanjić."
+    "trivia": "Le tricolore panslave inversé est rehaussé des petites armoiries de la Serbie, montrant l'aigle bicéphale blanc sous la couronne royale dorée des Nemanjić."
   },
   {
     "id": "BGR",
@@ -796,15 +841,20 @@
       {
         "color": "Blanc",
         "hex": "#FFFFFF",
-        "percentage": 50.0
+        "percentage": 49.5
       },
       {
         "color": "Rouge",
         "hex": "#CF142B",
-        "percentage": 50.0
+        "percentage": 49.5
+      },
+      {
+        "color": "Gris argenté",
+        "hex": "#CCCCCC",
+        "percentage": 1.0
       }
     ],
-    "trivia": "Porte la George Cross britannique décernée à l'île entière en 1942 pour son héroïsme durant la Seconde Guerre mondiale."
+    "trivia": "Dans le coin supérieur gauche figure la croix de George (George Cross) décernée par George VI en 1942 pour saluer la bravoure du peuple maltais."
   },
   {
     "id": "ALB",
@@ -957,22 +1007,27 @@
     "difficulty": 2,
     "slices": [
       {
+        "color": "Rouge",
+        "hex": "#ED1C24",
+        "percentage": 33.2
+      },
+      {
         "color": "Blanc",
         "hex": "#FFFFFF",
-        "percentage": 33.33
+        "percentage": 33.0
       },
       {
         "color": "Bleu",
         "hex": "#005CE6",
-        "percentage": 33.33
+        "percentage": 33.0
       },
       {
-        "color": "Rouge",
-        "hex": "#ED1C24",
-        "percentage": 33.34
+        "color": "Jaune",
+        "hex": "#FFD100",
+        "percentage": 0.8
       }
     ],
-    "trivia": "Son écusson représente le mont Triglav, plus haut sommet du pays, surmonté de trois étoiles d'or des comtes de Celje."
+    "trivia": "Le blason en canton figure la silhouette du mont Triglav sur fond d'azur, bordée des vagues de la mer Adriatique et surmontée de trois étoiles d'or."
   },
   {
     "id": "MKD",
@@ -1164,20 +1219,30 @@
       {
         "color": "Vert",
         "hex": "#006847",
-        "percentage": 33.33
-      },
-      {
-        "color": "Blanc",
-        "hex": "#FFFFFF",
-        "percentage": 33.33
+        "percentage": 33.5
       },
       {
         "color": "Rouge",
         "hex": "#CE1126",
-        "percentage": 33.34
+        "percentage": 33.5
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 30.0
+      },
+      {
+        "color": "Brun",
+        "hex": "#693F23",
+        "percentage": 1.8
+      },
+      {
+        "color": "Or",
+        "hex": "#FFD100",
+        "percentage": 1.2
       }
     ],
-    "trivia": "Les armoiries centrales illustrent la légende aztèque de l'aigle posé sur un nopal dévorant un serpent."
+    "trivia": "Au centre de la bande blanche trône l'emblème aztèque : un aigle royal perché sur un figuier de Barbarie dévorant un serpent au-dessus du lac Texcoco."
   },
   {
     "id": "COL",
@@ -1274,21 +1339,26 @@
     "slices": [
       {
         "color": "Jaune",
-        "hex": "#FCE300",
-        "percentage": 33.33
+        "hex": "#FFCC00",
+        "percentage": 33.0
       },
       {
         "color": "Bleu",
         "hex": "#00247D",
-        "percentage": 33.33
+        "percentage": 32.5
       },
       {
         "color": "Rouge",
         "hex": "#CF142B",
-        "percentage": 33.34
+        "percentage": 33.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 1.5
       }
     ],
-    "trivia": "Ses huit étoiles blanches en arc de cercle représentent les huit provinces historiques de la déclaration d'indépendance."
+    "trivia": "Les huit étoiles blanches disposées en arc sur la bande bleue symbolisent les huit provinces historiques signataires de l'acte d'indépendance."
   },
   {
     "id": "CUB",
@@ -1362,15 +1432,20 @@
       {
         "color": "Blanc",
         "hex": "#FFFFFF",
-        "percentage": 55.56
+        "percentage": 54.5
       },
       {
         "color": "Bleu",
         "hex": "#0038A8",
-        "percentage": 44.44
+        "percentage": 43.5
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FCD116",
+        "percentage": 2.0
       }
     ],
-    "trivia": "Ses neuf bandes bleues et blanches rappellent les neuf départements fondateurs du pays en 1830."
+    "trivia": "Ses neuf bandes représentent les neuf premiers départements uruguayens, éclairés au canton par le visage radieux du Soleil de Mai (Sol de Mayo)."
   },
   {
     "id": "BOL",
@@ -1415,20 +1490,30 @@
       {
         "color": "Jaune",
         "hex": "#FFDD00",
-        "percentage": 50.0
+        "percentage": 48.5
       },
       {
         "color": "Bleu",
         "hex": "#034EA2",
-        "percentage": 25.0
+        "percentage": 24.5
       },
       {
         "color": "Rouge",
         "hex": "#ED1C24",
-        "percentage": 25.0
+        "percentage": 24.0
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 1.5
+      },
+      {
+        "color": "Brun",
+        "hex": "#693F23",
+        "percentage": 1.5
       }
     ],
-    "trivia": "Le condor des Andes qui couronne les armoiries symbolise le pouvoir, la grandeur et la force de la nation."
+    "trivia": "Au centre des bandes de la Grande Colombie trône le condor des Andes déployé protégeant le mont volcanique Chimborazo et le fleuve Guayas."
   },
   {
     "id": "CRI",
@@ -1953,21 +2038,26 @@
     "slices": [
       {
         "color": "Rouge",
-        "hex": "#C8102E",
-        "percentage": 33.33
-      },
-      {
-        "color": "Blanc",
-        "hex": "#FFFFFF",
-        "percentage": 33.33
+        "hex": "#CE1126",
+        "percentage": 33.3
       },
       {
         "color": "Noir",
         "hex": "#000000",
-        "percentage": 33.34
+        "percentage": 33.4
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 31.3
+      },
+      {
+        "color": "Or",
+        "hex": "#C69214",
+        "percentage": 2.0
       }
     ],
-    "trivia": "L'Aigle doré de Saladin au centre veille sur les trois bandes du panarabisme triomphant."
+    "trivia": "Le tricolore panarabe rouge, blanc et noir arbore en son centre l'Aigle de Saladin en or, symbole de la souveraineté et du courage égyptien."
   },
   {
     "id": "MAR",
@@ -2606,15 +2696,20 @@
       {
         "color": "Rouge",
         "hex": "#DA2032",
-        "percentage": 66.67
+        "percentage": 63.0
       },
       {
         "color": "Bleu",
-        "hex": "#0066B3",
-        "percentage": 33.33
+        "hex": "#005BAA",
+        "percentage": 33.2
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFD100",
+        "percentage": 3.8
       }
     ],
-    "trivia": "La bande rouge de gauche arbore le symbole national du Soyombo, allégorie mystique de liberté."
+    "trivia": "La bande rouge de gauche arbore en or le 'Soyombo', idéogramme national mongol représentant le feu, le soleil, la lune et le symbole Yin-Yang."
   },
   {
     "id": "MLI",
@@ -2899,15 +2994,25 @@
       {
         "color": "Bleu ciel",
         "hex": "#4997D0",
-        "percentage": 66.67
+        "percentage": 66.0
       },
       {
         "color": "Blanc",
         "hex": "#FFFFFF",
-        "percentage": 33.33
+        "percentage": 31.8
+      },
+      {
+        "color": "Vert",
+        "hex": "#007A3D",
+        "percentage": 1.2
+      },
+      {
+        "color": "Or",
+        "hex": "#C69214",
+        "percentage": 1.0
       }
     ],
-    "trivia": "Les deux bandes bleu ciel entourent la terre ferme entre l'océan Pacifique et la mer des Caraïbes."
+    "trivia": "Au cœur de la bande blanche, l'oiseau sacré Quetzal resplendit au-dessus du parchemin proclamant l'indépendance de l'Amérique centrale de 1821."
   },
   {
     "id": "PRY",
@@ -2921,20 +3026,30 @@
       {
         "color": "Rouge",
         "hex": "#D52B1E",
-        "percentage": 33.33
-      },
-      {
-        "color": "Blanc",
-        "hex": "#FFFFFF",
-        "percentage": 33.33
+        "percentage": 33.3
       },
       {
         "color": "Bleu",
         "hex": "#0038A8",
-        "percentage": 33.34
+        "percentage": 33.3
+      },
+      {
+        "color": "Blanc",
+        "hex": "#FFFFFF",
+        "percentage": 31.8
+      },
+      {
+        "color": "Jaune",
+        "hex": "#FFD100",
+        "percentage": 0.8
+      },
+      {
+        "color": "Vert",
+        "hex": "#00843D",
+        "percentage": 0.8
       }
     ],
-    "trivia": "Fait exceptionnel : l'avers et le revers portent deux écussons différents."
+    "trivia": "L'avers du drapeau présente l'Étoile de Mai dorée entourée d'une branche de palmier et d'olivier. C'est l'un des rares drapeaux au revers différent !"
   },
   {
     "id": "BHS",
@@ -3006,20 +3121,25 @@
       {
         "color": "Bleu ciel",
         "hex": "#68BFE5",
-        "percentage": 72.0
-      },
-      {
-        "color": "Rouge",
-        "hex": "#C8102E",
-        "percentage": 14.0
+        "percentage": 71.5
       },
       {
         "color": "Blanc",
         "hex": "#FFFFFF",
-        "percentage": 14.0
+        "percentage": 13.5
+      },
+      {
+        "color": "Rouge",
+        "hex": "#CE1126",
+        "percentage": 13.5
+      },
+      {
+        "color": "Or",
+        "hex": "#FFD100",
+        "percentage": 1.5
       }
     ],
-    "trivia": "Le fond bleu ciel azur pacifique accueille l'Union Jack et l'écu royal orné d'un lion et d'une colombe."
+    "trivia": "Sur le champ bleu ciel pacifique, l'Union Jack côtoie le bouclier fidjien orné d'un lion britannique doré tenant une gousse de cacao et d'une colombe."
   },
   {
     "id": "PNG",
